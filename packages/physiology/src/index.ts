@@ -14,7 +14,6 @@ export interface PhysiologyProvider {
   flowFor(structureId: StructureId): FlowRate | null;
   cardiacPhase(): number | null;
   respiratoryPhase(): number | null;
-  complianceFor(structureId: StructureId): number | null;
 }
 
 export class StaticUnavailablePhysiology implements PhysiologyProvider {
@@ -35,10 +34,6 @@ export class StaticUnavailablePhysiology implements PhysiologyProvider {
   }
 
   respiratoryPhase(): number | null {
-    return null;
-  }
-
-  complianceFor(): number | null {
     return null;
   }
 }
