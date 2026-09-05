@@ -38,7 +38,9 @@
         "additionalProperties": false,
         "required": ["type", "targetId"],
         "properties": {
-          "type": { "type": "string", "minLength": 1 },
+          "type": {
+            "enum": ["part_of", "branch_of", "adjacent_to", "connected_to"]
+          },
           "targetId": { "type": "string", "minLength": 1 }
         }
       }
@@ -50,7 +52,15 @@
         "additionalProperties": false,
         "required": ["kind", "assetId"],
         "properties": {
-          "kind": { "type": "string", "minLength": 1 },
+          "kind": {
+            "enum": [
+              "renderSurface",
+              "collisionSurface",
+              "segmentationVolume",
+              "lumenVolume",
+              "centerline"
+            ]
+          },
           "assetId": { "type": "string", "minLength": 1 }
         }
       }
