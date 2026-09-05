@@ -125,24 +125,22 @@ export class PatientStateTransitionService {
     }
 
     const previousState = structure.medicalState;
-    if (request.transition === 'puncture') {
-      if (previousState.integrity === 'punctured') {
-        return {
-          structureId: structure.id,
-          previousState,
-          currentState: previousState,
-          changed: false,
-        };
-      }
-
-      const currentState: RuntimeMedicalState = { integrity: 'punctured' };
-      structureState.set(structure, currentState);
+    if (previousState.integrity === 'punctured') {
       return {
         structureId: structure.id,
         previousState,
-        currentState,
-        changed: true,
+        currentState: previousState,
+        changed: false,
       };
     }
+
+    const currentState: RuntimeMedicalState = { integrity: 'punctured' };
+    structureState.set(structure, currentState);
+    return {
+      structureId: structure.id,
+      previousState,
+      currentState,
+      changed: true,
+    };
   }
 }
