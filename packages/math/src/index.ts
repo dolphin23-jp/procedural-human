@@ -83,25 +83,41 @@ export interface ImageVoxelCoordinate {
 
 export const vec3 = (x: number, y: number, z: number): Vec3 => ({ x, y, z });
 
-export const patientSpacePoint = (x: number, y: number, z: number): PatientSpacePoint => ({
+export const patientSpacePoint = (
+  x: number,
+  y: number,
+  z: number,
+): PatientSpacePoint => ({
   space: 'patient',
   kind: 'point',
   value: vec3(x, y, z),
 });
 
-export const patientSpaceVector = (x: number, y: number, z: number): PatientSpaceVector => ({
+export const patientSpaceVector = (
+  x: number,
+  y: number,
+  z: number,
+): PatientSpaceVector => ({
   space: 'patient',
   kind: 'vector',
   value: vec3(x, y, z),
 });
 
-export const renderSpacePoint = (x: number, y: number, z: number): RenderSpacePoint => ({
+export const renderSpacePoint = (
+  x: number,
+  y: number,
+  z: number,
+): RenderSpacePoint => ({
   space: 'render',
   kind: 'point',
   value: vec3(x, y, z),
 });
 
-export const imageVoxelCoordinate = (i: number, j: number, k: number): ImageVoxelCoordinate => ({
+export const imageVoxelCoordinate = (
+  i: number,
+  j: number,
+  k: number,
+): ImageVoxelCoordinate => ({
   space: 'image-voxel',
   i,
   j,

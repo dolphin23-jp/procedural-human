@@ -65,7 +65,9 @@ test('unit conversions round-trip through canonical representations', () => {
   assert.equal(toMinutes(minutes(2.5)), 2.5);
   assert.ok(Math.abs(toDegrees(degrees(37)) - 37) < 1e-12);
   assert.equal(toKilopascals(kilopascals(12.3)), 12.3);
-  assert.ok(Math.abs(toMillimetresOfMercury(millimetresOfMercury(120)) - 120) < 1e-12);
+  assert.ok(
+    Math.abs(toMillimetresOfMercury(millimetresOfMercury(120)) - 120) < 1e-12,
+  );
   assert.equal(toMetresPerSecond(metresPerSecond(1.5)), 1.5);
   assert.ok(Math.abs(toLitresPerMinute(litresPerMinute(5.2)) - 5.2) < 1e-12);
   assert.equal(toLitres(litres(2)), 2);
