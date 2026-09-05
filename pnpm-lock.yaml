@@ -1,0 +1,51 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .: {}
+
+  apps/web: {}
+
+  packages/anatomy: {}
+
+  packages/asset-runtime: {}
+
+  packages/core: {}
+
+  packages/event-log: {}
+
+  packages/imaging-core: {}
+
+  packages/imaging-cornerstone: {}
+
+  packages/instruments: {}
+
+  packages/interaction: {}
+
+  packages/math: {}
+
+  packages/patient: {}
+
+  packages/physics-api: {}
+
+  packages/physics-lite: {}
+
+  packages/physiology: {}
+
+  packages/procedures: {}
+
+  packages/rendering-core: {}
+
+  packages/rendering-three: {}
+
+  packages/session: {}
+
+  packages/spatial: {}
+
+  packages/ui: {}
+
+  packages/units: {}

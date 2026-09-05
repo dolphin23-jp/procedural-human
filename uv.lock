@@ -1,0 +1,49 @@
+version = 1
+revision = 3
+requires-python = ">=3.11"
+
+[manifest]
+members = [
+    "ph-assets",
+    "ph-cli",
+    "ph-dicom",
+    "ph-geometry",
+    "ph-segmentation",
+    "ph-validation",
+    "procedural-human-authoring",
+]
+
+[[package]]
+name = "ph-assets"
+version = "0.0.0"
+source = { virtual = "authoring/python/ph_assets" }
+
+[[package]]
+name = "ph-cli"
+version = "0.0.0"
+source = { virtual = "authoring/python/ph_cli" }
+
+[[package]]
+name = "ph-dicom"
+version = "0.0.0"
+source = { virtual = "authoring/python/ph_dicom" }
+
+[[package]]
+name = "ph-geometry"
+version = "0.0.0"
+source = { virtual = "authoring/python/ph_geometry" }
+
+[[package]]
+name = "ph-segmentation"
+version = "0.0.0"
+source = { virtual = "authoring/python/ph_segmentation" }
+
+[[package]]
+name = "ph-validation"
+version = "0.0.0"
+source = { virtual = "authoring/python/ph_validation" }
+
+[[package]]
+name = "procedural-human-authoring"
+version = "0.0.0"
+source = { virtual = "." }
