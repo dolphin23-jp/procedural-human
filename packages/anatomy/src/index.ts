@@ -110,7 +110,9 @@ export class AnatomicalGraph {
       return [];
     }
     return type
-      ? entity.relationships.filter((relationship) => relationship.type === type)
+      ? entity.relationships.filter(
+          (relationship) => relationship.type === type,
+        )
       : entity.relationships;
   }
 

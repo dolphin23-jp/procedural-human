@@ -4,11 +4,7 @@ import {
   AnatomicalGraph,
   createRepresentationBundle,
 } from '../packages/anatomy/dist/index.js';
-import {
-  assetId,
-  contentHash,
-  entityId,
-} from '../packages/core/dist/index.js';
+import { assetId, contentHash, entityId } from '../packages/core/dist/index.js';
 
 const validation = { level: 'V1', notes: null };
 const provenance = {
