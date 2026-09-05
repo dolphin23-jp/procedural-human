@@ -10,7 +10,7 @@ test('the repository has no package-boundary violations', async () => {
   assert.deepEqual(violations, []);
 });
 
-test('a deliberate anatomy-to-procedures fixture violation fails and passes after removal', async () => {
+test('anatomy rejects workspace dependencies above core, units, and math', async () => {
   const rootDir = await mkdtemp(
     path.join(os.tmpdir(), 'procedural-human-boundary-'),
   );
@@ -21,19 +21,39 @@ test('a deliberate anatomy-to-procedures fixture violation fails and passes afte
     const violationPath = path.join(anatomySourceDir, 'violation.ts');
     await writeFile(
       violationPath,
-      "import '@procedural-human/procedures';\n",
+      "import '@procedural-human/patient';\n",
       'utf8',
     );
 
     const violations = await checkPackageBoundaries(rootDir);
     assert.equal(violations.length, 1);
-    assert.match(
-      violations[0] ?? '',
-      /anatomy.*must not depend on.*procedures/,
-    );
+    assert.match(violations[0] ?? '', /anatomy may only depend/);
 
     await rm(violationPath);
     assert.deepEqual(await checkPackageBoundaries(rootDir), []);
+  } finally {
+    await rm(rootDir, { recursive: true, force: true });
+  }
+});
+
+test('patient must not reverse-depend on spatial', async () => {
+  const rootDir = await mkdtemp(
+    path.join(os.tmpdir(), 'procedural-human-boundary-'),
+  );
+  const patientSourceDir = path.join(rootDir, 'packages', 'patient', 'src');
+
+  try {
+    await mkdir(patientSourceDir, { recursive: true });
+    const violationPath = path.join(patientSourceDir, 'violation.ts');
+    await writeFile(
+      violationPath,
+      "import '@procedural-human/spatial';\n",
+      'utf8',
+    );
+
+    const violations = await checkPackageBoundaries(rootDir);
+    assert.equal(violations.length, 1);
+    assert.match(violations[0] ?? '', /patient.*must not depend on.*spatial/);
   } finally {
     await rm(rootDir, { recursive: true, force: true });
   }

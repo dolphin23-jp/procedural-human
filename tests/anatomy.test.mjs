@@ -3,6 +3,7 @@ import test from 'node:test';
 import {
   AnatomicalGraph,
   createRepresentationBundle,
+  provisionalBoundaryRegionReference,
 } from '../packages/anatomy/dist/index.js';
 import { assetId, contentHash, entityId } from '../packages/core/dist/index.js';
 
@@ -20,6 +21,7 @@ const accuracy = {
   topologyAccuracy: null,
   geometryAccuracy: null,
   registrationAccuracy: null,
+  diameterAccuracy: null,
   relationshipAccuracy: null,
 };
 
@@ -94,14 +96,17 @@ test('Provenance and accuracy represent unknown values explicitly as null', () =
   assert.equal(model.provenance.sourceIdentifier, null);
   assert.equal(model.provenance.derivationMethod, null);
   assert.equal(model.accuracy.geometryAccuracy, null);
+  assert.equal(model.accuracy.diameterAccuracy, null);
   assert.equal(model.accuracy.relationshipAccuracy, null);
 });
 
-test('BoundaryEntity represents the two regions separated by a boundary', () => {
+test('BoundaryEntity uses explicitly provisional region references only', () => {
+  const skin = provisionalBoundaryRegionReference('fixture-skin');
+  const softTissue = provisionalBoundaryRegionReference('fixture-soft-tissue');
   const boundary = {
     id: entityId('boundary.fixture.skin-soft-tissue'),
     name: 'Fixture skin-soft tissue boundary',
-    separates: ['fixture-skin', 'fixture-soft-tissue'],
+    separates: [skin, softTissue],
     provenance,
     accuracy,
     validation,
