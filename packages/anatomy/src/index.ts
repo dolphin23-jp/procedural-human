@@ -79,6 +79,15 @@ export interface AnatomicalEntity {
   readonly validation: ValidationStatus;
 }
 
+export interface BoundaryEntity {
+  readonly id: EntityId;
+  readonly name: string;
+  readonly separates: readonly [string, string];
+  readonly provenance: Provenance;
+  readonly accuracy: AccuracyProfile;
+  readonly validation: ValidationStatus;
+}
+
 export class AnatomicalGraph {
   readonly #entities: ReadonlyMap<EntityId, AnatomicalEntity>;
 
