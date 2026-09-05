@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1",
+  "sessionId": "session.example",
+  "case": {"caseId": "case.fixture_venous_access", "version": "1.0.0"},
+  "engineVersion": "0.0.0",
+  "assets": [{"assetId": "asset.fixture", "version": "1.0.0", "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],
+  "procedure": {"procedureId": "procedure.venous_access_sandbox", "version": "1.0.0"},
+  "schemaVersions": {"case": "1", "procedure": "1", "event": "1", "session": "1"},
+  "randomSeed": 123456789
+}
