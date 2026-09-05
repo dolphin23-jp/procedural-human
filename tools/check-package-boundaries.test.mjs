@@ -58,3 +58,26 @@ test('patient must not reverse-depend on spatial', async () => {
     await rm(rootDir, { recursive: true, force: true });
   }
 });
+
+test('spatial rejects renderer and higher-level workspace dependencies', async () => {
+  const rootDir = await mkdtemp(
+    path.join(os.tmpdir(), 'procedural-human-boundary-'),
+  );
+  const spatialSourceDir = path.join(rootDir, 'packages', 'spatial', 'src');
+
+  try {
+    await mkdir(spatialSourceDir, { recursive: true });
+    const violationPath = path.join(spatialSourceDir, 'violation.ts');
+    await writeFile(
+      violationPath,
+      "import '@procedural-human/rendering-three';\n",
+      'utf8',
+    );
+
+    const violations = await checkPackageBoundaries(rootDir);
+    assert.equal(violations.length, 1);
+    assert.match(violations[0] ?? '', /spatial may only depend/);
+  } finally {
+    await rm(rootDir, { recursive: true, force: true });
+  }
+});
