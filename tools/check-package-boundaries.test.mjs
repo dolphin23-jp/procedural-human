@@ -53,10 +53,7 @@ test('patient must not reverse-depend on spatial', async () => {
 
     const violations = await checkPackageBoundaries(rootDir);
     assert.equal(violations.length, 1);
-    assert.match(
-      violations[0] ?? '',
-      /patient.*must not depend on.*spatial/,
-    );
+    assert.match(violations[0] ?? '', /patient.*must not depend on.*spatial/);
   } finally {
     await rm(rootDir, { recursive: true, force: true });
   }

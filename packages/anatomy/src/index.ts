@@ -93,7 +93,8 @@ export type ProvisionalBoundaryRegionReference = string & {
 
 export const provisionalBoundaryRegionReference = (
   value: string,
-): ProvisionalBoundaryRegionReference => value as ProvisionalBoundaryRegionReference;
+): ProvisionalBoundaryRegionReference =>
+  value as ProvisionalBoundaryRegionReference;
 
 export interface BoundaryEntity {
   readonly id: EntityId;

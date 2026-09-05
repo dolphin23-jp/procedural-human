@@ -68,9 +68,12 @@ test('two PatientInstance objects own isolated runtime medical state', () => {
   assert.deepEqual(firstPatient.medicalStateFor(sharedStructureDefinition.id), {
     integrity: 'punctured',
   });
-  assert.deepEqual(secondPatient.medicalStateFor(sharedStructureDefinition.id), {
-    integrity: 'intact',
-  });
+  assert.deepEqual(
+    secondPatient.medicalStateFor(sharedStructureDefinition.id),
+    {
+      integrity: 'intact',
+    },
+  );
 });
 
 test('runtime medical state reads are immutable snapshots', () => {
@@ -101,7 +104,9 @@ test('puncture state changes only through PatientStateTransitionService', () => 
   });
 
   assert.equal(result.changed, true);
-  assert.deepEqual(patient.medicalStateFor(vein.id), { integrity: 'punctured' });
+  assert.deepEqual(patient.medicalStateFor(vein.id), {
+    integrity: 'punctured',
+  });
 });
 
 test('repeated puncture remains deterministic and idempotent', () => {
@@ -123,7 +128,9 @@ test('repeated puncture remains deterministic and idempotent', () => {
   assert.equal(second.changed, false);
   assert.deepEqual(second.previousState, { integrity: 'punctured' });
   assert.deepEqual(second.currentState, { integrity: 'punctured' });
-  assert.deepEqual(patient.medicalStateFor(vein.id), { integrity: 'punctured' });
+  assert.deepEqual(patient.medicalStateFor(vein.id), {
+    integrity: 'punctured',
+  });
 });
 
 test('patient rejects duplicate patient structure ids', () => {

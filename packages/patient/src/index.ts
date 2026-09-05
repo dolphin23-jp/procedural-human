@@ -48,7 +48,8 @@ export class PatientStructureInstance {
     this.representationAssetIds = Object.freeze([
       ...descriptor.representationAssetIds,
     ]);
-    this.#initialIntegrity = descriptor.initialMedicalState?.integrity ?? 'intact';
+    this.#initialIntegrity =
+      descriptor.initialMedicalState?.integrity ?? 'intact';
     Object.freeze(this);
   }
 
@@ -58,7 +59,10 @@ export class PatientStructureInstance {
 }
 
 class PatientRuntimeState {
-  readonly #integrityByStructure = new Map<StructureId, MedicalIntegrityState>();
+  readonly #integrityByStructure = new Map<
+    StructureId,
+    MedicalIntegrityState
+  >();
 
   constructor(structures: readonly PatientStructureInstance[]) {
     for (const structure of structures) {
@@ -131,7 +135,9 @@ export class PatientInstance {
 
     const structureList = Object.freeze([...structures.values()]);
     this.anatomy = Object.freeze({
-      canonicalAnatomy: Object.freeze({ ...descriptor.anatomy.canonicalAnatomy }),
+      canonicalAnatomy: Object.freeze({
+        ...descriptor.anatomy.canonicalAnatomy,
+      }),
       structures: structureList,
     });
     this.#structures = structures;
