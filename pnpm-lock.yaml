@@ -107,7 +107,14 @@ importers:
 
   packages/session: {}
 
-  packages/spatial: {}
+  packages/spatial:
+    dependencies:
+      '@procedural-human/math':
+        specifier: workspace:*
+        version: link:../math
+      '@procedural-human/units':
+        specifier: workspace:*
+        version: link:../units
 
   packages/ui: {}
 
