@@ -1,0 +1,12 @@
+{
+  "id": "entity.fixture.invalid",
+  "name": "Invalid fixture",
+  "type": "development-fixture",
+  "laterality": "left",
+  "region": "fixture",
+  "relationships": [],
+  "representations": [],
+  "provenance": { "sourceClass": "invented-medical-truth" },
+  "accuracy": {},
+  "validation": { "level": "V9" }
+}

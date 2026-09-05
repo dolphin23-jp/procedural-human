@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/asset-manifest/v1",
+  "title": "Asset Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["assetId", "version", "contentHash", "region", "source", "accuracy", "validation", "representations", "dependencies", "license"],
+  "properties": {
+    "assetId": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "contentHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "region": { "type": "string", "minLength": 1 },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceClass", "sourceIdentifier"],
+      "properties": {
+        "sourceClass": { "enum": ["acquired", "cadaver-derived", "atlas-derived", "literature-derived", "algorithm-derived", "human-edited", "ai-inferred", "synthetic", "development-fixture"] },
+        "sourceIdentifier": { "type": ["string", "null"] },
+        "retrievalDate": { "type": ["string", "null"] },
+        "derivationMethod": { "type": ["string", "null"] }
+      }
+    },
+    "accuracy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "identityAccuracy": { "type": ["string", "null"] },
+        "topologyAccuracy": { "type": ["string", "null"] },
+        "geometryAccuracy": { "type": ["string", "null"] },
+        "registrationAccuracy": { "type": ["string", "null"] },
+        "diameterAccuracy": { "type": ["string", "null"] },
+        "relationshipAccuracy": { "type": ["string", "null"] }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level"],
+      "properties": {
+        "level": { "enum": ["V0", "V1", "V2", "V3", "V4"] },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "representations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "uri"],
+        "properties": {
+          "kind": { "type": "string", "minLength": 1 },
+          "uri": { "type": "string", "minLength": 1 },
+          "contentHash": { "type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$" }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["assetId", "version", "contentHash"],
+        "properties": {
+          "assetId": { "type": "string", "minLength": 1 },
+          "version": { "type": "string", "minLength": 1 },
+          "contentHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+        }
+      }
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": ["string", "null"] },
+        "redistributionAllowed": { "type": ["boolean", "null"] }
+      }
+    }
+  }
+}
