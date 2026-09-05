@@ -4,12 +4,13 @@
   "private": true,
   "packageManager": "pnpm@10.15.1",
   "scripts": {
-    "build": "pnpm --filter @procedural-human/web build",
+    "build": "pnpm build:contracts && pnpm --filter @procedural-human/web build",
+    "build:contracts": "pnpm --filter @procedural-human/core build && pnpm --filter @procedural-human/units build && pnpm --filter @procedural-human/math build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "test": "node --test tools/*.test.mjs",
-    "typecheck": "pnpm --filter @procedural-human/web typecheck",
+    "test": "pnpm build:contracts && node --test tools/*.test.mjs tests/*.test.mjs",
+    "typecheck": "pnpm --filter @procedural-human/core typecheck && pnpm --filter @procedural-human/units typecheck && pnpm --filter @procedural-human/math typecheck && pnpm --filter @procedural-human/web typecheck",
     "check:boundaries": "node tools/check-package-boundaries.mjs"
   },
   "devDependencies": {
