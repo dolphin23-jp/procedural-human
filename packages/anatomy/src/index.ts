@@ -49,6 +49,7 @@ export interface AccuracyProfile {
   readonly topologyAccuracy: string | null;
   readonly geometryAccuracy: string | null;
   readonly registrationAccuracy: string | null;
+  readonly diameterAccuracy: string | null;
   readonly relationshipAccuracy: string | null;
 }
 
@@ -79,10 +80,28 @@ export interface AnatomicalEntity {
   readonly validation: ValidationStatus;
 }
 
+declare const provisionalBoundaryRegionReferenceBrand: unique symbol;
+
+/**
+ * TASK-028-only reference for the two named regions a boundary separates.
+ * It intentionally carries no inside/outside, lumen, traversal, or entry/exit
+ * semantics. Spatial interpretation remains owned by later Spatial Query tasks.
+ */
+export type ProvisionalBoundaryRegionReference = string & {
+  readonly [provisionalBoundaryRegionReferenceBrand]: 'ProvisionalBoundaryRegionReference';
+};
+
+export const provisionalBoundaryRegionReference = (
+  value: string,
+): ProvisionalBoundaryRegionReference => value as ProvisionalBoundaryRegionReference;
+
 export interface BoundaryEntity {
   readonly id: EntityId;
   readonly name: string;
-  readonly separates: readonly [string, string];
+  readonly separates: readonly [
+    ProvisionalBoundaryRegionReference,
+    ProvisionalBoundaryRegionReference,
+  ];
   readonly provenance: Provenance;
   readonly accuracy: AccuracyProfile;
   readonly validation: ValidationStatus;
