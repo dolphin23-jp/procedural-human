@@ -10,6 +10,12 @@ const contracts = [
   ['asset-manifest', 'schemas/assets/asset-manifest.v1.schema.json'],
   ['patient-manifest', 'schemas/patient/patient-manifest.v1.schema.json'],
   ['simulation-event', 'schemas/events/simulation-event.v1.schema.json'],
+  [
+    'procedure-definition',
+    'schemas/procedures/procedure-definition.v1.schema.json',
+  ],
+  ['case-manifest', 'schemas/cases/case-manifest.v1.schema.json'],
+  ['session-record', 'schemas/sessions/session-record.v1.schema.json'],
 ];
 
 const ajv = new Ajv2020({ allErrors: true, strict: true });
@@ -26,7 +32,6 @@ for (const [name, schemaPath] of contracts) {
 }
 
 let failures = 0;
-
 for (const [name] of contracts) {
   const validate = validators.get(name);
   for (const expectation of ['valid', 'invalid']) {
@@ -39,23 +44,19 @@ for (const [name] of contracts) {
     const data = JSON.parse(await fs.readFile(fixturePath, 'utf8'));
     const actualValid = validate(data);
     const expectedValid = expectation === 'valid';
-
     if (actualValid !== expectedValid) {
       failures += 1;
-      const details = validate.errors
-        ? JSON.stringify(validate.errors, null, 2)
-        : 'no validation errors';
       console.error(
-        `${path.relative(root, fixturePath)} expected ${expectation} but validation returned ${actualValid}.\n${details}`,
+        `${path.relative(root, fixturePath)} expected ${expectation} but validation returned ${actualValid}.`,
       );
+      if (validate.errors)
+        console.error(JSON.stringify(validate.errors, null, 2));
     }
   }
 }
 
-if (failures > 0) {
-  process.exitCode = 1;
-} else {
+if (failures > 0) process.exitCode = 1;
+else
   console.log(
     `Validated ${contracts.length} schema versions and ${contracts.length * 2} fixtures.`,
   );
-}

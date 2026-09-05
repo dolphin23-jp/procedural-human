@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/cases/case-manifest/v1",
+  "title": "Case Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "caseId",
+    "version",
+    "patient",
+    "procedure",
+    "semanticBindings"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1" },
+    "caseId": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "patient": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["patientId", "manifestVersion"],
+      "properties": {
+        "patientId": { "type": "string", "minLength": 1 },
+        "manifestVersion": { "type": "string", "minLength": 1 }
+      }
+    },
+    "procedure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["procedureId", "version"],
+      "properties": {
+        "procedureId": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "semanticBindings": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    }
+  }
+}

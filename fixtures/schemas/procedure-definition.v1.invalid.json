@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1",
+  "procedureId": "procedure.invalid",
+  "version": "1.0.0",
+  "name": "Invalid",
+  "goals": [],
+  "dependencies": [],
+  "semanticRoles": [],
+  "safetyRules": []
+}
