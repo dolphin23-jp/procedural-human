@@ -4,9 +4,25 @@
   "type": "development-fixture-vessel",
   "laterality": "left",
   "region": "fixture-forearm",
-  "relationships": [{ "type": "adjacent_to", "targetId": "entity.fixture.soft-tissue" }],
-  "representations": [{ "kind": "collisionSurface", "assetId": "asset.fixture.vein" }],
-  "provenance": { "sourceClass": "development-fixture", "sourceIdentifier": "fixture-v1", "derivationMethod": null, "contentHash": null },
-  "accuracy": { "identityAccuracy": null, "topologyAccuracy": null, "geometryAccuracy": null, "registrationAccuracy": null, "diameterAccuracy": null, "relationshipAccuracy": null },
+  "relationships": [
+    { "type": "adjacent_to", "targetId": "entity.fixture.soft-tissue" }
+  ],
+  "representations": [
+    { "kind": "collisionSurface", "assetId": "asset.fixture.vein" }
+  ],
+  "provenance": {
+    "sourceClass": "development-fixture",
+    "sourceIdentifier": "fixture-v1",
+    "derivationMethod": null,
+    "contentHash": null
+  },
+  "accuracy": {
+    "identityAccuracy": null,
+    "topologyAccuracy": null,
+    "geometryAccuracy": null,
+    "registrationAccuracy": null,
+    "diameterAccuracy": null,
+    "relationshipAccuracy": null
+  },
   "validation": { "level": "V0", "notes": "Non-medical software fixture." }
 }

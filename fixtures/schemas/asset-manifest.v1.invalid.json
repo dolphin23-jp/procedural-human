@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "contentHash": "not-a-sha256",
   "region": "fixture",
-  "source": { "sourceClass": "development-fixture", "sourceIdentifier": "fixture" },
+  "source": {
+    "sourceClass": "development-fixture",
+    "sourceIdentifier": "fixture"
+  },
   "accuracy": {},
   "validation": { "level": "V0" },
   "representations": [],

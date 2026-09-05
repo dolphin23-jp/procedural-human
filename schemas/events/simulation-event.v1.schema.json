@@ -4,7 +4,16 @@
   "title": "Simulation Event v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "type", "simulationTime", "actor", "target", "patientPosition", "payload", "schemaVersion"],
+  "required": [
+    "id",
+    "type",
+    "simulationTime",
+    "actor",
+    "target",
+    "patientPosition",
+    "payload",
+    "schemaVersion"
+  ],
   "properties": {
     "id": { "type": "string", "minLength": 1 },
     "type": { "type": "string", "minLength": 1 },
@@ -18,7 +27,9 @@
       }
     },
     "actor": { "$ref": "#/$defs/entityReference" },
-    "target": { "oneOf": [{ "$ref": "#/$defs/entityReference" }, { "type": "null" }] },
+    "target": {
+      "oneOf": [{ "$ref": "#/$defs/entityReference" }, { "type": "null" }]
+    },
     "patientPosition": {
       "oneOf": [
         {

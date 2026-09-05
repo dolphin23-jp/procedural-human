@@ -4,7 +4,13 @@
   "simulationTime": { "value": 1.25, "unit": "s" },
   "actor": { "kind": "instrument", "id": "instrument.fixture.needle" },
   "target": { "kind": "structure", "id": "structure.fixture.vein" },
-  "patientPosition": { "x": 12.5, "y": -3.25, "z": 8.0, "unit": "mm", "space": "patient" },
+  "patientPosition": {
+    "x": 12.5,
+    "y": -3.25,
+    "z": 8.0,
+    "unit": "mm",
+    "space": "patient"
+  },
   "payload": {},
   "schemaVersion": "1"
 }

@@ -6,7 +6,21 @@
     "version": "1.0.0",
     "contentHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
   },
-  "patientStructures": [{ "structureId": "structure.fixture.vein", "canonicalEntityId": "entity.fixture.vein", "representationAssetIds": ["asset.fixture.vein"] }],
+  "patientStructures": [
+    {
+      "structureId": "structure.fixture.vein",
+      "canonicalEntityId": "entity.fixture.vein",
+      "representationAssetIds": ["asset.fixture.vein"]
+    }
+  ],
   "baselineState": {},
-  "imagingReferences": [{ "id": "image.fixture.reference", "sourceType": "synthetic", "assetId": "asset.fixture.image", "registrationStatus": "unknown", "registrationId": null }]
+  "imagingReferences": [
+    {
+      "id": "image.fixture.reference",
+      "sourceType": "synthetic",
+      "assetId": "asset.fixture.image",
+      "registrationStatus": "unknown",
+      "registrationId": null
+    }
+  ]
 }

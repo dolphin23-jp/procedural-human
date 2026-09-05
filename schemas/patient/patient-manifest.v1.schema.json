@@ -4,7 +4,14 @@
   "title": "Patient Manifest v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "patientId", "canonicalAnatomy", "patientStructures", "baselineState", "imagingReferences"],
+  "required": [
+    "schemaVersion",
+    "patientId",
+    "canonicalAnatomy",
+    "patientStructures",
+    "baselineState",
+    "imagingReferences"
+  ],
   "properties": {
     "schemaVersion": { "const": "1" },
     "patientId": { "type": "string", "minLength": 1 },
@@ -27,7 +34,11 @@
         "properties": {
           "structureId": { "type": "string", "minLength": 1 },
           "canonicalEntityId": { "type": "string", "minLength": 1 },
-          "representationAssetIds": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+          "representationAssetIds": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          }
         }
       }
     },
@@ -45,7 +56,9 @@
           "id": { "type": "string", "minLength": 1 },
           "sourceType": { "enum": ["acquired", "synthetic", "hybrid"] },
           "assetId": { "type": "string", "minLength": 1 },
-          "registrationStatus": { "enum": ["registered", "unregistered", "unknown"] },
+          "registrationStatus": {
+            "enum": ["registered", "unregistered", "unknown"]
+          },
           "registrationId": { "type": ["string", "null"] }
         }
       }

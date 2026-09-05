@@ -8,5 +8,11 @@
   },
   "patientStructures": [],
   "baselineState": {},
-  "imagingReferences": [{ "id": "image.fixture.reference", "sourceType": "synthetic", "assetId": "asset.fixture.image" }]
+  "imagingReferences": [
+    {
+      "id": "image.fixture.reference",
+      "sourceType": "synthetic",
+      "assetId": "asset.fixture.image"
+    }
+  ]
 }

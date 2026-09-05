@@ -3,10 +3,32 @@
   "version": "1.0.0",
   "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   "region": "fixture-forearm",
-  "source": { "sourceClass": "development-fixture", "sourceIdentifier": "fixture-v1", "retrievalDate": null, "derivationMethod": "deterministic-cylinder" },
-  "accuracy": { "identityAccuracy": null, "topologyAccuracy": null, "geometryAccuracy": null, "registrationAccuracy": null, "diameterAccuracy": null, "relationshipAccuracy": null },
+  "source": {
+    "sourceClass": "development-fixture",
+    "sourceIdentifier": "fixture-v1",
+    "retrievalDate": null,
+    "derivationMethod": "deterministic-cylinder"
+  },
+  "accuracy": {
+    "identityAccuracy": null,
+    "topologyAccuracy": null,
+    "geometryAccuracy": null,
+    "registrationAccuracy": null,
+    "diameterAccuracy": null,
+    "relationshipAccuracy": null
+  },
   "validation": { "level": "V0", "notes": "Software fixture only." },
-  "representations": [{ "kind": "collisionSurface", "uri": "fixture://vein/collision", "contentHash": null }],
+  "representations": [
+    {
+      "kind": "collisionSurface",
+      "uri": "fixture://vein/collision",
+      "contentHash": null
+    }
+  ],
   "dependencies": [],
-  "license": { "name": "project-development-fixture", "url": null, "redistributionAllowed": true }
+  "license": {
+    "name": "project-development-fixture",
+    "url": null,
+    "redistributionAllowed": true
+  }
 }

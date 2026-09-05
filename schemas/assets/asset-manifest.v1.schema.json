@@ -4,7 +4,18 @@
   "title": "Asset Manifest v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["assetId", "version", "contentHash", "region", "source", "accuracy", "validation", "representations", "dependencies", "license"],
+  "required": [
+    "assetId",
+    "version",
+    "contentHash",
+    "region",
+    "source",
+    "accuracy",
+    "validation",
+    "representations",
+    "dependencies",
+    "license"
+  ],
   "properties": {
     "assetId": { "type": "string", "minLength": 1 },
     "version": { "type": "string", "minLength": 1 },
@@ -15,7 +26,19 @@
       "additionalProperties": false,
       "required": ["sourceClass", "sourceIdentifier"],
       "properties": {
-        "sourceClass": { "enum": ["acquired", "cadaver-derived", "atlas-derived", "literature-derived", "algorithm-derived", "human-edited", "ai-inferred", "synthetic", "development-fixture"] },
+        "sourceClass": {
+          "enum": [
+            "acquired",
+            "cadaver-derived",
+            "atlas-derived",
+            "literature-derived",
+            "algorithm-derived",
+            "human-edited",
+            "ai-inferred",
+            "synthetic",
+            "development-fixture"
+          ]
+        },
         "sourceIdentifier": { "type": ["string", "null"] },
         "retrievalDate": { "type": ["string", "null"] },
         "derivationMethod": { "type": ["string", "null"] }
@@ -51,7 +74,10 @@
         "properties": {
           "kind": { "type": "string", "minLength": 1 },
           "uri": { "type": "string", "minLength": 1 },
-          "contentHash": { "type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$" }
+          "contentHash": {
+            "type": ["string", "null"],
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          }
         }
       }
     },
@@ -64,7 +90,10 @@
         "properties": {
           "assetId": { "type": "string", "minLength": 1 },
           "version": { "type": "string", "minLength": 1 },
-          "contentHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+          "contentHash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          }
         }
       }
     },

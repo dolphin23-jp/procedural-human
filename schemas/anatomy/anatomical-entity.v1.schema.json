@@ -4,12 +4,32 @@
   "title": "Anatomical Entity v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "name", "type", "laterality", "region", "relationships", "representations", "provenance", "accuracy", "validation"],
+  "required": [
+    "id",
+    "name",
+    "type",
+    "laterality",
+    "region",
+    "relationships",
+    "representations",
+    "provenance",
+    "accuracy",
+    "validation"
+  ],
   "properties": {
     "id": { "type": "string", "minLength": 1 },
     "name": { "type": "string", "minLength": 1 },
     "type": { "type": "string", "minLength": 1 },
-    "laterality": { "enum": ["left", "right", "bilateral", "midline", "not-applicable", "unknown"] },
+    "laterality": {
+      "enum": [
+        "left",
+        "right",
+        "bilateral",
+        "midline",
+        "not-applicable",
+        "unknown"
+      ]
+    },
     "region": { "type": "string", "minLength": 1 },
     "relationships": {
       "type": "array",
@@ -45,10 +65,25 @@
       "additionalProperties": false,
       "required": ["sourceClass"],
       "properties": {
-        "sourceClass": { "enum": ["acquired", "cadaver-derived", "atlas-derived", "literature-derived", "algorithm-derived", "human-edited", "ai-inferred", "synthetic", "development-fixture"] },
+        "sourceClass": {
+          "enum": [
+            "acquired",
+            "cadaver-derived",
+            "atlas-derived",
+            "literature-derived",
+            "algorithm-derived",
+            "human-edited",
+            "ai-inferred",
+            "synthetic",
+            "development-fixture"
+          ]
+        },
         "sourceIdentifier": { "type": ["string", "null"] },
         "derivationMethod": { "type": ["string", "null"] },
-        "contentHash": { "type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$" }
+        "contentHash": {
+          "type": ["string", "null"],
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
       }
     },
     "accuracy": {
