@@ -5,7 +5,7 @@
   "packageManager": "pnpm@10.15.1",
   "scripts": {
     "build": "pnpm build:contracts && pnpm --filter @procedural-human/web build",
-    "build:contracts": "pnpm --filter @procedural-human/core build && pnpm --filter @procedural-human/units build && pnpm --filter @procedural-human/math build && pnpm --filter @procedural-human/anatomy build",
+    "build:contracts": "pnpm --filter @procedural-human/core build && pnpm --filter @procedural-human/units build && pnpm --filter @procedural-human/math build && pnpm --filter @procedural-human/anatomy build && pnpm --filter @procedural-human/patient build && pnpm --filter @procedural-human/physiology build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
@@ -13,7 +13,7 @@
     "schema:validate:python": "uv run --package ph_validation python authoring/python/ph_validation/src/ph_validation/shared_schema_validation.py",
     "schema:validate:shared": "pnpm schema:validate && pnpm schema:validate:python",
     "test": "pnpm build:contracts && pnpm schema:validate:shared && node --test tools/*.test.mjs tests/*.test.mjs",
-    "typecheck": "pnpm --filter @procedural-human/core typecheck && pnpm --filter @procedural-human/units typecheck && pnpm --filter @procedural-human/math typecheck && pnpm --filter @procedural-human/anatomy typecheck && pnpm --filter @procedural-human/web typecheck",
+    "typecheck": "pnpm --filter @procedural-human/core typecheck && pnpm --filter @procedural-human/units typecheck && pnpm --filter @procedural-human/math typecheck && pnpm --filter @procedural-human/anatomy typecheck && pnpm --filter @procedural-human/patient typecheck && pnpm --filter @procedural-human/physiology typecheck && pnpm --filter @procedural-human/web typecheck",
     "check:boundaries": "node tools/check-package-boundaries.mjs"
   },
   "devDependencies": {
