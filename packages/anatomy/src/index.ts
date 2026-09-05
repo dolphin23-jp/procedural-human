@@ -1,4 +1,4 @@
-import type { AssetId, EntityId } from '@procedural-human/core';
+import type { AssetId, ContentHash, EntityId } from '@procedural-human/core';
 
 export type Laterality =
   | 'left'
@@ -39,9 +39,9 @@ export interface ValidationStatus {
 
 export interface Provenance {
   readonly sourceClass: SourceClass;
-  readonly sourceDataset: string | null;
+  readonly sourceIdentifier: string | null;
   readonly derivationMethod: string | null;
-  readonly validation: ValidationStatus;
+  readonly contentHash: ContentHash | null;
 }
 
 export interface AccuracyProfile {
@@ -64,13 +64,7 @@ export interface RepresentationDescriptor {
   readonly assetId: AssetId;
 }
 
-export interface RepresentationBundle {
-  readonly renderSurface?: RepresentationDescriptor;
-  readonly collisionSurface?: RepresentationDescriptor;
-  readonly segmentationVolume?: RepresentationDescriptor;
-  readonly lumenVolume?: RepresentationDescriptor;
-  readonly centerline?: RepresentationDescriptor;
-}
+export type RepresentationBundle = readonly RepresentationDescriptor[];
 
 export interface AnatomicalEntity {
   readonly id: EntityId;
@@ -133,12 +127,12 @@ export class AnatomicalGraph {
 export const createRepresentationBundle = (
   descriptors: readonly RepresentationDescriptor[],
 ): RepresentationBundle => {
-  const bundle: Partial<Record<RepresentationKind, RepresentationDescriptor>> = {};
+  const seen = new Set<RepresentationKind>();
   for (const descriptor of descriptors) {
-    if (bundle[descriptor.kind]) {
+    if (seen.has(descriptor.kind)) {
       throw new Error(`Duplicate representation kind: ${descriptor.kind}`);
     }
-    bundle[descriptor.kind] = descriptor;
+    seen.add(descriptor.kind);
   }
-  return bundle;
+  return [...descriptors];
 };
