@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/patient/patient-manifest/v1",
+  "title": "Patient Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "patientId",
+    "canonicalAnatomy",
+    "patientStructures",
+    "baselineState",
+    "imagingReferences"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1" },
+    "patientId": { "type": "string", "minLength": 1 },
+    "canonicalAnatomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assetId", "version", "contentHash"],
+      "properties": {
+        "assetId": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "contentHash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      }
+    },
+    "patientStructures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["structureId", "canonicalEntityId"],
+        "properties": {
+          "structureId": { "type": "string", "minLength": 1 },
+          "canonicalEntityId": { "type": "string", "minLength": 1 },
+          "representationAssetIds": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "baselineState": {
+      "type": "object",
+      "description": "Schema-owned separation point for baseline patient state; domain fields are introduced by later patient-state tasks."
+    },
+    "imagingReferences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "sourceType", "assetId", "registrationStatus"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "sourceType": { "enum": ["acquired", "synthetic", "hybrid"] },
+          "assetId": { "type": "string", "minLength": 1 },
+          "registrationStatus": {
+            "enum": ["registered", "unregistered", "unknown"]
+          },
+          "registrationId": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}

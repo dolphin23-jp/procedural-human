@@ -9,12 +9,14 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "test": "pnpm build:contracts && node --test tools/*.test.mjs tests/*.test.mjs",
+    "schema:validate": "node tools/validate-schemas.mjs",
+    "test": "pnpm build:contracts && pnpm schema:validate && node --test tools/*.test.mjs tests/*.test.mjs",
     "typecheck": "pnpm --filter @procedural-human/core typecheck && pnpm --filter @procedural-human/units typecheck && pnpm --filter @procedural-human/math typecheck && pnpm --filter @procedural-human/web typecheck",
     "check:boundaries": "node tools/check-package-boundaries.mjs"
   },
   "devDependencies": {
     "@eslint/js": "9.34.0",
+    "ajv": "8.17.1",
     "eslint": "9.34.0",
     "globals": "16.3.0",
     "prettier": "3.6.2",

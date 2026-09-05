@@ -1,0 +1,16 @@
+{
+  "id": "event.fixture.invalid",
+  "type": "fixture.invalid",
+  "simulationTime": { "value": 1.0, "unit": "ms" },
+  "actor": { "kind": "instrument", "id": "instrument.fixture.needle" },
+  "target": null,
+  "patientPosition": {
+    "x": 1,
+    "y": 2,
+    "z": 3,
+    "unit": "cm",
+    "space": "render"
+  },
+  "payload": {},
+  "schemaVersion": "1"
+}

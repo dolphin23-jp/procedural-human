@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/anatomy/anatomical-entity/v1",
+  "title": "Anatomical Entity v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "type",
+    "laterality",
+    "region",
+    "relationships",
+    "representations",
+    "provenance",
+    "accuracy",
+    "validation"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "type": { "type": "string", "minLength": 1 },
+    "laterality": {
+      "enum": [
+        "left",
+        "right",
+        "bilateral",
+        "midline",
+        "not-applicable",
+        "unknown"
+      ]
+    },
+    "region": { "type": "string", "minLength": 1 },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "targetId"],
+        "properties": {
+          "type": { "type": "string", "minLength": 1 },
+          "targetId": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "representations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "assetId"],
+        "properties": {
+          "kind": { "type": "string", "minLength": 1 },
+          "assetId": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "accuracy": { "$ref": "#/$defs/accuracy" },
+    "validation": { "$ref": "#/$defs/validation" }
+  },
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceClass"],
+      "properties": {
+        "sourceClass": {
+          "enum": [
+            "acquired",
+            "cadaver-derived",
+            "atlas-derived",
+            "literature-derived",
+            "algorithm-derived",
+            "human-edited",
+            "ai-inferred",
+            "synthetic",
+            "development-fixture"
+          ]
+        },
+        "sourceIdentifier": { "type": ["string", "null"] },
+        "derivationMethod": { "type": ["string", "null"] },
+        "contentHash": {
+          "type": ["string", "null"],
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "accuracy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "identityAccuracy": { "type": ["string", "null"] },
+        "topologyAccuracy": { "type": ["string", "null"] },
+        "geometryAccuracy": { "type": ["string", "null"] },
+        "registrationAccuracy": { "type": ["string", "null"] },
+        "diameterAccuracy": { "type": ["string", "null"] },
+        "relationshipAccuracy": { "type": ["string", "null"] }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level"],
+      "properties": {
+        "level": { "enum": ["V0", "V1", "V2", "V3", "V4"] },
+        "notes": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

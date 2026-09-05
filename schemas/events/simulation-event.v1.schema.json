@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/events/simulation-event/v1",
+  "title": "Simulation Event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "simulationTime",
+    "actor",
+    "target",
+    "patientPosition",
+    "payload",
+    "schemaVersion"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "type": { "type": "string", "minLength": 1 },
+    "simulationTime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {
+        "value": { "type": "number", "minimum": 0 },
+        "unit": { "const": "s" }
+      }
+    },
+    "actor": { "$ref": "#/$defs/entityReference" },
+    "target": {
+      "oneOf": [{ "$ref": "#/$defs/entityReference" }, { "type": "null" }]
+    },
+    "patientPosition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "y", "z", "unit", "space"],
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "z": { "type": "number" },
+            "unit": { "const": "mm" },
+            "space": { "const": "patient" }
+          }
+        },
+        { "type": "null" }
+      ]
+    },
+    "payload": { "type": "object" },
+    "schemaVersion": { "const": "1" }
+  },
+  "$defs": {
+    "entityReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "type": "string", "minLength": 1 },
+        "id": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

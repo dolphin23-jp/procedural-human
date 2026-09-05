@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1",
+  "patientId": "patient.fixture.001",
+  "canonicalAnatomy": {
+    "assetId": "asset.fixture.canonical",
+    "version": "1.0.0",
+    "contentHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "patientStructures": [
+    {
+      "structureId": "structure.fixture.vein",
+      "canonicalEntityId": "entity.fixture.vein",
+      "representationAssetIds": ["asset.fixture.vein"]
+    }
+  ],
+  "baselineState": {},
+  "imagingReferences": [
+    {
+      "id": "image.fixture.reference",
+      "sourceType": "synthetic",
+      "assetId": "asset.fixture.image",
+      "registrationStatus": "unknown",
+      "registrationId": null
+    }
+  ]
+}
