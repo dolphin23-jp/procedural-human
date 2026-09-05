@@ -109,6 +109,9 @@ importers:
 
   packages/spatial:
     dependencies:
+      '@procedural-human/core':
+        specifier: workspace:*
+        version: link:../core
       '@procedural-human/math':
         specifier: workspace:*
         version: link:../math

@@ -209,12 +209,9 @@ const pointAlongSegment = (
   t: number,
 ): PatientSpacePoint =>
   patientPoint(
-    segment.start.value.x +
-      (segment.end.value.x - segment.start.value.x) * t,
-    segment.start.value.y +
-      (segment.end.value.y - segment.start.value.y) * t,
-    segment.start.value.z +
-      (segment.end.value.z - segment.start.value.z) * t,
+    segment.start.value.x + (segment.end.value.x - segment.start.value.x) * t,
+    segment.start.value.y + (segment.end.value.y - segment.start.value.y) * t,
+    segment.start.value.z + (segment.end.value.z - segment.start.value.z) * t,
   );
 
 const squaredDistance = (
@@ -423,10 +420,7 @@ export class XAxisCylinderSpatialAdapter
 
     const clampedX = Math.min(
       this.#center.value.x + this.#halfLengthMm,
-      Math.max(
-        this.#center.value.x - this.#halfLengthMm,
-        point.value.x,
-      ),
+      Math.max(this.#center.value.x - this.#halfLengthMm, point.value.x),
     );
     const dy = point.value.y - this.#center.value.y;
     const dz = point.value.z - this.#center.value.z;

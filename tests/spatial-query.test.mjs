@@ -1,10 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import {
-  entityId,
-  structureId,
-} from '../packages/core/dist/index.js';
+import { entityId, structureId } from '../packages/core/dist/index.js';
 import { patientSpacePoint } from '../packages/math/dist/index.js';
 import {
   AxisAlignedBoxSpatialAdapter,
@@ -44,8 +41,7 @@ const entries = fixture.entities.map((entity) => ({
   structureId: structureId(entity.id.replace('entity.', 'structure.')),
   canonicalEntityId: entityId(entity.id),
   name: entity.name,
-  membershipRoles:
-    entity.type === 'fixture-tissue' ? ['tissue'] : ['lumen'],
+  membershipRoles: entity.type === 'fixture-tissue' ? ['tissue'] : ['lumen'],
   representation: adapterFor(entity),
 }));
 
@@ -116,11 +112,7 @@ test('TASK-038 segment query returns actual fixture intersections without bounda
 
   assert.deepEqual(
     hits.map((hit) => hit.intersections.map((point) => point.value.z)),
-    [
-      [-1, 1],
-      [1],
-      [7, 13],
-    ],
+    [[-1, 1], [1], [7, 13]],
   );
   assert.equal('entry' in hits[0], false);
   assert.equal('exit' in hits[0], false);
@@ -132,8 +124,14 @@ test('primitive spatial adapters provide deterministic containment and intersect
     (entry) => entry.canonicalEntityId === 'entity.fixture.vein',
   );
   assert.ok(vein);
-  assert.equal(vein.representation.containsPoint(patientSpacePoint(0, -10, 10)), true);
-  assert.equal(vein.representation.containsPoint(patientSpacePoint(0, -10, 14)), false);
+  assert.equal(
+    vein.representation.containsPoint(patientSpacePoint(0, -10, 10)),
+    true,
+  );
+  assert.equal(
+    vein.representation.containsPoint(patientSpacePoint(0, -10, 14)),
+    false,
+  );
 
   const tangent = patientSpaceSegment(
     patientSpacePoint(0, -13, 0),
