@@ -18,21 +18,15 @@ export interface PhysiologyProvider {
 }
 
 export class StaticUnavailablePhysiology implements PhysiologyProvider {
-  pressureAt(
-    _structureId: StructureId,
-    _position: PatientSpacePoint,
-  ): Pressure | null {
+  pressureAt(): Pressure | null {
     return null;
   }
 
-  velocityAt(
-    _structureId: StructureId,
-    _position: PatientSpacePoint,
-  ): Velocity | null {
+  velocityAt(): Velocity | null {
     return null;
   }
 
-  flowFor(_structureId: StructureId): FlowRate | null {
+  flowFor(): FlowRate | null {
     return null;
   }
 
@@ -44,7 +38,7 @@ export class StaticUnavailablePhysiology implements PhysiologyProvider {
     return null;
   }
 
-  complianceFor(_structureId: StructureId): number | null {
+  complianceFor(): number | null {
     return null;
   }
 }
