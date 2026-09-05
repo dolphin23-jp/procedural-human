@@ -55,7 +55,11 @@ importers:
         specifier: 7.1.3
         version: 7.1.3(@types/node@24.3.0)
 
-  packages/anatomy: {}
+  packages/anatomy:
+    dependencies:
+      '@procedural-human/core':
+        specifier: workspace:*
+        version: link:../core
 
   packages/asset-runtime: {}
 
