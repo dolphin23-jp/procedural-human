@@ -3,11 +3,12 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const forbiddenWorkspaceEdges = new Map([
-  ['anatomy', new Set(['procedures', 'rendering-three'])],
-  ['patient', new Set(['procedures'])],
+  ['patient', new Set(['procedures', 'spatial'])],
   ['spatial', new Set(['interaction'])],
   ['instruments', new Set(['procedures'])],
 ]);
+
+const anatomyAllowedWorkspaceTargets = new Set(['core', 'units', 'math']);
 
 const sourceExtensions = new Set([
   '.js',
@@ -132,6 +133,15 @@ export async function checkPackageBoundaries(rootDir) {
     for (const specifier of extractImportSpecifiers(source)) {
       const workspaceTarget = workspacePackageFromSpecifier(specifier);
       if (
+        owner.kind === 'package' &&
+        owner.name === 'anatomy' &&
+        workspaceTarget &&
+        !anatomyAllowedWorkspaceTargets.has(workspaceTarget)
+      ) {
+        violations.push(
+          `${relativePath}: @procedural-human/anatomy may only depend on @procedural-human/core, @procedural-human/units, or @procedural-human/math`,
+        );
+      } else if (
         owner.kind === 'package' &&
         workspaceTarget &&
         forbiddenWorkspaceEdges.get(owner.name)?.has(workspaceTarget)
