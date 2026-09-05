@@ -143,9 +143,7 @@ export async function checkPackageBoundaries(rootDir) {
 
       const externalViolation = externalBoundaryViolation(owner, specifier);
       if (externalViolation) {
-        violations.push(
-          `${relativePath}: ${externalViolation} (${specifier})`,
-        );
+        violations.push(`${relativePath}: ${externalViolation} (${specifier})`);
       }
     }
   }

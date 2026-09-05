@@ -11,17 +11,26 @@ test('the repository has no package-boundary violations', async () => {
 });
 
 test('a deliberate anatomy-to-procedures fixture violation fails and passes after removal', async () => {
-  const rootDir = await mkdtemp(path.join(os.tmpdir(), 'procedural-human-boundary-'));
+  const rootDir = await mkdtemp(
+    path.join(os.tmpdir(), 'procedural-human-boundary-'),
+  );
   const anatomySourceDir = path.join(rootDir, 'packages', 'anatomy', 'src');
 
   try {
     await mkdir(anatomySourceDir, { recursive: true });
     const violationPath = path.join(anatomySourceDir, 'violation.ts');
-    await writeFile(violationPath, "import '@procedural-human/procedures';\n", 'utf8');
+    await writeFile(
+      violationPath,
+      "import '@procedural-human/procedures';\n",
+      'utf8',
+    );
 
     const violations = await checkPackageBoundaries(rootDir);
     assert.equal(violations.length, 1);
-    assert.match(violations[0] ?? '', /anatomy.*must not depend on.*procedures/);
+    assert.match(
+      violations[0] ?? '',
+      /anatomy.*must not depend on.*procedures/,
+    );
 
     await rm(violationPath);
     assert.deepEqual(await checkPackageBoundaries(rootDir), []);
