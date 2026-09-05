@@ -58,15 +58,15 @@ export class PatientStructureInstance {
 }
 
 class PatientRuntimeState {
-  readonly #integrityByStructure: Map<StructureId, MedicalIntegrityState>;
+  readonly #integrityByStructure = new Map<StructureId, MedicalIntegrityState>();
 
   constructor(structures: readonly PatientStructureInstance[]) {
-    this.#integrityByStructure = new Map(
-      structures.map((structure) => [
+    for (const structure of structures) {
+      this.#integrityByStructure.set(
         structure.id,
         structure[initialMedicalStateAccess](),
-      ]),
-    );
+      );
+    }
   }
 
   read(structureId: StructureId): RuntimeMedicalState {
