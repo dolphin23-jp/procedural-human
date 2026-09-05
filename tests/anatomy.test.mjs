@@ -96,3 +96,17 @@ test('Provenance and accuracy represent unknown values explicitly as null', () =
   assert.equal(model.accuracy.geometryAccuracy, null);
   assert.equal(model.accuracy.relationshipAccuracy, null);
 });
+
+test('BoundaryEntity represents the two regions separated by a boundary', () => {
+  const boundary = {
+    id: entityId('boundary.fixture.skin-soft-tissue'),
+    name: 'Fixture skin-soft tissue boundary',
+    separates: ['fixture-skin', 'fixture-soft-tissue'],
+    provenance,
+    accuracy,
+    validation,
+  };
+
+  assert.deepEqual(boundary.separates, ['fixture-skin', 'fixture-soft-tissue']);
+  assert.equal(boundary.provenance.sourceClass, 'development-fixture');
+});
