@@ -9,7 +9,14 @@ const forbiddenWorkspaceEdges = new Map([
   ['instruments', new Set(['procedures'])],
 ]);
 
-const sourceExtensions = new Set(['.js', '.jsx', '.mjs', '.cjs', '.ts', '.tsx']);
+const sourceExtensions = new Set([
+  '.js',
+  '.jsx',
+  '.mjs',
+  '.cjs',
+  '.ts',
+  '.tsx',
+]);
 
 function ownerFor(relativePath) {
   const parts = relativePath.split(path.sep);
@@ -33,9 +40,9 @@ function workspacePackageFromSpecifier(specifier) {
 function extractImportSpecifiers(source) {
   const specifiers = new Set();
   const patterns = [
-    /(?:import|export)\s+(?:[^'\"]*?\s+from\s+)?['\"]([^'\"]+)['\"]/g,
-    /import\(\s*['\"]([^'\"]+)['\"]\s*\)/g,
-    /require\(\s*['\"]([^'\"]+)['\"]\s*\)/g,
+    /(?:import|export)\s+(?:[^'"]*?\s+from\s+)?['"]([^'"]+)['"]/g,
+    /import\(\s*['"]([^'"]+)['"]\s*\)/g,
+    /require\(\s*['"]([^'"]+)['"]\s*\)/g,
   ];
 
   for (const pattern of patterns) {
@@ -50,18 +57,32 @@ function extractImportSpecifiers(source) {
 }
 
 function externalBoundaryViolation(owner, specifier) {
-  const isReact = specifier === 'react' || specifier.startsWith('react/') || specifier === 'react-dom' || specifier.startsWith('react-dom/');
-  if (isReact && !(owner.kind === 'app' && owner.name === 'web') && !(owner.kind === 'package' && owner.name === 'ui')) {
+  const isReact =
+    specifier === 'react' ||
+    specifier.startsWith('react/') ||
+    specifier === 'react-dom' ||
+    specifier.startsWith('react-dom/');
+  if (
+    isReact &&
+    !(owner.kind === 'app' && owner.name === 'web') &&
+    !(owner.kind === 'package' && owner.name === 'ui')
+  ) {
     return 'React may only be imported by apps/web or packages/ui';
   }
 
   const isThree = specifier === 'three' || specifier.startsWith('three/');
-  if (isThree && !(owner.kind === 'package' && owner.name === 'rendering-three')) {
+  if (
+    isThree &&
+    !(owner.kind === 'package' && owner.name === 'rendering-three')
+  ) {
     return 'Three.js may only be imported by packages/rendering-three';
   }
 
   const isCornerstone = specifier.startsWith('@cornerstonejs/');
-  if (isCornerstone && !(owner.kind === 'package' && owner.name === 'imaging-cornerstone')) {
+  if (
+    isCornerstone &&
+    !(owner.kind === 'package' && owner.name === 'imaging-cornerstone')
+  ) {
     return 'Cornerstone may only be imported by packages/imaging-cornerstone';
   }
 
@@ -69,12 +90,14 @@ function externalBoundaryViolation(owner, specifier) {
 }
 
 async function collectSourceFiles(directory) {
-  const entries = await readdir(directory, { withFileTypes: true }).catch((error) => {
-    if (error.code === 'ENOENT') {
-      return [];
-    }
-    throw error;
-  });
+  const entries = await readdir(directory, { withFileTypes: true }).catch(
+    (error) => {
+      if (error.code === 'ENOENT') {
+        return [];
+      }
+      throw error;
+    },
+  );
   const files = [];
 
   for (const entry of entries) {
@@ -108,13 +131,21 @@ export async function checkPackageBoundaries(rootDir) {
     const source = await readFile(filePath, 'utf8');
     for (const specifier of extractImportSpecifiers(source)) {
       const workspaceTarget = workspacePackageFromSpecifier(specifier);
-      if (owner.kind === 'package' && workspaceTarget && forbiddenWorkspaceEdges.get(owner.name)?.has(workspaceTarget)) {
-        violations.push(`${relativePath}: @procedural-human/${owner.name} must not depend on @procedural-human/${workspaceTarget}`);
+      if (
+        owner.kind === 'package' &&
+        workspaceTarget &&
+        forbiddenWorkspaceEdges.get(owner.name)?.has(workspaceTarget)
+      ) {
+        violations.push(
+          `${relativePath}: @procedural-human/${owner.name} must not depend on @procedural-human/${workspaceTarget}`,
+        );
       }
 
       const externalViolation = externalBoundaryViolation(owner, specifier);
       if (externalViolation) {
-        violations.push(`${relativePath}: ${externalViolation} (${specifier})`);
+        violations.push(
+          `${relativePath}: ${externalViolation} (${specifier})`,
+        );
       }
     }
   }
@@ -138,7 +169,9 @@ async function main() {
   console.log('Package boundary check passed.');
 }
 
-const isDirectRun = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+const isDirectRun =
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isDirectRun) {
   await main();
 }
