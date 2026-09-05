@@ -24,7 +24,8 @@ jobs:
         with:
           node-version: '22'
       - run: pnpm install --lockfile-only --no-frozen-lockfile
-      - run: pnpm prettier --write package.json packages/spatial/package.json packages/spatial/src/index.ts packages/spatial/tsconfig.json tests/spatial-contract.test.mjs tools/check-package-boundaries.mjs tools/check-package-boundaries.test.mjs
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec prettier --write package.json packages/spatial/package.json packages/spatial/src/index.ts packages/spatial/tsconfig.json tests/spatial-contract.test.mjs tools/check-package-boundaries.mjs tools/check-package-boundaries.test.mjs
       - name: Commit preparation
         run: |
           if git diff --quiet; then
