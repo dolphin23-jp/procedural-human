@@ -77,13 +77,27 @@ importers:
 
   packages/math: {}
 
-  packages/patient: {}
+  packages/patient:
+    dependencies:
+      '@procedural-human/core':
+        specifier: workspace:*
+        version: link:../core
 
   packages/physics-api: {}
 
   packages/physics-lite: {}
 
-  packages/physiology: {}
+  packages/physiology:
+    dependencies:
+      '@procedural-human/core':
+        specifier: workspace:*
+        version: link:../core
+      '@procedural-human/math':
+        specifier: workspace:*
+        version: link:../math
+      '@procedural-human/units':
+        specifier: workspace:*
+        version: link:../units
 
   packages/procedures: {}
 

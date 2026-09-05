@@ -10,25 +10,45 @@
       "id": "entity.fixture.skin",
       "name": "Fixture Skin",
       "type": "fixture-tissue",
-      "geometry": { "shape": "slab", "sizeMm": [100, 80, 2], "centerMm": [0, 0, 0] }
+      "geometry": {
+        "shape": "slab",
+        "sizeMm": [100, 80, 2],
+        "centerMm": [0, 0, 0]
+      }
     },
     {
       "id": "entity.fixture.soft-tissue",
       "name": "Fixture Soft Tissue",
       "type": "fixture-tissue",
-      "geometry": { "shape": "slab", "sizeMm": [100, 80, 30], "centerMm": [0, 0, 16] }
+      "geometry": {
+        "shape": "slab",
+        "sizeMm": [100, 80, 30],
+        "centerMm": [0, 0, 16]
+      }
     },
     {
       "id": "entity.fixture.vein",
       "name": "Fixture Vein",
       "type": "fixture-vessel",
-      "geometry": { "shape": "cylinder", "radiusMm": 3, "lengthMm": 70, "axis": "x", "centerMm": [0, -10, 10] }
+      "geometry": {
+        "shape": "cylinder",
+        "radiusMm": 3,
+        "lengthMm": 70,
+        "axis": "x",
+        "centerMm": [0, -10, 10]
+      }
     },
     {
       "id": "entity.fixture.artery",
       "name": "Fixture Artery",
       "type": "fixture-vessel",
-      "geometry": { "shape": "cylinder", "radiusMm": 3, "lengthMm": 70, "axis": "x", "centerMm": [0, 10, 15] }
+      "geometry": {
+        "shape": "cylinder",
+        "radiusMm": 3,
+        "lengthMm": 70,
+        "axis": "x",
+        "centerMm": [0, 10, 15]
+      }
     }
   ]
 }

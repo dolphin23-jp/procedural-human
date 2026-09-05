@@ -23,7 +23,10 @@ export interface RuntimeMedicalState {
   readonly integrity: MedicalIntegrityState;
 }
 
-const structureState = new WeakMap<PatientStructureInstance, RuntimeMedicalState>();
+const structureState = new WeakMap<
+  PatientStructureInstance,
+  RuntimeMedicalState
+>();
 
 export interface PatientStructureDescriptor {
   readonly id: StructureId;
