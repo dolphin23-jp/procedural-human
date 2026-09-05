@@ -2,8 +2,11 @@
   "schemaVersion": "1",
   "caseId": "case.fixture_venous_access",
   "version": "1.0.0",
-  "patient": {"patientId": "patient.fixture", "manifestVersion": "1.0.0"},
-  "procedure": {"procedureId": "procedure.venous_access_sandbox", "version": "1.0.0"},
+  "patient": { "patientId": "patient.fixture", "manifestVersion": "1.0.0" },
+  "procedure": {
+    "procedureId": "procedure.venous_access_sandbox",
+    "version": "1.0.0"
+  },
   "semanticBindings": {
     "venous_access_target": "structure.fixture.vein",
     "arterial_structure": "structure.fixture.artery"

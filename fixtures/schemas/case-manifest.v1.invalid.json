@@ -2,7 +2,10 @@
   "schemaVersion": "1",
   "caseId": "case.invalid",
   "version": "1.0.0",
-  "patient": {"patientId": "patient.fixture", "manifestVersion": "1.0.0"},
-  "procedure": {"procedureId": "procedure.venous_access_sandbox", "version": "1.0.0"},
+  "patient": { "patientId": "patient.fixture", "manifestVersion": "1.0.0" },
+  "procedure": {
+    "procedureId": "procedure.venous_access_sandbox",
+    "version": "1.0.0"
+  },
   "semanticBindings": {}
 }

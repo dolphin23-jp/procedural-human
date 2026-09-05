@@ -4,20 +4,29 @@
   "title": "Session Record v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "sessionId", "case", "engineVersion", "assets", "procedure", "schemaVersions", "randomSeed"],
+  "required": [
+    "schemaVersion",
+    "sessionId",
+    "case",
+    "engineVersion",
+    "assets",
+    "procedure",
+    "schemaVersions",
+    "randomSeed"
+  ],
   "properties": {
-    "schemaVersion": {"const": "1"},
-    "sessionId": {"type": "string", "minLength": 1},
+    "schemaVersion": { "const": "1" },
+    "sessionId": { "type": "string", "minLength": 1 },
     "case": {
       "type": "object",
       "additionalProperties": false,
       "required": ["caseId", "version"],
       "properties": {
-        "caseId": {"type": "string", "minLength": 1},
-        "version": {"type": "string", "minLength": 1}
+        "caseId": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
       }
     },
-    "engineVersion": {"type": "string", "minLength": 1},
+    "engineVersion": { "type": "string", "minLength": 1 },
     "assets": {
       "type": "array",
       "items": {
@@ -25,9 +34,12 @@
         "additionalProperties": false,
         "required": ["assetId", "version", "contentHash"],
         "properties": {
-          "assetId": {"type": "string", "minLength": 1},
-          "version": {"type": "string", "minLength": 1},
-          "contentHash": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+          "assetId": { "type": "string", "minLength": 1 },
+          "version": { "type": "string", "minLength": 1 },
+          "contentHash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          }
         }
       }
     },
@@ -36,15 +48,15 @@
       "additionalProperties": false,
       "required": ["procedureId", "version"],
       "properties": {
-        "procedureId": {"type": "string", "minLength": 1},
-        "version": {"type": "string", "minLength": 1}
+        "procedureId": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
       }
     },
     "schemaVersions": {
       "type": "object",
       "minProperties": 1,
-      "additionalProperties": {"type": "string", "minLength": 1}
+      "additionalProperties": { "type": "string", "minLength": 1 }
     },
-    "randomSeed": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+    "randomSeed": { "type": "integer", "minimum": 0, "maximum": 4294967295 }
   }
 }

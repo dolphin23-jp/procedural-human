@@ -3,9 +3,21 @@
   "procedureId": "procedure.venous_access_sandbox",
   "version": "1.0.0",
   "name": "Venous Access Sandbox",
-  "goals": [{"id": "enter-target-vein", "eventType": "lumen_entered", "targetRole": "venous_access_target"}],
+  "goals": [
+    {
+      "id": "enter-target-vein",
+      "eventType": "lumen_entered",
+      "targetRole": "venous_access_target"
+    }
+  ],
   "dependencies": [],
   "semanticRoles": ["venous_access_target", "arterial_structure"],
-  "safetyRules": [{"id": "avoid-arterial-puncture", "eventType": "boundary_crossed", "targetRole": "arterial_structure"}],
-  "completionCriteria": {"requiredGoalIds": ["enter-target-vein"]}
+  "safetyRules": [
+    {
+      "id": "avoid-arterial-puncture",
+      "eventType": "boundary_crossed",
+      "targetRole": "arterial_structure"
+    }
+  ],
+  "completionCriteria": { "requiredGoalIds": ["enter-target-vein"] }
 }

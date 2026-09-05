@@ -4,18 +4,25 @@
   "title": "Case Manifest v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "caseId", "version", "patient", "procedure", "semanticBindings"],
+  "required": [
+    "schemaVersion",
+    "caseId",
+    "version",
+    "patient",
+    "procedure",
+    "semanticBindings"
+  ],
   "properties": {
-    "schemaVersion": {"const": "1"},
-    "caseId": {"type": "string", "minLength": 1},
-    "version": {"type": "string", "minLength": 1},
+    "schemaVersion": { "const": "1" },
+    "caseId": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
     "patient": {
       "type": "object",
       "additionalProperties": false,
       "required": ["patientId", "manifestVersion"],
       "properties": {
-        "patientId": {"type": "string", "minLength": 1},
-        "manifestVersion": {"type": "string", "minLength": 1}
+        "patientId": { "type": "string", "minLength": 1 },
+        "manifestVersion": { "type": "string", "minLength": 1 }
       }
     },
     "procedure": {
@@ -23,14 +30,14 @@
       "additionalProperties": false,
       "required": ["procedureId", "version"],
       "properties": {
-        "procedureId": {"type": "string", "minLength": 1},
-        "version": {"type": "string", "minLength": 1}
+        "procedureId": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
       }
     },
     "semanticBindings": {
       "type": "object",
       "minProperties": 1,
-      "additionalProperties": {"type": "string", "minLength": 1}
+      "additionalProperties": { "type": "string", "minLength": 1 }
     }
   }
 }

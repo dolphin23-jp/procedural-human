@@ -1,10 +1,19 @@
 {
   "schemaVersion": "1",
   "sessionId": "session.invalid",
-  "case": {"caseId": "case.fixture_venous_access", "version": "1.0.0"},
+  "case": { "caseId": "case.fixture_venous_access", "version": "1.0.0" },
   "engineVersion": "0.0.0",
-  "assets": [{"assetId": "asset.fixture", "version": "1.0.0", "contentHash": "not-a-sha256"}],
-  "procedure": {"procedureId": "procedure.venous_access_sandbox", "version": "1.0.0"},
-  "schemaVersions": {"session": "1"},
+  "assets": [
+    {
+      "assetId": "asset.fixture",
+      "version": "1.0.0",
+      "contentHash": "not-a-sha256"
+    }
+  ],
+  "procedure": {
+    "procedureId": "procedure.venous_access_sandbox",
+    "version": "1.0.0"
+  },
+  "schemaVersions": { "session": "1" },
   "randomSeed": 1
 }
