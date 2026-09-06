@@ -1,5 +1,12 @@
 export * from './penetration-path.js';
 export * from './boundary-query.js';
+import { DistanceQuery, type DistanceQueryResult } from './distance-query.js';
+import {
+  OrderedPenetrationPathQuery,
+  type PenetrationBoundaryBinding,
+  type PenetrationPathElement,
+  type SpatialRegionBinding,
+} from './penetration-path.js';
 import type {
   RegionSpatialRepresentationAdapter,
   SpatialPointLocation,
@@ -521,5 +528,88 @@ export class XAxisCylinderSpatialAdapter
     return millimetres(
       Math.sqrt(squaredDistance(point, clampedX, closestY, closestZ)),
     );
+  }
+}
+
+/**
+ * Small consumer-facing Spatial Query contract.
+ *
+ * Consumers ask one shared service for patient-space anatomical knowledge.
+ * Low-level indexes and specialized query classes remain implementation details
+ * of Spatial composition and are not required by downstream packages.
+ */
+export interface SpatialQueryApi {
+  queryPoint(point: PatientSpacePoint): PointQueryResult;
+  querySegment(segment: PatientSpaceSegment): readonly PenetrationPathElement[];
+  distanceTo(
+    point: PatientSpacePoint,
+    structureId: StructureId,
+  ): DistanceQueryResult;
+}
+
+/**
+ * Composition input for SpatialQueryService.
+ *
+ * regions are the authoritative occupancy bindings used by point and ordered
+ * segment queries. distanceEntries is optional when one region unambiguously
+ * supplies the distance representation for each StructureId. Supplying it is
+ * required when a structure has multiple regions or a different distance
+ * representation, so the service never guesses which representation to measure.
+ */
+export interface SpatialQueryServiceConfig {
+  readonly regions: readonly SpatialRegionBinding[];
+  readonly boundaries?: readonly PenetrationBoundaryBinding[];
+  readonly distanceEntries?: readonly SpatialIndexEntry[];
+}
+
+const snapshotIndexEntry = <T extends SpatialIndexEntry>(entry: T): T =>
+  Object.freeze({
+    ...entry,
+    membershipRoles: Object.freeze([...entry.membershipRoles]),
+  }) as T;
+
+/**
+ * Stateless facade over the deterministic Spatial Query capabilities built in
+ * TASK-035 through TASK-042. It emits no Interaction events and performs no
+ * procedure evaluation or medical-state mutation.
+ */
+export class SpatialQueryService implements SpatialQueryApi {
+  readonly #pointQuery: PointQuery;
+  readonly #segmentQuery: OrderedPenetrationPathQuery;
+  readonly #distanceQuery: DistanceQuery;
+
+  constructor(config: SpatialQueryServiceConfig) {
+    const regions: readonly SpatialRegionBinding[] = Object.freeze(
+      config.regions.map((region) => snapshotIndexEntry(region)),
+    );
+    const distanceEntries: readonly SpatialIndexEntry[] = Object.freeze(
+      (config.distanceEntries ?? regions).map((entry) =>
+        snapshotIndexEntry(entry),
+      ),
+    );
+
+    this.#pointQuery = new PointQuery(new BasicSpatialIndex(regions));
+    this.#segmentQuery = new OrderedPenetrationPathQuery(
+      regions,
+      config.boundaries ?? [],
+    );
+    this.#distanceQuery = new DistanceQuery(distanceEntries);
+  }
+
+  queryPoint(point: PatientSpacePoint): PointQueryResult {
+    return this.#pointQuery.execute(point);
+  }
+
+  querySegment(
+    segment: PatientSpaceSegment,
+  ): readonly PenetrationPathElement[] {
+    return this.#segmentQuery.execute(segment);
+  }
+
+  distanceTo(
+    point: PatientSpacePoint,
+    structureId: StructureId,
+  ): DistanceQueryResult {
+    return this.#distanceQuery.execute(point, structureId);
   }
 }
