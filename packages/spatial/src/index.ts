@@ -1,3 +1,8 @@
+export * from './boundary-query.js';
+import type {
+  RegionSpatialRepresentationAdapter,
+  SpatialPointLocation,
+} from './boundary-query.js';
 import type { EntityId, StructureId } from '@procedural-human/core';
 import type { PatientSpacePoint } from '@procedural-human/math';
 import {
@@ -226,17 +231,39 @@ const squaredDistance = (
   return dx * dx + dy * dy + dz * dz;
 };
 
+const assertRegionBounds = (bounds: PatientSpaceBoundingBox): void => {
+  for (const axis of ['x', 'y', 'z'] as const) {
+    if (
+      !Number.isFinite(bounds.min.value[axis]) ||
+      !Number.isFinite(bounds.max.value[axis]) ||
+      bounds.min.value[axis] >= bounds.max.value[axis]
+    ) {
+      throw new Error(
+        'Region bounds must be finite and have resolvable positive extent',
+      );
+    }
+  }
+};
+
 export interface AxisAlignedBoxDescriptor {
   readonly center: PatientSpacePoint;
   readonly size: readonly [Length, Length, Length];
 }
 
 export class AxisAlignedBoxSpatialAdapter
-  implements BoundedSpatialRepresentationAdapter
+  implements RegionSpatialRepresentationAdapter
 {
   readonly bounds: PatientSpaceBoundingBox;
 
   constructor(descriptor: AxisAlignedBoxDescriptor) {
+    if (
+      !descriptor.size.every(
+        (size) =>
+          Number.isFinite(toMillimetres(size)) && toMillimetres(size) > 0,
+      )
+    ) {
+      throw new Error('Box region sizes must be finite positive Length values');
+    }
     const halfX = toMillimetres(descriptor.size[0]) / 2;
     const halfY = toMillimetres(descriptor.size[1]) / 2;
     const halfZ = toMillimetres(descriptor.size[2]) / 2;
@@ -252,15 +279,27 @@ export class AxisAlignedBoxSpatialAdapter
         descriptor.center.value.z + halfZ,
       ),
     });
+    assertRegionBounds(this.bounds);
   }
 
   containsPoint(point: PatientSpacePoint): boolean {
     return pointInBounds(point, this.bounds);
   }
 
+  classifyPoint(point: PatientSpacePoint): SpatialPointLocation {
+    if (!this.containsPoint(point)) return 'outside';
+    return (['x', 'y', 'z'] as const).some(
+      (axis) =>
+        point.value[axis] === this.bounds.min.value[axis] ||
+        point.value[axis] === this.bounds.max.value[axis],
+    )
+      ? 'boundary'
+      : 'inside';
+  }
+
   intersectSegment(segment: PatientSpaceSegment): readonly PatientSpacePoint[] {
-    let near = 0;
-    let far = 1;
+    let near = -Infinity;
+    let far = Infinity;
 
     for (const axis of ['x', 'y', 'z'] as const) {
       const start = segment.start.value[axis];
@@ -286,15 +325,11 @@ export class AxisAlignedBoxSpatialAdapter
       }
     }
 
-    const parameters: number[] = [];
-    const startInside = this.containsPoint(segment.start);
-    const endInside = this.containsPoint(segment.end);
-    if (!startInside && near >= 0 && near <= 1) {
-      parameters.push(near);
-    }
-    if (!endInside && far >= 0 && far <= 1 && far !== near) {
-      parameters.push(far);
-    }
+    // All contacts, including endpoints and the ends of boundary overlaps.
+    const parameters = [near, far].filter((t) => t >= 0 && t <= 1);
+    if (this.classifyPoint(segment.start) === 'boundary') parameters.push(0);
+    if (this.classifyPoint(segment.end) === 'boundary') parameters.push(1);
+    parameters.sort((left, right) => left - right);
 
     return Object.freeze(parameters.map((t) => pointAlongSegment(segment, t)));
   }
@@ -326,7 +361,7 @@ export interface XAxisCylinderDescriptor {
 }
 
 export class XAxisCylinderSpatialAdapter
-  implements BoundedSpatialRepresentationAdapter
+  implements RegionSpatialRepresentationAdapter
 {
   readonly #center: PatientSpacePoint;
   readonly #radiusMm: number;
@@ -334,6 +369,16 @@ export class XAxisCylinderSpatialAdapter
   readonly bounds: PatientSpaceBoundingBox;
 
   constructor(descriptor: XAxisCylinderDescriptor) {
+    if (
+      ![descriptor.radius, descriptor.length].every(
+        (size) =>
+          Number.isFinite(toMillimetres(size)) && toMillimetres(size) > 0,
+      )
+    ) {
+      throw new Error(
+        'Cylinder region dimensions must be finite positive Length values',
+      );
+    }
     this.#center = descriptor.center;
     this.#radiusMm = toMillimetres(descriptor.radius);
     this.#halfLengthMm = toMillimetres(descriptor.length) / 2;
@@ -349,6 +394,7 @@ export class XAxisCylinderSpatialAdapter
         descriptor.center.value.z + this.#radiusMm,
       ),
     });
+    assertRegionBounds(this.bounds);
   }
 
   containsPoint(point: PatientSpacePoint): boolean {
@@ -359,6 +405,17 @@ export class XAxisCylinderSpatialAdapter
       axial <= this.#halfLengthMm &&
       dy * dy + dz * dz <= this.#radiusMm * this.#radiusMm
     );
+  }
+
+  classifyPoint(point: PatientSpacePoint): SpatialPointLocation {
+    if (!this.containsPoint(point)) return 'outside';
+    const axial = Math.abs(point.value.x - this.#center.value.x);
+    const dy = point.value.y - this.#center.value.y;
+    const dz = point.value.z - this.#center.value.z;
+    return axial === this.#halfLengthMm ||
+      dy * dy + dz * dz === this.#radiusMm * this.#radiusMm
+      ? 'boundary'
+      : 'inside';
   }
 
   intersectSegment(segment: PatientSpaceSegment): readonly PatientSpacePoint[] {
