@@ -1,6 +1,10 @@
 import type { StructureId } from '@procedural-human/core';
 import type { PatientSpacePoint } from '@procedural-human/math';
-import { millimetres, toMillimetres, type Length } from '@procedural-human/units';
+import {
+  millimetres,
+  toMillimetres,
+  type Length,
+} from '@procedural-human/units';
 import type { SpatialIndexEntry } from './index.js';
 
 export interface DistanceQueryResult {
@@ -65,7 +69,9 @@ export class DistanceQuery {
       throw new DistanceQueryFailure(`Unknown structure: ${structureId}`);
     }
 
-    const distanceMm = toMillimetres(entry.representation.distanceToPoint(point));
+    const distanceMm = toMillimetres(
+      entry.representation.distanceToPoint(point),
+    );
     if (!Number.isFinite(distanceMm) || distanceMm < 0) {
       throw new DistanceQueryFailure(
         `Representation returned invalid distance for ${structureId}`,
