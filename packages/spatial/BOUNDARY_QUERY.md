@@ -86,9 +86,11 @@ crossings of different semantic boundaries remain separate. Numerically close
 but unequal t retain physical order. Input binding order and hit enumeration
 order do not control output. Results and position values are frozen snapshots.
 
-TASK-040 lumen classification, TASK-041 distance query, TASK-042 ordered tissue
-path and cross-call continuity, TASK-043 public Human.query, Interaction events,
-procedure judgment, rendering and physics are not implemented. Partial surfaces
+TASK-042 reuses the numerical partition through an internal helper without
+changing these crossing semantics; see PENETRATION_PATH.md for ordered occupancy
+and coincident transition groups. Cross-call continuity, TASK-043 public
+Human.query, Interaction events, procedure judgment, rendering and physics
+remain outside this query. Partial surfaces
 with different semantic boundary IDs on one region, general from-region/to-region
 adjacency, medical asset bindings and validation remain future authoring/Spatial
 extensions; no fabricated closure or lumen meaning is introduced here.

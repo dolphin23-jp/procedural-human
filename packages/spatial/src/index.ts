@@ -1,3 +1,4 @@
+export * from './penetration-path.js';
 export * from './boundary-query.js';
 import type {
   RegionSpatialRepresentationAdapter,
