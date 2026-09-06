@@ -7,7 +7,7 @@
     "build": "pnpm build:contracts && pnpm --filter @procedural-human/web build",
     "build:contracts": "pnpm --filter @procedural-human/core build && pnpm --filter @procedural-human/units build && pnpm --filter @procedural-human/math build && pnpm --filter @procedural-human/anatomy build && pnpm --filter @procedural-human/patient build && pnpm --filter @procedural-human/physiology build && pnpm --filter @procedural-human/spatial build",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format:check": "prettier --check . || (prettier tests/distance-query.test.mjs && false)",
     "lint": "eslint .",
     "schema:validate": "node tools/validate-schemas.mjs",
     "schema:validate:python": "uv run --package ph_validation python authoring/python/ph_validation/src/ph_validation/shared_schema_validation.py",
