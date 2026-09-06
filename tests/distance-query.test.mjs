@@ -3,7 +3,10 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { entityId, structureId } from '../packages/core/dist/index.js';
 import { patientSpacePoint as p } from '../packages/math/dist/index.js';
-import { DistanceQuery, DistanceQueryFailure } from '../packages/spatial/dist/distance-query.js';
+import {
+  DistanceQuery,
+  DistanceQueryFailure,
+} from '../packages/spatial/dist/distance-query.js';
 import {
   AxisAlignedBoxSpatialAdapter,
   XAxisCylinderSpatialAdapter,
@@ -91,7 +94,10 @@ test('TASK-041 semantic target is explicit rather than inferred from proximity o
     name: 'Opaque structure label',
   };
   const renamedQuery = new DistanceQuery([renamed]);
-  const result = renamedQuery.execute(point, structureId('structure.fixture.vein'));
+  const result = renamedQuery.execute(
+    point,
+    structureId('structure.fixture.vein'),
+  );
   assert.equal(result.canonicalEntityId, 'entity.fixture.vein');
   assert.equal(toMillimetres(result.distance), 7);
 });
