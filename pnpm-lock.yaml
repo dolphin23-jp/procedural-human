@@ -109,6 +109,9 @@ importers:
 
   packages/spatial:
     dependencies:
+      '@procedural-human/anatomy':
+        specifier: workspace:*
+        version: link:../anatomy
       '@procedural-human/core':
         specifier: workspace:*
         version: link:../core
