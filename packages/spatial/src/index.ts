@@ -45,12 +45,18 @@ export interface BoundedSpatialRepresentationAdapter
 }
 
 export type SpatialMembershipRole = 'tissue' | 'lumen';
+export type VascularLumenKind = 'venous' | 'arterial';
 
 export interface SpatialIndexEntry {
   readonly structureId: StructureId;
   readonly canonicalEntityId: EntityId;
   readonly name: string;
   readonly membershipRoles: readonly SpatialMembershipRole[];
+  /**
+   * Explicit vascular semantics for a lumen representation.
+   * Spatial never infers this from names, IDs, geometry, or renderer metadata.
+   */
+  readonly vascularLumenKind?: VascularLumenKind;
   readonly representation: BoundedSpatialRepresentationAdapter;
 }
 
@@ -106,6 +112,16 @@ export class BasicSpatialIndex {
   readonly #entries: readonly SpatialIndexEntry[];
 
   constructor(entries: readonly SpatialIndexEntry[]) {
+    for (const entry of entries) {
+      if (
+        entry.vascularLumenKind !== undefined &&
+        !entry.membershipRoles.includes('lumen')
+      ) {
+        throw new Error(
+          'Vascular lumen classification requires lumen membership',
+        );
+      }
+    }
     this.#entries = Object.freeze([...entries]);
   }
 
@@ -131,10 +147,18 @@ export interface SpatialMatch {
   readonly name: string;
 }
 
+export interface LumenSpatialMatch extends SpatialMatch {
+  /**
+   * null means lumen membership is known but no venous/arterial semantic
+   * classification was supplied. The query does not guess.
+   */
+  readonly vascularLumenKind: VascularLumenKind | null;
+}
+
 export interface PointQueryResult {
   readonly structures: readonly SpatialMatch[];
   readonly tissues: readonly SpatialMatch[];
-  readonly lumens: readonly SpatialMatch[];
+  readonly lumens: readonly LumenSpatialMatch[];
 }
 
 const matchFor = (entry: SpatialIndexEntry): SpatialMatch =>
@@ -142,6 +166,12 @@ const matchFor = (entry: SpatialIndexEntry): SpatialMatch =>
     structureId: entry.structureId,
     canonicalEntityId: entry.canonicalEntityId,
     name: entry.name,
+  });
+
+const lumenMatchFor = (entry: SpatialIndexEntry): LumenSpatialMatch =>
+  Object.freeze({
+    ...matchFor(entry),
+    vascularLumenKind: entry.vascularLumenKind ?? null,
   });
 
 export class PointQuery {
@@ -162,7 +192,7 @@ export class PointQuery {
       .map(matchFor);
     const lumens = containing
       .filter((entry) => entry.membershipRoles.includes('lumen'))
-      .map(matchFor);
+      .map(lumenMatchFor);
 
     return Object.freeze({
       structures: Object.freeze(structures),

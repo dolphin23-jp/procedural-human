@@ -42,6 +42,7 @@ const entries = fixture.entities.map((entity) => ({
   canonicalEntityId: entityId(entity.id),
   name: entity.name,
   membershipRoles: entity.type === 'fixture-tissue' ? ['tissue'] : ['lumen'],
+  vascularLumenKind: entity.vascularLumenKind,
   representation: adapterFor(entity),
 }));
 
@@ -90,6 +91,48 @@ test('TASK-037 point query returns named structures, tissue, and fixture lumen m
   assert.deepEqual(
     veinCenter.lumens.map((match) => match.canonicalEntityId),
     ['entity.fixture.vein'],
+  );
+});
+
+test('TASK-040 lumen membership distinguishes venous and arterial semantics explicitly', () => {
+  const query = new PointQuery(index);
+
+  const vein = query.execute(patientSpacePoint(0, -10, 10));
+  assert.equal(vein.lumens.length, 1);
+  assert.equal(vein.lumens[0].vascularLumenKind, 'venous');
+
+  const artery = query.execute(patientSpacePoint(0, 10, 15));
+  assert.equal(artery.lumens.length, 1);
+  assert.equal(artery.lumens[0].canonicalEntityId, 'entity.fixture.artery');
+  assert.equal(artery.lumens[0].vascularLumenKind, 'arterial');
+
+  const opaqueClassification = new PointQuery(
+    new BasicSpatialIndex([
+      {
+        structureId: structureId('structure.fixture.opaque'),
+        canonicalEntityId: entityId('entity.fixture.opaque'),
+        name: 'Opaque fixture vessel',
+        membershipRoles: ['lumen'],
+        vascularLumenKind: 'arterial',
+        representation: entries.find(
+          (entry) => entry.canonicalEntityId === 'entity.fixture.vein',
+        ).representation,
+      },
+    ]),
+  ).execute(patientSpacePoint(0, -10, 10));
+  assert.equal(opaqueClassification.lumens[0].vascularLumenKind, 'arterial');
+
+  assert.throws(
+    () =>
+      new BasicSpatialIndex([
+        {
+          ...entries.find(
+            (entry) => entry.canonicalEntityId === 'entity.fixture.skin',
+          ),
+          vascularLumenKind: 'venous',
+        },
+      ]),
+    /requires lumen membership/,
   );
 });
 
