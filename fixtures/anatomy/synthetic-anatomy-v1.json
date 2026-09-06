@@ -30,6 +30,7 @@
       "id": "entity.fixture.vein",
       "name": "Fixture Vein",
       "type": "fixture-vessel",
+      "vascularLumenKind": "venous",
       "geometry": {
         "shape": "cylinder",
         "radiusMm": 3,
@@ -42,6 +43,7 @@
       "id": "entity.fixture.artery",
       "name": "Fixture Artery",
       "type": "fixture-vessel",
+      "vascularLumenKind": "arterial",
       "geometry": {
         "shape": "cylinder",
         "radiusMm": 3,
