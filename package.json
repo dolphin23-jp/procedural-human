@@ -14,7 +14,8 @@
     "schema:validate:shared": "pnpm schema:validate && pnpm schema:validate:python",
     "test": "pnpm build:contracts && pnpm schema:validate:shared && node --test tools/*.test.mjs tests/*.test.mjs",
     "typecheck": "pnpm --filter @procedural-human/core typecheck && pnpm --filter @procedural-human/units typecheck && pnpm --filter @procedural-human/math typecheck && pnpm --filter @procedural-human/anatomy typecheck && pnpm --filter @procedural-human/patient typecheck && pnpm --filter @procedural-human/physiology typecheck && pnpm --filter @procedural-human/spatial typecheck && pnpm --filter @procedural-human/web typecheck",
-    "check:boundaries": "node tools/check-package-boundaries.mjs"
+    "check:boundaries": "node tools/check-package-boundaries.mjs",
+    "spatial:baseline": "pnpm build:contracts && node tools/spatial-performance-baseline.mjs"
   },
   "devDependencies": {
     "@eslint/js": "9.34.0",
