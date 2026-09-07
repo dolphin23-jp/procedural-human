@@ -1,10 +1,17 @@
 import {
+  CornerstoneAxialVolumeViewer,
+  createSyntheticAxialVolumeFixture,
+  type AxialSliceState,
+} from '@procedural-human/imaging-cornerstone';
+import {
   ThreeFixtureRenderer,
   createFixtureCoordinateTransform,
   createFixtureDemoClippingPlane,
   type SemanticPickResult,
 } from '@procedural-human/rendering-three';
 import { useEffect, useRef, useState } from 'react';
+
+const imagingFixture = createSyntheticAxialVolumeFixture();
 
 const accuracyRows = [
   ['Identity', 'identityAccuracy'],
@@ -49,6 +56,138 @@ function StructureMetadataPanel({
         ))}
       </dl>
     </aside>
+  );
+}
+
+function ImagingPanel() {
+  const elementRef = useRef<HTMLDivElement>(null);
+  const viewerRef = useRef<CornerstoneAxialVolumeViewer | null>(null);
+  const [slice, setSlice] = useState<AxialSliceState | null>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element) return;
+
+    let cancelled = false;
+    let observer: ResizeObserver | null = null;
+
+    void Promise.resolve().then(async () => {
+      if (cancelled) return;
+
+      try {
+        const viewer = await CornerstoneAxialVolumeViewer.create(
+          element,
+          imagingFixture,
+        );
+        if (cancelled) {
+          viewer.dispose();
+          return;
+        }
+
+        viewerRef.current = viewer;
+        setSlice(viewer.currentSlice);
+        observer = new ResizeObserver(() => {
+          if (!cancelled) viewer.resize();
+        });
+        observer.observe(element);
+      } catch (error: unknown) {
+        if (!cancelled) {
+          setImageError(
+            error instanceof Error
+              ? error.message
+              : 'Unable to initialize imaging view.',
+          );
+        }
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      observer?.disconnect();
+      const viewer = viewerRef.current;
+      viewerRef.current = null;
+      viewer?.dispose();
+    };
+  }, []);
+
+  const moveSlice = async (displayIndex: number) => {
+    const viewer = viewerRef.current;
+    if (!viewer) return;
+    try {
+      setSlice(await viewer.setSlice(displayIndex));
+      setImageError(null);
+    } catch (error) {
+      setImageError(
+        error instanceof Error ? error.message : 'Unable to move image slice.',
+      );
+    }
+  };
+
+  const origin = slice?.plane.origin.value;
+
+  return (
+    <section className="imaging" aria-labelledby="imaging-title">
+      <header className="viewer__header">
+        <div>
+          <p className="viewer__eyebrow">M5 · Medical Imaging Bridge</p>
+          <h2 id="imaging-title">Synthetic axial calibration volume</h2>
+        </div>
+        <p className="viewer__notice">
+          Development fixture · not medical imaging
+        </p>
+      </header>
+      <div className="imaging__body">
+        <div
+          ref={elementRef}
+          className="imaging__viewport"
+          aria-label="Cornerstone axial development image viewport"
+        />
+        <div className="imaging__controls">
+          <label htmlFor="axial-slice">Axial slice</label>
+          <input
+            id="axial-slice"
+            type="range"
+            min={0}
+            max={imagingFixture.frame.dimensions.k - 1}
+            step={1}
+            value={slice?.displayIndex ?? 0}
+            disabled={!slice}
+            onChange={(event) => void moveSlice(Number(event.target.value))}
+          />
+          <span>
+            {slice ? slice.displayIndex + 1 : '–'} /{' '}
+            {imagingFixture.frame.dimensions.k}
+          </span>
+        </div>
+        <dl
+          className="imaging__position"
+          aria-label="Patient-space slice position"
+        >
+          <div>
+            <dt>Source voxel k</dt>
+            <dd>{slice?.voxelK ?? '–'}</dd>
+          </div>
+          <div>
+            <dt>Patient plane origin</dt>
+            <dd>
+              {origin
+                ? `(${origin.x.toFixed(1)}, ${origin.y.toFixed(1)}, ${origin.z.toFixed(1)}) mm`
+                : '–'}
+            </dd>
+          </div>
+        </dl>
+        <p className="imaging__provenance">
+          {imagingFixture.provenance.validationLevel} ·{' '}
+          {imagingFixture.provenance.notes}
+        </p>
+        {imageError && (
+          <p className="imaging__error">
+            Imaging view unavailable: {imageError}
+          </p>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -153,6 +292,7 @@ export function App() {
           )}
         </div>
       </section>
+      <ImagingPanel />
     </main>
   );
 }
