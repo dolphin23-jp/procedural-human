@@ -32,3 +32,6 @@ export class ImageRenderCoordinateBridge {
     return this.#image.patientToVoxel(this.#render.renderPointToPatient(point));
   }
 }
+
+export { ImagingPlaneSynchronizer } from './imaging-plane-sync.js';
+export type { ImagingPlaneSyncState } from './imaging-plane-sync.js';

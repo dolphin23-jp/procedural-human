@@ -1,5 +1,7 @@
 import {
   ImagePatientTransform,
+  createPatientImagingPlane,
+  type AxialSliceState,
   createVolumeImagingFrame,
   type PatientImagingPlane,
   type VolumeImagingFrame,
@@ -9,13 +11,7 @@ import type { PatientSpacePoint } from '@procedural-human/math';
 export const PATIENT_AXIAL_TOLERANCE = 1e-9;
 export const AXIAL_SAMPLE_PLANE_TOLERANCE = 1e-4;
 
-export interface AxialSliceState {
-  /** Cornerstone viewport ordering; this is not assumed to equal voxel k. */
-  readonly displayIndex: number;
-  /** Source-volume sample plane recovered through Patient Space. */
-  readonly voxelK: number;
-  readonly plane: PatientImagingPlane;
-}
+export type { AxialSliceState } from '@procedural-human/imaging-core';
 
 function displayIndex(value: number, count: number): number {
   if (!Number.isSafeInteger(value) || value < 0 || value >= count) {
@@ -61,7 +57,8 @@ export function createAxialSliceStateFromPatientPoint(
   const index = displayIndex(currentDisplayIndex, axialFrame.dimensions.k);
   const transform = new ImagePatientTransform(axialFrame);
   const voxel = transform.patientToVoxel(pointOnDisplayedPlane);
-  const nearestK = Math.round(voxel.k);
+  // Descending source axes can produce -0; indices have a canonical zero.
+  const nearestK = Math.round(voxel.k) || 0;
 
   if (
     Math.abs(voxel.k - nearestK) > AXIAL_SAMPLE_PLANE_TOLERANCE ||
@@ -101,4 +98,32 @@ export function createAxialSliceStateAtVoxelK(
     voxelK,
     plane: transform.planeAtK(voxelK),
   });
+}
+
+/** Reject unsupported orientation and off-lattice positions before moving a camera. */
+export function axialVoxelKForPatientPlane(
+  frame: VolumeImagingFrame,
+  plane: PatientImagingPlane,
+): number {
+  if (!plane || plane.kind !== 'patient-imaging-plane') {
+    throw new TypeError('Expected patient imaging plane.');
+  }
+  const checked = createPatientImagingPlane(plane);
+  const axialFrame = assertPatientAxialFrame(frame);
+  const expected = new ImagePatientTransform(axialFrame).planeAtK(0);
+  for (const key of ['directionI', 'directionJ', 'normal'] as const) {
+    for (const axis of ['x', 'y', 'z'] as const) {
+      const value = plane[key]?.value?.[axis];
+      if (
+        !Number.isFinite(value) ||
+        Math.abs(value - expected[key].value[axis]) > PATIENT_AXIAL_TOLERANCE
+      ) {
+        throw new RangeError(
+          'Axial synchronization cannot change plane orientation; oblique MPR belongs to TASK-063.',
+        );
+      }
+    }
+  }
+  return createAxialSliceStateFromPatientPoint(axialFrame, 0, checked.origin)
+    .voxelK;
 }

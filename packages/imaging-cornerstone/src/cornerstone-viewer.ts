@@ -10,10 +10,16 @@ import {
   type Types,
   type VolumeViewport,
 } from '@cornerstonejs/core';
+import {
+  ImagePatientTransform,
+  type PatientImagingPlane,
+} from '@procedural-human/imaging-core';
 import { patientSpacePoint } from '@procedural-human/math';
 import { toMillimetres } from '@procedural-human/units';
 import {
   assertPatientAxialFrame,
+  PATIENT_AXIAL_TOLERANCE,
+  axialVoxelKForPatientPlane,
   createAxialSliceStateFromPatientPoint,
   type AxialSliceState,
 } from './axial.js';
@@ -229,6 +235,7 @@ export class CornerstoneAxialVolumeViewer {
       imageIndex: displayIndex,
       volumeId: this.#volumeId,
     });
+    this.#assertAlive();
     const state = this.#readCurrentSlice();
     if (state.displayIndex !== displayIndex) {
       throw new Error(
@@ -239,8 +246,37 @@ export class CornerstoneAxialVolumeViewer {
     return state;
   }
 
+  /** Translate along the axial normal, preserving pan, zoom and camera distance. */
+  async setPatientPlane(plane: PatientImagingPlane): Promise<AxialSliceState> {
+    this.#assertAlive();
+    const targetK = axialVoxelKForPatientPlane(this.#source.frame, plane);
+    const viewport = this.#viewport();
+    const { focalPoint, position } = viewport.getCamera();
+    if (!focalPoint || !position) {
+      throw new Error('Cornerstone axial viewport camera is unavailable.');
+    }
+    const target = new ImagePatientTransform(this.#source.frame).planeAtK(
+      targetK,
+    );
+    const dz = target.origin.value.z - focalPoint[2];
+    viewport.setCamera({
+      focalPoint: [focalPoint[0], focalPoint[1], focalPoint[2] + dz],
+      position: [position[0], position[1], position[2] + dz],
+    });
+    viewport.render();
+    const state = this.#readCurrentSlice();
+    if (state.voxelK !== targetK) {
+      throw new Error(
+        'Cornerstone did not reach the requested Patient Space plane.',
+      );
+    }
+    this.#currentSlice = state;
+    return state;
+  }
+
   resize(): void {
     this.#assertAlive();
+    // The second argument is keepCamera, preserving the synchronized plane.
     this.#renderingEngine.resize(true, true);
   }
 
@@ -259,7 +295,16 @@ export class CornerstoneAxialVolumeViewer {
 
   #readCurrentSlice(): AxialSliceState {
     const viewport = this.#viewport();
-    const focalPoint = viewport.getCamera().focalPoint;
+    const { focalPoint, viewPlaneNormal } = viewport.getCamera();
+    if (
+      !viewPlaneNormal ||
+      !viewPlaneNormal.every(Number.isFinite) ||
+      Math.abs(viewPlaneNormal[0]) > PATIENT_AXIAL_TOLERANCE ||
+      Math.abs(viewPlaneNormal[1]) > PATIENT_AXIAL_TOLERANCE ||
+      Math.abs(Math.abs(viewPlaneNormal[2]) - 1) > PATIENT_AXIAL_TOLERANCE
+    ) {
+      throw new Error('Cornerstone viewport is no longer patient-axial.');
+    }
     if (!focalPoint) {
       throw new Error('Cornerstone axial viewport has no focal point.');
     }
