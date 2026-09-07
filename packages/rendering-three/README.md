@@ -59,13 +59,34 @@ mouse-wheel dolly, two-pointer pan, pinch dolly, and tap selection.
 
 TASK-052 also separates physical displacement from dimensionless direction:
 `PatientSpaceVector` represents millimetre displacement, while
-`PatientSpaceDirection` represents a finite unit direction. Orbit axes and future
+`PatientSpaceDirection` represents a finite unit direction. Orbit axes and
 clipping normals use directions; pan remains a physical vector. Patient↔render
 direction conversion applies rotation only, not scale.
 
 ## TASK-053 — Real iPad checkpoint
 
-The implementation required for the manual checkpoint is present, but CI cannot
-close TASK-053. See [REAL_IPAD_CHECKPOINT.md](REAL_IPAD_CHECKPOINT.md) for the
-physical-iPad Safari acceptance record covering rotate, zoom, pan and semantic
-selection. Gate E remains open until that record passes on a real device.
+The physical iPad Safari checkpoint passed on 2026-09-07. See
+[REAL_IPAD_CHECKPOINT.md](REAL_IPAD_CHECKPOINT.md). Gate E is closed.
+
+## TASK-054 — Structure metadata panel
+
+The web fixture renders metadata from the canonical `AnatomicalEntity` returned
+by semantic picking: name, provenance source class, validation level/notes, and
+all available accuracy dimensions. Missing accuracy values remain visibly
+`Unavailable`; render mesh names never upgrade or substitute metadata.
+
+## TASK-055 — Patient-space clipping plane rendering
+
+`ThreeFixtureRenderer.setClippingPlane()` accepts the renderer-neutral
+`PatientClippingPlane`. The adapter converts the patient-space origin and unit
+normal through the explicit `PatientRenderTransform` into a Three world-space
+`Plane` and assigns it to `WebGLRenderer.clippingPlanes`.
+
+Three clips negative signed distance, so the adapter preserves the core contract:
+the nonnegative side of `dot(normal, point - origin)` remains visible.
+`null` disables clipping. This is presentation only; anatomy, patient state, and
+Spatial Query are unchanged.
+
+The fixture UI exposes an explicitly non-medical oblique demo plane only to make
+the clipping behavior easy to inspect. The renderer API itself accepts arbitrary
+valid patient-space planes.
