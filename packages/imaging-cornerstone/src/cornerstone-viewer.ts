@@ -23,22 +23,12 @@ import {
   type ImagingVolumeSource,
 } from './source.js';
 
-let initializePromise: Promise<void> | null = null;
 let nextInstanceId = 0;
 
-async function ensureCornerstoneInitialized(): Promise<void> {
-  if (isCornerstoneInitialized()) {
-    return;
+function ensureCornerstoneInitialized(): void {
+  if (!isCornerstoneInitialized()) {
+    init();
   }
-  if (!initializePromise) {
-    initializePromise = init()
-      .then(() => undefined)
-      .catch((error: unknown) => {
-        initializePromise = null;
-        throw error;
-      });
-  }
-  await initializePromise;
 }
 
 function volumeMetadata(source: ImagingVolumeSource): Types.Metadata {
@@ -126,7 +116,7 @@ export class CornerstoneAxialVolumeViewer {
     }
     const source = validateImagingVolumeSource(inputSource);
     assertPatientAxialFrame(source.frame);
-    await ensureCornerstoneInitialized();
+    ensureCornerstoneInitialized();
 
     const instanceId = ++nextInstanceId;
     const renderingEngineId = `ph-imaging-engine-${instanceId}`;
@@ -230,7 +220,9 @@ export class CornerstoneAxialVolumeViewer {
       displayIndex < 0 ||
       displayIndex >= this.sliceCount
     ) {
-      throw new RangeError('Requested axial display index is outside the volume.');
+      throw new RangeError(
+        'Requested axial display index is outside the volume.',
+      );
     }
 
     await utilities.jumpToSlice(this.#element, {
@@ -239,7 +231,9 @@ export class CornerstoneAxialVolumeViewer {
     });
     const state = this.#readCurrentSlice();
     if (state.displayIndex !== displayIndex) {
-      throw new Error('Cornerstone did not reach the requested axial display slice.');
+      throw new Error(
+        'Cornerstone did not reach the requested axial display slice.',
+      );
     }
     this.#currentSlice = state;
     return state;
@@ -266,6 +260,9 @@ export class CornerstoneAxialVolumeViewer {
   #readCurrentSlice(): AxialSliceState {
     const viewport = this.#viewport();
     const focalPoint = viewport.getCamera().focalPoint;
+    if (!focalPoint) {
+      throw new Error('Cornerstone axial viewport has no focal point.');
+    }
     return createAxialSliceStateFromPatientPoint(
       this.#source.frame,
       viewport.getSliceIndex(),
