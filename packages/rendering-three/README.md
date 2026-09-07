@@ -25,3 +25,21 @@ geometry matrix, camera and lights share this mapping. See
 [coordinate contracts](../rendering-core/COORDINATES.md) for equations, units,
 validation and numerical tolerances. Camera input, GLB loading,
 visibility/opacity controls, picking and clipping remain later tasks.
+
+
+## TASK-048 — GLB runtime loading and semantic binding
+
+GLB is treated only as a derived render representation. Runtime identity is never
+inferred from a node or mesh name. `ThreeGlbRuntimeLoader` requires an explicit
+`GlbRuntimeAssetDescriptor` whose non-medical runtime binding keys map to
+`StructureId` values in a `ThreeSemanticContext`. The context resolves those IDs
+to the actual `PatientStructureInstance` and canonical `AnatomicalEntity`.
+
+The GLB must declare `extras.renderBindingKey` on the node/mesh carrying a bound
+representation. Every declared key must be explicitly present in the descriptor,
+every descriptor key must exist in the GLB, and unknown patient structures or
+canonical entities fail loading. GLB names remain presentation/debug metadata only.
+
+The descriptor also requires `coordinateSpace: "patient-mm"`. Loaded geometry is
+wrapped once by the explicit TASK-047 Patient→Render transform. Missing or implied
+registration is not accepted.

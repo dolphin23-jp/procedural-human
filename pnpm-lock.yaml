@@ -118,12 +118,18 @@ importers:
 
   packages/rendering-three:
     dependencies:
+      '@procedural-human/anatomy':
+        specifier: workspace:*
+        version: link:../anatomy
       '@procedural-human/core':
         specifier: workspace:*
         version: link:../core
       '@procedural-human/math':
         specifier: workspace:*
         version: link:../math
+      '@procedural-human/patient':
+        specifier: workspace:*
+        version: link:../patient
       '@procedural-human/rendering-core':
         specifier: workspace:*
         version: link:../rendering-core
