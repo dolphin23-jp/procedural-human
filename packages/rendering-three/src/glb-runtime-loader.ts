@@ -135,7 +135,8 @@ function validateDescriptor(
   descriptor: GlbRuntimeAssetDescriptor,
   context: ThreeSemanticContext,
 ): ReadonlyMap<string, GlbSemanticBinding> {
-  if (!descriptor) throw new TypeError('GLB runtime asset descriptor is required.');
+  if (!descriptor)
+    throw new TypeError('GLB runtime asset descriptor is required.');
   if (descriptor.patientId !== context.patientId) {
     throw new Error(
       `GLB patient binding mismatch: expected ${context.patientId}, received ${descriptor.patientId}.`,
@@ -218,7 +219,9 @@ export class ThreeGlbRuntimeLoader {
       const rawKey = object.userData.renderBindingKey;
       if (rawKey === undefined) return;
       if (typeof rawKey !== 'string' || rawKey.trim().length === 0) {
-        throw new TypeError('GLB extras.renderBindingKey must be a non-empty string.');
+        throw new TypeError(
+          'GLB extras.renderBindingKey must be a non-empty string.',
+        );
       }
       if (!bindings.has(rawKey)) {
         throw new Error(

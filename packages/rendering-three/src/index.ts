@@ -111,9 +111,7 @@ export class ThreeFixtureRenderer {
 
 export { ThreeSemanticContext } from './semantic-context.js';
 export type { SemanticRenderIdentity } from './semantic-context.js';
-export {
-  ThreeGlbRuntimeLoader,
-} from './glb-runtime-loader.js';
+export { ThreeGlbRuntimeLoader } from './glb-runtime-loader.js';
 export type {
   GlbRuntimeAssetDescriptor,
   GlbSemanticBinding,

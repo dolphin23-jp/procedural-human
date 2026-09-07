@@ -51,7 +51,8 @@ function fixtureEntity(
     provenance: Object.freeze({
       sourceClass: 'development-fixture',
       sourceIdentifier: 'synthetic-anatomy-v1',
-      derivationMethod: 'hand-authored primitive/GLB geometry for software testing',
+      derivationMethod:
+        'hand-authored primitive/GLB geometry for software testing',
       contentHash: fixtureHash,
     }),
     accuracy,

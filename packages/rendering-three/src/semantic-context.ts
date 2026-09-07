@@ -95,7 +95,10 @@ export function bindSemanticObjects(
   context: ThreeSemanticContext,
   structureId: StructureId,
   objects: readonly Object3D[],
-): { readonly identity: SemanticRenderIdentity; readonly meshes: readonly Mesh[] } {
+): {
+  readonly identity: SemanticRenderIdentity;
+  readonly meshes: readonly Mesh[];
+} {
   const identity = context.identityFor(structureId);
   const meshes = collectMeshes(objects);
   if (meshes.length === 0) {
@@ -143,7 +146,8 @@ export function semanticMeshesFor(
   structureId: StructureId,
 ): readonly Mesh[] {
   const entry = registry(context).byStructure.get(structureId);
-  if (!entry) throw new Error(`No render representation bound for ${structureId}.`);
+  if (!entry)
+    throw new Error(`No render representation bound for ${structureId}.`);
   return Object.freeze([...entry.meshes]);
 }
 

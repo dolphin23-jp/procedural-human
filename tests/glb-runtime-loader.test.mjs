@@ -43,103 +43,110 @@ async function fixtureBuffer() {
   );
 }
 
-test('TASK-048 GLB loader resolves explicit runtime keys to patient and canonical semantic identities', async () => {
-  const context = createFixtureSemanticContext();
-  const loader = new ThreeGlbRuntimeLoader(
-    context,
-    createFixtureCoordinateTransform(),
-  );
-  const asset = await loader.loadFromArrayBuffer(
-    await fixtureBuffer(),
-    descriptorFor(context),
-  );
+test(
+  'TASK-048 GLB loader resolves explicit runtime keys to patient and canonical semantic identities',
+  async () => {
+    const context = createFixtureSemanticContext();
+    const loader = new ThreeGlbRuntimeLoader(
+      context,
+      createFixtureCoordinateTransform(),
+    );
+    const asset = await loader.loadFromArrayBuffer(
+      await fixtureBuffer(),
+      descriptorFor(context),
+    );
 
-  assert.deepEqual(asset.summary(), {
-    assetId: 'asset.fixture.synthetic-anatomy-v1.glb',
-    structureIds: [
-      'structure.fixture.skin',
-      'structure.fixture.soft-tissue',
-      'structure.fixture.vein',
-      'structure.fixture.artery',
-    ],
-    meshCount: 4,
-  });
-  const identities = asset.semanticIdentities();
-  assert.ok(
-    identities.every(
-      (identity) => identity.patientStructure instanceof PatientStructureInstance,
-    ),
-  );
-  assert.deepEqual(
-    identities.map((identity) => identity.anatomicalEntity.name),
-    ['Fixture Skin', 'Fixture Soft Tissue', 'Fixture Vein', 'Fixture Artery'],
-  );
+    assert.deepEqual(asset.summary(), {
+      assetId: 'asset.fixture.synthetic-anatomy-v1.glb',
+      structureIds: [
+        'structure.fixture.skin',
+        'structure.fixture.soft-tissue',
+        'structure.fixture.vein',
+        'structure.fixture.artery',
+      ],
+      meshCount: 4,
+    });
+    const identities = asset.semanticIdentities();
+    assert.ok(
+      identities.every(
+        (identity) =>
+          identity.patientStructure instanceof PatientStructureInstance,
+      ),
+    );
+    assert.deepEqual(
+      identities.map((identity) => identity.anatomicalEntity.name),
+      ['Fixture Skin', 'Fixture Soft Tissue', 'Fixture Vein', 'Fixture Artery'],
+    );
 
-  const root = loadedAssetGroupFor(asset);
-  assert.equal(root.matrixAutoUpdate, false);
-  const gltfScene = root.children[0];
-  // The fixture deliberately lies in node names. Explicit bindings must win.
-  assert.equal(gltfScene.children[0].name, 'radial_artery');
-  assert.equal(identities[0].patientStructure.id, 'structure.fixture.skin');
+    const root = loadedAssetGroupFor(asset);
+    assert.equal(root.matrixAutoUpdate, false);
+    const gltfScene = root.children[0];
+    // The fixture deliberately lies in node names. Explicit bindings must win.
+    assert.equal(gltfScene.children[0].name, 'radial_artery');
+    assert.equal(identities[0].patientStructure.id, 'structure.fixture.skin');
 
-  asset.dispose();
-  asset.dispose();
-  assert.throws(() => loadedAssetGroupFor(asset), /disposed/);
-});
+    asset.dispose();
+    asset.dispose();
+    assert.throws(() => loadedAssetGroupFor(asset), /disposed/);
+  },
+);
 
-test('TASK-048 GLB loader fails closed on missing, duplicate, unknown or cross-patient semantic binding', async () => {
-  const context = createFixtureSemanticContext();
-  const loader = new ThreeGlbRuntimeLoader(
-    context,
-    createFixtureCoordinateTransform(),
-  );
-  const data = await fixtureBuffer();
+test(
+  'TASK-048 GLB loader fails closed on missing, duplicate, unknown or cross-patient semantic binding',
+  async () => {
+    const context = createFixtureSemanticContext();
+    const loader = new ThreeGlbRuntimeLoader(
+      context,
+      createFixtureCoordinateTransform(),
+    );
+    const data = await fixtureBuffer();
 
-  const missing = descriptorFor(context);
-  missing.bindings = missing.bindings.slice(0, 3);
-  await assert.rejects(
-    loader.loadFromArrayBuffer(data, missing),
-    /unbound renderBindingKey/,
-  );
+    const missing = descriptorFor(context);
+    missing.bindings = missing.bindings.slice(0, 3);
+    await assert.rejects(
+      loader.loadFromArrayBuffer(data, missing),
+      /unbound renderBindingKey/,
+    );
 
-  const duplicate = descriptorFor(context);
-  duplicate.bindings = [
-    ...duplicate.bindings,
-    {
-      renderBindingKey: 'fixture.skin.surface',
-      structureId: FIXTURE_STRUCTURE_IDS.vein,
-    },
-  ];
-  await assert.rejects(
-    loader.loadFromArrayBuffer(data, duplicate),
-    /Duplicate GLB renderBindingKey/,
-  );
+    const duplicate = descriptorFor(context);
+    duplicate.bindings = [
+      ...duplicate.bindings,
+      {
+        renderBindingKey: 'fixture.skin.surface',
+        structureId: FIXTURE_STRUCTURE_IDS.vein,
+      },
+    ];
+    await assert.rejects(
+      loader.loadFromArrayBuffer(data, duplicate),
+      /Duplicate GLB renderBindingKey/,
+    );
 
-  const wrongPatient = {
-    ...descriptorFor(context),
-    patientId: 'patient.other',
-  };
-  await assert.rejects(
-    loader.loadFromArrayBuffer(data, wrongPatient),
-    /patient binding mismatch/,
-  );
-
-  const wrongStructure = descriptorFor(context);
-  wrongStructure.bindings = wrongStructure.bindings.map((binding, index) =>
-    index === 0
-      ? { ...binding, structureId: 'structure.fixture.does-not-exist' }
-      : binding,
-  );
-  await assert.rejects(
-    loader.loadFromArrayBuffer(data, wrongStructure),
-    /Unknown patient structure/,
-  );
-
-  await assert.rejects(
-    loader.loadFromArrayBuffer(data, {
+    const wrongPatient = {
       ...descriptorFor(context),
-      coordinateSpace: 'render',
-    }),
-    /coordinateSpace/,
-  );
-});
+      patientId: 'patient.other',
+    };
+    await assert.rejects(
+      loader.loadFromArrayBuffer(data, wrongPatient),
+      /patient binding mismatch/,
+    );
+
+    const wrongStructure = descriptorFor(context);
+    wrongStructure.bindings = wrongStructure.bindings.map((binding, index) =>
+      index === 0
+        ? { ...binding, structureId: 'structure.fixture.does-not-exist' }
+        : binding,
+    );
+    await assert.rejects(
+      loader.loadFromArrayBuffer(data, wrongStructure),
+      /Unknown patient structure/,
+    );
+
+    await assert.rejects(
+      loader.loadFromArrayBuffer(data, {
+        ...descriptorFor(context),
+        coordinateSpace: 'render',
+      }),
+      /coordinateSpace/,
+    );
+  },
+);
