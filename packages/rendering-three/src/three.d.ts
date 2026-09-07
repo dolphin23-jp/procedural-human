@@ -47,6 +47,13 @@ declare module 'three' {
     ): this;
     copy(matrix: Matrix4): this;
   }
+  export class Plane {
+    readonly normal: Vector3;
+    constant: number;
+    constructor(normal?: Vector3, constant?: number);
+    setFromNormalAndCoplanarPoint(normal: Vector3, point: Vector3): this;
+    distanceToPoint(point: Vector3): number;
+  }
   export class Euler {
     x: number;
     y: number;
@@ -145,6 +152,7 @@ declare module 'three' {
       antialias?: boolean;
       alpha?: boolean;
     });
+    clippingPlanes: Plane[];
     setPixelRatio(value: number): void;
     setSize(width: number, height: number, updateStyle?: boolean): void;
     render(scene: Scene, camera: PerspectiveCamera): void;
