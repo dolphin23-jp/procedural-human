@@ -72,18 +72,26 @@ function ImagingPanel() {
     let cancelled = false;
     let observer: ResizeObserver | null = null;
 
-    void CornerstoneAxialVolumeViewer.create(element, imagingFixture)
-      .then((viewer) => {
+    void Promise.resolve().then(async () => {
+      if (cancelled) return;
+
+      try {
+        const viewer = await CornerstoneAxialVolumeViewer.create(
+          element,
+          imagingFixture,
+        );
         if (cancelled) {
           viewer.dispose();
           return;
         }
+
         viewerRef.current = viewer;
         setSlice(viewer.currentSlice);
-        observer = new ResizeObserver(() => viewer.resize());
+        observer = new ResizeObserver(() => {
+          if (!cancelled) viewer.resize();
+        });
         observer.observe(element);
-      })
-      .catch((error: unknown) => {
+      } catch (error: unknown) {
         if (!cancelled) {
           setImageError(
             error instanceof Error
@@ -91,7 +99,8 @@ function ImagingPanel() {
               : 'Unable to initialize imaging view.',
           );
         }
-      });
+      }
+    });
 
     return () => {
       cancelled = true;
