@@ -32,6 +32,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@procedural-human/rendering-three':
+        specifier: workspace:*
+        version: link:../../packages/rendering-three
       react:
         specifier: 19.1.1
         version: 19.1.1
@@ -113,7 +116,14 @@ importers:
         specifier: workspace:*
         version: link:../units
 
-  packages/rendering-three: {}
+  packages/rendering-three:
+    dependencies:
+      '@procedural-human/core':
+        specifier: workspace:*
+        version: link:../core
+      three:
+        specifier: 0.185.1
+        version: 0.185.1
 
   packages/session: {}
 
@@ -1144,6 +1154,9 @@ packages:
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
+
+  three@0.185.1:
+    resolution: {integrity: sha512-5aojFCXKwnjBRZvUnt3WFfEcvUJgkN5LlijRFN95hMy8WVkG4I0QNcJE+OuWvuJ0bOdStrbfXn0pkd6/QyiAlg==}
 
   tinyglobby@0.2.17:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
@@ -2195,6 +2208,8 @@ snapshots:
   supports-color@7.2.0:
     dependencies:
       has-flag: 4.0.0
+
+  three@0.185.1: {}
 
   tinyglobby@0.2.17:
     dependencies:
