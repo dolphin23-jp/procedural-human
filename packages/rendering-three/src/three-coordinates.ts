@@ -43,7 +43,9 @@ export function threeVectorToRender(vector: Vector3): RenderSpaceVector {
   return renderSpaceVector(vector.x, vector.y, vector.z);
 }
 
-export function renderDirectionToThree(\n  direction: RenderSpaceDirection,\n): Vector3 {
+export function renderDirectionToThree(
+  direction: RenderSpaceDirection,
+): Vector3 {
   if (
     !direction ||
     direction.space !== 'render' ||
