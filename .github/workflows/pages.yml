@@ -34,7 +34,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm build:contracts
-      - run: pnpm --filter @procedural-human/web build -- --base=/procedural-human/
+      - run: pnpm --filter @procedural-human/web build
 
       - uses: actions/configure-pages@v5
 
