@@ -52,8 +52,7 @@ test('TASK-059 derives source k through Patient Space instead of equating displa
     imageVoxelCoordinate(17.25, 8.5, 7.25),
   );
   assert.throws(
-    () =>
-      createAxialSliceStateFromPatientPoint(source.frame, 1, betweenSlices),
+    () => createAxialSliceStateFromPatientPoint(source.frame, 1, betweenSlices),
     /does not coincide/,
   );
 });

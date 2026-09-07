@@ -124,7 +124,9 @@ function ImagingPanel() {
           <p className="viewer__eyebrow">M5 · Medical Imaging Bridge</p>
           <h2 id="imaging-title">Synthetic axial calibration volume</h2>
         </div>
-        <p className="viewer__notice">Development fixture · not medical imaging</p>
+        <p className="viewer__notice">
+          Development fixture · not medical imaging
+        </p>
       </header>
       <div className="imaging__body">
         <div
@@ -149,7 +151,10 @@ function ImagingPanel() {
             {imagingFixture.frame.dimensions.k}
           </span>
         </div>
-        <dl className="imaging__position" aria-label="Patient-space slice position">
+        <dl
+          className="imaging__position"
+          aria-label="Patient-space slice position"
+        >
           <div>
             <dt>Source voxel k</dt>
             <dd>{slice?.voxelK ?? '–'}</dd>
@@ -168,7 +173,9 @@ function ImagingPanel() {
           {imagingFixture.provenance.notes}
         </p>
         {imageError && (
-          <p className="imaging__error">Imaging view unavailable: {imageError}</p>
+          <p className="imaging__error">
+            Imaging view unavailable: {imageError}
+          </p>
         )}
       </div>
     </section>

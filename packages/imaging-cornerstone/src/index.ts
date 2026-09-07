@@ -3,10 +3,7 @@ export type {
   ImagingVolumeProvenance,
   ImagingVolumeSource,
 } from './source.js';
-export {
-  validateImagingVolumeSource,
-  copyScalarData,
-} from './source.js';
+export { validateImagingVolumeSource, copyScalarData } from './source.js';
 export type { AxialSliceState } from './axial.js';
 export {
   PATIENT_AXIAL_TOLERANCE,
