@@ -38,6 +38,9 @@ importers:
       '@procedural-human/rendering-three':
         specifier: workspace:*
         version: link:../../packages/rendering-three
+      '@procedural-human/session':
+        specifier: workspace:*
+        version: link:../../packages/session
       react:
         specifier: 19.1.1
         version: 19.1.1

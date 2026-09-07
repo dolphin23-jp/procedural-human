@@ -333,3 +333,25 @@ h1,
     grid-template-columns: 1fr;
   }
 }
+
+.viewer__plane-controls {
+  position: absolute;
+  left: 16px;
+  top: 110px;
+  display: grid;
+  gap: 6px;
+  width: min(280px, calc(100% - 32px));
+  padding: 12px;
+  border: 1px solid #35586b;
+  border-radius: 9px;
+  background: #101621;
+  color: #c8d3e2;
+  font-size: 0.78rem;
+}
+.viewer__plane-controls input {
+  width: 100%;
+  min-height: 36px;
+}
+.imaging__viewport {
+  overscroll-behavior: contain;
+}

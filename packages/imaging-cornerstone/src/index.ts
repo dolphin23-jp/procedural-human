@@ -9,6 +9,7 @@ export {
   PATIENT_AXIAL_TOLERANCE,
   AXIAL_SAMPLE_PLANE_TOLERANCE,
   assertPatientAxialFrame,
+  axialVoxelKForPatientPlane,
   createAxialSliceStateFromPatientPoint,
   createAxialSliceStateAtVoxelK,
 } from './axial.js';

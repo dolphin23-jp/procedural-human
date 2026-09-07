@@ -91,3 +91,17 @@ export type ImagingObservation = ObservationReference &
         readonly frames: null;
       }
   );
+
+/** Axial viewport readback; display order is independent of source voxel k. */
+export interface AxialSliceState {
+  readonly displayIndex: number;
+  readonly voxelK: number;
+  readonly plane: PatientImagingPlane;
+}
+
+/** Technology-neutral port; commands resolve only after Patient Space readback. */
+export interface AxialImagingViewport {
+  readonly currentSlice: AxialSliceState;
+  setSlice(displayIndex: number): Promise<AxialSliceState>;
+  setPatientPlane(plane: PatientImagingPlane): Promise<AxialSliceState>;
+}

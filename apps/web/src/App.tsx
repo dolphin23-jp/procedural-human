@@ -6,10 +6,13 @@ import {
 import {
   ThreeFixtureRenderer,
   createFixtureCoordinateTransform,
-  createFixtureDemoClippingPlane,
   type SemanticPickResult,
 } from '@procedural-human/rendering-three';
-import { useEffect, useRef, useState } from 'react';
+import {
+  ImagingPlaneSynchronizer,
+  type ImagingPlaneSyncState,
+} from '@procedural-human/session';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 
 const imagingFixture = createSyntheticAxialVolumeFixture();
 
@@ -59,70 +62,31 @@ function StructureMetadataPanel({
   );
 }
 
-function ImagingPanel() {
-  const elementRef = useRef<HTMLDivElement>(null);
-  const viewerRef = useRef<CornerstoneAxialVolumeViewer | null>(null);
-  const [slice, setSlice] = useState<AxialSliceState | null>(null);
-  const [imageError, setImageError] = useState<string | null>(null);
-
+function ImagingPanel({
+  elementRef,
+  slice,
+  imageError,
+  moveSlice,
+  scrollImage,
+}: {
+  elementRef: RefObject<HTMLDivElement | null>;
+  slice: AxialSliceState | null;
+  imageError: string | null;
+  moveSlice: (index: number) => void;
+  scrollImage: (delta: number) => void;
+}) {
   useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
-
-    let cancelled = false;
-    let observer: ResizeObserver | null = null;
-
-    void Promise.resolve().then(async () => {
-      if (cancelled) return;
-
-      try {
-        const viewer = await CornerstoneAxialVolumeViewer.create(
-          element,
-          imagingFixture,
-        );
-        if (cancelled) {
-          viewer.dispose();
-          return;
-        }
-
-        viewerRef.current = viewer;
-        setSlice(viewer.currentSlice);
-        observer = new ResizeObserver(() => {
-          if (!cancelled) viewer.resize();
-        });
-        observer.observe(element);
-      } catch (error: unknown) {
-        if (!cancelled) {
-          setImageError(
-            error instanceof Error
-              ? error.message
-              : 'Unable to initialize imaging view.',
-          );
-        }
+    const wheel = (event: WheelEvent) => {
+      if (!event.ctrlKey && event.deltaY !== 0) {
+        event.preventDefault();
+        scrollImage(Math.sign(event.deltaY));
       }
-    });
-
-    return () => {
-      cancelled = true;
-      observer?.disconnect();
-      const viewer = viewerRef.current;
-      viewerRef.current = null;
-      viewer?.dispose();
     };
-  }, []);
-
-  const moveSlice = async (displayIndex: number) => {
-    const viewer = viewerRef.current;
-    if (!viewer) return;
-    try {
-      setSlice(await viewer.setSlice(displayIndex));
-      setImageError(null);
-    } catch (error) {
-      setImageError(
-        error instanceof Error ? error.message : 'Unable to move image slice.',
-      );
-    }
-  };
+    element.addEventListener('wheel', wheel, { passive: false });
+    return () => element.removeEventListener('wheel', wheel);
+  }, [elementRef, scrollImage]);
 
   const origin = slice?.plane.origin.value;
 
@@ -152,7 +116,7 @@ function ImagingPanel() {
             max={imagingFixture.frame.dimensions.k - 1}
             step={1}
             value={slice?.displayIndex ?? 0}
-            disabled={!slice}
+            disabled={!slice && !imageError}
             onChange={(event) => void moveSlice(Number(event.target.value))}
           />
           <span>
@@ -193,23 +157,31 @@ function ImagingPanel() {
 
 export function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rendererRef = useRef<ThreeFixtureRenderer | null>(null);
+  const imageElementRef = useRef<HTMLDivElement>(null);
+  const syncRef = useRef<ImagingPlaneSynchronizer | null>(null);
   const [renderError, setRenderError] = useState<string | null>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
   const [selection, setSelection] = useState<SemanticPickResult | null>(null);
-  const [clippingEnabled, setClippingEnabled] = useState(false);
+  const [syncState, setSyncState] = useState<ImagingPlaneSyncState | null>(
+    null,
+  );
+  const slice = syncState?.slice ?? null;
+  const clippingEnabled = syncState?.clippingEnabled ?? true;
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const element = imageElementRef.current;
+    if (!canvas || !element) return;
+    let cancelled = false;
+    let viewer: CornerstoneAxialVolumeViewer | null = null;
+    let synchronizer: ImagingPlaneSynchronizer | null = null;
+    let imageObserver: ResizeObserver | null = null;
     let renderer: ThreeFixtureRenderer;
     try {
       renderer = new ThreeFixtureRenderer(canvas, {
         coordinates: createFixtureCoordinateTransform(),
       });
-      rendererRef.current = renderer;
-      renderer.attachInput({
-        onSelection: setSelection,
-      });
+      renderer.attachInput({ onSelection: setSelection });
     } catch (error) {
       setRenderError(
         error instanceof Error
@@ -225,22 +197,75 @@ export function App() {
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
     resize();
+
+    // Defer creation past StrictMode's first cleanup; late completions own only
+    // their local viewer and cannot dispose a newer mount's resources.
+    void Promise.resolve().then(async () => {
+      if (cancelled) return;
+      try {
+        const created = await CornerstoneAxialVolumeViewer.create(
+          element,
+          imagingFixture,
+        );
+        if (cancelled) {
+          created.dispose();
+          return;
+        }
+        viewer = created;
+        synchronizer = new ImagingPlaneSynchronizer({
+          image: created,
+          render: renderer,
+          frame: imagingFixture.frame,
+          onChange: (state) => {
+            if (!cancelled) setSyncState(state);
+          },
+        });
+        syncRef.current = synchronizer;
+        imageObserver = new ResizeObserver(() => {
+          if (!cancelled) created.resize();
+        });
+        imageObserver.observe(element);
+      } catch (error) {
+        viewer?.dispose();
+        if (!cancelled)
+          setImageError(
+            error instanceof Error
+              ? error.message
+              : 'Unable to initialize image/3D synchronization.',
+          );
+      }
+    });
+
     return () => {
+      cancelled = true;
       observer.disconnect();
-      if (rendererRef.current === renderer) rendererRef.current = null;
+      imageObserver?.disconnect();
+      if (syncRef.current === synchronizer) syncRef.current = null;
+      synchronizer?.dispose();
+      viewer?.dispose();
       renderer.dispose();
     };
   }, []);
 
-  const toggleClipping = () => {
-    const renderer = rendererRef.current;
-    if (!renderer) return;
-    const enabled = !clippingEnabled;
-    renderer.setClippingPlane(
-      enabled ? createFixtureDemoClippingPlane() : null,
+  const run = (command: (sync: ImagingPlaneSynchronizer) => Promise<void>) => {
+    const sync = syncRef.current;
+    if (!sync) return;
+    void command(sync).then(
+      () => {
+        if (syncRef.current === sync) setImageError(null);
+      },
+      (error) => {
+        if (syncRef.current === sync)
+          setImageError(
+            error instanceof Error
+              ? error.message
+              : 'Unable to synchronize planes.',
+          );
+      },
     );
-    setClippingEnabled(enabled);
   };
+  const toggleClipping = () =>
+    syncRef.current?.setClippingEnabled(!clippingEnabled);
 
   return (
     <main className="shell">
@@ -265,9 +290,32 @@ export function App() {
             type="button"
             aria-pressed={clippingEnabled}
             onClick={toggleClipping}
+            disabled={!syncState}
           >
             Clipping plane: {clippingEnabled ? 'On' : 'Off'}
           </button>
+          <div className="viewer__plane-controls">
+            <label htmlFor="patient-plane-k">
+              3D axial plane · source voxel k
+            </label>
+            <input
+              id="patient-plane-k"
+              type="range"
+              min={0}
+              max={imagingFixture.frame.dimensions.k - 1}
+              step={1}
+              value={slice?.voxelK ?? 0}
+              disabled={!syncState}
+              onChange={(event) =>
+                run((sync) => sync.setPlaneAtVoxelK(Number(event.target.value)))
+              }
+            />
+            <output>
+              {slice
+                ? `k ${slice.voxelK} · z ${slice.plane.origin.value.z.toFixed(1)} mm`
+                : '–'}
+            </output>
+          </div>
           {selection && <StructureMetadataPanel selection={selection} />}
           <div className="viewer__legend" aria-label="Fixture structure legend">
             <span>
@@ -292,7 +340,13 @@ export function App() {
           )}
         </div>
       </section>
-      <ImagingPanel />
+      <ImagingPanel
+        elementRef={imageElementRef}
+        slice={slice}
+        imageError={imageError ?? syncState?.error ?? null}
+        moveSlice={(index) => run((sync) => sync.setImageSlice(index))}
+        scrollImage={(delta) => run((sync) => sync.scrollImage(delta))}
+      />
     </main>
   );
 }

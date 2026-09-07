@@ -20,3 +20,5 @@ export {
   ImagePlaneTransform,
   imagePixelCoordinate,
 } from './coordinates.js';
+
+export type { AxialSliceState, AxialImagingViewport } from './contracts.js';

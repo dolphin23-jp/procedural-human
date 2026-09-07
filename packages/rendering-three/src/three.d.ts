@@ -74,6 +74,10 @@ declare module 'three' {
     remove(...objects: Object3D[]): this;
     traverse(callback: (object: Object3D) => void): void;
   }
+  export class PlaneHelper extends Object3D {
+    constructor(plane: Plane, size?: number, color?: number);
+    dispose(): void;
+  }
   export class Group extends Object3D {}
   export class Scene extends Object3D {
     background: Color | null;
@@ -153,6 +157,7 @@ declare module 'three' {
       alpha?: boolean;
     });
     clippingPlanes: Plane[];
+    autoClear: boolean;
     setPixelRatio(value: number): void;
     setSize(width: number, height: number, updateStyle?: boolean): void;
     render(scene: Scene, camera: PerspectiveCamera): void;
