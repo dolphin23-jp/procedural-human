@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/triple-slash-reference -- adapter-local Three declarations */
 /// <reference path="./three.d.ts" />
 import type { StructureId } from '@procedural-human/core';
+import { toMillimetres } from '@procedural-human/units';
 import { patientSpacePoint } from '@procedural-human/math';
 import {
   PatientRenderTransform,
@@ -14,6 +15,7 @@ import {
   Color,
   DirectionalLight,
   PerspectiveCamera,
+  PlaneHelper,
   Scene,
   WebGLRenderer,
 } from 'three';
@@ -65,6 +67,8 @@ export class ThreeFixtureRenderer {
   readonly #picker: ThreeSemanticPicker;
   readonly #cameraRig: ThreeCameraRig;
   #input: CameraInputController | null = null;
+  readonly #planeScene = new Scene();
+  #planeHelper: PlaneHelper | null = null;
   #disposed = false;
 
   constructor(canvas: HTMLCanvasElement, options: ThreeFixtureRendererOptions) {
@@ -161,10 +165,21 @@ export class ThreeFixtureRenderer {
 
   setClippingPlane(plane: PatientClippingPlane | null): void {
     this.#assertActive();
-    this.#renderer.clippingPlanes =
+    const converted =
       plane === null
-        ? []
-        : [patientClippingPlaneToThree(plane, this.#coordinates)];
+        ? null
+        : patientClippingPlaneToThree(plane, this.#coordinates);
+    this.#clearPlaneHelper();
+    this.#renderer.clippingPlanes = converted ? [converted] : [];
+    if (converted) {
+      // Bounded presentation guide in fixture dimensions, not anatomy geometry.
+      this.#planeHelper = new PlaneHelper(
+        converted,
+        110 / toMillimetres(this.#coordinates.config.millimetresPerRenderUnit),
+        0x65dbe6,
+      );
+      this.#planeScene.add(this.#planeHelper);
+    }
     this.render();
   }
 
@@ -199,21 +214,42 @@ export class ThreeFixtureRenderer {
     this.#renderer.setSize(width, height, false);
     this.#camera.aspect = width / height;
     this.#camera.updateProjectionMatrix();
-    this.#renderer.render(this.#scene, this.#camera);
+    this.render();
   }
 
   render(): void {
     this.#assertActive();
     this.#renderer.render(this.#scene, this.#camera);
+    if (this.#planeHelper) {
+      // Draw the coplanar guide without clipping it against itself. Retain the
+      // anatomy depth buffer, so the guide still has the correct 3D position.
+      const planes = this.#renderer.clippingPlanes;
+      this.#renderer.clippingPlanes = [];
+      this.#renderer.autoClear = false;
+      try {
+        this.#renderer.render(this.#planeScene, this.#camera);
+      } finally {
+        this.#renderer.autoClear = true;
+        this.#renderer.clippingPlanes = planes;
+      }
+    }
   }
 
   dispose(): void {
     if (this.#disposed) return;
     this.#input?.dispose();
+    this.#clearPlaneHelper();
     this.#presentation.dispose();
     this.#fixtureScene.dispose();
     this.#renderer.dispose();
     this.#disposed = true;
+  }
+
+  #clearPlaneHelper(): void {
+    if (!this.#planeHelper) return;
+    this.#planeScene.remove(this.#planeHelper);
+    this.#planeHelper.dispose();
+    this.#planeHelper = null;
   }
 
   #assertActive(): void {
