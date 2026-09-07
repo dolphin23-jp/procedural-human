@@ -6,6 +6,12 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 import unittest
+import sys
+
+sys.path.insert(
+    0,
+    str(Path(__file__).resolve().parents[1] / "src"),
+)
 
 from ph_dicom.archive import snapshot_source_archive
 from ph_dicom.ingest import (
