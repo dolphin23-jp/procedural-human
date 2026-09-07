@@ -5,7 +5,7 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate:
@@ -25,12 +25,6 @@ jobs:
 
       - run: pnpm install --no-frozen-lockfile
 
-      - name: Upload generated lockfile
-        uses: actions/upload-artifact@v4
-        with:
-          name: generated-pnpm-lock
-          path: pnpm-lock.yaml
-
       - uses: astral-sh/setup-uv@v6
         with:
           version: '0.10.0'
@@ -41,15 +35,16 @@ jobs:
       - run: pnpm lint
       - run: pnpm format
 
-      - name: Upload formatted implementation
-        uses: actions/upload-artifact@v4
-        with:
-          name: formatted-task-058-059
-          path: |
-            apps/web/src/App.tsx
-            apps/web/src/styles.css
-            packages/imaging-cornerstone
-            tests/imaging-cornerstone.test.mjs
+      - name: Commit generated lockfile and formatting
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pnpm-lock.yaml apps/web/src/App.tsx apps/web/src/styles.css packages/imaging-cornerstone tests/imaging-cornerstone.test.mjs
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update lockfile and format TASK-058/059"
+            git push
+          fi
 
       - run: pnpm format:check
       - run: pnpm typecheck
