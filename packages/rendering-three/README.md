@@ -17,6 +17,11 @@ check. The package includes only the narrow ambient declarations used by this
 adapter because Three.js does not publish TypeScript declarations. Runtime
 behavior is still provided by the unmodified pinned package.
 
-This task uses renderer-local primitive coordinates. The explicit reversible
-Patient Space to Render Space conversion belongs to TASK-047. It does not add
-camera input, GLB loading, visibility/opacity controls, picking, or clipping.
+TASK-047 adds explicit reversible Patient Space ↔ Render Space ↔ Three world
+conversion. The renderer and scene now require a `PatientRenderTransform`.
+The web composition supplies `createFixtureCoordinateTransform()` explicitly:
+origin (0,0,12) mm, identity rotation, and 100 mm per render unit. The parent
+geometry matrix, camera and lights share this mapping. See
+[coordinate contracts](../rendering-core/COORDINATES.md) for equations, units,
+validation and numerical tolerances. Camera input, GLB loading,
+visibility/opacity controls, picking and clipping remain later tasks.

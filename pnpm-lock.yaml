@@ -121,6 +121,15 @@ importers:
       '@procedural-human/core':
         specifier: workspace:*
         version: link:../core
+      '@procedural-human/math':
+        specifier: workspace:*
+        version: link:../math
+      '@procedural-human/rendering-core':
+        specifier: workspace:*
+        version: link:../rendering-core
+      '@procedural-human/units':
+        specifier: workspace:*
+        version: link:../units
       three:
         specifier: 0.185.1
         version: 0.185.1

@@ -74,6 +74,13 @@ export interface RenderSpacePoint {
   readonly value: Vec3;
 }
 
+/** Displacement in the explicitly configured render units, not a direction. */
+export interface RenderSpaceVector {
+  readonly space: 'render';
+  readonly kind: 'vector';
+  readonly value: Vec3;
+}
+
 export interface ImageVoxelCoordinate {
   readonly space: 'image-voxel';
   readonly i: number;
@@ -122,4 +129,14 @@ export const imageVoxelCoordinate = (
   i,
   j,
   k,
+});
+
+export const renderSpaceVector = (
+  x: number,
+  y: number,
+  z: number,
+): RenderSpaceVector => ({
+  space: 'render',
+  kind: 'vector',
+  value: vec3(x, y, z),
 });

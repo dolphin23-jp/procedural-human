@@ -37,7 +37,8 @@ constructor performs its own scalar validation; type assertions can bypass it,
 so adapters remain responsible for untrusted input.
 
 The adapter must explicitly convert Patient Space to its Render Space. No
-identity transform is implied. Coordinate conversion and tests belong to
-TASK-047; renderer implementation to TASK-046; visibility/opacity/picking/input
+identity transform is implied. TASK-047 implements the neutral
+`PatientRenderTransform`; see [coordinate contracts](COORDINATES.md).
+Renderer implementation belongs to TASK-046; visibility/opacity/picking/input
 and clipping behavior to TASK-049–055. No GLB loader, state store, renderer,
 picking algorithm, input controller, or clipping algorithm is implemented here.
