@@ -43,3 +43,11 @@ canonical entities fail loading. GLB names remain presentation/debug metadata on
 The descriptor also requires `coordinateSpace: "patient-mm"`. Loaded geometry is
 wrapped once by the explicit TASK-047 Patient→Render transform. Missing or implied
 registration is not accepted.
+
+## TASK-049 — Structure visibility
+
+`ThreeStructurePresentation.setVisibility()` resolves a semantic `StructureId`
+through the shared semantic registry and updates only the Three.js `visible`
+property on every render mesh bound to that structure. Unknown or unbound
+structures fail explicitly. Visibility does not clear selection, alter opacity,
+mutate `PatientInstance` medical state, or call Spatial Query.

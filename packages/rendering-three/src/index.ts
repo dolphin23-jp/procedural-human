@@ -123,3 +123,4 @@ export {
   FIXTURE_RENDER_ASSET_ID,
 } from './fixture-semantics.js';
 export { FIXTURE_STRUCTURE_IDS } from './fixture-ids.js';
+export { ThreeStructurePresentation } from './structure-presentation.js';
