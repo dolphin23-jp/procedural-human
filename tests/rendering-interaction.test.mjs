@@ -146,9 +146,7 @@ test('TASK-055 clipping plane preserves Patient Space keep-positive semantics af
   const normal = patientSpaceDirection(Math.SQRT1_2, 0, Math.SQRT1_2);
   const plane = patientClippingPlaneToThree({ origin, normal }, coordinates);
 
-  const onPlane = renderPointToThree(
-    coordinates.patientPointToRender(origin),
-  );
+  const onPlane = renderPointToThree(coordinates.patientPointToRender(origin));
   const keptPoint = renderPointToThree(
     coordinates.patientPointToRender(
       patientSpacePoint(
