@@ -122,68 +122,72 @@ test('TASK-052 camera input emits physical intents and uses dimensionless direct
   assert.throws(() => patientSpaceDirection(2, 0, 0), /unit direction/);
 });
 
-test('TASK-054 structure metadata comes from canonical semantics and preserves unavailable accuracy', () => {
-  const { context, group } = boundFixture();
-  const identity = context.identityFor(FIXTURE_STRUCTURE_IDS.vein);
+test(
+  'TASK-054 structure metadata comes from canonical semantics and preserves unavailable accuracy',
+  () => {
+    const { context, group } = boundFixture();
+    const identity = context.identityFor(FIXTURE_STRUCTURE_IDS.vein);
 
-  assert.equal(identity.anatomicalEntity.name, 'Fixture Vein');
-  assert.equal(
-    identity.anatomicalEntity.provenance.sourceClass,
-    'development-fixture',
-  );
-  assert.equal(identity.anatomicalEntity.validation.level, 'V0');
-  assert.equal(identity.anatomicalEntity.accuracy.geometryAccuracy, null);
+    assert.equal(identity.anatomicalEntity.name, 'Fixture Vein');
+    assert.equal(
+      identity.anatomicalEntity.provenance.sourceClass,
+      'development-fixture',
+    );
+    assert.equal(identity.anatomicalEntity.validation.level, 'V0');
+    assert.equal(identity.anatomicalEntity.accuracy.geometryAccuracy, null);
 
-  group.children[2].name = 'high-confidence-real-vein';
-  const sameIdentity = context.identityFor(FIXTURE_STRUCTURE_IDS.vein);
-  assert.equal(sameIdentity.anatomicalEntity.validation.level, 'V0');
-  assert.equal(sameIdentity.anatomicalEntity.accuracy.geometryAccuracy, null);
-});
+    group.children[2].name = 'high-confidence-real-vein';
+    const sameIdentity = context.identityFor(FIXTURE_STRUCTURE_IDS.vein);
+    assert.equal(sameIdentity.anatomicalEntity.validation.level, 'V0');
+    assert.equal(sameIdentity.anatomicalEntity.accuracy.geometryAccuracy, null);
+  },
+);
 
-test('TASK-055 clipping plane preserves Patient Space keep-positive semantics after render conversion', () => {
-  const coordinates = createFixtureCoordinateTransform();
-  const origin = patientSpacePoint(8, -4, 18);
-  const normal = patientSpaceDirection(Math.SQRT1_2, 0, Math.SQRT1_2);
-  const plane = patientClippingPlaneToThree({ origin, normal }, coordinates);
+test(
+  'TASK-055 clipping plane preserves Patient Space keep-positive semantics after render conversion',
+  () => {
+    const coordinates = createFixtureCoordinateTransform();
+    const origin = patientSpacePoint(8, -4, 18);
+    const normal = patientSpaceDirection(Math.SQRT1_2, 0, Math.SQRT1_2);
+    const plane = patientClippingPlaneToThree({ origin, normal }, coordinates);
 
-  const onPlane = renderPointToThree(
-    coordinates.patientPointToRender(origin),
-  );
-  const keptPoint = renderPointToThree(
-    coordinates.patientPointToRender(
-      patientSpacePoint(
-        origin.value.x + normal.value.x * 10,
-        origin.value.y + normal.value.y * 10,
-        origin.value.z + normal.value.z * 10,
+    const onPlane = renderPointToThree(coordinates.patientPointToRender(origin));
+    const keptPoint = renderPointToThree(
+      coordinates.patientPointToRender(
+        patientSpacePoint(
+          origin.value.x + normal.value.x * 10,
+          origin.value.y + normal.value.y * 10,
+          origin.value.z + normal.value.z * 10,
+        ),
       ),
-    ),
-  );
-  const clippedPoint = renderPointToThree(
-    coordinates.patientPointToRender(
-      patientSpacePoint(
-        origin.value.x - normal.value.x * 10,
-        origin.value.y - normal.value.y * 10,
-        origin.value.z - normal.value.z * 10,
+    );
+    const clippedPoint = renderPointToThree(
+      coordinates.patientPointToRender(
+        patientSpacePoint(
+          origin.value.x - normal.value.x * 10,
+          origin.value.y - normal.value.y * 10,
+          origin.value.z - normal.value.z * 10,
+        ),
       ),
-    ),
-  );
+    );
 
-  assert.ok(Math.abs(plane.distanceToPoint(onPlane)) < 1e-12);
-  assert.ok(plane.distanceToPoint(keptPoint) > 0);
-  assert.ok(plane.distanceToPoint(clippedPoint) < 0);
-  assert.throws(
-    () =>
-      patientClippingPlaneToThree(
-        {
-          origin,
-          normal: {
-            space: 'patient',
-            kind: 'direction',
-            value: { x: 2, y: 0, z: 0 },
+    assert.ok(Math.abs(plane.distanceToPoint(onPlane)) < 1e-12);
+    assert.ok(plane.distanceToPoint(keptPoint) > 0);
+    assert.ok(plane.distanceToPoint(clippedPoint) < 0);
+    assert.throws(
+      () =>
+        patientClippingPlaneToThree(
+          {
+            origin,
+            normal: {
+              space: 'patient',
+              kind: 'direction',
+              value: { x: 2, y: 0, z: 0 },
+            },
           },
-        },
-        coordinates,
-      ),
-    /unit direction/,
-  );
-});
+          coordinates,
+        ),
+      /unit direction/,
+    );
+  },
+);
