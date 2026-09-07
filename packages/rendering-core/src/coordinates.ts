@@ -1,11 +1,15 @@
 import {
+  patientSpaceDirection,
   patientSpacePoint,
   patientSpaceVector,
+  renderSpaceDirection,
   renderSpacePoint,
   renderSpaceVector,
+  type PatientSpaceDirection,
   type PatientSpacePoint,
   type PatientSpaceVector,
   type Quaternion,
+  type RenderSpaceDirection,
   type RenderSpacePoint,
   type RenderSpaceVector,
   type Vec3,
@@ -31,10 +35,12 @@ function tagged(
   value:
     | PatientSpacePoint
     | PatientSpaceVector
+    | PatientSpaceDirection
     | RenderSpacePoint
-    | RenderSpaceVector,
+    | RenderSpaceVector
+    | RenderSpaceDirection,
   space: 'patient' | 'render',
-  kind: 'point' | 'vector',
+  kind: 'point' | 'vector' | 'direction',
 ): void {
   if (!value || value.space !== space || value.kind !== kind) {
     throw new TypeError(`Expected ${space}-space ${kind}.`);
@@ -84,7 +90,6 @@ export class PatientRenderTransform {
         'Patient-to-render rotation must be a unit quaternion.',
       );
     }
-    // Correct only floating-point normalization error, never arbitrary rotations.
     const rotation = Object.freeze({
       x: q.x / norm,
       y: q.y / norm,
@@ -157,5 +162,21 @@ export class PatientRenderTransform {
     const result = patientSpaceVector(v.x * scale, v.y * scale, v.z * scale);
     finite(result.value);
     return result;
+  }
+
+  patientDirectionToRender(
+    direction: PatientSpaceDirection,
+  ): RenderSpaceDirection {
+    tagged(direction, 'patient', 'direction');
+    const v = rotate(direction.value, this.config.patientToRenderRotation);
+    return renderSpaceDirection(v.x, v.y, v.z);
+  }
+
+  renderDirectionToPatient(
+    direction: RenderSpaceDirection,
+  ): PatientSpaceDirection {
+    tagged(direction, 'render', 'direction');
+    const v = rotate(direction.value, this.#inverseRotation);
+    return patientSpaceDirection(v.x, v.y, v.z);
   }
 }

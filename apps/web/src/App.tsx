@@ -7,6 +7,9 @@ import { useEffect, useRef, useState } from 'react';
 export function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [renderError, setRenderError] = useState<string | null>(null);
+  const [selectedStructure, setSelectedStructure] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -15,6 +18,10 @@ export function App() {
     try {
       renderer = new ThreeFixtureRenderer(canvas, {
         coordinates: createFixtureCoordinateTransform(),
+      });
+      renderer.attachInput({
+        onSelection: (selection) =>
+          setSelectedStructure(selection?.anatomicalEntity.name ?? null),
       });
     } catch (error) {
       setRenderError(
@@ -51,6 +58,15 @@ export function App() {
         </header>
         <div className="viewer__viewport">
           <canvas ref={canvasRef} aria-label="3D synthetic anatomy fixture" />
+          <p className="viewer__controls">
+            Drag to rotate · Shift-drag to pan · wheel/pinch to zoom · tap to
+            select
+          </p>
+          {selectedStructure && (
+            <p className="viewer__selection" aria-live="polite">
+              Selected: {selectedStructure}
+            </p>
+          )}
           <div className="viewer__legend" aria-label="Fixture structure legend">
             <span>
               <i className="legend-swatch legend-swatch--skin" />

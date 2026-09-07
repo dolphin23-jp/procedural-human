@@ -13,7 +13,18 @@ declare module 'three' {
     constructor(x?: number, y?: number, z?: number);
     set(x: number, y: number, z: number): this;
     copy(v: Vector3): this;
+    clone(): Vector3;
+    add(v: Vector3): this;
+    sub(v: Vector3): this;
+    multiplyScalar(value: number): this;
     normalize(): this;
+    length(): number;
+    crossVectors(a: Vector3, b: Vector3): this;
+    applyQuaternion(q: Quaternion): this;
+  }
+  export class Quaternion {
+    constructor(x?: number, y?: number, z?: number, w?: number);
+    setFromAxisAngle(axis: Vector3, angle: number): this;
   }
   export class Matrix4 {
     set(
