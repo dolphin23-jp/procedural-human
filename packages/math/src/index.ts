@@ -96,6 +96,10 @@ export interface RenderSpaceDirection {
   readonly value: Vec3;
 }
 
+/** Continuous zero-based voxel-center indices; (0,0,0) is the first center.
+ * Fractions and out-of-buffer coordinates are valid geometry, not array access.
+ * Imaging transforms validate finite values; no implicit half-voxel offset.
+ */
 export interface ImageVoxelCoordinate {
   readonly space: 'image-voxel';
   readonly i: number;

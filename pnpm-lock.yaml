@@ -70,7 +70,17 @@ importers:
 
   packages/event-log: {}
 
-  packages/imaging-core: {}
+  packages/imaging-core:
+    dependencies:
+      '@procedural-human/core':
+        specifier: workspace:*
+        version: link:../core
+      '@procedural-human/math':
+        specifier: workspace:*
+        version: link:../math
+      '@procedural-human/units':
+        specifier: workspace:*
+        version: link:../units
 
   packages/imaging-cornerstone: {}
 
@@ -140,7 +150,17 @@ importers:
         specifier: 0.185.1
         version: 0.185.1
 
-  packages/session: {}
+  packages/session:
+    dependencies:
+      '@procedural-human/imaging-core':
+        specifier: workspace:*
+        version: link:../imaging-core
+      '@procedural-human/math':
+        specifier: workspace:*
+        version: link:../math
+      '@procedural-human/rendering-core':
+        specifier: workspace:*
+        version: link:../rendering-core
 
   packages/spatial:
     dependencies:

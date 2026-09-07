@@ -291,6 +291,15 @@ Round-trip transforms must be tested.
 
 Unknown registration must never silently become identity registration.
 
+TASK-056/057 ownership clarification: `imaging-core` owns Image ↔ Patient
+geometry and depends only on core/units/math. The existing neutral
+`PatientRenderTransform` in `rendering-core` owns Patient ↔ Render math.
+`session` owns the small `ImageRenderCoordinateBridge` composition utility and
+imports both; neither core subsystem imports the other. This utility does not
+implement SimulationSession lifecycle (TASK-082). See
+[imaging coordinates](packages/imaging-core/COORDINATES.md) for exact index,
+frame, handedness, registration, and numerical contracts.
+
 ## 24. packages/rendering-core
 
 Owns rendering-neutral presentation concepts such as visibility, opacity, selection, clipping plane, and camera intent.
