@@ -5,6 +5,7 @@ import { patientSpacePoint } from '@procedural-human/math';
 import {
   PatientRenderTransform,
   type CameraIntent,
+  type PatientClippingPlane,
   type StructureOpacity,
   type StructureVisibility,
 } from '@procedural-human/rendering-core';
@@ -18,6 +19,7 @@ import {
 } from 'three';
 import { CameraInputController } from './camera-input.js';
 import { ThreeCameraRig } from './camera-rig.js';
+import { patientClippingPlaneToThree } from './clipping-plane.js';
 import {
   ThreeFixtureScene,
   fixtureGroupFor,
@@ -35,7 +37,10 @@ import { createFixtureCamera } from './fixture-view.js';
 
 export { ThreeFixtureScene } from './fixture-scene.js';
 export type { FixtureSceneSummary } from './fixture-scene.js';
-export { createFixtureCoordinateTransform } from './fixture-coordinates.js';
+export {
+  createFixtureCoordinateTransform,
+  createFixtureDemoClippingPlane,
+} from './fixture-coordinates.js';
 
 export interface ThreeFixtureRendererOptions {
   readonly coordinates: PatientRenderTransform;
@@ -50,6 +55,7 @@ export interface ThreeFixtureInputOptions {
 /** Interactive renderer for the explicitly non-medical synthetic fixture. */
 export class ThreeFixtureRenderer {
   readonly #canvas: HTMLCanvasElement;
+  readonly #coordinates: PatientRenderTransform;
   readonly #renderer: WebGLRenderer;
   readonly #scene: Scene;
   readonly #camera: PerspectiveCamera;
@@ -73,6 +79,7 @@ export class ThreeFixtureRenderer {
       );
     }
     this.#canvas = canvas;
+    this.#coordinates = coordinates;
     this.#context = options.semanticContext ?? createFixtureSemanticContext();
     this.#camera = createFixtureCamera(coordinates);
     this.#cameraRig = new ThreeCameraRig(
@@ -149,6 +156,15 @@ export class ThreeFixtureRenderer {
 
   setOpacity(request: StructureOpacity): void {
     this.#presentation.setOpacity(request);
+    this.render();
+  }
+
+  setClippingPlane(plane: PatientClippingPlane | null): void {
+    this.#assertActive();
+    this.#renderer.clippingPlanes =
+      plane === null
+        ? []
+        : [patientClippingPlaneToThree(plane, this.#coordinates)];
     this.render();
   }
 
