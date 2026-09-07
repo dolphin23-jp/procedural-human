@@ -127,7 +127,8 @@ export function loadedAssetGroupFor(asset: ThreeLoadedRenderAsset): Group {
     throw new TypeError('Asset was not created by ThreeGlbRuntimeLoader.');
   }
   const state = loadedStates.get(asset);
-  if (!state || state.disposed) throw new Error('Loaded GLB asset is disposed.');
+  if (!state || state.disposed)
+    throw new Error('Loaded GLB asset is disposed.');
   return state.root;
 }
 

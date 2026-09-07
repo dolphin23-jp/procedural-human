@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/triple-slash-reference -- adapter-local Three declarations */
 /// <reference path="./three.d.ts" />
-import type { AnatomicalEntity, AnatomicalGraph } from '@procedural-human/anatomy';
+import type {
+  AnatomicalEntity,
+  AnatomicalGraph,
+} from '@procedural-human/anatomy';
 import type { PatientId, StructureId } from '@procedural-human/core';
 import type {
   PatientInstance,
@@ -23,7 +26,10 @@ interface InternalSemanticRegistry {
   readonly byMesh: WeakMap<Mesh, SemanticRenderIdentity>;
 }
 
-const registries = new WeakMap<ThreeSemanticContext, InternalSemanticRegistry>();
+const registries = new WeakMap<
+  ThreeSemanticContext,
+  InternalSemanticRegistry
+>();
 
 export class ThreeSemanticContext {
   readonly patientId: PatientId;

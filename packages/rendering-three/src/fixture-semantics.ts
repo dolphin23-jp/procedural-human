@@ -1,4 +1,7 @@
-import { AnatomicalGraph, type AnatomicalEntity } from '@procedural-human/anatomy';
+import {
+  AnatomicalGraph,
+  type AnatomicalEntity,
+} from '@procedural-human/anatomy';
 import {
   assetId,
   contentHash,
