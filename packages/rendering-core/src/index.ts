@@ -1,5 +1,6 @@
 import type { PatientId, StructureId } from '@procedural-human/core';
 import type {
+  PatientSpaceDirection,
   PatientSpacePoint,
   PatientSpaceVector,
 } from '@procedural-human/math';
@@ -41,7 +42,7 @@ export type StructureSelection = StructureId | null;
  */
 export interface PatientClippingPlane {
   readonly origin: PatientSpacePoint;
-  readonly normal: PatientSpaceVector;
+  readonly normal: PatientSpaceDirection;
 }
 
 /** Device-independent intents; all spatial values are in Patient Space. */
@@ -50,7 +51,7 @@ export type CameraIntent =
       readonly type: 'orbit';
       readonly pivot: PatientSpacePoint;
       /** Finite unit axis; positive angle follows the right-hand rule. */
-      readonly axis: PatientSpaceVector;
+      readonly axis: PatientSpaceDirection;
       readonly angle: Angle;
     }
   | {

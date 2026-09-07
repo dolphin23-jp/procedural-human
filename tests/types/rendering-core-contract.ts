@@ -4,6 +4,7 @@ import {
   structureId,
 } from '../../packages/core/src/index';
 import {
+  patientSpaceDirection,
   patientSpacePoint,
   patientSpaceVector,
   renderSpacePoint,
@@ -18,7 +19,7 @@ import type {
 declare const api: RenderingPresentationApi;
 const id = structureId('structure.fixture.vein');
 const origin = patientSpacePoint(0, 0, 0);
-const normal = patientSpaceVector(0, 0, 1);
+const normal = patientSpaceDirection(0, 0, 1);
 api.setVisibility({ structureId: id, visible: false });
 api.setOpacity({ structureId: id, opacity: opacity(0.3) });
 api.setSelection(id);
@@ -45,8 +46,15 @@ api.setSelection(entityId('vein'));
 api.setOpacity({ structureId: id, opacity: 0.3 });
 // @ts-expect-error Render Space is not Patient Space.
 api.setClippingPlane({ origin: renderSpacePoint(0, 0, 0), normal });
-// @ts-expect-error A point cannot substitute for a plane normal.
-api.setClippingPlane({ origin, normal: origin });
+// @ts-expect-error A displacement cannot substitute for a unit normal.
+api.setClippingPlane({ origin, normal: patientSpaceVector(0, 0, 1) });
+api.applyCameraIntent({
+  type: 'orbit',
+  pivot: origin,
+  // @ts-expect-error Orbit axes are dimensionless directions, not displacements.
+  axis: patientSpaceVector(0, 1, 0),
+  angle: degrees(30),
+});
 api.applyCameraIntent({
   type: 'orbit',
   pivot: origin,
@@ -65,7 +73,6 @@ api.setClippingPlane();
 // @ts-expect-error Visibility uses semantic IDs too.
 api.setVisibility({ structureId: 'mesh', visible: true });
 
-// All variants must remain discriminated and exhaustively handleable.
 function intentKind(intent: CameraIntent): string {
   switch (intent.type) {
     case 'orbit':

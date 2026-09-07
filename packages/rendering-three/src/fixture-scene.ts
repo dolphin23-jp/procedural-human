@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/triple-slash-reference -- adapter-local Three declarations */
 /// <reference path="./three.d.ts" />
-import { structureId, type StructureId } from '@procedural-human/core';
+import type { StructureId } from '@procedural-human/core';
 import { PatientRenderTransform } from '@procedural-human/rendering-core';
 import {
   BoxGeometry,
@@ -10,13 +10,7 @@ import {
   MeshStandardMaterial,
 } from 'three';
 import { patientToThreeMatrix } from './three-coordinates.js';
-
-const FIXTURE_STRUCTURE_IDS = Object.freeze({
-  skin: structureId('structure.fixture.skin'),
-  softTissue: structureId('structure.fixture.soft-tissue'),
-  vein: structureId('structure.fixture.vein'),
-  artery: structureId('structure.fixture.artery'),
-});
+import { FIXTURE_STRUCTURE_IDS } from './fixture-ids.js';
 
 export interface FixtureSceneSummary {
   readonly structureIds: readonly StructureId[];
