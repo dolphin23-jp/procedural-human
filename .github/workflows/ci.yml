@@ -33,7 +33,11 @@ jobs:
       - run: uv sync --locked
 
       - run: pnpm lint
-      - run: pnpm format:check
+      - name: Probe formatter diff
+        run: |
+          pnpm prettier --write tests/rendering-interaction.test.mjs
+          git diff -- tests/rendering-interaction.test.mjs
+          exit 1
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm spatial:baseline
