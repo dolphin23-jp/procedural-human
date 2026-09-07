@@ -136,9 +136,7 @@ export class ThreeFixtureRenderer {
       },
       onTap: (clientX, clientY) => {
         const selection = this.pickClientPoint(clientX, clientY);
-        this.#presentation.setSelection(
-          selection?.patientStructure.id ?? null,
-        );
+        this.#presentation.setSelection(selection?.patientStructure.id ?? null);
         options.onSelection?.(selection);
       },
     });

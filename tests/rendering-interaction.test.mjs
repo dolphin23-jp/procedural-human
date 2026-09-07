@@ -93,11 +93,11 @@ test('TASK-051 picking returns patient/canonical semantics rather than mesh name
 test('TASK-052 camera input emits physical intents and uses dimensionless directions', () => {
   const coordinates = createFixtureCoordinateTransform();
   const camera = createFixtureCamera(coordinates);
-  const rig = new ThreeCameraRig(
-    camera,
-    coordinates,
-    { space: 'patient', kind: 'point', value: { x: 0, y: 0, z: 12 } },
-  );
+  const rig = new ThreeCameraRig(camera, coordinates, {
+    space: 'patient',
+    kind: 'point',
+    value: { x: 0, y: 0, z: 12 },
+  });
   const frame = rig.inputFrame(800);
   assert.equal(frame.screenRight.kind, 'direction');
   assert.equal(frame.screenUp.kind, 'direction');

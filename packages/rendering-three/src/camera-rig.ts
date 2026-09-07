@@ -12,10 +12,7 @@ import type {
   CameraIntent,
   PatientRenderTransform,
 } from '@procedural-human/rendering-core';
-import {
-  toMillimetres,
-  toRadians,
-} from '@procedural-human/units';
+import { toMillimetres, toRadians } from '@procedural-human/units';
 import { PerspectiveCamera, Quaternion, Vector3 } from 'three';
 import {
   renderPointToThree,
@@ -77,8 +74,13 @@ export class ThreeCameraRig {
         direction.normalize();
         const travel = millimetres / mmPerUnit;
         const nextDistance = currentDistance - travel;
-        if (!Number.isFinite(nextDistance) || nextDistance <= this.#camera.near * 2) {
-          throw new RangeError('Camera dolly would cross the focus target or near plane.');
+        if (
+          !Number.isFinite(nextDistance) ||
+          nextDistance <= this.#camera.near * 2
+        ) {
+          throw new RangeError(
+            'Camera dolly would cross the focus target or near plane.',
+          );
         }
         this.#camera.position.add(direction.multiplyScalar(travel));
         this.#lookAtTarget();

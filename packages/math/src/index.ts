@@ -105,12 +105,7 @@ export interface ImageVoxelCoordinate {
 
 export const vec3 = (x: number, y: number, z: number): Vec3 => ({ x, y, z });
 
-function unitDirection(
-  x: number,
-  y: number,
-  z: number,
-  label: string,
-): Vec3 {
+function unitDirection(x: number, y: number, z: number, label: string): Vec3 {
   if (![x, y, z].every(Number.isFinite)) {
     throw new RangeError(`${label} components must be finite.`);
   }

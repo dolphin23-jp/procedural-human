@@ -42,7 +42,9 @@ export class ThreeStructurePresentation {
       request.opacity < 0 ||
       request.opacity > 1
     ) {
-      throw new RangeError('Structure opacity must be finite and between 0 and 1.');
+      throw new RangeError(
+        'Structure opacity must be finite and between 0 and 1.',
+      );
     }
     this.#context.identityFor(request.structureId);
     const meshes = semanticMeshesFor(this.#context, request.structureId);
@@ -89,6 +91,7 @@ export class ThreeStructurePresentation {
   }
 
   #assertActive(): void {
-    if (this.#disposed) throw new Error('ThreeStructurePresentation is disposed.');
+    if (this.#disposed)
+      throw new Error('ThreeStructurePresentation is disposed.');
   }
 }

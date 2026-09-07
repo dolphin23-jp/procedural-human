@@ -43,7 +43,9 @@ export function orbitIntentsFromScreenDrag(
     ![deltaX, deltaY, radiansPerPixel].every(Number.isFinite) ||
     radiansPerPixel <= 0
   ) {
-    throw new RangeError('Orbit drag values must be finite and scale positive.');
+    throw new RangeError(
+      'Orbit drag values must be finite and scale positive.',
+    );
   }
   return Object.freeze([
     orbitIntent(frame, frame.screenUp, -deltaX * radiansPerPixel),
@@ -68,7 +70,9 @@ export function dollyIntentFromPixels(
   multiplier = 1,
 ): CameraIntent {
   if (![pixels, multiplier].every(Number.isFinite) || multiplier <= 0) {
-    throw new RangeError('Dolly input values must be finite and multiplier positive.');
+    throw new RangeError(
+      'Dolly input values must be finite and multiplier positive.',
+    );
   }
   return {
     type: 'dolly',
@@ -84,9 +88,14 @@ export class CameraInputController {
   readonly #previousTouchAction: string;
   #disposed = false;
 
-  constructor(canvas: HTMLCanvasElement, options: CameraInputControllerOptions) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    options: CameraInputControllerOptions,
+  ) {
     if (!canvas || !options?.frame || !options.emit) {
-      throw new TypeError('Canvas, frame provider and CameraIntent sink are required.');
+      throw new TypeError(
+        'Canvas, frame provider and CameraIntent sink are required.',
+      );
     }
     this.#canvas = canvas;
     this.#options = options;

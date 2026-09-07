@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/triple-slash-reference -- adapter-local Three declarations */
 /// <reference path="./three.d.ts" />
 import type { PatientSpacePoint } from '@procedural-human/math';
+import type { PatientRenderTransform } from '@procedural-human/rendering-core';
 import type { PerspectiveCamera } from 'three';
 import { Raycaster, Vector2 } from 'three';
 import {
@@ -10,7 +11,6 @@ import {
   ThreeSemanticContext,
 } from './semantic-context.js';
 import { threePointToRender } from './three-coordinates.js';
-import type { PatientRenderTransform } from '@procedural-human/rendering-core';
 
 export interface SemanticPickResult extends SemanticRenderIdentity {
   readonly patientPoint: PatientSpacePoint;
@@ -39,7 +39,9 @@ export class ThreeSemanticPicker {
     camera: PerspectiveCamera,
   ): SemanticPickResult | null {
     if (![x, y].every(Number.isFinite) || x < -1 || x > 1 || y < -1 || y > 1) {
-      throw new RangeError('Picking coordinates must be finite NDC values in [-1, 1].');
+      throw new RangeError(
+        'Picking coordinates must be finite NDC values in [-1, 1].',
+      );
     }
     this.#raycaster.setFromCamera(new Vector2(x, y), camera);
     const candidates = allSemanticMeshes(this.#context).filter(
@@ -47,7 +49,10 @@ export class ThreeSemanticPicker {
     );
     const intersections = this.#raycaster.intersectObjects(candidates, false);
     for (const intersection of intersections) {
-      const identity = resolveSemanticObject(this.#context, intersection.object);
+      const identity = resolveSemanticObject(
+        this.#context,
+        intersection.object,
+      );
       if (!identity) continue;
       return Object.freeze({
         ...identity,
