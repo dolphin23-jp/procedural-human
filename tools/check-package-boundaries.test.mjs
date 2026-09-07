@@ -81,3 +81,33 @@ test('spatial rejects renderer and higher-level workspace dependencies', async (
     await rm(rootDir, { recursive: true, force: true });
   }
 });
+
+test('TASK-056 imaging core cannot depend on rendering/session or leak Three/Cornerstone/React', async () => {
+  const rootDir = await mkdtemp(
+    path.join(os.tmpdir(), 'procedural-human-imaging-boundary-'),
+  );
+  try {
+    for (const [owner, target] of [
+      ['imaging-core', '@procedural-human/rendering-core'],
+      ['imaging-core', '@procedural-human/session'],
+      ['imaging-core', 'three'],
+      ['imaging-core', '@cornerstonejs/core'],
+      ['imaging-core', 'react'],
+      ['rendering-core', '@procedural-human/imaging-core'],
+      ['rendering-core', '@procedural-human/session'],
+    ]) {
+      const dir = path.join(rootDir, 'packages', owner, 'src');
+      await mkdir(dir, { recursive: true });
+      const file = path.join(dir, 'violation.ts');
+      await writeFile(file, `export * from '${target}';\n`);
+      assert.equal(
+        (await checkPackageBoundaries(rootDir)).length,
+        1,
+        `${owner} -> ${target}`,
+      );
+      await rm(file);
+    }
+  } finally {
+    await rm(rootDir, { recursive: true, force: true });
+  }
+});

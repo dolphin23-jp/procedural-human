@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 const forbiddenWorkspaceEdges = new Map([
   ['patient', new Set(['procedures', 'spatial'])],
   ['instruments', new Set(['procedures'])],
+  ['rendering-core', new Set(['imaging-core', 'session'])],
 ]);
 
 const anatomyAllowedWorkspaceTargets = new Set(['core', 'units', 'math']);
@@ -155,6 +156,15 @@ export async function checkPackageBoundaries(rootDir) {
       ) {
         violations.push(
           `${relativePath}: @procedural-human/spatial may only depend on @procedural-human/core, @procedural-human/units, @procedural-human/math, @procedural-human/anatomy, or @procedural-human/patient`,
+        );
+      } else if (
+        owner.kind === 'package' &&
+        owner.name === 'imaging-core' &&
+        workspaceTarget &&
+        !anatomyAllowedWorkspaceTargets.has(workspaceTarget)
+      ) {
+        violations.push(
+          `${relativePath}: imaging-core may only depend on core, units, or math`,
         );
       } else if (
         owner.kind === 'package' &&
