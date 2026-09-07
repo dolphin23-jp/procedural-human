@@ -7,6 +7,7 @@ import {
   patientSpaceVector,
   renderSpacePoint,
   renderSpaceVector,
+  type RenderSpaceDirection,
   type RenderSpacePoint,
   type RenderSpaceVector,
 } from '@procedural-human/math';
@@ -40,6 +41,24 @@ export function renderVectorToThree(vector: RenderSpaceVector): Vector3 {
 export function threeVectorToRender(vector: Vector3): RenderSpaceVector {
   finite(vector.x, vector.y, vector.z);
   return renderSpaceVector(vector.x, vector.y, vector.z);
+}
+
+export function renderDirectionToThree(
+  direction: RenderSpaceDirection,
+): Vector3 {
+  if (
+    !direction ||
+    direction.space !== 'render' ||
+    direction.kind !== 'direction'
+  ) {
+    throw new TypeError('Expected render-space direction.');
+  }
+  finite(direction.value.x, direction.value.y, direction.value.z);
+  return new Vector3(
+    direction.value.x,
+    direction.value.y,
+    direction.value.z,
+  );
 }
 
 /** Column basis built from the same neutral transform used by point queries. */
