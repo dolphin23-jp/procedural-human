@@ -1,4 +1,4 @@
-# Rendering-core contracts (TASK-045, refined by TASK-052)
+# Rendering-core contracts (TASK-045, refined by TASK-052 / TASK-055)
 
 This package owns transient presentation contracts, independent of browser input,
 Three.js, React, medical state, and Spatial Query. It compiles without DOM types.
@@ -43,6 +43,7 @@ identity transform is implied. TASK-047 implements the neutral
 
 Renderer implementation belongs to `packages/rendering-three`. TASK-048 adds
 explicit GLB semantic binding, TASK-049/050 semantic visibility and opacity,
-TASK-051 semantic picking, and TASK-052 mouse/touch input normalization. Clipping
-rendering remains TASK-055. Rendering-core itself contains none of those concrete
-Three.js or browser implementations.
+TASK-051 semantic picking, TASK-052 mouse/touch input normalization, and TASK-055
+concrete clipping rendering. The Three adapter converts the patient-space plane
+to a world-space Three plane while preserving the contract's nonnegative
+keep-side; no renderer type is added to rendering-core.

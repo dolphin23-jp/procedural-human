@@ -1,15 +1,63 @@
 import {
   ThreeFixtureRenderer,
   createFixtureCoordinateTransform,
+  createFixtureDemoClippingPlane,
+  type SemanticPickResult,
 } from '@procedural-human/rendering-three';
 import { useEffect, useRef, useState } from 'react';
 
+const accuracyRows = [
+  ['Identity', 'identityAccuracy'],
+  ['Topology', 'topologyAccuracy'],
+  ['Geometry', 'geometryAccuracy'],
+  ['Registration', 'registrationAccuracy'],
+  ['Diameter', 'diameterAccuracy'],
+  ['Relationship', 'relationshipAccuracy'],
+] as const;
+
+function metadataValue(value: string | null): string {
+  return value ?? 'Unavailable';
+}
+
+function StructureMetadataPanel({
+  selection,
+}: {
+  readonly selection: SemanticPickResult;
+}) {
+  const entity = selection.anatomicalEntity;
+
+  return (
+    <aside className="viewer__metadata" aria-label="Structure metadata">
+      <p className="metadata__eyebrow">Selected structure</p>
+      <h2>{entity.name}</h2>
+      <dl className="metadata__summary">
+        <dt>Source class</dt>
+        <dd>{entity.provenance.sourceClass}</dd>
+        <dt>Validation</dt>
+        <dd>{entity.validation.level}</dd>
+      </dl>
+      {entity.validation.notes && (
+        <p className="metadata__notes">{entity.validation.notes}</p>
+      )}
+      <h3>Accuracy</h3>
+      <dl className="metadata__accuracy">
+        {accuracyRows.map(([label, key]) => (
+          <div key={key}>
+            <dt>{label}</dt>
+            <dd>{metadataValue(entity.accuracy[key])}</dd>
+          </div>
+        ))}
+      </dl>
+    </aside>
+  );
+}
+
 export function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rendererRef = useRef<ThreeFixtureRenderer | null>(null);
   const [renderError, setRenderError] = useState<string | null>(null);
-  const [selectedStructure, setSelectedStructure] = useState<string | null>(
-    null,
-  );
+  const [selection, setSelection] = useState<SemanticPickResult | null>(null);
+  const [clippingEnabled, setClippingEnabled] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -19,9 +67,9 @@ export function App() {
       renderer = new ThreeFixtureRenderer(canvas, {
         coordinates: createFixtureCoordinateTransform(),
       });
+      rendererRef.current = renderer;
       renderer.attachInput({
-        onSelection: (selection) =>
-          setSelectedStructure(selection?.anatomicalEntity.name ?? null),
+        onSelection: setSelection,
       });
     } catch (error) {
       setRenderError(
@@ -40,9 +88,20 @@ export function App() {
     resize();
     return () => {
       observer.disconnect();
+      if (rendererRef.current === renderer) rendererRef.current = null;
       renderer.dispose();
     };
   }, []);
+
+  const toggleClipping = () => {
+    const renderer = rendererRef.current;
+    if (!renderer) return;
+    const enabled = !clippingEnabled;
+    renderer.setClippingPlane(
+      enabled ? createFixtureDemoClippingPlane() : null,
+    );
+    setClippingEnabled(enabled);
+  };
 
   return (
     <main className="shell">
@@ -62,11 +121,15 @@ export function App() {
             Drag to rotate · Shift-drag to pan · wheel/pinch to zoom · tap to
             select
           </p>
-          {selectedStructure && (
-            <p className="viewer__selection" aria-live="polite">
-              Selected: {selectedStructure}
-            </p>
-          )}
+          <button
+            className="viewer__clip-toggle"
+            type="button"
+            aria-pressed={clippingEnabled}
+            onClick={toggleClipping}
+          >
+            Clipping plane: {clippingEnabled ? 'On' : 'Off'}
+          </button>
+          {selection && <StructureMetadataPanel selection={selection} />}
           <div className="viewer__legend" aria-label="Fixture structure legend">
             <span>
               <i className="legend-swatch legend-swatch--skin" />
