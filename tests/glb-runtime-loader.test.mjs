@@ -16,30 +16,30 @@ const descriptorFor = (context) => ({
   patientId: context.patientId,
   coordinateSpace: 'patient-mm',
   bindings: [
-  {
-    renderBindingKey: 'fixture.skin.surface',
-    structureId: FIXTURE_STRUCTURE_IDS.skin,
-  },
-  {
-    renderBindingKey: 'fixture.soft-tissue.surface',
-    structureId: FIXTURE_STRUCTURE_IDS.softTissue,
-  },
-  {
-    renderBindingKey: 'fixture.vein.surface',
-    structureId: FIXTURE_STRUCTURE_IDS.vein,
-  },
-  {
-    renderBindingKey: 'fixture.artery.surface',
-    structureId: FIXTURE_STRUCTURE_IDS.artery,
-  },
+    {
+      renderBindingKey: 'fixture.skin.surface',
+      structureId: FIXTURE_STRUCTURE_IDS.skin,
+    },
+    {
+      renderBindingKey: 'fixture.soft-tissue.surface',
+      structureId: FIXTURE_STRUCTURE_IDS.softTissue,
+    },
+    {
+      renderBindingKey: 'fixture.vein.surface',
+      structureId: FIXTURE_STRUCTURE_IDS.vein,
+    },
+    {
+      renderBindingKey: 'fixture.artery.surface',
+      structureId: FIXTURE_STRUCTURE_IDS.artery,
+    },
   ],
 });
 
 async function fixtureBuffer() {
   const buffer = await readFile('fixtures/rendering/synthetic-anatomy-v1.glb');
   return buffer.buffer.slice(
-  buffer.byteOffset,
-  buffer.byteOffset + buffer.byteLength,
+    buffer.byteOffset,
+    buffer.byteOffset + buffer.byteLength,
   );
 }
 
