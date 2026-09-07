@@ -27,3 +27,13 @@ The adapter implements the neutral `AxialImagingViewport` port in imaging-core.
 `setPatientPlane` translates the axial camera, validates source-plane alignment,
 and returns readback with separate display index/source k. Session composes it
 with rendering; see [synchronization contract](../session/IMAGING_SYNC.md).
+
+### Browser entry prerequisite
+
+vtk.js 36.4.1 imports xmlbuilder2 4.0.3's Node entry, which evaluates an
+`EventEmitter` subclass during module loading. Vite externalizes Node `events`
+and `url`, so a successful build can still produce a blank browser page.
+`apps/web/vite.config.ts` resolves xmlbuilder2 to the same installed version's
+published browser bundle, including its upstream polyfills. No API is stubbed
+and no dependency version changes. A VM regression test initializes that bundle
+without Node globals and exercises XML creation.
