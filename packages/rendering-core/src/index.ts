@@ -5,6 +5,9 @@ import type {
 } from '@procedural-human/math';
 import type { Angle, Length } from '@procedural-human/units';
 
+export { PatientRenderTransform } from './coordinates.js';
+export type { PatientRenderTransformConfig } from './coordinates.js';
+
 declare const opacityBrand: unique symbol;
 
 /** Dimensionless presentation alpha: 0 is transparent; 1 is opaque. */

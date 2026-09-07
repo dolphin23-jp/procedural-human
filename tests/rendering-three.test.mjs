@@ -1,9 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { ThreeFixtureScene } from '../packages/rendering-three/dist/index.js';
+import {
+  ThreeFixtureScene,
+  createFixtureCoordinateTransform,
+} from '../packages/rendering-three/dist/index.js';
 
 test('TASK-046 Three scene represents every synthetic fixture structure semantically', () => {
-  const scene = new ThreeFixtureScene();
+  const scene = new ThreeFixtureScene(createFixtureCoordinateTransform());
   assert.deepEqual(scene.summary(), {
     structureIds: [
       'structure.fixture.skin',

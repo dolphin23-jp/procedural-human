@@ -1,4 +1,7 @@
-import { ThreeFixtureRenderer } from '@procedural-human/rendering-three';
+import {
+  ThreeFixtureRenderer,
+  createFixtureCoordinateTransform,
+} from '@procedural-human/rendering-three';
 import { useEffect, useRef, useState } from 'react';
 
 export function App() {
@@ -10,7 +13,9 @@ export function App() {
     if (!canvas) return;
     let renderer: ThreeFixtureRenderer;
     try {
-      renderer = new ThreeFixtureRenderer(canvas);
+      renderer = new ThreeFixtureRenderer(canvas, {
+        coordinates: createFixtureCoordinateTransform(),
+      });
     } catch (error) {
       setRenderError(
         error instanceof Error

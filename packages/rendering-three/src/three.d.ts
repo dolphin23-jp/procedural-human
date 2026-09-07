@@ -1,7 +1,33 @@
 declare module 'three' {
   export class Vector3 {
+    x: number;
+    y: number;
+    z: number;
     constructor(x?: number, y?: number, z?: number);
     set(x: number, y: number, z: number): this;
+    copy(v: Vector3): this;
+    normalize(): this;
+  }
+  export class Matrix4 {
+    set(
+      n11: number,
+      n12: number,
+      n13: number,
+      n14: number,
+      n21: number,
+      n22: number,
+      n23: number,
+      n24: number,
+      n31: number,
+      n32: number,
+      n33: number,
+      n34: number,
+      n41: number,
+      n42: number,
+      n43: number,
+      n44: number,
+    ): this;
+    copy(matrix: Matrix4): this;
   }
   export class Euler {
     x: number;
@@ -12,6 +38,9 @@ declare module 'three' {
     readonly children: Object3D[];
     readonly position: Vector3;
     readonly rotation: Euler;
+    readonly up: Vector3;
+    readonly matrix: Matrix4;
+    matrixAutoUpdate: boolean;
     name: string;
     userData: Record<string, unknown>;
     add(...objects: Object3D[]): this;
@@ -59,6 +88,7 @@ declare module 'three' {
     constructor(color?: number, intensity?: number);
   }
   export class DirectionalLight extends Object3D {
+    readonly target: Object3D;
     constructor(color?: number, intensity?: number);
   }
   export class PerspectiveCamera extends Object3D {

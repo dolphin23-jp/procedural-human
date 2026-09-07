@@ -16,6 +16,9 @@
   },
   "dependencies": {
     "@procedural-human/core": "workspace:*",
+    "@procedural-human/math": "workspace:*",
+    "@procedural-human/rendering-core": "workspace:*",
+    "@procedural-human/units": "workspace:*",
     "three": "0.185.1"
   }
 }
