@@ -2,6 +2,23 @@
 
 This checkpoint is intentionally manual. CI, desktop browsers, simulators, and automated WebKit are not substitutes for a physical iPad running Safari.
 
+## iPad-only access
+
+The checkpoint viewer is deployed with GitHub Pages so the physical-device check can be completed without a development PC.
+
+Expected URL after the Pages workflow succeeds:
+
+- https://dolphin23-jp.github.io/procedural-human/
+
+The Pages workflow builds the web app with the repository base path and deploys `apps/web/dist`. During TASK-053 it deploys from both `task-048-053-runtime-interaction` and `main`; after the task branch is merged, `main` remains the durable source.
+
+On the iPad:
+
+1. Open the URL above in Safari.
+2. Confirm the page says `Synthetic anatomy fixture` and `Development fixture · not medical anatomy`.
+3. Run the interaction checks below in both portrait and landscape.
+4. Report PASS/FAIL and any gesture or selection defect. Do not substitute a desktop or simulator result.
+
 ## Implementation ready for the checkpoint
 
 The M4 fixture viewer now exposes the interaction path required by TASK-053:
