@@ -43,9 +43,7 @@ export function threeVectorToRender(vector: Vector3): RenderSpaceVector {
   return renderSpaceVector(vector.x, vector.y, vector.z);
 }
 
-export function renderDirectionToThree(
-  direction: RenderSpaceDirection,
-): Vector3 {
+export function renderDirectionToThree(direction: RenderSpaceDirection): Vector3 {
   if (
     !direction ||
     direction.space !== 'render' ||
@@ -54,11 +52,7 @@ export function renderDirectionToThree(
     throw new TypeError('Expected render-space direction.');
   }
   finite(direction.value.x, direction.value.y, direction.value.z);
-  return new Vector3(
-    direction.value.x,
-    direction.value.y,
-    direction.value.z,
-  );
+  return new Vector3(direction.value.x, direction.value.y, direction.value.z);
 }
 
 /** Column basis built from the same neutral transform used by point queries. */
