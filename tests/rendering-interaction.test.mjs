@@ -151,7 +151,9 @@ test(
     const normal = patientSpaceDirection(Math.SQRT1_2, 0, Math.SQRT1_2);
     const plane = patientClippingPlaneToThree({ origin, normal }, coordinates);
 
-    const onPlane = renderPointToThree(\n      coordinates.patientPointToRender(origin),\n    );
+    const onPlane = renderPointToThree(
+      coordinates.patientPointToRender(origin),
+    );
     const keptPoint = renderPointToThree(
       coordinates.patientPointToRender(
         patientSpacePoint(
