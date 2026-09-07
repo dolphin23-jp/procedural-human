@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1",
+  "sourceArchiveId": "source.nlm.vhp-female",
+  "dataset": {
+    "provider": "U.S. National Library of Medicine",
+    "name": "Visible Human Project — Visible Human Female",
+    "portalDatasetId": "ux2j-9i9a",
+    "subjectId": "VHP-F",
+    "sourceClass": "cadaver-derived"
+  },
+  "recordedAt": "2026-09-08",
+  "retrievalDate": null,
+  "retrievalStatus": "not-materialized-in-agent-environment",
+  "canonicalLocations": {
+    "root": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/",
+    "fullcolor": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/Fullcolor/fullbody/",
+    "ct": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/radiological/normalCT/",
+    "ctHeaders": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/radiological/normalCTHeaders/"
+  },
+  "remoteInventorySnapshot": {
+    "observedAt": "2026-09-08",
+    "index": {
+      "path": "INDEX",
+      "byteSize": 1579987,
+      "lastModified": "2024-08-28T19:20:27Z",
+      "sha256": null,
+      "hashStatus": "pending-local-acquisition"
+    },
+    "indexCompressed": {
+      "path": "INDEX.Z",
+      "byteSize": 187009,
+      "lastModified": "2024-08-28T19:20:27Z",
+      "sha256": null,
+      "hashStatus": "pending-local-acquisition"
+    },
+    "readme": {
+      "path": "README",
+      "byteSize": 1176,
+      "lastModified": "2024-08-28T19:05:47Z",
+      "sha256": null,
+      "hashStatus": "pending-local-acquisition"
+    }
+  },
+  "payloads": [
+    {
+      "role": "primary-anatomical-source",
+      "path": "Fullcolor/fullbody/",
+      "format": "raw.Z",
+      "hashStatus": "per-file-pending-local-acquisition"
+    },
+    {
+      "role": "reference-ct",
+      "path": "radiological/normalCT/",
+      "format": "GE source",
+      "hashStatus": "per-file-pending-local-acquisition"
+    },
+    {
+      "role": "ct-header-metadata",
+      "path": "radiological/normalCTHeaders/",
+      "format": "text",
+      "hashStatus": "per-file-pending-local-acquisition"
+    }
+  ],
+  "license": {
+    "termsUrl": "https://www.nlm.nih.gov/databases/download/terms_and_conditions.html",
+    "access": "public",
+    "registrationRequired": false,
+    "requiredAttribution": "Courtesy of the U.S. National Library of Medicine",
+    "noEndorsement": true,
+    "redistributionCondition": "Maintain the current NLM data version or conspicuously state that redistributed data may not reflect the most current or accurate NLM data."
+  },
+  "integrity": {
+    "requiredHashAlgorithm": "SHA-256",
+    "complete": false,
+    "blockPromotionUntilComplete": true,
+    "note": "Content hashes must be computed from acquired bytes. Remote listing metadata is recorded only as an inventory snapshot and is not a content hash."
+  }
+}
