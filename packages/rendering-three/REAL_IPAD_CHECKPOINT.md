@@ -10,11 +10,22 @@ Expected URL after the Pages workflow succeeds:
 
 - https://dolphin23-jp.github.io/procedural-human/
 
+### One-time Pages enablement
+
+GitHub requires the repository owner to enable Pages once before the deployment workflow can create the site. This can be done entirely on the iPad:
+
+1. Open the repository in Safari while signed in to GitHub.
+2. Open `Settings` → `Pages`.
+3. Under `Build and deployment`, set `Source` to `GitHub Actions`.
+4. Re-run the `Deploy iPad Preview` workflow, or make another commit to the checkpoint branch.
+
+After this one-time repository setting, later pushes to `main` or `task-048-053-runtime-interaction` deploy automatically.
+
 The Pages workflow builds the web app with the repository base path and deploys `apps/web/dist`. During TASK-053 it deploys from both `task-048-053-runtime-interaction` and `main`; after the task branch is merged, `main` remains the durable source.
 
 On the iPad:
 
-1. Open the URL above in Safari.
+1. Open the Pages URL above in Safari.
 2. Confirm the page says `Synthetic anatomy fixture` and `Development fixture · not medical anatomy`.
 3. Run the interaction checks below in both portrait and landscape.
 4. Report PASS/FAIL and any gesture or selection defect. Do not substitute a desktop or simulator result.
