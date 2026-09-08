@@ -1,0 +1,34 @@
+name: A06-A10 format helper
+
+on:
+  push:
+    branches:
+      - task-a06-a08-review-semantic-centerline-gates
+    paths:
+      - .github/workflows/a06-a10-format-helper.yml
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec prettier --write schemas/assets/manual-edit-provenance.v1.schema.json schemas/assets/semantic-structure-mapping.v1.schema.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a06-a10-prettier-output
+          path: |
+            schemas/assets/manual-edit-provenance.v1.schema.json
+            schemas/assets/semantic-structure-mapping.v1.schema.json
+          retention-days: 1
