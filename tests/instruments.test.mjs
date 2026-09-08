@@ -9,6 +9,12 @@ import {
   createInstrumentPose,
   createNeedleDefinition,
   createNeedleInstance,
+  needleAdvanceIntent,
+  needleRetractIntent,
+  needleRotationIntent,
+  needleTranslationIntent,
+  normalizedControlAxis,
+  normalizedControlMagnitude,
   instrumentDefinitionId,
   instrumentInstanceId,
   instrumentPartId,
@@ -315,4 +321,27 @@ test('TASK-067 pose updates rotate +Z tip direction and append only changed samp
 
   const repeated = updateNeedlePose(moved, moved.pose);
   assert.equal(repeated.trajectory.length, 2);
+});
+
+
+test('TASK-068 normalizes device-independent needle control intents', () => {
+  assert.deepEqual(needleTranslationIntent(-1, 0.5), {
+    type: 'translate',
+    lateral: -1,
+    vertical: 0.5,
+  });
+  assert.deepEqual(needleRotationIntent(0.25, -0.75), {
+    type: 'rotate',
+    yaw: 0.25,
+    pitch: -0.75,
+  });
+  assert.deepEqual(needleAdvanceIntent(1), { type: 'advance', amount: 1 });
+  assert.deepEqual(needleRetractIntent(0), { type: 'retract', amount: 0 });
+});
+
+test('TASK-068 rejects out-of-range and non-finite normalized input', () => {
+  assert.throws(() => normalizedControlAxis(1.01), /within \[-1, 1\]/);
+  assert.throws(() => normalizedControlAxis(Number.NaN), /finite/);
+  assert.throws(() => normalizedControlMagnitude(-0.01), /within \[0, 1\]/);
+  assert.throws(() => normalizedControlMagnitude(Infinity), /finite/);
 });
