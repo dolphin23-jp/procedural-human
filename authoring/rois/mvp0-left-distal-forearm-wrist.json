@@ -1,4 +1,5 @@
 {
+  "schema": "ph-authoring-roi.v1",
   "schemaVersion": "1",
   "roiId": "mvp0-left-distal-forearm-wrist-v0",
   "sourceArchiveId": "source.nlm.vhp-female",
