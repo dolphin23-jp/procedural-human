@@ -75,10 +75,13 @@ export function patientPlaneToCornerstoneCamera(
   const checked = checkedPatientPlane(plane);
   const normal = checked.normal.value;
   const j = checked.directionJ.value;
-  return Object.freeze({
-    viewPlaneNormal: [normal.x, normal.y, normal.z],
-    viewUp: [-j.x, -j.y, -j.z],
-  });
+  const viewPlaneNormal: [number, number, number] = [
+    normal.x,
+    normal.y,
+    normal.z,
+  ];
+  const viewUp: [number, number, number] = [-j.x, -j.y, -j.z];
+  return Object.freeze({ viewPlaneNormal, viewUp });
 }
 
 /**
