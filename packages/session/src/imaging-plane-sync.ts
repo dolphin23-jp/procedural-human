@@ -93,7 +93,7 @@ export class ImagingPlaneSynchronizer {
     );
   }
 
-  setPatientPlane(plane: PatientImagingPlane): Promise<void> {
+  async setPatientPlane(plane: PatientImagingPlane): Promise<void> {
     // Copy now so callers cannot mutate a queued request.
     const copy = createPatientImagingPlane(plane);
     if (
