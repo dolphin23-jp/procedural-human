@@ -1,0 +1,45 @@
+name: A05 Visible Human Wrist ROI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - task-a01-mvp0-source-dataset
+    paths:
+      - '.github/workflows/a05-visible-human-roi.yml'
+      - 'authoring/source-acquisition/vhp_female_roi_acquire.py'
+      - 'authoring/source-acquisition/vhp_female_locator.py'
+
+permissions:
+  contents: read
+
+jobs:
+  acquire-roi:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install bounded authoring dependency
+        run: python -m pip install --disable-pip-version-check 'Pillow==12.0.0'
+
+      - name: Acquire source stack and lossless patient-left crop
+        run: |
+          python authoring/source-acquisition/vhp_female_roi_acquire.py \
+            --start 1567 \
+            --stop 1717 \
+            --crop 1450 250 2000 1000 \
+            --output .artifacts/a05-vhp-female-left-wrist-roi
+
+      - name: Upload bounded source-derived ROI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-vhp-female-left-wrist-roi
+          path: .artifacts/a05-vhp-female-left-wrist-roi/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
