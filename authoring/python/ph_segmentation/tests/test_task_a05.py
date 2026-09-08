@@ -26,6 +26,7 @@ from ph_segmentation import (  # noqa: E402
     VesselSliceObservation,
     build_vascular_feasibility_report,
     generate_nonvascular_draft,
+    generate_tissue_only_draft,
     request_vessel_mask_generation,
 )
 from ph_segmentation.manifest_io import (  # noqa: E402
@@ -195,6 +196,36 @@ class TaskA05Tests(unittest.TestCase):
                     / "slice-000.pgm"
                 ).exists()
             )
+
+    def test_tissue_only_execution_blocks_untrackable_bones_without_fake_masks(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source"
+            output = root / "out"
+            source.mkdir()
+            manifest = self._make_source_stack(source)
+            result = generate_tissue_only_draft(
+                source,
+                manifest,
+                output,
+                skin_rule=fixture_config().skin_rule,
+                subcutaneous_rule=fixture_config().subcutaneous_rule,
+                muscle_tendon_rule=fixture_config().muscle_tendon_rule,
+            )
+
+            self.assertEqual(
+                {item["draftLabel"] for item in result["generatedLabels"]},
+                {"skin", "subcutaneous_soft_tissue", "major_muscle_tendon_region"},
+            )
+            self.assertEqual(
+                {item["draftLabel"] for item in result["blockedNonvascularLabels"]},
+                {"radius", "ulna"},
+            )
+            self.assertFalse(result["claims"]["completeFiveClassDraft"])
+            self.assertFalse(result["claims"]["patientSpaceGeometry"])
+            self.assertFalse((output / "masks" / "radius").exists())
+            self.assertFalse((output / "masks" / "ulna").exists())
+            self.assertTrue((output / "masks" / "skin" / "slice-000.pgm").exists())
 
     def test_bone_anchor_tracks_must_cover_the_source_stack(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
