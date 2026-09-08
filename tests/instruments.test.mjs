@@ -323,7 +323,6 @@ test('TASK-067 pose updates rotate +Z tip direction and append only changed samp
   assert.equal(repeated.trajectory.length, 2);
 });
 
-
 test('TASK-068 normalizes device-independent needle control intents', () => {
   assert.deepEqual(needleTranslationIntent(-1, 0.5), {
     type: 'translate',
