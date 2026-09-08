@@ -27,6 +27,7 @@ function harness(before = async () => {}) {
     changes = [];
   const image = {
     currentSlice: createAxialSliceStateAtVoxelK(frame, 4, 4),
+    currentPlane: createAxialSliceStateAtVoxelK(frame, 4, 4).plane,
     async setSlice(displayIndex) {
       calls.push(['image', displayIndex]);
       await before();
@@ -35,6 +36,7 @@ function harness(before = async () => {}) {
         displayIndex,
         8 - displayIndex,
       );
+      this.currentPlane = this.currentSlice.plane;
       return this.currentSlice;
     },
     async setPatientPlane(plane) {
@@ -42,7 +44,14 @@ function harness(before = async () => {}) {
       calls.push(['plane', k]);
       await before();
       this.currentSlice = createAxialSliceStateAtVoxelK(frame, 8 - k, k);
+      this.currentPlane = this.currentSlice.plane;
       return this.currentSlice;
+    },
+    async setImagingPlane(plane) {
+      calls.push(['oblique', plane]);
+      await before();
+      this.currentPlane = createPatientImagingPlane(plane);
+      return this.currentPlane;
     },
   };
   const sync = new ImagingPlaneSynchronizer({
@@ -146,6 +155,30 @@ test('TASK-061 descending k and anisotropic spacing retain source geometry', () 
     assert.equal(plane.normal.value.z, 1);
     assert.equal(axialVoxelKForPatientPlane(descending, plane), k);
   }
+});
+
+test('TASK-063 arbitrary oblique plane becomes the shared Patient Space plane without fabricating source-k state', async () => {
+  const { sync, calls, rendered } = harness();
+  const oblique = createPatientImagingPlane({
+    origin: patientSpacePoint(0.5, -1.25, 2.75),
+    directionI: patientSpaceDirection(Math.SQRT1_2, 0, Math.SQRT1_2),
+    directionJ: patientSpaceDirection(0, 1, 0),
+  });
+
+  await sync.setPatientPlane(oblique);
+
+  assert.equal(sync.state.slice, null);
+  assert.deepEqual(sync.state.plane, oblique);
+  assert.deepEqual(rendered.at(-1), oblique);
+  assert.equal(calls.at(-1)[0], 'oblique');
+
+  await assert.rejects(sync.scrollImage(1), /oblique/);
+  assert.deepEqual(sync.state.plane, oblique);
+  assert.deepEqual(rendered.at(-1), oblique);
+
+  await sync.setPlaneAtVoxelK(4);
+  assert.equal(sync.state.slice.voxelK, 4);
+  assert.deepEqual(sync.state.plane, sync.state.slice.plane);
 });
 
 test('mixed rapid commands execute in input order with at most one camera mutation in flight', async () => {

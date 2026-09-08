@@ -99,9 +99,18 @@ export interface AxialSliceState {
   readonly plane: PatientImagingPlane;
 }
 
-/** Technology-neutral port; commands resolve only after Patient Space readback. */
+/** Technology-neutral axial source-slice port used by TASK-059 through TASK-061. */
 export interface AxialImagingViewport {
   readonly currentSlice: AxialSliceState;
   setSlice(displayIndex: number): Promise<AxialSliceState>;
   setPatientPlane(plane: PatientImagingPlane): Promise<AxialSliceState>;
+}
+
+/**
+ * Technology-neutral arbitrary-plane viewport port.
+ * Commands resolve only after the adapter reads the actual Patient Space plane.
+ */
+export interface PatientPlaneImagingViewport {
+  readonly currentPlane: PatientImagingPlane;
+  setImagingPlane(plane: PatientImagingPlane): Promise<PatientImagingPlane>;
 }

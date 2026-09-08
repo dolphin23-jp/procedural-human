@@ -1,13 +1,30 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { ImagePatientTransform } from '../packages/imaging-core/dist/index.js';
-import { imageVoxelCoordinate } from '../packages/math/dist/index.js';
+import {
+  ImagePatientTransform,
+  createPatientImagingPlane,
+} from '../packages/imaging-core/dist/index.js';
+import {
+  imageVoxelCoordinate,
+  patientSpaceDirection,
+  patientSpacePoint,
+} from '../packages/math/dist/index.js';
 import {
   assertPatientAxialFrame,
+  assertPatientPlanesEquivalent,
   createAxialSliceStateAtVoxelK,
   createAxialSliceStateFromPatientPoint,
-} from '../packages/imaging-cornerstone/dist/axial.js';
+  patientPlaneFromCornerstoneCamera,
+  patientPlaneToCornerstoneCamera,
+} from '../packages/imaging-cornerstone/dist/index.js';
 import { createSyntheticAxialVolumeFixture } from '../packages/imaging-cornerstone/dist/fixture.js';
+
+function assertVectorClose(actual, expected, tolerance = 1e-12) {
+  assert.equal(actual.length, expected.length);
+  for (let index = 0; index < actual.length; index++) {
+    assert.ok(Math.abs(actual[index] - expected[index]) <= tolerance);
+  }
+}
 
 test('TASK-058 fixture is deterministic, bounded, and explicitly non-medical', () => {
   const first = createSyntheticAxialVolumeFixture();
@@ -55,4 +72,23 @@ test('TASK-059 derives source k through Patient Space instead of equating displa
     () => createAxialSliceStateFromPatientPoint(source.frame, 1, betweenSlices),
     /does not coincide/,
   );
+});
+
+test('TASK-063 arbitrary Patient Space plane round-trips through Cornerstone camera convention', () => {
+  const plane = createPatientImagingPlane({
+    origin: patientSpacePoint(7.25, -13.5, 4.75),
+    directionI: patientSpaceDirection(Math.SQRT1_2, 0, Math.SQRT1_2),
+    directionJ: patientSpaceDirection(0, 1, 0),
+  });
+
+  const camera = patientPlaneToCornerstoneCamera(plane);
+  assertVectorClose(camera.viewUp, [0, -1, 0]);
+  assertVectorClose(camera.viewPlaneNormal, [-Math.SQRT1_2, 0, Math.SQRT1_2]);
+
+  const recovered = patientPlaneFromCornerstoneCamera(
+    [plane.origin.value.x, plane.origin.value.y, plane.origin.value.z],
+    camera.viewPlaneNormal,
+    camera.viewUp,
+  );
+  assert.doesNotThrow(() => assertPatientPlanesEquivalent(plane, recovered));
 });

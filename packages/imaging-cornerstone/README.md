@@ -37,3 +37,22 @@ and `url`, so a successful build can still produce a blank browser page.
 published browser bundle, including its upstream polyfills. No API is stubbed
 and no dependency version changes. A VM regression test initializes that bundle
 without Node globals and exercises XML creation.
+
+
+## TASK-063 arbitrary oblique MPR
+
+The same orthographic volume viewport now also implements the technology-neutral
+`PatientPlaneImagingViewport` port. A caller supplies a validated
+`PatientImagingPlane`; the adapter maps its Patient Space basis to Cornerstone
+camera `viewPlaneNormal` / `viewUp`, moves the focal plane without changing
+the source scalar volume, reads the actual camera plane back, and verifies that
+position and orientation match explicit software tolerances.
+
+Oblique sections do **not** receive a fabricated source `voxelK` or
+`displayIndex`. Those fields remain meaningful only for declared axial source
+sample planes. Returning to `setSlice` or the TASK-061 axial plane command
+restores the source-plane orientation before axial navigation.
+
+The camera conversion is presentation logic only. Patient Space remains the
+coordinate truth; this feature does not create registration and does not upgrade
+the development fixture above V0.

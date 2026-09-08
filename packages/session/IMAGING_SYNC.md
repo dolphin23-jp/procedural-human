@@ -1,7 +1,7 @@
-# Image / 3D plane synchronization — TASK-060/061
+# Image / 3D plane synchronization — TASK-060/061/063
 
-`ImagingPlaneSynchronizer` composes a neutral `AxialImagingViewport` port and a
-rendering `setClippingPlane` port. Session owns the shared immutable state and
+`ImagingPlaneSynchronizer` composes neutral `AxialImagingViewport` and
+`PatientPlaneImagingViewport` ports with a rendering `setClippingPlane` port. Session owns the shared immutable state and
 command ordering. Neither imaging nor rendering imports the other adapter.
 This does not implement TASK-082 SimulationSession lifecycle or an Event Bus.
 There are no persistent schema changes or new third-party dependencies.
@@ -19,15 +19,19 @@ medical landmark correspondence is claimed.
 - 3D source-plane slider → `setPlaneAtVoxelK` → ImagePatientTransform →
   `setPatientPlane` → Cornerstone camera translation → readback → both controls.
 - A caller with a Patient Space plane can use `setPatientPlane` directly.
+  Source axial planes retain `AxialSliceState`; arbitrary oblique MPR commits the
+  shared `PatientImagingPlane` with `slice = null` rather than inventing source-k metadata.
 
 Cornerstone translates the camera focal point and position along patient Z,
 retaining pan, zoom and camera distance. It recovers source k from actual focal
 point coordinates and reads display index independently. It never assumes
 `displayIndex === k` or `displayIndex === count - 1 - k`.
 
-TASK-061 supports source axial sample planes with unchanged source I/J basis.
-Oblique planes, in-plane rotation, normal reversal, off-lattice positions and
-out-of-volume k are rejected; TASK-063 owns oblique MPR. The existing `1e-4`
+TASK-061 source-k navigation remains restricted to declared axial sample planes.
+TASK-063 adds arbitrary oblique MPR through the generic Patient Space plane port.
+The Cornerstone camera basis is read back and checked before the shared plane is
+committed. Oblique state intentionally has no source `displayIndex`/`voxelK`.
+Returning to an explicit source-k command restores axial source-plane semantics. The existing `1e-4`
 voxel-k readback tolerance covers Cornerstone numerical error, not medical
 registration accuracy or arbitrary snapping. An accepted request moves to the
 canonical sample plane, then validates readback. Wheel input explicitly stops

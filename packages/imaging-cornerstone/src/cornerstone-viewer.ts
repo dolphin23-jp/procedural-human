@@ -18,11 +18,16 @@ import { patientSpacePoint } from '@procedural-human/math';
 import { toMillimetres } from '@procedural-human/units';
 import {
   assertPatientAxialFrame,
-  PATIENT_AXIAL_TOLERANCE,
   axialVoxelKForPatientPlane,
   createAxialSliceStateFromPatientPoint,
   type AxialSliceState,
 } from './axial.js';
+import {
+  assertPatientPlaneOrientationEquivalent,
+  assertPatientPlanesEquivalent,
+  patientPlaneFromCornerstoneCamera,
+  patientPlaneToCornerstoneCamera,
+} from './plane.js';
 import {
   copyScalarData,
   validateImagingVolumeSource,
@@ -87,16 +92,18 @@ function removeLocalVolume(volumeId: string): void {
 }
 
 /**
- * Browser adapter for TASK-058/059. Cornerstone-specific objects stay private;
- * callers receive only Patient Space slice state.
+ * Browser adapter for TASK-058/059 and TASK-063. Cornerstone-specific objects
+ * stay private; callers receive only Patient Space image state.
  */
 export class CornerstoneAxialVolumeViewer {
   readonly #element: HTMLDivElement;
   readonly #source: ImagingVolumeSource;
+  readonly #transform: ImagePatientTransform;
   readonly #renderingEngine: RenderingEngine;
   readonly #viewportId: string;
   readonly #volumeId: string;
   #currentSlice: AxialSliceState | null = null;
+  #currentPlane: PatientImagingPlane | null = null;
   #disposed = false;
 
   private constructor(
@@ -108,6 +115,7 @@ export class CornerstoneAxialVolumeViewer {
   ) {
     this.#element = element;
     this.#source = source;
+    this.#transform = new ImagePatientTransform(source.frame);
     this.#renderingEngine = renderingEngine;
     this.#viewportId = viewportId;
     this.#volumeId = volumeId;
@@ -210,9 +218,18 @@ export class CornerstoneAxialVolumeViewer {
 
   get currentSlice(): AxialSliceState {
     if (!this.#currentSlice) {
-      throw new Error('Axial viewer has not established a slice yet.');
+      throw new Error(
+        'The current viewport plane is oblique and has no axial source-slice state.',
+      );
     }
     return this.#currentSlice;
+  }
+
+  get currentPlane(): PatientImagingPlane {
+    if (!this.#currentPlane) {
+      throw new Error('Imaging viewer has not established a plane yet.');
+    }
+    return this.#currentPlane;
   }
 
   get source(): ImagingVolumeSource {
@@ -231,6 +248,9 @@ export class CornerstoneAxialVolumeViewer {
       );
     }
 
+    // An oblique viewport must return to the declared source-plane orientation
+    // before display-index navigation has axial source-slice meaning.
+    this.#setOrientation(this.#transform.planeAtK(0));
     await utilities.jumpToSlice(this.#element, {
       imageIndex: displayIndex,
       volumeId: this.#volumeId,
@@ -243,35 +263,42 @@ export class CornerstoneAxialVolumeViewer {
       );
     }
     this.#currentSlice = state;
+    this.#currentPlane = state.plane;
     return state;
   }
 
-  /** Translate along the axial normal, preserving pan, zoom and camera distance. */
+  /** Move to one declared axial source plane for TASK-061 compatibility. */
   async setPatientPlane(plane: PatientImagingPlane): Promise<AxialSliceState> {
     this.#assertAlive();
     const targetK = axialVoxelKForPatientPlane(this.#source.frame, plane);
-    const viewport = this.#viewport();
-    const { focalPoint, position } = viewport.getCamera();
-    if (!focalPoint || !position) {
-      throw new Error('Cornerstone axial viewport camera is unavailable.');
-    }
-    const target = new ImagePatientTransform(this.#source.frame).planeAtK(
-      targetK,
-    );
-    const dz = target.origin.value.z - focalPoint[2];
-    viewport.setCamera({
-      focalPoint: [focalPoint[0], focalPoint[1], focalPoint[2] + dz],
-      position: [position[0], position[1], position[2] + dz],
-    });
-    viewport.render();
+    const target = this.#transform.planeAtK(targetK);
+    this.#moveCameraToPlane(target);
     const state = this.#readCurrentSlice();
     if (state.voxelK !== targetK) {
       throw new Error(
-        'Cornerstone did not reach the requested Patient Space plane.',
+        'Cornerstone did not reach the requested Patient Space axial plane.',
       );
     }
     this.#currentSlice = state;
+    this.#currentPlane = state.plane;
     return state;
+  }
+
+  /**
+   * TASK-063 arbitrary MPR. No source voxel-k/display-index is fabricated for
+   * an oblique section. The actual camera plane is read back and verified.
+   */
+  async setImagingPlane(
+    plane: PatientImagingPlane,
+  ): Promise<PatientImagingPlane> {
+    this.#assertAlive();
+    this.#moveCameraToPlane(plane);
+    this.#assertAlive();
+    const readback = this.#readCurrentPlane();
+    assertPatientPlanesEquivalent(plane, readback);
+    this.#currentSlice = null;
+    this.#currentPlane = readback;
+    return readback;
   }
 
   resize(): void {
@@ -293,31 +320,70 @@ export class CornerstoneAxialVolumeViewer {
     return this.#renderingEngine.getViewport<VolumeViewport>(this.#viewportId);
   }
 
+  #setOrientation(plane: PatientImagingPlane): void {
+    const viewport = this.#viewport();
+    viewport.setCamera(patientPlaneToCornerstoneCamera(plane));
+    viewport.render();
+  }
+
+  #moveCameraToPlane(plane: PatientImagingPlane): void {
+    const viewport = this.#viewport();
+    const camera = viewport.getCamera();
+    const { focalPoint, position } = camera;
+    if (!focalPoint || !position) {
+      throw new Error('Cornerstone viewport camera is unavailable.');
+    }
+    const distance = Math.hypot(
+      position[0] - focalPoint[0],
+      position[1] - focalPoint[1],
+      position[2] - focalPoint[2],
+    );
+    if (!Number.isFinite(distance) || distance <= Number.EPSILON) {
+      throw new Error('Cornerstone viewport camera distance is invalid.');
+    }
+
+    const target = patientPlaneToCornerstoneCamera(plane);
+    const origin = plane.origin.value;
+    viewport.setCamera({
+      ...target,
+      focalPoint: [origin.x, origin.y, origin.z],
+      position: [
+        origin.x + target.viewPlaneNormal[0] * distance,
+        origin.y + target.viewPlaneNormal[1] * distance,
+        origin.z + target.viewPlaneNormal[2] * distance,
+      ],
+    });
+    viewport.render();
+  }
+
+  #readCurrentPlane(): PatientImagingPlane {
+    const { focalPoint, viewPlaneNormal, viewUp } =
+      this.#viewport().getCamera();
+    if (!focalPoint || !viewPlaneNormal || !viewUp) {
+      throw new Error('Cornerstone viewport camera plane is unavailable.');
+    }
+    return patientPlaneFromCornerstoneCamera(
+      [focalPoint[0], focalPoint[1], focalPoint[2]],
+      [viewPlaneNormal[0], viewPlaneNormal[1], viewPlaneNormal[2]],
+      [viewUp[0], viewUp[1], viewUp[2]],
+    );
+  }
+
   #readCurrentSlice(): AxialSliceState {
     const viewport = this.#viewport();
-    const { focalPoint, viewPlaneNormal } = viewport.getCamera();
-    if (
-      !viewPlaneNormal ||
-      !viewPlaneNormal.every(Number.isFinite) ||
-      Math.abs(viewPlaneNormal[0]) > PATIENT_AXIAL_TOLERANCE ||
-      Math.abs(viewPlaneNormal[1]) > PATIENT_AXIAL_TOLERANCE ||
-      Math.abs(Math.abs(viewPlaneNormal[2]) - 1) > PATIENT_AXIAL_TOLERANCE
-    ) {
-      throw new Error('Cornerstone viewport is no longer patient-axial.');
-    }
-    if (!focalPoint) {
-      throw new Error('Cornerstone axial viewport has no focal point.');
-    }
+    const plane = this.#readCurrentPlane();
+    assertPatientPlaneOrientationEquivalent(this.#transform.planeAtK(0), plane);
+    const focalPoint = plane.origin.value;
     return createAxialSliceStateFromPatientPoint(
       this.#source.frame,
       viewport.getSliceIndex(),
-      patientSpacePoint(focalPoint[0], focalPoint[1], focalPoint[2]),
+      patientSpacePoint(focalPoint.x, focalPoint.y, focalPoint.z),
     );
   }
 
   #assertAlive(): void {
     if (this.#disposed) {
-      throw new Error('Cornerstone axial viewer has been disposed.');
+      throw new Error('Cornerstone imaging viewer has been disposed.');
     }
   }
 }
