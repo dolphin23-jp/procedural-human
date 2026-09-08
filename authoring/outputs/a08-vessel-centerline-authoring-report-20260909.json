@@ -1,0 +1,43 @@
+{
+  "schema": "ph-vessel-centerline-authoring-report.v1",
+  "schemaVersion": "1",
+  "task": "TASK-A08",
+  "recordedAt": "2026-09-09",
+  "coordinateSpace": {
+    "kind": "source-image-stack",
+    "patientSpaceClaim": false,
+    "ctRegistrationEstablished": false
+  },
+  "structures": [
+    {
+      "draftLabel": "radial_artery",
+      "anatomicalId": "structure.radial_artery.left",
+      "feasibilityClassification": "not-established",
+      "centerlineStatus": "blocked",
+      "centerlineUri": null,
+      "reason": "source feasibility is not-established, not continuous-candidate; TASK-A06 human manual anatomical correction is not complete"
+    },
+    {
+      "draftLabel": "ulnar_artery",
+      "anatomicalId": "structure.ulnar_artery.left",
+      "feasibilityClassification": "not-established",
+      "centerlineStatus": "blocked",
+      "centerlineUri": null,
+      "reason": "source feasibility is not-established, not continuous-candidate; TASK-A06 human manual anatomical correction is not complete"
+    },
+    {
+      "draftLabel": "superficial_target_vein",
+      "anatomicalId": null,
+      "feasibilityClassification": "not-established",
+      "centerlineStatus": "blocked",
+      "centerlineUri": null,
+      "reason": "source feasibility is not-established, not continuous-candidate; TASK-A06 human manual anatomical correction is not complete; named anatomical identity is unresolved"
+    }
+  ],
+  "claims": {
+    "centerlinesCreated": false,
+    "patientSpaceGeometry": false,
+    "medicalValidation": false,
+    "automaticPromotionAllowed": false
+  }
+}
