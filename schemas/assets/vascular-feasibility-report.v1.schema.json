@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/vascular-feasibility-report/v1",
+  "title": "TASK-A05 Vascular Feasibility Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "task", "status", "coordinateSpace", "sourceManifestDigestSha256", "structures", "claims"],
+  "properties": {
+    "schema": { "const": "ph-vascular-feasibility-report.v1" },
+    "task": { "const": "TASK-A05" },
+    "status": { "$ref": "#/$defs/draftStatus" },
+    "coordinateSpace": { "$ref": "#/$defs/sourceSpace" },
+    "sourceManifestDigestSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "structures": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["draftLabel", "classification", "reviewDisposition", "maskGenerationBlocked", "automaticPromotionAllowed", "validatedSegmentation", "status", "metrics"],
+        "properties": {
+          "draftLabel": { "enum": ["radial_artery", "ulnar_artery", "superficial_target_vein"] },
+          "classification": { "enum": ["continuous-candidate", "intermittent-candidate", "not-established"] },
+          "reviewDisposition": { "enum": ["may-proceed-to-manual-review", "remain-blocked"] },
+          "maskGenerationBlocked": { "const": true },
+          "automaticPromotionAllowed": { "const": false },
+          "validatedSegmentation": { "const": false },
+          "status": { "$ref": "#/$defs/draftStatus" },
+          "metrics": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["totalSlices", "observedSlices", "candidateSlices", "candidateCoverageFraction", "longestConsecutiveCandidateRun", "maxInternalGapSlices", "centroidContinuityEstablished", "maxAdjacentCentroidStepPx"],
+            "properties": {
+              "totalSlices": { "type": "integer", "minimum": 1 },
+              "observedSlices": { "type": "integer", "minimum": 0 },
+              "candidateSlices": { "type": "integer", "minimum": 0 },
+              "candidateCoverageFraction": { "type": "number", "minimum": 0, "maximum": 1 },
+              "longestConsecutiveCandidateRun": { "type": "integer", "minimum": 0 },
+              "maxInternalGapSlices": { "type": "integer", "minimum": 0 },
+              "centroidContinuityEstablished": { "type": "boolean" },
+              "maxAdjacentCentroidStepPx": { "type": ["number", "null"], "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["patientSpaceGeometry", "medicalValidation", "vesselMasksCreated", "feasibilityIsSegmentationValidation"],
+      "properties": {
+        "patientSpaceGeometry": { "const": false },
+        "medicalValidation": { "const": false },
+        "vesselMasksCreated": { "const": false },
+        "feasibilityIsSegmentationValidation": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "draftStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validationLevel", "reviewStatus", "candidateOnly", "medicalValidation"],
+      "properties": {
+        "validationLevel": { "const": "V0" },
+        "reviewStatus": { "const": "unreviewed" },
+        "candidateOnly": { "const": true },
+        "medicalValidation": { "const": false }
+      }
+    },
+    "sourceSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "patientSpaceClaim", "registrationStatus"],
+      "properties": {
+        "kind": { "const": "source-image-stack" },
+        "patientSpaceClaim": { "const": false },
+        "registrationStatus": { "const": "not-established" }
+      }
+    }
+  }
+}
