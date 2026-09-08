@@ -23,6 +23,8 @@ class ManualCorrectionStructure:
     draft_label: str
     status: str
     reason: str | None = None
+    output_uri: str | None = None
+    output_digest: str | None = None
 
 
 def _normalise_digest(value: str, *, field: str) -> str:
@@ -66,17 +68,36 @@ def build_manual_correction_record(
             )
         if row.status in {"edited", "reviewed-no-change"}:
             has_completed_human_action = True
+            if not row.output_uri or not row.output_digest:
+                raise ManualCorrectionRecordError(
+                    f"completed structure {row.draft_label} requires output_uri and output_digest"
+                )
         if row.status == "edited":
             has_edit = True
         if row.status == "blocked-source-evidence" and not row.reason:
             raise ManualCorrectionRecordError(
                 f"blocked structure {row.draft_label} requires a reason"
             )
+        if row.status in {"pending-human-edit", "blocked-source-evidence"} and (
+            row.output_uri is not None or row.output_digest is not None
+        ):
+            raise ManualCorrectionRecordError(
+                f"incomplete structure {row.draft_label} cannot claim corrected output"
+            )
         payload_rows.append(
             {
                 "draftLabel": row.draft_label,
                 "status": row.status,
                 "reason": row.reason,
+                "outputUri": row.output_uri,
+                "outputDigest": (
+                    _normalise_digest(
+                        row.output_digest,
+                        field=f"{row.draft_label}.output_digest",
+                    )
+                    if row.output_digest is not None
+                    else None
+                ),
             }
         )
 
