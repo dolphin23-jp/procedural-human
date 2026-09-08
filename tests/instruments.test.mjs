@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { patientSpacePoint } from '../packages/math/dist/index.js';
+import { millimetres } from '../packages/units/dist/index.js';
 import {
   createInstrumentDefinition,
   createInstrumentInstance,
   createInstrumentPart,
   createInstrumentPose,
+  createNeedleDefinition,
   instrumentDefinitionId,
   instrumentInstanceId,
   instrumentPartId,
@@ -139,5 +141,97 @@ test('TASK-065 rejects malformed identities, part graphs, coordinates, and rotat
         orientation: { x: 0, y: 0, z: 0, w: 2 },
       }),
     /unit quaternion/,
+  );
+});
+
+
+test('TASK-066 defines a generic needle by semantic tip, bevel, shaft, and lumen parts', () => {
+  const shaft = instrumentPartId('needle.part.shaft');
+  const bevel = instrumentPartId('needle.part.bevel');
+  const tip = instrumentPartId('needle.part.tip');
+  const lumen = instrumentPartId('needle.part.lumen');
+  const definition = createNeedleDefinition({
+    id: instrumentDefinitionId('instrument.needle.generic'),
+    name: 'Generic needle',
+    parts: [
+      createInstrumentPart({ id: shaft, name: 'Shaft' }),
+      createInstrumentPart({ id: bevel, name: 'Bevel', parentPartId: shaft }),
+      createInstrumentPart({ id: tip, name: 'Tip', parentPartId: bevel }),
+      createInstrumentPart({ id: lumen, name: 'Lumen', parentPartId: shaft }),
+    ],
+    functionalParts: { tip, bevel, shaft, lumen },
+    geometry: {
+      shaftLength: millimetres(40),
+      bevelLength: millimetres(3),
+      outerDiameter: millimetres(1.2),
+      lumenDiameter: millimetres(0.7),
+    },
+  });
+
+  assert.equal(definition.kind, 'needle');
+  assert.equal(definition.functionalParts.tip, tip);
+  assert.equal(definition.geometry.shaftLength, 40);
+  assert.ok(Object.isFrozen(definition));
+  assert.ok(Object.isFrozen(definition.functionalParts));
+  assert.ok(Object.isFrozen(definition.geometry));
+});
+
+test('TASK-066 needle definition fails closed on invalid functional mapping and geometry', () => {
+  const shaft = instrumentPartId('needle.bad.shaft');
+  const bevel = instrumentPartId('needle.bad.bevel');
+  const tip = instrumentPartId('needle.bad.tip');
+  const lumen = instrumentPartId('needle.bad.lumen');
+  const parts = [
+    createInstrumentPart({ id: shaft, name: 'Shaft' }),
+    createInstrumentPart({ id: bevel, name: 'Bevel' }),
+    createInstrumentPart({ id: tip, name: 'Tip' }),
+    createInstrumentPart({ id: lumen, name: 'Lumen' }),
+  ];
+  const base = {
+    id: instrumentDefinitionId('instrument.needle.bad'),
+    name: 'Bad needle',
+    parts,
+    functionalParts: { tip, bevel, shaft, lumen },
+  };
+
+  assert.throws(
+    () =>
+      createNeedleDefinition({
+        ...base,
+        functionalParts: { tip, bevel, shaft, lumen: instrumentPartId('missing') },
+        geometry: {
+          shaftLength: millimetres(40),
+          bevelLength: millimetres(3),
+          outerDiameter: millimetres(1.2),
+          lumenDiameter: millimetres(0.7),
+        },
+      }),
+    /not in the instrument definition/,
+  );
+  assert.throws(
+    () =>
+      createNeedleDefinition({
+        ...base,
+        geometry: {
+          shaftLength: millimetres(40),
+          bevelLength: millimetres(41),
+          outerDiameter: millimetres(1.2),
+          lumenDiameter: millimetres(0.7),
+        },
+      }),
+    /bevel length must not exceed shaft length/,
+  );
+  assert.throws(
+    () =>
+      createNeedleDefinition({
+        ...base,
+        geometry: {
+          shaftLength: millimetres(40),
+          bevelLength: millimetres(3),
+          outerDiameter: millimetres(1),
+          lumenDiameter: millimetres(1),
+        },
+      }),
+    /lumen diameter must be smaller/,
   );
 });
