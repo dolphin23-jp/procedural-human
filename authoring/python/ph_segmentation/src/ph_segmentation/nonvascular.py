@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from math import hypot
+from math import hypot, isfinite
 
 from .manifest_io import SourceStackManifest, verify_source_slice, write_json_atomic
 from .reports import (
@@ -72,9 +72,13 @@ class AnchorTrack:
         if not self.anchors:
             raise CandidateGenerationBlocked("bone anchor track is empty")
         anchors = tuple(sorted(self.anchors, key=lambda item: item.slice_index))
-        if slice_index <= anchors[0].slice_index:
+        if slice_index < anchors[0].slice_index or slice_index > anchors[-1].slice_index:
+            raise CandidateGenerationBlocked(
+                "bone anchor track extrapolation is prohibited in source-image-stack coordinates"
+            )
+        if slice_index == anchors[0].slice_index:
             return anchors[0].x, anchors[0].y
-        if slice_index >= anchors[-1].slice_index:
+        if slice_index == anchors[-1].slice_index:
             return anchors[-1].x, anchors[-1].y
         for left, right in zip(anchors, anchors[1:]):
             if left.slice_index <= slice_index <= right.slice_index:
@@ -277,6 +281,48 @@ def _coverage_record(pixel_counts: list[int], total_pixels_per_slice: int) -> di
     }
 
 
+def _validate_anchor_track(
+    track: AnchorTrack,
+    label: str,
+    slice_count: int,
+) -> None:
+    if not track.anchors:
+        raise CandidateGenerationBlocked(
+            f"{label} requires an explicit source-space anchor track"
+        )
+    if not isfinite(track.max_component_distance_px) or track.max_component_distance_px <= 0:
+        raise CandidateGenerationBlocked(
+            f"{label} anchor search distance must be finite and positive"
+        )
+
+    anchors = tuple(sorted(track.anchors, key=lambda item: item.slice_index))
+    seen: set[int] = set()
+    for anchor in anchors:
+        if not isinstance(anchor.slice_index, int):
+            raise CandidateGenerationBlocked(
+                f"{label} anchor slice index must be an integer"
+            )
+        if not 0 <= anchor.slice_index < slice_count:
+            raise CandidateGenerationBlocked(
+                f"{label} anchor slice {anchor.slice_index} is outside the source stack"
+            )
+        if anchor.slice_index in seen:
+            raise CandidateGenerationBlocked(
+                f"{label} has duplicate anchors on source slice {anchor.slice_index}"
+            )
+        seen.add(anchor.slice_index)
+        if not isfinite(anchor.x) or not isfinite(anchor.y):
+            raise CandidateGenerationBlocked(
+                f"{label} anchor coordinates must be finite source-image pixels"
+            )
+
+    if anchors[0].slice_index != 0 or anchors[-1].slice_index != slice_count - 1:
+        raise CandidateGenerationBlocked(
+            f"{label} anchor track must cover source slices 0 through {slice_count - 1}; "
+            "endpoint extrapolation is prohibited"
+        )
+
+
 def generate_nonvascular_draft(
     source_root: str | Path,
     source_manifest: SourceStackManifest,
@@ -285,10 +331,8 @@ def generate_nonvascular_draft(
     *,
     verify_hashes: bool = True,
 ) -> dict[str, object]:
-    if not config.radius_track.anchors or not config.ulna_track.anchors:
-        raise CandidateGenerationBlocked(
-            "radius and ulna require explicit source-space anchor tracks; patient-space inference is prohibited"
-        )
+    _validate_anchor_track(config.radius_track, "radius", source_manifest.slice_count)
+    _validate_anchor_track(config.ulna_track, "ulna", source_manifest.slice_count)
 
     source_root = Path(source_root)
     output_root = Path(output_root)
