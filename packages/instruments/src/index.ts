@@ -1,14 +1,32 @@
-import type { PatientSpacePoint, Quaternion } from '@procedural-human/math';
-
 declare const instrumentIdentifierBrand: unique symbol;
 
 type InstrumentIdentifier<Kind extends string> = string & {
   readonly [instrumentIdentifierBrand]: Kind;
 };
 
-export type InstrumentDefinitionId = InstrumentIdentifier<'InstrumentDefinitionId'>;
+export type InstrumentDefinitionId =
+  InstrumentIdentifier<'InstrumentDefinitionId'>;
 export type InstrumentInstanceId = InstrumentIdentifier<'InstrumentInstanceId'>;
 export type InstrumentPartId = InstrumentIdentifier<'InstrumentPartId'>;
+
+/** Tagged Patient Space point, structurally compatible with math PatientSpacePoint. */
+export interface InstrumentPosePosition {
+  readonly space: 'patient';
+  readonly kind: 'point';
+  readonly value: {
+    readonly x: number;
+    readonly y: number;
+    readonly z: number;
+  };
+}
+
+/** Technology-neutral unit quaternion, structurally compatible with math Quaternion. */
+export interface InstrumentPoseOrientation {
+  readonly x: number;
+  readonly y: number;
+  readonly z: number;
+  readonly w: number;
+}
 
 export interface InstrumentPart {
   readonly id: InstrumentPartId;
@@ -23,8 +41,8 @@ export interface InstrumentDefinition {
 }
 
 export interface InstrumentPose {
-  readonly position: PatientSpacePoint;
-  readonly orientation: Quaternion;
+  readonly position: InstrumentPosePosition;
+  readonly orientation: InstrumentPoseOrientation;
 }
 
 export interface InstrumentInstance {
@@ -50,13 +68,17 @@ function nonEmptyName(value: string, label: string): string {
   return value;
 }
 
-function copyPatientSpacePoint(point: PatientSpacePoint): PatientSpacePoint {
+function copyPatientSpacePoint(
+  point: InstrumentPosePosition,
+): InstrumentPosePosition {
   if (
     point?.space !== 'patient' ||
     point.kind !== 'point' ||
     ![point.value?.x, point.value?.y, point.value?.z].every(Number.isFinite)
   ) {
-    throw new TypeError('Instrument pose position must be a finite Patient Space point.');
+    throw new TypeError(
+      'Instrument pose position must be a finite Patient Space point.',
+    );
   }
   return Object.freeze({
     space: 'patient',
@@ -69,7 +91,9 @@ function copyPatientSpacePoint(point: PatientSpacePoint): PatientSpacePoint {
   });
 }
 
-function copyUnitQuaternion(orientation: Quaternion): Quaternion {
+function copyUnitQuaternion(
+  orientation: InstrumentPoseOrientation,
+): InstrumentPoseOrientation {
   const values = [
     orientation?.x,
     orientation?.y,
@@ -86,7 +110,9 @@ function copyUnitQuaternion(orientation: Quaternion): Quaternion {
     orientation.w,
   );
   if (!Number.isFinite(norm) || Math.abs(norm - 1) > 1e-9) {
-    throw new RangeError('Instrument pose orientation must be a unit quaternion.');
+    throw new RangeError(
+      'Instrument pose orientation must be a unit quaternion.',
+    );
   }
   return Object.freeze({
     x: orientation.x / norm,
@@ -96,7 +122,9 @@ function copyUnitQuaternion(orientation: Quaternion): Quaternion {
   });
 }
 
-export const instrumentDefinitionId = (value: string): InstrumentDefinitionId =>
+export const instrumentDefinitionId = (
+  value: string,
+): InstrumentDefinitionId =>
   nonEmptyIdentifier<'InstrumentDefinitionId'>(value, 'Instrument definition ID');
 
 export const instrumentInstanceId = (value: string): InstrumentInstanceId =>
@@ -151,8 +179,8 @@ export function createInstrumentDefinition(input: {
 }
 
 export function createInstrumentPose(input: {
-  readonly position: PatientSpacePoint;
-  readonly orientation: Quaternion;
+  readonly position: InstrumentPosePosition;
+  readonly orientation: InstrumentPoseOrientation;
 }): InstrumentPose {
   return Object.freeze({
     position: copyPatientSpacePoint(input.position),
