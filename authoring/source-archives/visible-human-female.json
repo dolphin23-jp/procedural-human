@@ -9,9 +9,9 @@
     "subjectId": "VHP-F",
     "sourceClass": "cadaver-derived"
   },
-  "recordedAt": "2026-09-08",
+  "recordedAt": "2026-09-09",
   "retrievalDate": "2026-09-08",
-  "retrievalStatus": "bounded-a05-source-stack-reacquired-and-verified-persistent-handoff-partial-storage-quota-blocked",
+  "retrievalStatus": "bounded-a05-source-stack-reacquired-verified-and-persisted-complete",
   "canonicalLocations": {
     "root": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/",
     "fullcolor": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/Fullcolor/fullbody/",
@@ -60,18 +60,16 @@
         "rightExclusive": 2000,
         "bottomExclusive": 1000
       },
-      "sourceHashStatus": "sha256-recorded-per-source-file-in-artifact-manifest",
+      "sourceHashStatus": "sha256-recorded-per-source-file-in-chunk-manifests-and-independently-verified",
       "workflowRun": {
-        "id": 34180309604,
-        "startedAt": "2026-09-08T02:30:48Z"
+        "id": 34229461795,
+        "startedAt": "2026-09-08T13:01:34Z"
       },
       "artifact": {
-        "id": 10038734797,
-        "name": "a05-vhp-female-left-wrist-roi",
-        "createdAt": "2026-09-08T02:34:45Z",
-        "byteSize": 249299004,
-        "digest": "sha256:58951de89aba4cf6d1ecd75eb46420883d0409f8eff8411ab2fb891810839fbc",
-        "retention": "ephemeral-github-actions-artifact"
+        "namePattern": "a05-handoff-chunk-{0..9}",
+        "chunkCount": 10,
+        "retention": "ephemeral-github-actions-artifacts",
+        "verificationRecord": "authoring/source-archives/a05-real-source-verification-20260909.json"
       },
       "coordinateStatus": "source-image-stack-only; not DICOM Patient Space and not verified CT registration",
       "storagePolicy": "medical image bytes are not committed to Git"
@@ -119,29 +117,10 @@
     "note": "The bounded A05 source stack has per-file SHA-256 provenance in its artifact manifest. This does not claim that the complete Visible Human Female archive or CT source has been acquired or registered."
   },
   "persistentHandoff": {
-    "storageClass": "external-user-accessible-authoring-handoff-partial",
-    "authority": "handoff copy only; not the project Medical Master or runtime asset store",
-    "storageProvider": "Google Drive",
-    "libraryPath": "Procedural Human/A05 Visible Human Female Source/",
-    "folderId": "1A4klX4_pV5pIvfj3NM1xOJ5DSJUZ9OwX",
-    "reacquiredAt": "2026-09-09",
-    "complete": false,
-    "missingChunkIndices": [8, 9],
-    "persistenceBlocker": {
-      "providerError": "storageQuotaExceeded",
-      "message": "The user's Drive storage quota has been exceeded."
-    },
-    "temporaryTransport": {
-      "provider": "GitHub Actions",
-      "workflowRunId": 34229461795,
-      "retention": "30 days from 2026-09-08",
-      "authority": "temporary transport only; not persistent handoff authority"
-    },
-    "sourceIdentity": {
-      "sourceFilenameShaAggregate": "0c330a99eedf1a446ca6502b4a7bde12e9893e96dc75f65348cb16f32d701f48",
-      "cropFilenameShaAggregate": "f6e46638ecb84a16dd20cc604931874ec36815091d050b31843392b7d73c7171",
-      "canonicalRowsSha256": "1a7877c45418895377a7f3454ef2960b2be3fab8b9151ae9e718910c4bee339b"
-    },
+    "storageClass": "external-user-library-handoff",
+    "authority": "persistent authoring handoff copy only; not the project Medical Master or runtime asset store",
+    "libraryPath": "/Procedural Human/A05 Visible Human Female Source/",
+    "exportedAt": "2026-09-09",
     "frameCoverage": {
       "expectedFrameCount": 451,
       "chunkCount": 10,
@@ -152,81 +131,71 @@
         "index": 0,
         "byteSize": 26031165,
         "digest": "sha256:78b1b2c1e1ffa006f3b07711e3497bb74ba7133f777709eebcd008b1b429623d",
-        "sourceArtifactId": 10057281755,
-        "libraryFilename": "chunk-0.zip",
-        "persistentFileId": "17iDOUi4pmKshasSJOQe1sxkeqIJyrey5"
+        "sourceArtifactName": "a05-handoff-chunk-0",
+        "libraryFilename": "chunk-0.zip"
       },
       {
         "index": 1,
         "byteSize": 25803357,
         "digest": "sha256:01d54d17761091fc576e8cb7acb47bfc5b178185ffadb50415ff806bdfd7c837",
-        "sourceArtifactId": 10057282711,
-        "libraryFilename": "chunk-1.zip",
-        "persistentFileId": "1pSip_om5DUeOAf1Gghm3PYOGK4zVhlsA"
+        "sourceArtifactName": "a05-handoff-chunk-1",
+        "libraryFilename": "chunk-1.zip"
       },
       {
         "index": 2,
         "byteSize": 25331225,
         "digest": "sha256:56e2c3cb8382a4b6eb96fa4c04e12793281f8214a48fe5880c36628508663352",
-        "sourceArtifactId": 10057283651,
-        "libraryFilename": "chunk-2.zip",
-        "persistentFileId": "1k_idepF0NxTxIIFeFs7R68nh8NNrmVa4"
+        "sourceArtifactName": "a05-handoff-chunk-2",
+        "libraryFilename": "chunk-2.zip"
       },
       {
         "index": 3,
         "byteSize": 25451281,
         "digest": "sha256:8577b8e831bfd7d6d590562bd4c2603d9ca0e455179c426ac4860f05f517b44c",
-        "sourceArtifactId": 10057284584,
-        "libraryFilename": "chunk-3.zip",
-        "persistentFileId": "1Tp4yIrG8AoC9i55d3UoBnLPA7VTWWcWS"
+        "sourceArtifactName": "a05-handoff-chunk-3",
+        "libraryFilename": "chunk-3.zip"
       },
       {
         "index": 4,
         "byteSize": 25368674,
         "digest": "sha256:f912d7e745e3d817c555f8ea223b9bd1c5c07a52932f5a94464a3de215845816",
-        "sourceArtifactId": 10057285605,
-        "libraryFilename": "chunk-4.zip",
-        "persistentFileId": "1SvISbQx9PKEo9rgRRsdzABGItR16AU1i"
+        "sourceArtifactName": "a05-handoff-chunk-4",
+        "libraryFilename": "chunk-4.zip"
       },
       {
         "index": 5,
         "byteSize": 25100034,
         "digest": "sha256:4e702ab792ebd6af5aaff975221344c0b8e5a11feb9c89d33b42268dc01c5372",
-        "sourceArtifactId": 10057286644,
-        "libraryFilename": "chunk-5.zip",
-        "persistentFileId": "1pmEazuMr8o-jMs3kKvbbZEX8NHc59N4g"
+        "sourceArtifactName": "a05-handoff-chunk-5",
+        "libraryFilename": "chunk-5.zip"
       },
       {
         "index": 6,
         "byteSize": 25140770,
         "digest": "sha256:d5ecf42796bdf1a20d6540b49a2e5992524d5e85ba25bfc60245ab734f3e073f",
-        "sourceArtifactId": 10057287687,
-        "libraryFilename": "chunk-6.zip",
-        "persistentFileId": "1UAchOE3y3-czdM1WigWNDUMbAOTQhjhP"
+        "sourceArtifactName": "a05-handoff-chunk-6",
+        "libraryFilename": "chunk-6.zip"
       },
       {
         "index": 7,
         "byteSize": 25076645,
         "digest": "sha256:d0ba39a31449fac6754e9999051ad463b3a9ec39b62365568741623f20cd78c7",
-        "sourceArtifactId": 10057288822,
-        "libraryFilename": "chunk-7.zip",
-        "persistentFileId": "1zStkcmtBqdUqb6DRIGN1da5hLu_mQqAn"
+        "sourceArtifactName": "a05-handoff-chunk-7",
+        "libraryFilename": "chunk-7.zip"
       },
       {
         "index": 8,
         "byteSize": 25408260,
         "digest": "sha256:316aff6722ca56c67d8ea4bde02e613501190849e24bcdc3eafe3621cc944a2e",
-        "sourceArtifactId": 10057289930,
-        "libraryFilename": "chunk-8.zip",
-        "persistentFileId": null
+        "sourceArtifactName": "a05-handoff-chunk-8",
+        "libraryFilename": "chunk-8.zip"
       },
       {
         "index": 9,
         "byteSize": 20650491,
         "digest": "sha256:91c11d65506128cad36a2ba70284b154ee07811bbf3dc8674dceeb8cbd2aae63",
-        "sourceArtifactId": 10057291004,
-        "libraryFilename": "chunk-9.zip",
-        "persistentFileId": null
+        "sourceArtifactName": "a05-handoff-chunk-9",
+        "libraryFilename": "chunk-9.zip"
       }
     ]
   }
