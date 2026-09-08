@@ -10,7 +10,7 @@
   },
   "recordedAt": "2026-09-08",
   "retrievalDate": "2026-09-08",
-  "retrievalStatus": "bounded-a05-source-stack-materialized-as-ephemeral-artifact",
+  "retrievalStatus": "bounded-a05-source-stack-materialized-and-exported-to-user-library",
   "canonicalLocations": {
     "root": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/",
     "fullcolor": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/Fullcolor/fullbody/",
@@ -116,5 +116,78 @@
     "boundedA05AcquisitionComplete": true,
     "blockMedicalPromotionUntilRequiredSourceAndRegistrationIntegrityComplete": true,
     "note": "The bounded A05 source stack has per-file SHA-256 provenance in its artifact manifest. This does not claim that the complete Visible Human Female archive or CT source has been acquired or registered."
+  },
+  "persistentHandoff": {
+    "storageClass": "external-user-library-handoff",
+    "authority": "handoff copy only; not the project Medical Master or runtime asset store",
+    "libraryPath": "/Procedural Human/A05 Visible Human Female Source/",
+    "exportedAt": "2026-09-08",
+    "frameCoverage": {
+      "expectedFrameCount": 451,
+      "chunkCount": 10,
+      "reconstructionRule": "Extract chunk 0 through 9 and merge PNG files by filename; each chunk manifest carries per-source and per-crop SHA-256."
+    },
+    "chunks": [
+      {
+        "index": 0,
+        "name": "a05-vhp-female-left-wrist-roi-chunk-0.zip",
+        "byteSize": 26008764,
+        "digest": "sha256:39a5bc6cfe916ea54374302d470191c401cc9d65a0e9e4e03ce39abf3db28545"
+      },
+      {
+        "index": 1,
+        "name": "a05-vhp-female-left-wrist-roi-chunk-1.zip",
+        "byteSize": 25780946,
+        "digest": "sha256:dd08bc203fcabb64bc506a628c5522e0f5c5841d4498b76429f9dcfbc229870d"
+      },
+      {
+        "index": 2,
+        "name": "a05-vhp-female-left-wrist-roi-chunk-2.zip",
+        "byteSize": 25308776,
+        "digest": "sha256:c76cbcf047845170913784052acf20201c35d2d6069ab15c74ba985339c920cc"
+      },
+      {
+        "index": 3,
+        "name": "a05-vhp-female-left-wrist-roi-chunk-3.zip",
+        "byteSize": 25428824,
+        "digest": "sha256:06c06cb76068b56ca5e2c29cd5dce62a47c14f93c1342f7555226c368f8de731"
+      },
+      {
+        "index": 4,
+        "name": "a05-vhp-female-left-wrist-roi-chunk-4.zip",
+        "byteSize": 25346217,
+        "digest": "sha256:cd35a02cd0e34645c0f1281068fddbd707987eca2e404977233000d5f4d9b3af"
+      },
+      {
+        "index": 5,
+        "name": "a05-vhp-female-left-wrist-roi-chunk-5.zip",
+        "byteSize": 25077577,
+        "digest": "sha256:6b08e716899d3ba385ee704e86737b9d4876639037428453c048b1bc3efa6ec9"
+      },
+      {
+        "index": 6,
+        "name": "a05-vhp-female-left-wrist-roi-chunk-6.zip",
+        "byteSize": 25118313,
+        "digest": "sha256:d0dfa1841713587d766abbcc1f51ee1a77b114cd97120a21810d36fcc66568ca"
+      },
+      {
+        "index": 7,
+        "name": "a05-vhp-female-left-wrist-roi-chunk-7.zip",
+        "byteSize": 25054188,
+        "digest": "sha256:41f3a71de7817ec5273390ab3ab2ccdff0b96dfba3a6b7e6518a4a6b634ebfff"
+      },
+      {
+        "index": 8,
+        "name": "a05-vhp-female-left-wrist-roi-chunk-8.zip",
+        "byteSize": 25385803,
+        "digest": "sha256:c1d447880af82a91b99dc764b0faf099b85f28ceb10f1e9b6d1806b4449d3011"
+      },
+      {
+        "index": 9,
+        "name": "a05-vhp-female-left-wrist-roi-chunk-9.zip",
+        "byteSize": 20632345,
+        "digest": "sha256:7e85a05ffb43edba47fc0b38fe54987f2f1203d3c00d89c5b8e4ada6e0e83517"
+      }
+    ]
   }
 }
