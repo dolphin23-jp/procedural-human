@@ -32,7 +32,9 @@ export type NeedleControlIntent =
 
 export function normalizedControlAxis(value: number): NormalizedControlAxis {
   if (!Number.isFinite(value) || value < -1 || value > 1) {
-    throw new RangeError('Normalized control axis must be finite and within [-1, 1].');
+    throw new RangeError(
+      'Normalized control axis must be finite and within [-1, 1].',
+    );
   }
   return value as NormalizedControlAxis;
 }
