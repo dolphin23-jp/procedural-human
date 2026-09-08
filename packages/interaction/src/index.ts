@@ -9,6 +9,8 @@ import {
   patientSpaceSegment,
   type PatientSpaceSegment,
   type SpatialQueryApi,
+  type SpatialContactQueryApi,
+  type SpatialContactInterval,
 } from '@procedural-human/spatial';
 
 export interface NeedleMovementRequest {
@@ -71,11 +73,51 @@ function tipFor(instance: NeedleInstance): PatientSpacePoint {
   return tip;
 }
 
-/** Stateless observation of one caller-supplied straight tip displacement. */
-export class InteractionEngine {
-  readonly #spatial: SpatialQueryApi;
+function movementSegment(
+  request: NeedleMovementRequest,
+): PatientSpaceSegment {
+  const start = tipFor(request?.previous);
+  const end = tipFor(request?.current);
+  const { previous, current } = request;
+  if (
+    previous.id !== current.id ||
+    previous.definitionId !== current.definitionId
+  ) {
+    throw new RangeError(
+      'Needle movement states must identify the same needle.',
+    );
+  }
+  if (samePosition(start, end)) {
+    return patientSpaceSegment(start, end);
+  }
+  if (
+    !Number.isFinite(
+      Math.hypot(
+        end.value.x - start.value.x,
+        end.value.y - start.value.y,
+        end.value.z - start.value.z,
+      ),
+    )
+  ) {
+    throw new RangeError('Needle movement displacement overflow.');
+  }
+  return patientSpaceSegment(start, end);
+}
 
-  constructor(spatial: SpatialQueryApi) {
+/** Transient physical contact candidate; persistence/time belong to later tasks. */
+export interface InstrumentContact {
+  readonly kind: 'contact';
+  readonly instrumentId: InstrumentInstanceId;
+  readonly structureId: SpatialContactInterval['structureId'];
+  readonly canonicalEntityId: SpatialContactInterval['canonicalEntityId'];
+  readonly at: SpatialContactInterval['start'];
+}
+
+/** Patient-scoped, stateless tip movement and contact observation. */
+export class InteractionEngine {
+  readonly #spatial: SpatialQueryApi & Partial<SpatialContactQueryApi>;
+
+  constructor(spatial: SpatialQueryApi & Partial<SpatialContactQueryApi>) {
     if (typeof spatial?.querySegment !== 'function') {
       throw new TypeError(
         'InteractionEngine requires Spatial Query querySegment.',
@@ -87,42 +129,46 @@ export class InteractionEngine {
   observeNeedleMovement(
     request: NeedleMovementRequest,
   ): NeedleMovementObservation {
-    const start = tipFor(request?.previous);
-    const end = tipFor(request?.current);
-    const { previous, current } = request;
-    if (
-      previous.id !== current.id ||
-      previous.definitionId !== current.definitionId
-    ) {
-      throw new RangeError(
-        'Needle movement states must identify the same needle.',
-      );
-    }
-    if (samePosition(start, end)) {
+    const segment = movementSegment(request);
+    if (samePosition(segment.start, segment.end)) {
       return Object.freeze({
         kind: 'stationary',
-        instrumentId: current.id,
-        position: end,
+        instrumentId: request.current.id,
+        position: segment.end,
       });
     }
-    if (
-      !Number.isFinite(
-        Math.hypot(
-          end.value.x - start.value.x,
-          end.value.y - start.value.y,
-          end.value.z - start.value.z,
-        ),
-      )
-    ) {
-      throw new RangeError('Needle movement displacement overflow.');
-    }
-    const segment = patientSpaceSegment(start, end);
     const spatialResult = this.#spatial.querySegment(segment);
     return Object.freeze({
       kind: 'queried',
-      instrumentId: current.id,
+      instrumentId: request.current.id,
       segment,
       spatialResult,
     });
+  }
+
+  detectNeedleContacts(
+    request: NeedleMovementRequest,
+  ): readonly InstrumentContact[] {
+    const segment = movementSegment(request);
+    if (typeof this.#spatial.queryContacts !== 'function') {
+      throw new TypeError('Spatial contact query capability is unavailable.');
+    }
+    if (samePosition(segment.start, segment.end)) return Object.freeze([]);
+    // A component starting at zero is pre-existing contact, not a new onset.
+    // Endpoint contact was reported by the preceding consecutive displacement.
+    return Object.freeze(
+      this.#spatial
+        .queryContacts(segment)
+        .filter((interval) => interval.start.t > 0)
+        .map((interval) =>
+          Object.freeze({
+            kind: 'contact' as const,
+            instrumentId: request.current.id,
+            structureId: interval.structureId,
+            canonicalEntityId: interval.canonicalEntityId,
+            at: interval.start,
+          }),
+        ),
+    );
   }
 }

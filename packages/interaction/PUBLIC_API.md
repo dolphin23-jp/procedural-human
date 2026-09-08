@@ -69,3 +69,48 @@ also remains later Interaction work. TASK-071 preserves these semantics.
 
 Tests use unchanged development-fixture geometry. Software validation makes no
 medical-validation claim.
+
+## TASK-072 — Contact detection
+
+`detectNeedleContacts({ previous, current }): readonly InstrumentContact[]`
+returns transient physical contact candidates. The same injected service must
+also implement public `SpatialContactQueryApi`. Absence fails explicitly,
+including stationary requests; no optional-call empty result or renderer
+fallback is used. The original observeNeedleMovement behavior remains unchanged.
+
+This method shares TASK-071's movement validation, then queries contact evidence
+once for a nonzero tip displacement. It does not call querySegment: a surface
+overlap may be a valid contact even when an ordered penetration path is ambiguous.
+
+A contact begins at the start of each structure contact interval with t > 0.
+Its kind is `contact`; instrumentId, structureId, canonicalEntityId and `at`
+retain branded identity, Patient Space and physical distance. Returning candidates
+is the emission boundary for this task. No callback/global/Event Bus or persistent
+SimulationEvent schema is introduced; event timing/serialization remain M7 work.
+
+### Contact episode semantics
+
+- Outside to surface/interior: emit at the first touch, even at t=1.
+- Continued interior/surface contact: no new candidate.
+- Isolated tangency: emit at the touch without implying penetration.
+- Leave and recontact: emit for the new contact component.
+- Multiple regions of one structure: use Spatial's union, avoiding duplicate
+  contacts at representation seams. Simultaneous distinct structures each emit.
+- Zero tip displacement/pure rotation: empty, no query.
+- Initially on/inside a structure: treat it as pre-existing contact; no synthetic
+  initial event. Likewise a component starting at t=0 is not a new onset.
+
+For consecutive movements, a contact exactly at the shared endpoint belongs to
+the preceding movement (t=1), so the next segment does not duplicate it at t=0.
+The caller must supply every intended displacement in order within one fixed
+patient frame/asset state. Repeated requests return repeated candidates; this
+API does not provide exactly-once delivery, input deduplication or replay.
+
+This geometric episode rule requires no Interaction history or traversal state.
+It does not claim lifetime-first contact, initial-placement events, motion of
+anatomy around a stationary tip, shaft contact or swept-volume mechanics.
+
+Only contact semantics are added. BoundaryCrossed/LumenEntered/LumenExited,
+medical-state mutation, ordered path tracking, Procedure, UI/demo, clock,
+Event Bus/Event Log and replay remain unimplemented. Dependencies stay Instruments,
+Math and Spatial; software fixtures remain explicitly non-medical.
