@@ -17,27 +17,22 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Probe radiological metadata and likely files
+      - name: Probe Denver data downloads with browser-like session
         run: |
-          python - <<'PY'
-          from urllib.request import Request, urlopen
+          set -euxo pipefail
+          PAGE='https://digitalcommons.du.edu/visiblehuman/1/'
+          META='https://digitalcommons.du.edu/cgi/viewcontent.cgi?article=1001&context=visiblehuman&filename=11&type=additional'
+          CT='https://digitalcommons.du.edu/cgi/viewcontent.cgi?article=1001&context=visiblehuman&filename=1&type=additional'
 
-          base="https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/Radiological"
-          candidates=[
-            "README","README.txt",
-            "CT/README","CT/README.txt","ct/README","ct/README.txt",
-            "MRI/README","MRI/README.txt","mri/README","mri/README.txt",
-            "ct001.png","ct0001.png","f_ct001.png","fct001.png",
-            "CT/ct001.png","CT/ct0001.png","CT/f_ct001.png","CT/fct001.png",
-          ]
-          for name in candidates:
-            url=f"{base}/{name}"
-            try:
-              req=Request(url,headers={"User-Agent":"procedural-human-authoring/0.0 (+probe)"})
-              with urlopen(req,timeout=30) as r:
-                head=r.read(16000)
-                print("\nOK",r.status,r.headers.get("Content-Type"),len(head),url)
-                print(head.decode("utf-8","replace")[:12000])
-            except Exception as e:
-              print("ERR",url,type(e).__name__,e)
-          PY
+          curl -L -A 'Mozilla/5.0' -c /tmp/cookies.txt -o /tmp/page.html "$PAGE"
+          wc -c /tmp/page.html
+
+          for URL in "$META" "$CT"; do
+            echo "PROBE $URL"
+            curl -L -A 'Mozilla/5.0' -b /tmp/cookies.txt -e "$PAGE" \
+              --range 0-65535 -D /tmp/headers.txt -o /tmp/probe.bin "$URL" || true
+            cat /tmp/headers.txt
+            wc -c /tmp/probe.bin || true
+            file /tmp/probe.bin || true
+            head -c 200 /tmp/probe.bin | xxd || true
+          done
