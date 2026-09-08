@@ -1,10 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { patientSpacePoint } from '../packages/math/dist/index.js';
-import {
-  degrees,
-  millimetres,
-} from '../packages/units/dist/index.js';
+import { degrees, millimetres } from '../packages/units/dist/index.js';
 import {
   createInstrumentDefinition,
   createInstrumentInstance,
