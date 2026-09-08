@@ -1,0 +1,40 @@
+name: A05 Visible Human Wrist Locator
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - task-a01-mvp0-source-dataset
+    paths:
+      - '.github/workflows/a05-visible-human-locator.yml'
+      - 'authoring/source-acquisition/vhp_female_locator.py'
+
+permissions:
+  contents: read
+
+jobs:
+  acquire-locator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Acquire sparse NLM Visible Human Female locator set
+        run: |
+          python authoring/source-acquisition/vhp_female_locator.py \
+            --start 1600 \
+            --stop 1760 \
+            --step 10 \
+            --suffix a \
+            --output .artifacts/a05-vhp-female-wrist-locator
+
+      - name: Upload source locator artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-vhp-female-wrist-locator
+          path: .artifacts/a05-vhp-female-wrist-locator/
+          if-no-files-found: error
+          retention-days: 7
