@@ -70,7 +70,7 @@ test('TASK-059 derives source k through Patient Space instead of equating displa
 test(
   'TASK-063 arbitrary Patient Space plane round-trips through Cornerstone camera convention',
   () => {
-      const plane = createPatientImagingPlane({
+    const plane = createPatientImagingPlane({
       origin: patientSpacePoint(7.25, -13.5, 4.75),
       directionI: patientSpaceDirection(Math.SQRT1_2, 0, Math.SQRT1_2),
       directionJ: patientSpaceDirection(0, 1, 0),
@@ -92,6 +92,6 @@ test(
     assert.doesNotThrow(() => assertPatientPlanesEquivalent(plane, recovered));
     assert.deepEqual(recovered.directionI.value, plane.directionI.value);
     assert.deepEqual(recovered.directionJ.value, plane.directionJ.value);
-      assert.deepEqual(recovered.normal.value, plane.normal.value);
+    assert.deepEqual(recovered.normal.value, plane.normal.value);
   },
 );
