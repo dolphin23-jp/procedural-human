@@ -35,12 +35,21 @@ importers:
       '@procedural-human/imaging-cornerstone':
         specifier: workspace:*
         version: link:../../packages/imaging-cornerstone
+      '@procedural-human/instruments':
+        specifier: workspace:*
+        version: link:../../packages/instruments
+      '@procedural-human/math':
+        specifier: workspace:*
+        version: link:../../packages/math
       '@procedural-human/rendering-three':
         specifier: workspace:*
         version: link:../../packages/rendering-three
       '@procedural-human/session':
         specifier: workspace:*
         version: link:../../packages/session
+      '@procedural-human/units':
+        specifier: workspace:*
+        version: link:../../packages/units
       react:
         specifier: 19.1.1
         version: 19.1.1

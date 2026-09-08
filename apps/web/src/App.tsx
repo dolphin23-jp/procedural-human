@@ -1,4 +1,17 @@
 import {
+  NeedleMotionController,
+  createInstrumentPart,
+  createInstrumentPose,
+  createNeedleDefinition,
+  createNeedleInstance,
+  instrumentDefinitionId,
+  instrumentInstanceId,
+  instrumentPartId,
+  type NeedleInstance,
+} from '@procedural-human/instruments';
+import { patientSpacePoint } from '@procedural-human/math';
+import { degrees, millimetres } from '@procedural-human/units';
+import {
   CornerstoneAxialVolumeViewer,
   createSyntheticAxialVolumeFixture,
   type AxialSliceState,
@@ -13,8 +26,51 @@ import {
   type ImagingPlaneSyncState,
 } from '@procedural-human/session';
 import { useEffect, useRef, useState, type RefObject } from 'react';
+import { MouseNeedleInputAdapter } from './needle-mouse-input.js';
 
 const imagingFixture = createSyntheticAxialVolumeFixture();
+
+const developmentNeedleParts = {
+  shaft: instrumentPartId('development-needle.shaft'),
+  bevel: instrumentPartId('development-needle.bevel'),
+  tip: instrumentPartId('development-needle.tip'),
+  lumen: instrumentPartId('development-needle.lumen'),
+};
+
+const developmentNeedleDefinition = createNeedleDefinition({
+  id: instrumentDefinitionId('development-needle.generic'),
+  name: 'Generic development needle',
+  parts: [
+    createInstrumentPart({ id: developmentNeedleParts.shaft, name: 'Shaft' }),
+    createInstrumentPart({ id: developmentNeedleParts.bevel, name: 'Bevel' }),
+    createInstrumentPart({ id: developmentNeedleParts.tip, name: 'Tip' }),
+    createInstrumentPart({ id: developmentNeedleParts.lumen, name: 'Lumen' }),
+  ],
+  functionalParts: developmentNeedleParts,
+  geometry: {
+    shaftLength: millimetres(40),
+    bevelLength: millimetres(3),
+    outerDiameter: millimetres(1.2),
+    lumenDiameter: millimetres(0.7),
+  },
+});
+
+const needleMotionController = new NeedleMotionController({
+  translationStep: millimetres(60),
+  rotationStep: degrees(90),
+  advanceStep: millimetres(5),
+});
+
+function createDevelopmentNeedleInstance(): NeedleInstance {
+  return createNeedleInstance({
+    id: instrumentInstanceId('development-needle.instance'),
+    definition: developmentNeedleDefinition,
+    pose: createInstrumentPose({
+      position: patientSpacePoint(0, 0, -30),
+      orientation: { x: 0, y: 0, z: 0, w: 1 },
+    }),
+  });
+}
 
 const accuracyRows = [
   ['Identity', 'identityAccuracy'],
@@ -158,10 +214,14 @@ function ImagingPanel({
 export function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageElementRef = useRef<HTMLDivElement>(null);
+  const needleMouseRef = useRef<HTMLDivElement>(null);
   const syncRef = useRef<ImagingPlaneSynchronizer | null>(null);
   const [renderError, setRenderError] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [selection, setSelection] = useState<SemanticPickResult | null>(null);
+  const [needle, setNeedle] = useState<NeedleInstance>(() =>
+    createDevelopmentNeedleInstance(),
+  );
   const [syncState, setSyncState] = useState<ImagingPlaneSyncState | null>(
     null,
   );
@@ -247,6 +307,17 @@ export function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const element = needleMouseRef.current;
+    if (!element) return;
+    const adapter = new MouseNeedleInputAdapter(element, {
+      emit: (intent) => {
+        setNeedle((current) => needleMotionController.apply(current, intent));
+      },
+    });
+    return () => adapter.dispose();
+  }, []);
+
   const run = (command: (sync: ImagingPlaneSynchronizer) => Promise<void>) => {
     const sync = syncRef.current;
     if (!sync) return;
@@ -316,6 +387,27 @@ export function App() {
                 : '–'}
             </output>
           </div>
+          <aside
+            ref={needleMouseRef}
+            className="viewer__needle-control"
+            aria-label="Mouse needle control"
+          >
+            <p className="metadata__eyebrow">M6 · Generic needle</p>
+            <strong>Mouse needle control</strong>
+            <p>Drag: translate · Shift-drag: rotate · wheel: advance/retract</p>
+            <output>
+              Tip ({needle.tipPosition.value.x.toFixed(1)},{' '}
+              {needle.tipPosition.value.y.toFixed(1)},{' '}
+              {needle.tipPosition.value.z.toFixed(1)}) mm
+              <br />
+              Direction ({needle.tipDirection.value.x.toFixed(2)},{' '}
+              {needle.tipDirection.value.y.toFixed(2)},{' '}
+              {needle.tipDirection.value.z.toFixed(2)})
+              <br />
+              Trajectory samples: {needle.trajectory.length}
+            </output>
+            <small>Control only · no anatomy interaction yet</small>
+          </aside>
           {selection && <StructureMetadataPanel selection={selection} />}
           <div className="viewer__legend" aria-label="Fixture structure legend">
             <span>

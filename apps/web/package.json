@@ -13,7 +13,10 @@
     "@procedural-human/rendering-three": "workspace:*",
     "react": "19.1.1",
     "react-dom": "19.1.1",
-    "@procedural-human/session": "workspace:*"
+    "@procedural-human/session": "workspace:*",
+    "@procedural-human/instruments": "workspace:*",
+    "@procedural-human/math": "workspace:*",
+    "@procedural-human/units": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "24.3.0",
