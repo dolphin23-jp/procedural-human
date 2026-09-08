@@ -10,6 +10,8 @@ import {
 } from '@procedural-human/imaging-core';
 import type { PatientClippingPlane } from '@procedural-human/rendering-core';
 
+class ImagingPlaneCommandPreconditionError extends Error {}
+
 export interface ImagingPlaneSyncState {
   /** Present only when the current image plane is one declared axial source slice. */
   readonly slice: AxialSliceState | null;
@@ -70,10 +72,12 @@ export class ImagingPlaneSynchronizer {
     return this.#enqueue(
       () => {
         if (!Number.isSafeInteger(delta))
-          throw new RangeError('Slice delta must be an integer.');
+          throw new ImagingPlaneCommandPreconditionError(
+            'Slice delta must be an integer.',
+          );
         const current = this.#state.slice;
         if (!current) {
-          throw new RangeError(
+          throw new ImagingPlaneCommandPreconditionError(
             'Axial scrolling is unavailable while an oblique image plane is active.',
           );
         }
@@ -158,7 +162,10 @@ export class ImagingPlaneSynchronizer {
         this.#assertAlive();
         commit(value);
       } catch (error) {
-        if (!this.#disposed) {
+        if (
+          !this.#disposed &&
+          !(error instanceof ImagingPlaneCommandPreconditionError)
+        ) {
           // A failed readback may follow a camera mutation. Never leave a stale
           // 3D plane presented as synchronized with that image.
           this.#render.setClippingPlane(null);
