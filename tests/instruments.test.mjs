@@ -267,7 +267,9 @@ function task067NeedleDefinition() {
   });
 }
 
-test('TASK-067 needle instance derives tip position, direction, and trajectory from pose', () => {
+test(
+  'TASK-067 needle instance derives tip position, direction, and trajectory from pose',
+  () => {
   const definition = task067NeedleDefinition();
   const instance = createNeedleInstance({
     id: instrumentInstanceId('task067.instance'),
@@ -282,10 +284,13 @@ test('TASK-067 needle instance derives tip position, direction, and trajectory f
   assert.deepEqual(instance.tipDirection.value, { x: 0, y: 0, z: 1 });
   assert.equal(instance.trajectory.length, 1);
   assert.ok(Object.isFrozen(instance.trajectory));
-  assert.ok(Object.isFrozen(instance.trajectory[0]));
-});
+    assert.ok(Object.isFrozen(instance.trajectory[0]));
+  },
+);
 
-test('TASK-067 pose updates rotate +Z tip direction and append only changed samples', () => {
+test(
+  'TASK-067 pose updates rotate +Z tip direction and append only changed samples',
+  () => {
   const definition = task067NeedleDefinition();
   const initial = createNeedleInstance({
     id: instrumentInstanceId('task067.rotated'),
@@ -314,6 +319,7 @@ test('TASK-067 pose updates rotate +Z tip direction and append only changed samp
   assert.ok(Math.abs(moved.tipDirection.value.z) < 1e-12);
   assert.equal(moved.trajectory.length, 2);
 
-  const repeated = updateNeedlePose(moved, moved.pose);
-  assert.equal(repeated.trajectory.length, 2);
-});
+    const repeated = updateNeedlePose(moved, moved.pose);
+    assert.equal(repeated.trajectory.length, 2);
+  },
+);
