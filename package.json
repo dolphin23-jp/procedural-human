@@ -7,7 +7,7 @@
     "build": "pnpm build:contracts && pnpm --filter @procedural-human/web build",
     "build:contracts": "pnpm --filter @procedural-human/core build && pnpm --filter @procedural-human/units build && pnpm --filter @procedural-human/math build && pnpm --filter @procedural-human/instruments build && pnpm --filter @procedural-human/anatomy build && pnpm --filter @procedural-human/patient build && pnpm --filter @procedural-human/physiology build && pnpm --filter @procedural-human/spatial build && pnpm --filter @procedural-human/rendering-core build && pnpm --filter @procedural-human/rendering-three build && pnpm --filter @procedural-human/imaging-core build && pnpm --filter @procedural-human/imaging-cornerstone build && pnpm --filter @procedural-human/session build",
     "format": "prettier --write .",
-    "format:check": "prettier --write tests/needle-touch-input.test.mjs && git diff -- tests/needle-touch-input.test.mjs && exit 1",
+    "format:check": "prettier --check .",
     "lint": "eslint .",
     "schema:validate": "node tools/validate-schemas.mjs",
     "schema:validate:python": "uv run --package ph_validation python authoring/python/ph_validation/src/ph_validation/shared_schema_validation.py",
