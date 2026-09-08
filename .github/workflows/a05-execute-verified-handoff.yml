@@ -1,0 +1,207 @@
+name: A05 execute verified handoff
+
+on:
+  push:
+    branches:
+      - task-a05-current-main-forward-port
+    paths:
+      - .github/workflows/a05-execute-verified-handoff.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Download exact independently verified handoff chunks
+        run: |
+          set -euo pipefail
+          mkdir -p build/handoff
+          ids=(10057281755 10057282711 10057283651 10057284584 10057285605 10057286644 10057287687 10057288822 10057289930 10057291004)
+          for i in $(seq 0 9); do
+            curl --fail --location --silent --show-error \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/${ids[$i]}/zip" \
+              -o "build/handoff/chunk-$i.zip"
+          done
+
+      - name: Verify chunk archives and reconstruct exact source stack
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from hashlib import sha256
+          import json, struct, zipfile
+
+          expected_meta={
+            0:(26031165,"78b1b2c1e1ffa006f3b07711e3497bb74ba7133f777709eebcd008b1b429623d"),
+            1:(25803357,"01d54d17761091fc576e8cb7acb47bfc5b178185ffadb50415ff806bdfd7c837"),
+            2:(25331225,"56e2c3cb8382a4b6eb96fa4c04e12793281f8214a48fe5880c36628508663352"),
+            3:(25451281,"8577b8e831bfd7d6d590562bd4c2603d9ca0e455179c426ac4860f05f517b44c"),
+            4:(25368674,"f912d7e745e3d817c555f8ea223b9bd1c5c07a52932f5a94464a3de215845816"),
+            5:(25100034,"4e702ab792ebd6af5aaff975221344c0b8e5a11feb9c89d33b42268dc01c5372"),
+            6:(25140770,"d5ecf42796bdf1a20d6540b49a2e5992524d5e85ba25bfc60245ab734f3e073f"),
+            7:(25076645,"d0ba39a31449fac6754e9999051ad463b3a9ec39b62365568741623f20cd78c7"),
+            8:(25408260,"316aff6722ca56c67d8ea4bde02e613501190849e24bcdc3eafe3621cc944a2e"),
+            9:(20650491,"91c11d65506128cad36a2ba70284b154ee07811bbf3dc8674dceeb8cbd2aae63"),
+          }
+          names=[]
+          for p in range(1567,1717):
+              for s in ("a","b","c"):
+                  names.append(f"avf{p:04d}{s}.png")
+          names.append("avf1717a.png")
+          frames=Path("build/source/frames"); frames.mkdir(parents=True)
+          rows=[]; seen=set(); source_agg=sha256(); crop_agg=sha256()
+          chunks=[]
+          for i in range(10):
+              zp=Path(f"build/handoff/chunk-{i}.zip")
+              blob=zp.read_bytes()
+              actual=(len(blob),sha256(blob).hexdigest())
+              assert actual==expected_meta[i], (i,actual,expected_meta[i])
+              with zipfile.ZipFile(zp) as z:
+                  assert z.testzip() is None
+                  m=json.loads(z.read("manifest.json"))
+                  assert m["chunk"]["index"]==i
+                  assert m["chunk"]["fullStackFrameCount"]==451
+                  for row in m["files"]:
+                      gi=row["globalFrameIndex"]; fn=row["filename"]
+                      assert fn==names[gi] and fn not in seen
+                      assert row["sourceSpaceOnly"] is True
+                      assert row["cropPixels"]=={"left":1450,"top":250,"rightExclusive":2000,"bottomExclusive":1000}
+                      payload=z.read(fn)
+                      assert sha256(payload).hexdigest()==row["cropSha256"]
+                      assert len(payload)==row["cropByteSize"]
+                      assert len(row["sourceSha256"])==64 and row["sourceByteSize"]>0
+                      assert payload[:8]==b"\x89PNG\r\n\x1a\n"
+                      assert struct.unpack(">II",payload[16:24])==(550,750)
+                      (frames/fn).write_bytes(payload)
+                      seen.add(fn)
+                      source_agg.update(fn.encode()); source_agg.update(row["sourceSha256"].encode())
+                      crop_agg.update(fn.encode()); crop_agg.update(row["cropSha256"].encode())
+                      rows.append(row)
+              chunks.append({"index":i,"filename":zp.name,"byteSize":actual[0],"sha256":actual[1]})
+          rows.sort(key=lambda x:x["globalFrameIndex"])
+          assert [r["filename"] for r in rows]==names and len(rows)==451
+          assert source_agg.hexdigest()=="0c330a99eedf1a446ca6502b4a7bde12e9893e96dc75f65348cb16f32d701f48"
+          assert crop_agg.hexdigest()=="f6e46638ecb84a16dd20cc604931874ec36815091d050b31843392b7d73c7171"
+
+          stack={
+            "schema":"ph-a05-source-stack-reconstruction.v1",
+            "dataset":"NLM Visible Human Project — Visible Human Female bounded left distal forearm/wrist crop",
+            "sliceCount":451,
+            "coordinateSpace":{"kind":"source-image-stack","patientSpaceClaim":False,"registrationStatus":"not-established"},
+            "files":[{"filename":r["filename"],"sha256":r["cropSha256"]} for r in rows],
+            "claims":{"medicalMaster":False,"runtimeAssetStore":False,"ctRegistrationEstablished":False},
+          }
+          Path("build/source/source-stack-manifest.json").write_text(json.dumps(stack,indent=2,sort_keys=True)+"\n")
+          Path("build/source/handoff-verification.json").write_text(json.dumps({
+            "schema":"ph-a05-handoff-verification.v1",
+            "chunkCount":10,"frameCount":451,
+            "allChunkHashesVerified":True,"allCropHashesVerified":True,
+            "noMissingFrames":True,"noDuplicateFrames":True,
+            "filenameOrderingVerified":True,"globalFrameIndexOrderingVerified":True,
+            "sourceSha256MetadataPresent":True,"identicalCropDimensionsVerified":True,
+            "cropDimensionsPixels":{"width":550,"height":750},
+            "sourceFilenameShaAggregate":"0c330a99eedf1a446ca6502b4a7bde12e9893e96dc75f65348cb16f32d701f48",
+            "cropFilenameShaAggregate":"f6e46638ecb84a16dd20cc604931874ec36815091d050b31843392b7d73c7171",
+            "coordinateSpace":"source-image-stack-only","patientSpaceClaim":False,"medicalValidation":False,
+            "chunks":chunks,
+          },indent=2,sort_keys=True)+"\n")
+          PY
+
+      - name: Execute real V0 tissue candidates and fail closed on bones/vessels
+        env:
+          PYTHONPATH: authoring/python/ph_segmentation/src
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from ph_segmentation import (
+              SourceSliceRecord, SourceStackManifest,
+              generate_tissue_only_draft,
+              build_vascular_feasibility_report,
+              write_vascular_feasibility_report,
+          )
+          raw=json.loads(Path("build/source/source-stack-manifest.json").read_text())
+          stack=SourceStackManifest(
+              dataset=raw["dataset"],
+              slices=tuple(SourceSliceRecord(filename=r["filename"],sha256=r["sha256"]) for r in raw["files"]),
+              source_manifest_path="build/source/source-stack-manifest.json",
+          )
+          out=Path("build/a05-output")
+          nonvascular=generate_tissue_only_draft("build/source/frames",stack,out,verify_hashes=True)
+          vessel=build_vascular_feasibility_report(
+              {"radial_artery":(),"ulnar_artery":(),"superficial_target_vein":()},
+              451,stack.digest,
+          )
+          write_vascular_feasibility_report(out/"vascular-feasibility-report.v0.json",vessel)
+          coverage=json.loads((out/"coverage-statistics.v0.json").read_text())
+          summary={
+            "schema":"ph-a05-real-execution-summary.v1",
+            "sourceFrameCount":451,
+            "handoffVerification":json.loads(Path("build/source/handoff-verification.json").read_text()),
+            "nonvascularGenerated":[x["draftLabel"] for x in nonvascular["generatedLabels"]],
+            "nonvascularBlocked":[{"draftLabel":x["draftLabel"],"reason":x["reason"]} for x in nonvascular["blockedNonvascularLabels"]],
+            "coverage":coverage["labels"],
+            "vascularFeasibility":{x["draftLabel"]:{
+              "classification":x["classification"],
+              "maskGenerationBlocked":x["maskGenerationBlocked"],
+              "candidateSlices":x["metrics"]["candidateSlices"],
+            } for x in vessel["structures"]},
+            "claims":{"patientSpaceGeometry":False,"ctRegistrationEstablished":False,"medicalValidation":False,"medicalMaster":False,"runtimeAsset":False,"vesselMasksCreated":False},
+          }
+          (out/"real-execution-summary.json").write_text(json.dumps(summary,indent=2,sort_keys=True)+"\n")
+          print(json.dumps(summary,indent=2))
+          PY
+
+      - name: Verify real output
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path("build/a05-output")
+          for label in ("skin","subcutaneous_soft_tissue","major_muscle_tendon_region"):
+              assert len(list((root/"masks"/label).glob("*.pgm")))==451
+          assert not (root/"masks"/"radius").exists()
+          assert not (root/"masks"/"ulna").exists()
+          v=json.loads((root/"vascular-feasibility-report.v0.json").read_text())
+          assert all(x["classification"]=="not-established" and x["maskGenerationBlocked"] for x in v["structures"])
+          assert v["claims"]["vesselMasksCreated"] is False
+          PY
+
+      - id: output
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-real-v0-output-from-verified-handoff
+          path: build/a05-output/
+          compression-level: 9
+          retention-days: 30
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a05-real-v0-verification
+          path: |
+            build/source/handoff-verification.json
+            build/a05-output/real-execution-summary.json
+            build/a05-output/coverage-statistics.v0.json
+            build/a05-output/vascular-feasibility-report.v0.json
+            build/a05-output/real-nonvascular-execution.v0.json
+          retention-days: 30
+
+      - name: Print output archive identity
+        run: |
+          echo "artifact-id=${{ steps.output.outputs.artifact-id }}"
+          echo "artifact-digest=${{ steps.output.outputs.artifact-digest }}"
