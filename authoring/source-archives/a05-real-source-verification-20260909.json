@@ -156,10 +156,7 @@
         "fileId": "1zStkcmtBqdUqb6DRIGN1da5hLu_mQqAn"
       }
     ],
-    "missingChunkIndices": [
-      8,
-      9
-    ],
+    "missingChunkIndices": [8, 9],
     "blocker": {
       "providerError": "storageQuotaExceeded",
       "message": "The user's Drive storage quota has been exceeded."
