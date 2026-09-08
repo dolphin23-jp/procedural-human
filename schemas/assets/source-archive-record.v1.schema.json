@@ -27,7 +27,13 @@
     "dataset": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["provider", "name", "portalDatasetId", "subjectId", "sourceClass"],
+      "required": [
+        "provider",
+        "name",
+        "portalDatasetId",
+        "subjectId",
+        "sourceClass"
+      ],
       "properties": {
         "provider": { "type": "string", "minLength": 1 },
         "name": { "type": "string", "minLength": 1 },
@@ -123,7 +129,11 @@
         "frameCoverage": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["expectedFrameCount", "chunkCount", "reconstructionRule"],
+          "required": [
+            "expectedFrameCount",
+            "chunkCount",
+            "reconstructionRule"
+          ],
           "properties": {
             "expectedFrameCount": { "const": 451 },
             "chunkCount": { "const": 10 },
