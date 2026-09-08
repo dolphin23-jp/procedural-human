@@ -1,0 +1,304 @@
+name: A05 real-data acquisition
+
+on:
+  push:
+    branches:
+      - task-a05-current-main-forward-port
+    paths:
+      - .github/workflows/a05-real-data.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install bounded acquisition dependency
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Acquire all 451 source frames in ten bounded chunks
+        run: |
+          set -euo pipefail
+          mkdir -p build/a05-handoff
+          for index in $(seq 0 9); do
+            python authoring/source-acquisition/vhp_female_roi_chunk.py \
+              --chunk-index "$index" \
+              --chunk-size 46 \
+              --output "build/a05-handoff/chunk-$index"
+          done
+
+      - name: Verify acquisition coverage before artifact upload
+        run: |
+          python - <<'PY'
+          from hashlib import sha256
+          import json
+          from pathlib import Path
+          import struct
+
+          root = Path("build/a05-handoff")
+          expected = []
+          for position in range(1567, 1717):
+              for suffix in ("a", "b", "c"):
+                  expected.append(f"avf{position:04d}{suffix}.png")
+          expected.append("avf1717a.png")
+          assert len(expected) == 451
+
+          rows = []
+          observed = []
+          crop_hashes = set()
+          source_hashes = set()
+          for index in range(10):
+              chunk = root / f"chunk-{index}"
+              manifest = json.loads((chunk / "manifest.json").read_text())
+              files = manifest["files"]
+              assert manifest["chunk"]["index"] == index
+              assert manifest["chunk"]["fullStackFrameCount"] == 451
+              assert manifest["chunk"]["frameCount"] == len(files)
+              for row in files:
+                  global_index = row["globalFrameIndex"]
+                  filename = row["filename"]
+                  assert 0 <= global_index < 451
+                  assert filename == expected[global_index]
+                  assert row["sourceSpaceOnly"] is True
+                  assert row["cropPixels"] == {
+                      "left": 1450,
+                      "top": 250,
+                      "rightExclusive": 2000,
+                      "bottomExclusive": 1000,
+                  }
+                  path = chunk / filename
+                  payload = path.read_bytes()
+                  assert sha256(payload).hexdigest() == row["cropSha256"]
+                  assert len(payload) == row["cropByteSize"]
+                  assert isinstance(row["sourceSha256"], str) and len(row["sourceSha256"]) == 64
+                  assert isinstance(row["sourceByteSize"], int) and row["sourceByteSize"] > 0
+                  assert payload[:8] == b"\x89PNG\r\n\x1a\n"
+                  width, height = struct.unpack(">II", payload[16:24])
+                  assert (width, height) == (550, 750)
+                  observed.append(filename)
+                  crop_hashes.add(row["cropSha256"])
+                  source_hashes.add(row["sourceSha256"])
+                  rows.append({
+                      "globalFrameIndex": global_index,
+                      "filename": filename,
+                      "sourceSha256": row["sourceSha256"],
+                      "sourceByteSize": row["sourceByteSize"],
+                      "cropSha256": row["cropSha256"],
+                      "cropByteSize": row["cropByteSize"],
+                      "nominalSourcePositionMm": row["nominalSourcePositionMm"],
+                  })
+
+          assert observed == expected
+          assert len(set(observed)) == 451
+          assert len(rows) == 451
+          assert len(crop_hashes) == 451
+          assert len(source_hashes) == 451
+
+          summary = {
+              "schema": "ph-a05-real-source-acquisition-summary.v1",
+              "dataset": "U.S. National Library of Medicine — Visible Human Project — Visible Human Female",
+              "sourceFolder": "PNG_format/abdomen/",
+              "frameCount": 451,
+              "firstFilename": expected[0],
+              "lastFilename": expected[-1],
+              "allDownloadsSucceeded": True,
+              "allCropHashesVerified": True,
+              "noMissingFrames": True,
+              "noDuplicateFrames": True,
+              "filenameGlobalIndexOrderingVerified": True,
+              "identicalCropDimensionsVerified": True,
+              "cropDimensionsPixels": {"width": 550, "height": 750},
+              "cropPixels": {
+                  "left": 1450,
+                  "top": 250,
+                  "rightExclusive": 2000,
+                  "bottomExclusive": 1000,
+              },
+              "coordinateSpace": {
+                  "kind": "source-image-stack",
+                  "patientSpaceClaim": False,
+                  "ctRegistrationEstablished": False,
+              },
+              "medicalValidation": False,
+              "files": rows,
+          }
+          Path("build/a05-acquisition-summary.json").write_text(
+              json.dumps(summary, indent=2, sort_keys=True) + "\n"
+          )
+          print("verified exactly 451 source/crop records")
+          PY
+
+      - name: Build representative source-space preview
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageDraw
+
+          root = Path("build/a05-handoff")
+          preview = Path("build/a05-preview")
+          preview.mkdir(parents=True, exist_ok=True)
+          indices = [0, 45, 90, 135, 180, 225, 270, 315, 360, 405, 450]
+          names = []
+          for position in range(1567, 1717):
+              for suffix in ("a", "b", "c"):
+                  names.append(f"avf{position:04d}{suffix}.png")
+          names.append("avf1717a.png")
+
+          images = []
+          for idx in indices:
+              name = names[idx]
+              chunk_index = idx // 46
+              src = root / f"chunk-{chunk_index}" / name
+              dst = preview / name
+              dst.write_bytes(src.read_bytes())
+              image = Image.open(src).convert("RGB")
+              image.thumbnail((220, 300))
+              images.append((idx, name, image.copy()))
+
+          tile_w, tile_h = 240, 340
+          sheet = Image.new("RGB", (tile_w * 4, tile_h * 3), "white")
+          draw = ImageDraw.Draw(sheet)
+          for n, (idx, name, image) in enumerate(images):
+              x = (n % 4) * tile_w
+              y = (n // 4) * tile_h
+              sheet.paste(image, (x + 10, y + 25))
+              draw.text((x + 10, y + 5), f"{idx}: {name}", fill="black")
+          sheet.save(preview / "representative-contact-sheet.jpg", quality=92)
+          PY
+
+      - id: upload0
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-handoff-chunk-0
+          path: build/a05-handoff/chunk-0/*
+          compression-level: 0
+          retention-days: 30
+      - id: upload1
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-handoff-chunk-1
+          path: build/a05-handoff/chunk-1/*
+          compression-level: 0
+          retention-days: 30
+      - id: upload2
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-handoff-chunk-2
+          path: build/a05-handoff/chunk-2/*
+          compression-level: 0
+          retention-days: 30
+      - id: upload3
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-handoff-chunk-3
+          path: build/a05-handoff/chunk-3/*
+          compression-level: 0
+          retention-days: 30
+      - id: upload4
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-handoff-chunk-4
+          path: build/a05-handoff/chunk-4/*
+          compression-level: 0
+          retention-days: 30
+      - id: upload5
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-handoff-chunk-5
+          path: build/a05-handoff/chunk-5/*
+          compression-level: 0
+          retention-days: 30
+      - id: upload6
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-handoff-chunk-6
+          path: build/a05-handoff/chunk-6/*
+          compression-level: 0
+          retention-days: 30
+      - id: upload7
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-handoff-chunk-7
+          path: build/a05-handoff/chunk-7/*
+          compression-level: 0
+          retention-days: 30
+      - id: upload8
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-handoff-chunk-8
+          path: build/a05-handoff/chunk-8/*
+          compression-level: 0
+          retention-days: 30
+      - id: upload9
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05-handoff-chunk-9
+          path: build/a05-handoff/chunk-9/*
+          compression-level: 0
+          retention-days: 30
+
+      - name: Record artifact archive digests
+        env:
+          ID0: ${{ steps.upload0.outputs.artifact-id }}
+          ID1: ${{ steps.upload1.outputs.artifact-id }}
+          ID2: ${{ steps.upload2.outputs.artifact-id }}
+          ID3: ${{ steps.upload3.outputs.artifact-id }}
+          ID4: ${{ steps.upload4.outputs.artifact-id }}
+          ID5: ${{ steps.upload5.outputs.artifact-id }}
+          ID6: ${{ steps.upload6.outputs.artifact-id }}
+          ID7: ${{ steps.upload7.outputs.artifact-id }}
+          ID8: ${{ steps.upload8.outputs.artifact-id }}
+          ID9: ${{ steps.upload9.outputs.artifact-id }}
+          DIGEST0: ${{ steps.upload0.outputs.artifact-digest }}
+          DIGEST1: ${{ steps.upload1.outputs.artifact-digest }}
+          DIGEST2: ${{ steps.upload2.outputs.artifact-digest }}
+          DIGEST3: ${{ steps.upload3.outputs.artifact-digest }}
+          DIGEST4: ${{ steps.upload4.outputs.artifact-digest }}
+          DIGEST5: ${{ steps.upload5.outputs.artifact-digest }}
+          DIGEST6: ${{ steps.upload6.outputs.artifact-digest }}
+          DIGEST7: ${{ steps.upload7.outputs.artifact-digest }}
+          DIGEST8: ${{ steps.upload8.outputs.artifact-digest }}
+          DIGEST9: ${{ steps.upload9.outputs.artifact-digest }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          rows = []
+          for index in range(10):
+              rows.append({
+                  "index": index,
+                  "artifactName": f"a05-handoff-chunk-{index}",
+                  "artifactId": int(os.environ[f"ID{index}"]),
+                  "digest": os.environ[f"DIGEST{index}"],
+              })
+          Path("build/a05-artifact-archives.json").write_text(
+              json.dumps({
+                  "schema": "ph-a05-actions-artifact-archives.v1",
+                  "handoffAuthority": "temporary transport copy only",
+                  "chunks": rows,
+              }, indent=2, sort_keys=True) + "\n"
+          )
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a05-acquisition-metadata
+          path: |
+            build/a05-acquisition-summary.json
+            build/a05-artifact-archives.json
+          retention-days: 30
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a05-representative-preview
+          path: build/a05-preview/*
+          retention-days: 30
