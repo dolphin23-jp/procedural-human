@@ -157,18 +157,27 @@ export function createInstrumentDefinition(input: {
   readonly parts: readonly InstrumentPart[];
 }): InstrumentDefinition {
   const parts = input.parts.map((part) => createInstrumentPart(part));
-  const ids = new Set<string>();
+  const byId = new Map<InstrumentPartId, InstrumentPart>();
   for (const part of parts) {
-    if (ids.has(part.id)) {
+    if (byId.has(part.id)) {
       throw new RangeError(`Duplicate instrument part ID: ${part.id}`);
     }
-    ids.add(part.id);
+    byId.set(part.id, part);
   }
   for (const part of parts) {
-    if (part.parentPartId !== null && !ids.has(part.parentPartId)) {
+    if (part.parentPartId !== null && !byId.has(part.parentPartId)) {
       throw new RangeError(
         `Instrument part ${part.id} references an unknown parent ${part.parentPartId}.`,
       );
+    }
+    const visited = new Set<InstrumentPartId>();
+    let current: InstrumentPart | undefined = part;
+    while (current?.parentPartId !== null) {
+      if (visited.has(current.id)) {
+        throw new RangeError('Instrument part hierarchy must not contain a cycle.');
+      }
+      visited.add(current.id);
+      current = byId.get(current.parentPartId);
     }
   }
   return Object.freeze({
