@@ -9,6 +9,7 @@ const forbiddenWorkspaceEdges = new Map([
 ]);
 
 const anatomyAllowedWorkspaceTargets = new Set(['core', 'units', 'math']);
+const instrumentAllowedWorkspaceTargets = new Set(['core', 'units', 'math']);
 const spatialAllowedWorkspaceTargets = new Set([
   'core',
   'units',
@@ -147,6 +148,15 @@ export async function checkPackageBoundaries(rootDir) {
       ) {
         violations.push(
           `${relativePath}: @procedural-human/anatomy may only depend on @procedural-human/core, @procedural-human/units, or @procedural-human/math`,
+        );
+      } else if (
+        owner.kind === 'package' &&
+        owner.name === 'instruments' &&
+        workspaceTarget &&
+        !instrumentAllowedWorkspaceTargets.has(workspaceTarget)
+      ) {
+        violations.push(
+          `${relativePath}: @procedural-human/instruments may only depend on @procedural-human/core, @procedural-human/units, or @procedural-human/math`,
         );
       } else if (
         owner.kind === 'package' &&
