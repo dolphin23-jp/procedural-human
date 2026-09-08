@@ -18,6 +18,13 @@ function clampMagnitude(value: number): number {
   return Math.max(0, Math.min(1, value));
 }
 
+function isInteractiveControl(target: EventTarget | null): boolean {
+  return (
+    target instanceof Element &&
+    target.closest('button, input, select, textarea, a') !== null
+  );
+}
+
 /**
  * Browser-only mouse adapter. It emits normalized domain intents and never
  * reads or mutates NeedleInstance, anatomy, rendering, or procedure state.
@@ -49,7 +56,13 @@ export class MouseNeedleInputAdapter {
   }
 
   readonly #onPointerDown = (event: PointerEvent): void => {
-    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    if (
+      event.pointerType !== 'mouse' ||
+      event.button !== 0 ||
+      isInteractiveControl(event.target)
+    ) {
+      return;
+    }
     this.#pointerId = event.pointerId;
     this.#lastX = event.clientX;
     this.#lastY = event.clientY;
