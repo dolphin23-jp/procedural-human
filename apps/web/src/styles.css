@@ -33,6 +33,7 @@ textarea {
 .shell {
   min-height: 100vh;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(12px, 2.4vw, 28px);
   padding: clamp(12px, 2.4vw, 28px);
 }
@@ -295,6 +296,28 @@ h1,
   color: #91a4bf;
   font-size: 0.72rem;
   line-height: 1.45;
+}
+@media (min-width: 980px) {
+  .shell {
+    grid-template-columns: minmax(0, 1.35fr) minmax(360px, 0.85fr);
+    align-items: stretch;
+  }
+  .viewer,
+  .imaging {
+    min-height: calc(100vh - clamp(24px, 4.8vw, 56px));
+  }
+  .imaging {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .imaging__body {
+    min-height: 0;
+    grid-template-rows: minmax(320px, 1fr) auto auto auto;
+  }
+  .imaging__viewport {
+    height: auto;
+    min-height: 320px;
+  }
 }
 @media (max-width: 760px) {
   .viewer__legend {
