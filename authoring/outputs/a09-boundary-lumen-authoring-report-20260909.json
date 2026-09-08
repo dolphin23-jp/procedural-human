@@ -1,0 +1,46 @@
+{
+  "schema": "ph-boundary-lumen-authoring-report.v1",
+  "schemaVersion": "1",
+  "task": "TASK-A09",
+  "recordedAt": "2026-09-09",
+  "coordinateSpace": {
+    "kind": "source-image-stack",
+    "patientSpaceClaim": false,
+    "ctRegistrationEstablished": false
+  },
+  "structures": [
+    {
+      "draftLabel": "radial_artery",
+      "anatomicalId": "structure.radial_artery.left",
+      "representationStatus": "blocked",
+      "outsideRegion": null,
+      "wallBoundary": null,
+      "lumenRegion": null,
+      "reason": "vessel centerline is not generated; vessel segmentation/lumen mask is unavailable; TASK-A06 human manual anatomical correction is not complete"
+    },
+    {
+      "draftLabel": "ulnar_artery",
+      "anatomicalId": "structure.ulnar_artery.left",
+      "representationStatus": "blocked",
+      "outsideRegion": null,
+      "wallBoundary": null,
+      "lumenRegion": null,
+      "reason": "vessel centerline is not generated; vessel segmentation/lumen mask is unavailable; TASK-A06 human manual anatomical correction is not complete"
+    },
+    {
+      "draftLabel": "superficial_target_vein",
+      "anatomicalId": null,
+      "representationStatus": "blocked",
+      "outsideRegion": null,
+      "wallBoundary": null,
+      "lumenRegion": null,
+      "reason": "vessel centerline is not generated; vessel segmentation/lumen mask is unavailable; TASK-A06 human manual anatomical correction is not complete; named anatomical identity is unresolved"
+    }
+  ],
+  "claims": {
+    "boundaryLumenRepresentationsCreated": false,
+    "patientSpaceGeometry": false,
+    "medicalValidation": false,
+    "automaticPromotionAllowed": false
+  }
+}
