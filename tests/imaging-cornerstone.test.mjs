@@ -82,10 +82,12 @@ test('TASK-063 arbitrary Patient Space plane round-trips through Cornerstone cam
   });
 
   const camera = patientPlaneToCornerstoneCamera(plane);
-  assert.deepEqual(camera.viewUp, [0, -1, 0]);
-  assert.ok(Math.abs(camera.viewPlaneNormal[0] + Math.SQRT1_2) < 1e-12);
-  assert.equal(camera.viewPlaneNormal[1], 0);
-  assert.ok(Math.abs(camera.viewPlaneNormal[2] - Math.SQRT1_2) < 1e-12);
+  assertVectorClose(camera.viewUp, [0, -1, 0]);
+  assertVectorClose(camera.viewPlaneNormal, [
+    -Math.SQRT1_2,
+    0,
+    Math.SQRT1_2,
+  ]);
 
   const recovered = patientPlaneFromCornerstoneCamera(
     [plane.origin.value.x, plane.origin.value.y, plane.origin.value.z],
