@@ -58,10 +58,7 @@ export class MouseNeedleInputAdapter {
   };
 
   readonly #onPointerMove = (event: PointerEvent): void => {
-    if (
-      event.pointerType !== 'mouse' ||
-      this.#pointerId !== event.pointerId
-    ) {
+    if (event.pointerType !== 'mouse' || this.#pointerId !== event.pointerId) {
       return;
     }
     const rect = this.#element.getBoundingClientRect();
