@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/vessel-centerline-authoring-report/v1",
+  "title": "Vessel Centerline Authoring Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "coordinateSpace",
+    "structures",
+    "claims"
+  ],
+  "properties": {
+    "schema": { "const": "ph-vessel-centerline-authoring-report.v1" },
+    "schemaVersion": { "const": "1" },
+    "task": { "const": "TASK-A08" },
+    "recordedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "coordinateSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "patientSpaceClaim", "ctRegistrationEstablished"],
+      "properties": {
+        "kind": { "const": "source-image-stack" },
+        "patientSpaceClaim": { "const": false },
+        "ctRegistrationEstablished": { "const": false }
+      }
+    },
+    "structures": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "draftLabel",
+          "anatomicalId",
+          "feasibilityClassification",
+          "centerlineStatus",
+          "centerlineUri",
+          "reason"
+        ],
+        "properties": {
+          "draftLabel": { "type": "string", "minLength": 1 },
+          "anatomicalId": { "type": ["string", "null"] },
+          "feasibilityClassification": {
+            "enum": [
+              "continuous-candidate",
+              "intermittent-candidate",
+              "not-established"
+            ]
+          },
+          "centerlineStatus": { "enum": ["blocked", "generated"] },
+          "centerlineUri": { "type": ["string", "null"] },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "centerlinesCreated",
+        "patientSpaceGeometry",
+        "medicalValidation",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "centerlinesCreated": { "type": "boolean" },
+        "patientSpaceGeometry": { "const": false },
+        "medicalValidation": { "const": false },
+        "automaticPromotionAllowed": { "const": false }
+      }
+    }
+  }
+}
