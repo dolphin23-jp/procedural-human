@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -14,6 +15,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from ph_segmentation import (  # noqa: E402
     AnchorTrack,
+    CandidateGenerationBlocked,
     FeasibilityThresholds,
     NonvascularConfig,
     RgbRule,
@@ -193,6 +195,30 @@ class TaskA05Tests(unittest.TestCase):
                     / "slice-000.pgm"
                 ).exists()
             )
+
+    def test_bone_anchor_tracks_must_cover_the_source_stack(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source"
+            source.mkdir()
+            manifest = self._make_source_stack(source)
+            incomplete = replace(
+                fixture_config(),
+                radius_track=AnchorTrack(
+                    (SourceAnchor(0, 2, 2),),
+                    max_component_distance_px=2,
+                ),
+            )
+            with self.assertRaisesRegex(
+                CandidateGenerationBlocked,
+                "endpoint extrapolation is prohibited",
+            ):
+                generate_nonvascular_draft(
+                    source,
+                    manifest,
+                    root / "out",
+                    incomplete,
+                )
 
     def test_nonvascular_generation_is_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
