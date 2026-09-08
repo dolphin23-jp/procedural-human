@@ -8,7 +8,7 @@ on:
       - .github/workflows/a06-a10-format-helper.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   format:
@@ -25,10 +25,14 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec prettier --write schemas/assets/manual-edit-provenance.v1.schema.json schemas/assets/semantic-structure-mapping.v1.schema.json
-      - uses: actions/upload-artifact@v4
-        with:
-          name: a06-a10-prettier-output
-          path: |
-            schemas/assets/manual-edit-provenance.v1.schema.json
-            schemas/assets/semantic-structure-mapping.v1.schema.json
-          retention-days: 1
+      - name: Commit exact Prettier output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add schemas/assets/manual-edit-provenance.v1.schema.json schemas/assets/semantic-structure-mapping.v1.schema.json
+          if git diff --cached --quiet; then
+            echo "No formatting changes"
+          else
+            git commit -m "chore: format A06-A07 authoring schemas"
+            git push
+          fi
