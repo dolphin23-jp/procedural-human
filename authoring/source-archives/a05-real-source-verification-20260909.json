@@ -1,0 +1,176 @@
+{
+  "schema": "ph-a05-real-source-verification.v1",
+  "recordedAt": "2026-09-09",
+  "task": "TASK-A05",
+  "dataset": "U.S. National Library of Medicine — Visible Human Project — Visible Human Female",
+  "acquisition": {
+    "workflowRunId": 34229461795,
+    "sourceFolder": "PNG_format/abdomen/",
+    "firstFilename": "avf1567a.png",
+    "lastFilename": "avf1717a.png",
+    "frameCount": 451,
+    "cropPixels": {
+      "left": 1450,
+      "top": 250,
+      "rightExclusive": 2000,
+      "bottomExclusive": 1000
+    },
+    "cropDimensionsPixels": {
+      "width": 550,
+      "height": 750
+    },
+    "sourceFilenameShaAggregate": "0c330a99eedf1a446ca6502b4a7bde12e9893e96dc75f65348cb16f32d701f48",
+    "cropFilenameShaAggregate": "f6e46638ecb84a16dd20cc604931874ec36815091d050b31843392b7d73c7171",
+    "canonicalRowsSha256": "1a7877c45418895377a7f3454ef2960b2be3fab8b9151ae9e718910c4bee339b",
+    "allDownloadsSucceeded": true,
+    "allCropHashesVerified": true,
+    "noMissingFrames": true,
+    "noDuplicateFrames": true,
+    "filenameGlobalIndexOrderingVerified": true
+  },
+  "independentVerification": {
+    "chunkCount": 10,
+    "frameCount": 451,
+    "allChunkHashesVerified": true,
+    "allCropHashesVerified": true,
+    "zipStructureVerified": true,
+    "sourceSha256MetadataPresent": true,
+    "identicalCropDimensionsVerified": true,
+    "coordinateSpace": "source-image-stack-only",
+    "patientSpaceClaim": false,
+    "medicalValidation": false
+  },
+  "temporaryTransport": {
+    "kind": "github-actions-artifacts",
+    "retention": "30-days-from-2026-09-08",
+    "chunks": [
+      {
+        "index": 0,
+        "artifactId": 10057281755,
+        "libraryFilename": "chunk-0.zip",
+        "byteSize": 26031165,
+        "sha256": "78b1b2c1e1ffa006f3b07711e3497bb74ba7133f777709eebcd008b1b429623d"
+      },
+      {
+        "index": 1,
+        "artifactId": 10057282711,
+        "libraryFilename": "chunk-1.zip",
+        "byteSize": 25803357,
+        "sha256": "01d54d17761091fc576e8cb7acb47bfc5b178185ffadb50415ff806bdfd7c837"
+      },
+      {
+        "index": 2,
+        "artifactId": 10057283651,
+        "libraryFilename": "chunk-2.zip",
+        "byteSize": 25331225,
+        "sha256": "56e2c3cb8382a4b6eb96fa4c04e12793281f8214a48fe5880c36628508663352"
+      },
+      {
+        "index": 3,
+        "artifactId": 10057284584,
+        "libraryFilename": "chunk-3.zip",
+        "byteSize": 25451281,
+        "sha256": "8577b8e831bfd7d6d590562bd4c2603d9ca0e455179c426ac4860f05f517b44c"
+      },
+      {
+        "index": 4,
+        "artifactId": 10057285605,
+        "libraryFilename": "chunk-4.zip",
+        "byteSize": 25368674,
+        "sha256": "f912d7e745e3d817c555f8ea223b9bd1c5c07a52932f5a94464a3de215845816"
+      },
+      {
+        "index": 5,
+        "artifactId": 10057286644,
+        "libraryFilename": "chunk-5.zip",
+        "byteSize": 25100034,
+        "sha256": "4e702ab792ebd6af5aaff975221344c0b8e5a11feb9c89d33b42268dc01c5372"
+      },
+      {
+        "index": 6,
+        "artifactId": 10057287687,
+        "libraryFilename": "chunk-6.zip",
+        "byteSize": 25140770,
+        "sha256": "d5ecf42796bdf1a20d6540b49a2e5992524d5e85ba25bfc60245ab734f3e073f"
+      },
+      {
+        "index": 7,
+        "artifactId": 10057288822,
+        "libraryFilename": "chunk-7.zip",
+        "byteSize": 25076645,
+        "sha256": "d0ba39a31449fac6754e9999051ad463b3a9ec39b62365568741623f20cd78c7"
+      },
+      {
+        "index": 8,
+        "artifactId": 10057289930,
+        "libraryFilename": "chunk-8.zip",
+        "byteSize": 25408260,
+        "sha256": "316aff6722ca56c67d8ea4bde02e613501190849e24bcdc3eafe3621cc944a2e"
+      },
+      {
+        "index": 9,
+        "artifactId": 10057291004,
+        "libraryFilename": "chunk-9.zip",
+        "byteSize": 20650491,
+        "sha256": "91c11d65506128cad36a2ba70284b154ee07811bbf3dc8674dceeb8cbd2aae63"
+      }
+    ]
+  },
+  "persistentHandoff": {
+    "complete": false,
+    "storageProvider": "Google Drive",
+    "folderId": "1A4klX4_pV5pIvfj3NM1xOJ5DSJUZ9OwX",
+    "folderPath": "Procedural Human/A05 Visible Human Female Source/",
+    "authority": "persistent authoring handoff copy only; not Medical Master, validated asset, runtime asset, or Patient Space dataset",
+    "storedChunks": [
+      {
+        "index": 0,
+        "fileId": "17iDOUi4pmKshasSJOQe1sxkeqIJyrey5"
+      },
+      {
+        "index": 1,
+        "fileId": "1pSip_om5DUeOAf1Gghm3PYOGK4zVhlsA"
+      },
+      {
+        "index": 2,
+        "fileId": "1k_idepF0NxTxIIFeFs7R68nh8NNrmVa4"
+      },
+      {
+        "index": 3,
+        "fileId": "1Tp4yIrG8AoC9i55d3UoBnLPA7VTWWcWS"
+      },
+      {
+        "index": 4,
+        "fileId": "1SvISbQx9PKEo9rgRRsdzABGItR16AU1i"
+      },
+      {
+        "index": 5,
+        "fileId": "1pmEazuMr8o-jMs3kKvbbZEX8NHc59N4g"
+      },
+      {
+        "index": 6,
+        "fileId": "1UAchOE3y3-czdM1WigWNDUMbAOTQhjhP"
+      },
+      {
+        "index": 7,
+        "fileId": "1zStkcmtBqdUqb6DRIGN1da5hLu_mQqAn"
+      }
+    ],
+    "missingChunkIndices": [
+      8,
+      9
+    ],
+    "blocker": {
+      "providerError": "storageQuotaExceeded",
+      "message": "The user's Drive storage quota has been exceeded."
+    },
+    "reconstructionRule": "A complete persistent handoff requires chunk-0.zip through chunk-9.zip. Verify each ZIP byte size/SHA-256, validate manifest.json, verify all per-crop SHA-256 values, and reconstruct exactly 451 frames in global-frame order. Output remains source-image-stack only."
+  },
+  "claims": {
+    "patientSpaceGeometry": false,
+    "ctRegistrationEstablished": false,
+    "medicalValidation": false,
+    "medicalMaster": false,
+    "runtimeAsset": false
+  }
+}
