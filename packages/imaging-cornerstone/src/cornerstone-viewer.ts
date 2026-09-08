@@ -372,10 +372,7 @@ export class CornerstoneAxialVolumeViewer {
   #readCurrentSlice(): AxialSliceState {
     const viewport = this.#viewport();
     const plane = this.#readCurrentPlane();
-    assertPatientPlaneOrientationEquivalent(
-      this.#transform.planeAtK(0),
-      plane,
-    );
+    assertPatientPlaneOrientationEquivalent(this.#transform.planeAtK(0), plane);
     const focalPoint = plane.origin.value;
     return createAxialSliceStateFromPatientPoint(
       this.#source.frame,
