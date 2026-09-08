@@ -72,7 +72,6 @@ function createDevelopmentNeedleInstance(): NeedleInstance {
   });
 }
 
-
 const accuracyRows = [
   ['Identity', 'identityAccuracy'],
   ['Topology', 'topologyAccuracy'],
@@ -308,7 +307,6 @@ export function App() {
     };
   }, []);
 
-
   useEffect(() => {
     const element = needleMouseRef.current;
     if (!element) return;
@@ -396,9 +394,7 @@ export function App() {
           >
             <p className="metadata__eyebrow">M6 · Generic needle</p>
             <strong>Mouse needle control</strong>
-            <p>
-              Drag: translate · Shift-drag: rotate · wheel: advance/retract
-            </p>
+            <p>Drag: translate · Shift-drag: rotate · wheel: advance/retract</p>
             <output>
               Tip ({needle.tipPosition.value.x.toFixed(1)},{' '}
               {needle.tipPosition.value.y.toFixed(1)},{' '}
