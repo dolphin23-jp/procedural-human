@@ -46,7 +46,9 @@ function copyFunctionalParts(
   const known = new Set(definition.parts.map((part) => part.id));
   for (const id of values) {
     if (!known.has(id)) {
-      throw new RangeError(`Needle functional part ${id} is not in the instrument definition.`);
+      throw new RangeError(
+        `Needle functional part ${id} is not in the instrument definition.`,
+      );
     }
   }
   return Object.freeze({
@@ -58,16 +60,30 @@ function copyFunctionalParts(
 }
 
 function copyGeometry(geometry: NeedleGeometry): NeedleGeometry {
-  const shaftLength = positiveLength(geometry.shaftLength, 'Needle shaft length');
-  const bevelLength = positiveLength(geometry.bevelLength, 'Needle bevel length');
-  const outerDiameter = positiveLength(geometry.outerDiameter, 'Needle outer diameter');
-  const lumenDiameter = positiveLength(geometry.lumenDiameter, 'Needle lumen diameter');
+  const shaftLength = positiveLength(
+    geometry.shaftLength,
+    'Needle shaft length',
+  );
+  const bevelLength = positiveLength(
+    geometry.bevelLength,
+    'Needle bevel length',
+  );
+  const outerDiameter = positiveLength(
+    geometry.outerDiameter,
+    'Needle outer diameter',
+  );
+  const lumenDiameter = positiveLength(
+    geometry.lumenDiameter,
+    'Needle lumen diameter',
+  );
 
   if (toMillimetres(bevelLength) > toMillimetres(shaftLength)) {
     throw new RangeError('Needle bevel length must not exceed shaft length.');
   }
   if (toMillimetres(lumenDiameter) >= toMillimetres(outerDiameter)) {
-    throw new RangeError('Needle lumen diameter must be smaller than outer diameter.');
+    throw new RangeError(
+      'Needle lumen diameter must be smaller than outer diameter.',
+    );
   }
 
   return Object.freeze({
