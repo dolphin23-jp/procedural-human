@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/semantic-structure-mapping/v1",
+  "title": "Semantic Structure Mapping v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "coordinateSpace",
+    "mappings",
+    "unresolved",
+    "claims"
+  ],
+  "properties": {
+    "schema": { "const": "ph-semantic-structure-mapping.v1" },
+    "schemaVersion": { "const": "1" },
+    "task": { "const": "TASK-A07" },
+    "recordedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "coordinateSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "patientSpaceClaim"],
+      "properties": {
+        "kind": { "const": "source-image-stack" },
+        "patientSpaceClaim": { "const": false }
+      }
+    },
+    "mappings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "draftLabel",
+          "anatomicalId",
+          "name",
+          "type",
+          "laterality",
+          "region",
+          "mappingStatus",
+          "representationAvailable",
+          "validationLevel"
+        ],
+        "properties": {
+          "draftLabel": { "type": "string", "minLength": 1 },
+          "anatomicalId": {
+            "type": "string",
+            "pattern": "^structure\\.[a-z0-9_.-]+$"
+          },
+          "name": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 },
+          "laterality": {
+            "enum": [
+              "left",
+              "right",
+              "bilateral",
+              "midline",
+              "not-applicable",
+              "unknown"
+            ]
+          },
+          "region": { "type": "string", "minLength": 1 },
+          "mappingStatus": {
+            "enum": [
+              "mapped-candidate-representation",
+              "semantic-id-reserved-no-representation"
+            ]
+          },
+          "representationAvailable": { "type": "boolean" },
+          "validationLevel": { "const": "V0" }
+        }
+      }
+    },
+    "unresolved": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["draftLabel", "semanticRole", "anatomicalId", "reason"],
+        "properties": {
+          "draftLabel": { "type": "string", "minLength": 1 },
+          "semanticRole": { "type": "string", "minLength": 1 },
+          "anatomicalId": { "type": "null" },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "medicalValidation",
+        "patientSpaceGeometry",
+        "representationPresenceImpliedByIdentity",
+        "procedureRoleUsedAsAnatomicalIdentity"
+      ],
+      "properties": {
+        "medicalValidation": { "const": false },
+        "patientSpaceGeometry": { "const": false },
+        "representationPresenceImpliedByIdentity": { "const": false },
+        "procedureRoleUsedAsAnatomicalIdentity": { "const": false }
+      }
+    }
+  }
+}

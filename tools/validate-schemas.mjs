@@ -39,6 +39,31 @@ const authoringContracts = [
     'schemas/assets/vascular-feasibility-report.v1.schema.json',
     null,
   ],
+  [
+    'manual-edit-provenance',
+    'schemas/assets/manual-edit-provenance.v1.schema.json',
+    'authoring/manual-inputs/a06-manual-correction-status-20260909.json',
+  ],
+  [
+    'semantic-structure-mapping',
+    'schemas/assets/semantic-structure-mapping.v1.schema.json',
+    'authoring/semantic/a07-semantic-structure-mapping-20260909.json',
+  ],
+  [
+    'vessel-centerline-authoring-report',
+    'schemas/assets/vessel-centerline-authoring-report.v1.schema.json',
+    'authoring/outputs/a08-vessel-centerline-authoring-report-20260909.json',
+  ],
+  [
+    'boundary-lumen-authoring-report',
+    'schemas/assets/boundary-lumen-authoring-report.v1.schema.json',
+    'authoring/outputs/a09-boundary-lumen-authoring-report-20260909.json',
+  ],
+  [
+    'medical-master-readiness',
+    'schemas/assets/medical-master-readiness.v1.schema.json',
+    'authoring/outputs/a10-medical-master-readiness-20260909.json',
+  ],
 ];
 
 const ajv = new Ajv2020({ allErrors: true, strict: true });
@@ -95,5 +120,5 @@ for (const [name, , recordPath] of authoringContracts) {
 if (failures > 0) process.exitCode = 1;
 else
   console.log(
-    `Validated ${contracts.length + authoringContracts.length} schema versions, ${contracts.length * 2} fixtures, and 2 authoring records.`,
+    `Validated ${contracts.length + authoringContracts.length} schema versions, ${contracts.length * 2} fixtures, and ${authoringContracts.filter(([, , recordPath]) => recordPath !== null).length} authoring records.`,
   );
