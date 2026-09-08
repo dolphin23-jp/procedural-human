@@ -323,6 +323,126 @@ def _validate_anchor_track(
         )
 
 
+def generate_tissue_only_draft(
+    source_root: str | Path,
+    source_manifest: SourceStackManifest,
+    output_root: str | Path,
+    *,
+    profile_id: str = "vhp-female-source-space-tissue-v0",
+    skin_rule: RgbRule = DEFAULT_VISIBLE_HUMAN_V0_RULES["skin_rule"],
+    subcutaneous_rule: RgbRule = DEFAULT_VISIBLE_HUMAN_V0_RULES["subcutaneous_rule"],
+    muscle_tendon_rule: RgbRule = DEFAULT_VISIBLE_HUMAN_V0_RULES["muscle_tendon_rule"],
+    blocked_nonvascular_labels: tuple[str, ...] = ("radius", "ulna"),
+    blocked_reason: str = (
+        "explicit source-space radius/ulna anchor tracks spanning the complete source "
+        "stack are not established without prohibited extrapolation"
+    ),
+    verify_hashes: bool = True,
+) -> dict[str, object]:
+    """Generate only tissue candidates when bone identity cannot be safely tracked.
+
+    This deliberately does not emit the five-label draft-segmentation-manifest.v1,
+    because that contract represents successful generation of all five nonvascular
+    candidate masks. Blocked anatomy stays explicit instead of being represented by
+    fabricated or empty masks.
+    """
+    allowed_blocked = {"radius", "ulna"}
+    blocked_set = set(blocked_nonvascular_labels)
+    if not blocked_set or not blocked_set.issubset(allowed_blocked):
+        raise CandidateGenerationBlocked(
+            "tissue-only execution may block only radius and/or ulna"
+        )
+
+    source_root = Path(source_root)
+    output_root = Path(output_root)
+    generated_labels = (
+        "skin",
+        "subcutaneous_soft_tissue",
+        "major_muscle_tendon_region",
+    )
+    coverage: dict[str, list[int]] = {label: [] for label in generated_labels}
+    dimensions: tuple[int, int] | None = None
+
+    for record in source_manifest.slices:
+        source_path = source_root / record.filename
+        if verify_hashes:
+            verify_source_slice(source_path, record.sha256)
+        image = read_png_rgb(source_path)
+        if dimensions is None:
+            dimensions = (image.width, image.height)
+        elif dimensions != (image.width, image.height):
+            raise CandidateGenerationBlocked(
+                f"source slice dimensions changed at {record.filename}; no resampling is authorized"
+            )
+
+        raw_skin = _rule_mask(image, skin_rule)
+        masks = {
+            "skin": _skin_boundary_only(image, raw_skin),
+            "subcutaneous_soft_tissue": _rule_mask(image, subcutaneous_rule),
+            "major_muscle_tendon_region": _rule_mask(image, muscle_tendon_rule),
+        }
+        for label, mask in masks.items():
+            coverage[label].append(sum(mask))
+            destination = output_root / "masks" / label / f"{Path(record.filename).stem}.pgm"
+            write_pgm_mask(destination, image.width, image.height, mask)
+
+    if dimensions is None:
+        raise CandidateGenerationBlocked("source stack is empty")
+    width, height = dimensions
+    coverage_records = {
+        label: _coverage_record(counts, width * height) for label, counts in coverage.items()
+    }
+    report: dict[str, object] = {
+        "schema": "ph-a05-real-nonvascular-execution.v1",
+        "task": "TASK-A05",
+        "pipelineProfile": profile_id,
+        "status": DRAFT_STATUS.copy(),
+        "coordinateSpace": SOURCE_SPACE_ONLY.copy(),
+        "source": {
+            "dataset": source_manifest.dataset,
+            "sourceManifestDigestSha256": source_manifest.digest,
+            "sliceCount": source_manifest.slice_count,
+            "firstSourceFile": source_manifest.slices[0].filename,
+            "lastSourceFile": source_manifest.slices[-1].filename,
+            "sourceFilesVerified": verify_hashes,
+        },
+        "generatedLabels": [
+            nonvascular_label_record(label, coverage_records[label])
+            for label in generated_labels
+        ],
+        "blockedNonvascularLabels": [
+            {
+                "draftLabel": label,
+                "maskGeneration": "blocked",
+                "reason": blocked_reason,
+                "status": DRAFT_STATUS.copy(),
+            }
+            for label in blocked_nonvascular_labels
+        ],
+        "blockedVesselLabels": [
+            vessel_block_record(label) for label in BLOCKED_VESSEL_LABELS
+        ],
+        "claims": {
+            "patientSpaceGeometry": False,
+            "medicalValidation": False,
+            "automaticPromotion": False,
+            "completeFiveClassDraft": False,
+        },
+    }
+    write_json_atomic(output_root / "real-nonvascular-execution.v0.json", report)
+    write_json_atomic(
+        output_root / "coverage-statistics.v0.json",
+        {
+            "schema": "ph-draft-segmentation-coverage.v1",
+            "status": DRAFT_STATUS.copy(),
+            "coordinateSpace": SOURCE_SPACE_ONLY.copy(),
+            "labels": coverage_records,
+            "blockedNonvascularLabels": list(blocked_nonvascular_labels),
+        },
+    )
+    return report
+
+
 def generate_nonvascular_draft(
     source_root: str | Path,
     source_manifest: SourceStackManifest,
