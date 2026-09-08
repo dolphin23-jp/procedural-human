@@ -106,7 +106,11 @@ importers:
         specifier: workspace:*
         version: link:../units
 
-  packages/instruments: {}
+  packages/instruments:
+    dependencies:
+      '@procedural-human/units':
+        specifier: workspace:*
+        version: link:../units
 
   packages/interaction: {}
 
