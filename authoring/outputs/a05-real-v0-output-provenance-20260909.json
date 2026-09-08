@@ -1,0 +1,102 @@
+{
+  "schema": "ph-a05-real-output-provenance.v1",
+  "recordedAt": "2026-09-09",
+  "task": "TASK-A05",
+  "execution": {
+    "workflowRunId": 34283780494,
+    "sourceFrameCount": 451,
+    "sourceManifestDigestSha256": "4e1685c819c7805bd8121860d70e1585b58d6fcc0bed68ab8acac610d884933d",
+    "sourceFilenameShaAggregate": "0c330a99eedf1a446ca6502b4a7bde12e9893e96dc75f65348cb16f32d701f48",
+    "cropFilenameShaAggregate": "f6e46638ecb84a16dd20cc604931874ec36815091d050b31843392b7d73c7171",
+    "verifiedHandoffFrameCount": 451,
+    "allChunkHashesVerified": true,
+    "allCropHashesVerified": true
+  },
+  "nonvascular": {
+    "generated": [
+      {
+        "draftLabel": "skin",
+        "sliceCount": 451,
+        "slicesWithCandidate": 451,
+        "totalCandidatePixels": 548708,
+        "candidatePixelFraction": 0.002949448363905127,
+        "maxCandidatePixelsPerSlice": 1607
+      },
+      {
+        "draftLabel": "subcutaneous_soft_tissue",
+        "sliceCount": 451,
+        "slicesWithCandidate": 451,
+        "totalCandidatePixels": 38092253,
+        "candidatePixelFraction": 0.20475577773298395,
+        "maxCandidatePixelsPerSlice": 101497
+      },
+      {
+        "draftLabel": "major_muscle_tendon_region",
+        "sliceCount": 451,
+        "slicesWithCandidate": 451,
+        "totalCandidatePixels": 28700434,
+        "candidatePixelFraction": 0.1542723053147887,
+        "maxCandidatePixelsPerSlice": 75296
+      }
+    ],
+    "blocked": [
+      {
+        "draftLabel": "radius",
+        "reason": "complete source-space radius anchor track is not established without prohibited extrapolation"
+      },
+      {
+        "draftLabel": "ulna",
+        "reason": "complete source-space ulna anchor track is not established without prohibited extrapolation"
+      }
+    ]
+  },
+  "vascularFeasibility": [
+    {
+      "draftLabel": "radial_artery",
+      "classification": "not-established",
+      "candidateSlices": 0,
+      "maskGenerationBlocked": true
+    },
+    {
+      "draftLabel": "ulnar_artery",
+      "classification": "not-established",
+      "candidateSlices": 0,
+      "maskGenerationBlocked": true
+    },
+    {
+      "draftLabel": "superficial_target_vein",
+      "classification": "not-established",
+      "candidateSlices": 0,
+      "maskGenerationBlocked": true
+    }
+  ],
+  "temporaryOutputArtifact": {
+    "provider": "GitHub Actions",
+    "artifactId": 10078955143,
+    "name": "a05-real-v0-output-from-verified-handoff",
+    "byteSize": 6943149,
+    "digest": "sha256:6a9f302ab5a1efd5d5d9c60e3c29aeee6b2082f3e04df2bcbe880e886b8b3ef4",
+    "expiresAt": "2026-10-08T22:11:16Z",
+    "authority": "temporary transport copy only"
+  },
+  "persistentOutput": {
+    "complete": false,
+    "intendedProvider": "Google Drive",
+    "intendedParentFolderId": "14zE45lIGhd_I2c8bt5UZ6UTdAbpHJqyE",
+    "blocker": {
+      "providerError": "storageQuotaExceeded",
+      "message": "The user's Drive storage quota has been exceeded."
+    }
+  },
+  "claims": {
+    "validationLevel": "V0",
+    "reviewStatus": "unreviewed",
+    "candidateOnly": true,
+    "patientSpaceGeometry": false,
+    "ctRegistrationEstablished": false,
+    "medicalValidation": false,
+    "medicalMaster": false,
+    "runtimeAsset": false,
+    "vesselMasksCreated": false
+  }
+}
