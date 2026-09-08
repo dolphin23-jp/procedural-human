@@ -25,6 +25,7 @@ import {
 import {
   assertPatientPlaneOrientationEquivalent,
   assertPatientPlanesEquivalent,
+  cornerstoneCameraForParallelPatientPlane,
   patientPlaneFromCornerstoneCamera,
   patientPlaneToCornerstoneCamera,
 } from './plane.js';
@@ -272,7 +273,7 @@ export class CornerstoneAxialVolumeViewer {
     this.#assertAlive();
     const targetK = axialVoxelKForPatientPlane(this.#source.frame, plane);
     const target = this.#transform.planeAtK(targetK);
-    this.#moveCameraToPlane(target);
+    this.#moveCameraToParallelPlane(target);
     const state = this.#readCurrentSlice();
     if (state.voxelK !== targetK) {
       throw new Error(
@@ -323,6 +324,22 @@ export class CornerstoneAxialVolumeViewer {
   #setOrientation(plane: PatientImagingPlane): void {
     const viewport = this.#viewport();
     viewport.setCamera(patientPlaneToCornerstoneCamera(plane));
+    viewport.render();
+  }
+
+  #moveCameraToParallelPlane(plane: PatientImagingPlane): void {
+    const viewport = this.#viewport();
+    const { focalPoint, position } = viewport.getCamera();
+    if (!focalPoint || !position) {
+      throw new Error('Cornerstone viewport camera is unavailable.');
+    }
+    viewport.setCamera(
+      cornerstoneCameraForParallelPatientPlane(
+        [focalPoint[0], focalPoint[1], focalPoint[2]],
+        [position[0], position[1], position[2]],
+        plane,
+      ),
+    );
     viewport.render();
   }
 
