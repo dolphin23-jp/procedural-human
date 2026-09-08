@@ -16,6 +16,11 @@ export interface CornerstoneCameraPlane {
   readonly viewUp: [number, number, number];
 }
 
+export interface CornerstoneCameraPose extends CornerstoneCameraPlane {
+  readonly focalPoint: [number, number, number];
+  readonly position: [number, number, number];
+}
+
 type Point3 = readonly [number, number, number];
 
 function finitePoint3(value: Point3, name: string): void {
@@ -90,6 +95,50 @@ export function patientPlaneToCornerstoneCamera(
     canonicalZero(-j.z),
   ];
   return Object.freeze({ viewPlaneNormal, viewUp });
+}
+
+/**
+ * Camera-only navigation helper for source-plane movement. The focal point is
+ * translated only along the target plane normal, preserving its in-plane pan.
+ * Camera distance is preserved while orientation is aligned to the target.
+ */
+export function cornerstoneCameraForParallelPatientPlane(
+  focalPoint: Point3,
+  position: Point3,
+  plane: PatientImagingPlane,
+): CornerstoneCameraPose {
+  finitePoint3(focalPoint, 'Cornerstone focal point');
+  finitePoint3(position, 'Cornerstone camera position');
+  const target = patientPlaneToCornerstoneCamera(plane);
+  const normal = target.viewPlaneNormal;
+  const origin = checkedPatientPlane(plane).origin.value;
+  const signedDistance =
+    (origin.x - focalPoint[0]) * normal[0] +
+    (origin.y - focalPoint[1]) * normal[1] +
+    (origin.z - focalPoint[2]) * normal[2];
+  const translatedFocalPoint: [number, number, number] = [
+    canonicalZero(focalPoint[0] + normal[0] * signedDistance),
+    canonicalZero(focalPoint[1] + normal[1] * signedDistance),
+    canonicalZero(focalPoint[2] + normal[2] * signedDistance),
+  ];
+  const cameraDistance = Math.hypot(
+    position[0] - focalPoint[0],
+    position[1] - focalPoint[1],
+    position[2] - focalPoint[2],
+  );
+  if (!Number.isFinite(cameraDistance) || cameraDistance <= Number.EPSILON) {
+    throw new RangeError('Cornerstone viewport camera distance is invalid.');
+  }
+  const translatedPosition: [number, number, number] = [
+    canonicalZero(translatedFocalPoint[0] + normal[0] * cameraDistance),
+    canonicalZero(translatedFocalPoint[1] + normal[1] * cameraDistance),
+    canonicalZero(translatedFocalPoint[2] + normal[2] * cameraDistance),
+  ];
+  return Object.freeze({
+    ...target,
+    focalPoint: translatedFocalPoint,
+    position: translatedPosition,
+  });
 }
 
 /**
