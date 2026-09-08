@@ -1,0 +1,147 @@
+name: Extract Z-Anatomy forearm references
+
+on:
+  push:
+    branches:
+      - task-a06-atlas-assisted-correction
+    paths:
+      - .github/workflows/extract-z-anatomy-forearm.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Z-Anatomy source atlas
+        run: |
+          curl -L --fail --retry 3 \
+            -o /tmp/Z-Anatomy.zip \
+            https://raw.githubusercontent.com/Z-Anatomy/Models-of-human-anatomy/master/Z-Anatomy.zip
+          sha256sum /tmp/Z-Anatomy.zip
+          unzip -l /tmp/Z-Anatomy.zip | head -100
+
+      - name: Install Blender
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends blender
+
+      - name: Extract relevant left forearm structures
+        run: |
+          rm -rf /tmp/zatlas
+          mkdir -p /tmp/zatlas build/z-reference
+          unzip -q /tmp/Z-Anatomy.zip -d /tmp/zatlas
+          find /tmp/zatlas -maxdepth 3 -name 'Startup.blend' -print
+
+          cat > /tmp/export_targets.py <<'PY'
+          import bpy, json, os, re, sys
+          from mathutils import Vector
+
+          out_dir = sys.argv[sys.argv.index("--") + 1]
+          targets = {
+              "radius": [r"^Radius\.l(?:\.\d+)?$"],
+              "ulna": [r"^Ulna\.l(?:\.\d+)?$"],
+              "radial_artery": [r"^Radial artery\.l(?:\.\d+)?$"],
+              "ulnar_artery": [r"^Ulnar artery\.l(?:\.\d+)?$"],
+              "cephalic_vein": [r"^Cephalic vein\.l(?:\.\d+)?$"],
+              "basilic_vein": [r"^Basilic vein\.l(?:\.\d+)?$"],
+          }
+          os.makedirs(out_dir, exist_ok=True)
+          all_objects = [o for o in bpy.data.objects if o.type == "MESH"]
+          summary = {"blenderVersion": bpy.app.version_string, "structures": {}}
+
+          for key, pats in targets.items():
+              matches=[o for o in all_objects if any(re.match(p,o.name,re.I) for p in pats)]
+              if not matches:
+                  # fallback exact base-name search ignoring Blender numeric suffix
+                  matches=[
+                      o for o in all_objects
+                      if re.sub(r"\.\d+$","",o.name).lower()
+                      == {
+                          "radius":"radius.l",
+                          "ulna":"ulna.l",
+                          "radial_artery":"radial artery.l",
+                          "ulnar_artery":"ulnar artery.l",
+                          "cephalic_vein":"cephalic vein.l",
+                          "basilic_vein":"basilic vein.l",
+                      }[key]
+                  ]
+              print("TARGET",key,[o.name for o in matches])
+              if not matches:
+                  summary["structures"][key]={"found":False}
+                  continue
+
+              bpy.ops.object.select_all(action="DESELECT")
+              for o in matches:
+                  o.hide_set(False)
+                  o.hide_viewport=False
+                  o.select_set(True)
+              bpy.context.view_layer.objects.active=matches[0]
+
+              out_path=os.path.join(out_dir,key+".ply")
+              bpy.ops.export_mesh.ply(
+                  filepath=out_path,
+                  use_selection=True,
+                  use_mesh_modifiers=True,
+                  use_normals=False,
+                  use_uv_coords=False,
+                  use_colors=False,
+                  global_scale=1.0,
+                  axis_forward="-Z",
+                  axis_up="Y",
+              )
+
+              pts=[]
+              for o in matches:
+                  for corner in o.bound_box:
+                      pts.append(o.matrix_world @ Vector(corner))
+              mins=[min(p[i] for p in pts) for i in range(3)]
+              maxs=[max(p[i] for p in pts) for i in range(3)]
+              summary["structures"][key]={
+                  "found":True,
+                  "sourceObjectNames":[o.name for o in matches],
+                  "worldAabbBlenderUnits":{"min":mins,"max":maxs},
+                  "exportFilename":key+".ply",
+              }
+
+          with open(os.path.join(out_dir,"atlas-structure-summary.json"),"w") as f:
+              json.dump(summary,f,indent=2,sort_keys=True)
+          print(json.dumps(summary,indent=2,sort_keys=True))
+          PY
+
+          STARTUP=$(find /tmp/zatlas -name Startup.blend | head -1)
+          test -n "$STARTUP"
+          blender -b "$STARTUP" --python /tmp/export_targets.py -- "$PWD/build/z-reference"
+
+      - name: Record exact atlas source identity
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          z=Path("/tmp/Z-Anatomy.zip")
+          digest=hashlib.sha256(z.read_bytes()).hexdigest()
+          p=Path("build/z-reference/atlas-source.json")
+          p.write_text(json.dumps({
+            "schema":"ph-external-anatomy-reference.v1",
+            "source":"Z-Anatomy Models-of-human-anatomy",
+            "sourceUrl":"https://github.com/Z-Anatomy/Models-of-human-anatomy",
+            "downloadUrl":"https://raw.githubusercontent.com/Z-Anatomy/Models-of-human-anatomy/master/Z-Anatomy.zip",
+            "sha256":digest,
+            "license":"CC BY-SA 4.0",
+            "upstreamModelAttribution":"BodyParts3D - DBCLS - CC BY-SA 2.1 Japan",
+            "intendedUse":"atlas-derived spatial prior only",
+            "patientSpecificGeometryClaim":False,
+            "medicalValidationClaim":False
+          },indent=2,sort_keys=True)+"\n")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: z-anatomy-left-forearm-reference
+          path: build/z-reference/
+          retention-days: 30
