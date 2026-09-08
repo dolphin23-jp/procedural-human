@@ -38,6 +38,16 @@ VALIDATION_TARGETS = (
         "schemas/assets/vessel-centerline-authoring-report.v1.schema.json",
         "authoring/outputs/a08-vessel-centerline-authoring-report-20260909.json",
     ),
+    (
+        "boundary-lumen-authoring-report",
+        "schemas/assets/boundary-lumen-authoring-report.v1.schema.json",
+        "authoring/outputs/a09-boundary-lumen-authoring-report-20260909.json",
+    ),
+    (
+        "medical-master-readiness",
+        "schemas/assets/medical-master-readiness.v1.schema.json",
+        "authoring/outputs/a10-medical-master-readiness-20260909.json",
+    ),
 )
 
 
