@@ -270,20 +270,20 @@ function task067NeedleDefinition() {
 test(
   'TASK-067 needle instance derives tip position, direction, and trajectory from pose',
   () => {
-  const definition = task067NeedleDefinition();
-  const instance = createNeedleInstance({
-    id: instrumentInstanceId('task067.instance'),
-    definition,
-    pose: createInstrumentPose({
-      position: patientSpacePoint(1, 2, 3),
-      orientation: { x: 0, y: 0, z: 0, w: 1 },
-    }),
-  });
+    const definition = task067NeedleDefinition();
+    const instance = createNeedleInstance({
+      id: instrumentInstanceId('task067.instance'),
+      definition,
+      pose: createInstrumentPose({
+        position: patientSpacePoint(1, 2, 3),
+        orientation: { x: 0, y: 0, z: 0, w: 1 },
+      }),
+    });
 
-  assert.deepEqual(instance.tipPosition.value, { x: 1, y: 2, z: 3 });
-  assert.deepEqual(instance.tipDirection.value, { x: 0, y: 0, z: 1 });
-  assert.equal(instance.trajectory.length, 1);
-  assert.ok(Object.isFrozen(instance.trajectory));
+    assert.deepEqual(instance.tipPosition.value, { x: 1, y: 2, z: 3 });
+    assert.deepEqual(instance.tipDirection.value, { x: 0, y: 0, z: 1 });
+    assert.equal(instance.trajectory.length, 1);
+    assert.ok(Object.isFrozen(instance.trajectory));
     assert.ok(Object.isFrozen(instance.trajectory[0]));
   },
 );
@@ -291,33 +291,33 @@ test(
 test(
   'TASK-067 pose updates rotate +Z tip direction and append only changed samples',
   () => {
-  const definition = task067NeedleDefinition();
-  const initial = createNeedleInstance({
-    id: instrumentInstanceId('task067.rotated'),
-    definition,
-    pose: createInstrumentPose({
-      position: patientSpacePoint(0, 0, 0),
-      orientation: { x: 0, y: 0, z: 0, w: 1 },
-    }),
-  });
-  const quarterTurnY = {
-    x: 0,
-    y: Math.SQRT1_2,
-    z: 0,
-    w: Math.SQRT1_2,
-  };
-  const moved = updateNeedlePose(
-    initial,
-    createInstrumentPose({
-      position: patientSpacePoint(4, -2, 8),
-      orientation: quarterTurnY,
-    }),
-  );
+    const definition = task067NeedleDefinition();
+    const initial = createNeedleInstance({
+      id: instrumentInstanceId('task067.rotated'),
+      definition,
+      pose: createInstrumentPose({
+        position: patientSpacePoint(0, 0, 0),
+        orientation: { x: 0, y: 0, z: 0, w: 1 },
+      }),
+    });
+    const quarterTurnY = {
+      x: 0,
+      y: Math.SQRT1_2,
+      z: 0,
+      w: Math.SQRT1_2,
+    };
+    const moved = updateNeedlePose(
+      initial,
+      createInstrumentPose({
+        position: patientSpacePoint(4, -2, 8),
+        orientation: quarterTurnY,
+      }),
+    );
 
-  assert.ok(Math.abs(moved.tipDirection.value.x - 1) < 1e-12);
-  assert.ok(Math.abs(moved.tipDirection.value.y) < 1e-12);
-  assert.ok(Math.abs(moved.tipDirection.value.z) < 1e-12);
-  assert.equal(moved.trajectory.length, 2);
+    assert.ok(Math.abs(moved.tipDirection.value.x - 1) < 1e-12);
+    assert.ok(Math.abs(moved.tipDirection.value.y) < 1e-12);
+    assert.ok(Math.abs(moved.tipDirection.value.z) < 1e-12);
+    assert.equal(moved.trajectory.length, 2);
 
     const repeated = updateNeedlePose(moved, moved.pose);
     assert.equal(repeated.trajectory.length, 2);
