@@ -9,11 +9,12 @@
     "sourceClass": "cadaver-derived"
   },
   "recordedAt": "2026-09-08",
-  "retrievalDate": null,
-  "retrievalStatus": "not-materialized-in-agent-environment",
+  "retrievalDate": "2026-09-08",
+  "retrievalStatus": "bounded-a05-source-stack-materialized-as-ephemeral-artifact",
   "canonicalLocations": {
     "root": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/",
     "fullcolor": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/Fullcolor/fullbody/",
+    "pngAbdomen": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/PNG_format/abdomen/",
     "ct": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/radiological/normalCT/",
     "ctHeaders": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/radiological/normalCTHeaders/"
   },
@@ -24,41 +25,81 @@
       "byteSize": 1579987,
       "lastModified": "2024-08-28T19:20:27Z",
       "sha256": null,
-      "hashStatus": "pending-local-acquisition"
+      "hashStatus": "not-part-of-a05-bounded-acquisition"
     },
     "indexCompressed": {
       "path": "INDEX.Z",
       "byteSize": 187009,
       "lastModified": "2024-08-28T19:20:27Z",
       "sha256": null,
-      "hashStatus": "pending-local-acquisition"
+      "hashStatus": "not-part-of-a05-bounded-acquisition"
     },
     "readme": {
       "path": "README",
       "byteSize": 1176,
       "lastModified": "2024-08-28T19:05:47Z",
       "sha256": null,
-      "hashStatus": "pending-local-acquisition"
+      "hashStatus": "not-part-of-a05-bounded-acquisition"
     }
   },
+  "acquisitions": [
+    {
+      "acquisitionId": "a05-vhp-female-left-wrist-roi-20260908",
+      "purpose": "TASK-A05 bounded draft-segmentation source stack",
+      "sourceLocation": "PNG_format/abdomen/",
+      "sourceRange": {
+        "first": "avf1567a.png",
+        "last": "avf1717a.png",
+        "frameCount": 451,
+        "nominalIntervalMm": 0.3333333333333333
+      },
+      "derivedCropPixels": {
+        "left": 1450,
+        "top": 250,
+        "rightExclusive": 2000,
+        "bottomExclusive": 1000
+      },
+      "sourceHashStatus": "sha256-recorded-per-source-file-in-artifact-manifest",
+      "workflowRun": {
+        "id": 34180309604,
+        "startedAt": "2026-09-08T02:30:48Z"
+      },
+      "artifact": {
+        "id": 10038734797,
+        "name": "a05-vhp-female-left-wrist-roi",
+        "createdAt": "2026-09-08T02:34:45Z",
+        "byteSize": 249299004,
+        "digest": "sha256:58951de89aba4cf6d1ecd75eb46420883d0409f8eff8411ab2fb891810839fbc",
+        "retention": "ephemeral-github-actions-artifact"
+      },
+      "coordinateStatus": "source-image-stack-only; not DICOM Patient Space and not verified CT registration",
+      "storagePolicy": "medical image bytes are not committed to Git"
+    }
+  ],
   "payloads": [
     {
       "role": "primary-anatomical-source",
       "path": "Fullcolor/fullbody/",
       "format": "raw.Z",
-      "hashStatus": "per-file-pending-local-acquisition"
+      "hashStatus": "full-dataset-not-acquired"
+    },
+    {
+      "role": "a05-bounded-primary-anatomical-source",
+      "path": "PNG_format/abdomen/avf1567a.png..avf1717a.png",
+      "format": "PNG",
+      "hashStatus": "451-source-files-sha256-recorded"
     },
     {
       "role": "reference-ct",
       "path": "radiological/normalCT/",
       "format": "GE source",
-      "hashStatus": "per-file-pending-local-acquisition"
+      "hashStatus": "pending"
     },
     {
       "role": "ct-header-metadata",
       "path": "radiological/normalCTHeaders/",
       "format": "text",
-      "hashStatus": "per-file-pending-local-acquisition"
+      "hashStatus": "pending"
     }
   ],
   "license": {
@@ -72,7 +113,8 @@
   "integrity": {
     "requiredHashAlgorithm": "SHA-256",
     "complete": false,
-    "blockPromotionUntilComplete": true,
-    "note": "Content hashes must be computed from acquired bytes. Remote listing metadata is recorded only as an inventory snapshot and is not a content hash."
+    "boundedA05AcquisitionComplete": true,
+    "blockMedicalPromotionUntilRequiredSourceAndRegistrationIntegrityComplete": true,
+    "note": "The bounded A05 source stack has per-file SHA-256 provenance in its artifact manifest. This does not claim that the complete Visible Human Female archive or CT source has been acquired or registered."
   }
 }
