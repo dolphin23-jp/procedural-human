@@ -80,12 +80,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "draftLabel",
-          "semanticRole",
-          "anatomicalId",
-          "reason"
-        ],
+        "required": ["draftLabel", "semanticRole", "anatomicalId", "reason"],
         "properties": {
           "draftLabel": { "type": "string", "minLength": 1 },
           "semanticRole": { "type": "string", "minLength": 1 },
