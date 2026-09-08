@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { patientSpacePoint } from '../packages/math/dist/index.js';
-import { millimetres } from '../packages/units/dist/index.js';
+import {
+  degrees,
+  millimetres,
+} from '../packages/units/dist/index.js';
 import {
   createInstrumentDefinition,
   createInstrumentInstance,
@@ -9,6 +12,7 @@ import {
   createInstrumentPose,
   createNeedleDefinition,
   createNeedleInstance,
+  NeedleMotionController,
   needleAdvanceIntent,
   needleRetractIntent,
   needleRotationIntent,
@@ -343,4 +347,67 @@ test('TASK-068 rejects out-of-range and non-finite normalized input', () => {
   assert.throws(() => normalizedControlAxis(Number.NaN), /finite/);
   assert.throws(() => normalizedControlMagnitude(-0.01), /within \[0, 1\]/);
   assert.throws(() => normalizedControlMagnitude(Infinity), /finite/);
+});
+
+test('TASK-069 neutral controller applies translation and tip-axis travel', () => {
+  const definition = task067NeedleDefinition();
+  const controller = new NeedleMotionController({
+    translationStep: millimetres(20),
+    rotationStep: degrees(90),
+    advanceStep: millimetres(5),
+  });
+  const initial = createNeedleInstance({
+    id: instrumentInstanceId('task069.motion'),
+    definition,
+    pose: createInstrumentPose({
+      position: patientSpacePoint(0, 0, 0),
+      orientation: { x: 0, y: 0, z: 0, w: 1 },
+    }),
+  });
+
+  const translated = controller.apply(
+    initial,
+    needleTranslationIntent(0.5, -0.25),
+  );
+  assert.deepEqual(translated.tipPosition.value, { x: 10, y: -5, z: 0 });
+
+  const advanced = controller.apply(translated, needleAdvanceIntent(1));
+  assert.deepEqual(advanced.tipPosition.value, { x: 10, y: -5, z: 5 });
+
+  const retracted = controller.apply(advanced, needleRetractIntent(0.4));
+  assert.deepEqual(retracted.tipPosition.value, { x: 10, y: -5, z: 3 });
+});
+
+test('TASK-069 neutral controller rotates the needle without browser knowledge', () => {
+  const definition = task067NeedleDefinition();
+  const controller = new NeedleMotionController({
+    translationStep: millimetres(20),
+    rotationStep: degrees(90),
+    advanceStep: millimetres(5),
+  });
+  const initial = createNeedleInstance({
+    id: instrumentInstanceId('task069.rotate'),
+    definition,
+    pose: createInstrumentPose({
+      position: patientSpacePoint(0, 0, 0),
+      orientation: { x: 0, y: 0, z: 0, w: 1 },
+    }),
+  });
+
+  const rotated = controller.apply(initial, needleRotationIntent(1, 0));
+  assert.ok(Math.abs(rotated.tipDirection.value.x - 1) < 1e-12);
+  assert.ok(Math.abs(rotated.tipDirection.value.y) < 1e-12);
+  assert.ok(Math.abs(rotated.tipDirection.value.z) < 1e-12);
+});
+
+test('TASK-069 neutral controller rejects non-positive physical steps', () => {
+  assert.throws(
+    () =>
+      new NeedleMotionController({
+        translationStep: millimetres(0),
+        rotationStep: degrees(90),
+        advanceStep: millimetres(5),
+      }),
+    /translation step/,
+  );
 });
