@@ -1,4 +1,5 @@
 import {
+  IMAGE_BASIS_TOLERANCE,
   createPatientImagingPlane,
   type PatientImagingPlane,
 } from '@procedural-human/imaging-core';
@@ -21,6 +22,27 @@ function finitePoint3(value: Point3, name: string): void {
   if (!value || value.length !== 3 || !value.every(Number.isFinite)) {
     throw new TypeError(`${name} must contain three finite values.`);
   }
+}
+
+function checkedPatientPlane(
+  plane: PatientImagingPlane,
+): PatientImagingPlane {
+  const checked = checkedPatientPlane(plane);
+  if (
+    plane?.kind !== 'patient-imaging-plane' ||
+    !plane.normal ||
+    ['x', 'y', 'z'].some((axis) => {
+      const key = axis as 'x' | 'y' | 'z';
+      return (
+        !Number.isFinite(plane.normal.value[key]) ||
+        Math.abs(plane.normal.value[key] - checked.normal.value[key]) >
+          IMAGE_BASIS_TOLERANCE
+      );
+    })
+  ) {
+    throw new TypeError('Patient imaging plane normal must match its basis.');
+  }
+  return checked;
 }
 
 function dot(a: Point3, b: Point3): number {
@@ -99,8 +121,8 @@ export function assertPatientPlaneOrientationEquivalent(
   expected: PatientImagingPlane,
   actual: PatientImagingPlane,
 ): void {
-  const a = createPatientImagingPlane(expected);
-  const b = createPatientImagingPlane(actual);
+  const a = checkedPatientPlane(expected);
+  const b = checkedPatientPlane(actual);
   for (const key of ['directionI', 'directionJ', 'normal'] as const) {
     for (const axis of ['x', 'y', 'z'] as const) {
       if (
@@ -117,8 +139,8 @@ export function assertPatientPlanesEquivalent(
   expected: PatientImagingPlane,
   actual: PatientImagingPlane,
 ): void {
-  const a = createPatientImagingPlane(expected);
-  const b = createPatientImagingPlane(actual);
+  const a = checkedPatientPlane(expected);
+  const b = checkedPatientPlane(actual);
   assertPatientPlaneOrientationEquivalent(a, b);
   const distance = Math.hypot(
     a.origin.value.x - b.origin.value.x,
