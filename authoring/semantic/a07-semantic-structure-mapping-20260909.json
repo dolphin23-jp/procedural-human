@@ -1,0 +1,103 @@
+{
+  "schema": "ph-semantic-structure-mapping.v1",
+  "schemaVersion": "1",
+  "task": "TASK-A07",
+  "recordedAt": "2026-09-09",
+  "coordinateSpace": {
+    "kind": "source-image-stack",
+    "patientSpaceClaim": false
+  },
+  "mappings": [
+    {
+      "draftLabel": "skin",
+      "anatomicalId": "structure.skin.left_distal_forearm_wrist",
+      "name": "Left distal forearm/wrist skin",
+      "type": "tissue",
+      "laterality": "left",
+      "region": "left-distal-forearm-wrist",
+      "mappingStatus": "mapped-candidate-representation",
+      "representationAvailable": true,
+      "validationLevel": "V0"
+    },
+    {
+      "draftLabel": "subcutaneous_soft_tissue",
+      "anatomicalId": "structure.subcutaneous_soft_tissue.left_distal_forearm_wrist",
+      "name": "Left distal forearm/wrist subcutaneous soft tissue",
+      "type": "tissue-region",
+      "laterality": "left",
+      "region": "left-distal-forearm-wrist",
+      "mappingStatus": "mapped-candidate-representation",
+      "representationAvailable": true,
+      "validationLevel": "V0"
+    },
+    {
+      "draftLabel": "major_muscle_tendon_region",
+      "anatomicalId": "structure.major_muscle_tendon_region.left_distal_forearm_wrist",
+      "name": "Left distal forearm/wrist major muscle/tendon region",
+      "type": "tissue-region",
+      "laterality": "left",
+      "region": "left-distal-forearm-wrist",
+      "mappingStatus": "mapped-candidate-representation",
+      "representationAvailable": true,
+      "validationLevel": "V0"
+    },
+    {
+      "draftLabel": "radius",
+      "anatomicalId": "structure.radius.left",
+      "name": "Left radius",
+      "type": "bone",
+      "laterality": "left",
+      "region": "left-distal-forearm-wrist",
+      "mappingStatus": "semantic-id-reserved-no-representation",
+      "representationAvailable": false,
+      "validationLevel": "V0"
+    },
+    {
+      "draftLabel": "ulna",
+      "anatomicalId": "structure.ulna.left",
+      "name": "Left ulna",
+      "type": "bone",
+      "laterality": "left",
+      "region": "left-distal-forearm-wrist",
+      "mappingStatus": "semantic-id-reserved-no-representation",
+      "representationAvailable": false,
+      "validationLevel": "V0"
+    },
+    {
+      "draftLabel": "radial_artery",
+      "anatomicalId": "structure.radial_artery.left",
+      "name": "Left radial artery",
+      "type": "artery",
+      "laterality": "left",
+      "region": "left-distal-forearm-wrist",
+      "mappingStatus": "semantic-id-reserved-no-representation",
+      "representationAvailable": false,
+      "validationLevel": "V0"
+    },
+    {
+      "draftLabel": "ulnar_artery",
+      "anatomicalId": "structure.ulnar_artery.left",
+      "name": "Left ulnar artery",
+      "type": "artery",
+      "laterality": "left",
+      "region": "left-distal-forearm-wrist",
+      "mappingStatus": "semantic-id-reserved-no-representation",
+      "representationAvailable": false,
+      "validationLevel": "V0"
+    }
+  ],
+  "unresolved": [
+    {
+      "draftLabel": "superficial_target_vein",
+      "semanticRole": "venous_access_target",
+      "anatomicalId": null,
+      "reason": "Source evidence does not establish a named superficial vein identity; a procedure role must not be substituted for an anatomical entity ID."
+    }
+  ],
+  "claims": {
+    "medicalValidation": false,
+    "patientSpaceGeometry": false,
+    "representationPresenceImpliedByIdentity": false,
+    "procedureRoleUsedAsAnatomicalIdentity": false
+  }
+}
