@@ -21,16 +21,9 @@
     "persistentHandoff"
   ],
   "properties": {
-    "schema": {
-      "const": "ph-source-archive-record.v1"
-    },
-    "schemaVersion": {
-      "const": "1"
-    },
-    "sourceArchiveId": {
-      "type": "string",
-      "minLength": 1
-    },
+    "schema": { "const": "ph-source-archive-record.v1" },
+    "schemaVersion": { "const": "1" },
+    "sourceArchiveId": { "type": "string", "minLength": 1 },
     "dataset": {
       "type": "object",
       "additionalProperties": false,
@@ -42,89 +35,38 @@
         "sourceClass"
       ],
       "properties": {
-        "provider": {
-          "type": "string",
-          "minLength": 1
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1
-        },
-        "portalDatasetId": {
-          "type": "string",
-          "minLength": 1
-        },
-        "subjectId": {
-          "type": "string",
-          "minLength": 1
-        },
-        "sourceClass": {
-          "type": "string",
-          "minLength": 1
-        }
+        "provider": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "portalDatasetId": { "type": "string", "minLength": 1 },
+        "subjectId": { "type": "string", "minLength": 1 },
+        "sourceClass": { "type": "string", "minLength": 1 }
       }
     },
-    "recordedAt": {
-      "type": "string",
-      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-    },
-    "retrievalDate": {
-      "type": "string",
-      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-    },
-    "retrievalStatus": {
-      "type": "string",
-      "minLength": 1
-    },
+    "recordedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "retrievalDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "retrievalStatus": { "type": "string", "minLength": 1 },
     "canonicalLocations": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "root",
-        "fullcolor",
-        "pngAbdomen",
-        "ct",
-        "ctHeaders"
-      ],
+      "required": ["root", "fullcolor", "pngAbdomen", "ct", "ctHeaders"],
       "properties": {
-        "root": {
-          "type": "string",
-          "pattern": "^https://"
-        },
-        "fullcolor": {
-          "type": "string",
-          "pattern": "^https://"
-        },
-        "pngAbdomen": {
-          "type": "string",
-          "pattern": "^https://"
-        },
-        "ct": {
-          "type": "string",
-          "pattern": "^https://"
-        },
-        "ctHeaders": {
-          "type": "string",
-          "pattern": "^https://"
-        }
+        "root": { "type": "string", "pattern": "^https://" },
+        "fullcolor": { "type": "string", "pattern": "^https://" },
+        "pngAbdomen": { "type": "string", "pattern": "^https://" },
+        "ct": { "type": "string", "pattern": "^https://" },
+        "ctHeaders": { "type": "string", "pattern": "^https://" }
       }
     },
-    "remoteInventorySnapshot": {
-      "type": "object"
-    },
+    "remoteInventorySnapshot": { "type": "object" },
     "acquisitions": {
       "type": "array",
       "minItems": 1,
-      "items": {
-        "type": "object"
-      }
+      "items": { "type": "object" }
     },
     "payloads": {
       "type": "array",
       "minItems": 1,
-      "items": {
-        "type": "object"
-      }
+      "items": { "type": "object" }
     },
     "license": {
       "type": "object",
@@ -138,28 +80,12 @@
         "redistributionCondition"
       ],
       "properties": {
-        "termsUrl": {
-          "type": "string",
-          "pattern": "^https://"
-        },
-        "access": {
-          "type": "string",
-          "minLength": 1
-        },
-        "registrationRequired": {
-          "type": "boolean"
-        },
-        "requiredAttribution": {
-          "type": "string",
-          "minLength": 1
-        },
-        "noEndorsement": {
-          "type": "boolean"
-        },
-        "redistributionCondition": {
-          "type": "string",
-          "minLength": 1
-        }
+        "termsUrl": { "type": "string", "pattern": "^https://" },
+        "access": { "type": "string", "minLength": 1 },
+        "registrationRequired": { "type": "boolean" },
+        "requiredAttribution": { "type": "string", "minLength": 1 },
+        "noEndorsement": { "type": "boolean" },
+        "redistributionCondition": { "type": "string", "minLength": 1 }
       }
     },
     "integrity": {
@@ -173,309 +99,77 @@
         "note"
       ],
       "properties": {
-        "requiredHashAlgorithm": {
-          "const": "SHA-256"
-        },
-        "complete": {
-          "type": "boolean"
-        },
-        "boundedA05AcquisitionComplete": {
-          "type": "boolean"
-        },
+        "requiredHashAlgorithm": { "const": "SHA-256" },
+        "complete": { "type": "boolean" },
+        "boundedA05AcquisitionComplete": { "type": "boolean" },
         "blockMedicalPromotionUntilRequiredSourceAndRegistrationIntegrityComplete": {
           "type": "boolean"
         },
-        "note": {
-          "type": "string",
-          "minLength": 1
-        }
+        "note": { "type": "string", "minLength": 1 }
       }
     },
     "persistentHandoff": {
-      "oneOf": [
-        {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "storageClass",
+        "authority",
+        "libraryPath",
+        "exportedAt",
+        "frameCoverage",
+        "chunks"
+      ],
+      "properties": {
+        "storageClass": { "const": "external-user-library-handoff" },
+        "authority": { "type": "string", "minLength": 1 },
+        "libraryPath": {
+          "const": "/Procedural Human/A05 Visible Human Female Source/"
+        },
+        "exportedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "frameCoverage": {
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "storageClass",
-            "authority",
-            "libraryPath",
-            "exportedAt",
-            "frameCoverage",
-            "chunks"
+            "expectedFrameCount",
+            "chunkCount",
+            "reconstructionRule"
           ],
           "properties": {
-            "storageClass": {
-              "const": "external-user-library-handoff"
-            },
-            "authority": {
-              "type": "string",
-              "minLength": 1
-            },
-            "libraryPath": {
-              "const": "/Procedural Human/A05 Visible Human Female Source/"
-            },
-            "exportedAt": {
-              "type": "string",
-              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-            },
-            "frameCoverage": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "expectedFrameCount",
-                "chunkCount",
-                "reconstructionRule"
-              ],
-              "properties": {
-                "expectedFrameCount": {
-                  "const": 451
-                },
-                "chunkCount": {
-                  "const": 10
-                },
-                "reconstructionRule": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            },
-            "chunks": {
-              "type": "array",
-              "minItems": 10,
-              "maxItems": 10,
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "index",
-                  "byteSize",
-                  "digest",
-                  "sourceArtifactName",
-                  "libraryFilename"
-                ],
-                "properties": {
-                  "index": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9
-                  },
-                  "byteSize": {
-                    "type": "integer",
-                    "minimum": 1
-                  },
-                  "digest": {
-                    "type": "string",
-                    "pattern": "^sha256:[0-9a-f]{64}$"
-                  },
-                  "sourceArtifactName": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "libraryFilename": {
-                    "type": "string",
-                    "pattern": "^chunk-[0-9]\\.zip$"
-                  }
-                }
-              }
-            }
+            "expectedFrameCount": { "const": 451 },
+            "chunkCount": { "const": 10 },
+            "reconstructionRule": { "type": "string", "minLength": 1 }
           }
         },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "storageClass",
-            "authority",
-            "storageProvider",
-            "libraryPath",
-            "folderId",
-            "reacquiredAt",
-            "complete",
-            "missingChunkIndices",
-            "persistenceBlocker",
-            "temporaryTransport",
-            "sourceIdentity",
-            "frameCoverage",
-            "chunks"
-          ],
-          "properties": {
-            "storageClass": {
-              "const": "external-user-accessible-authoring-handoff-partial"
-            },
-            "authority": {
-              "type": "string",
-              "minLength": 1
-            },
-            "storageProvider": {
-              "type": "string",
-              "minLength": 1
-            },
-            "libraryPath": {
-              "const": "Procedural Human/A05 Visible Human Female Source/"
-            },
-            "folderId": {
-              "type": "string",
-              "minLength": 1
-            },
-            "reacquiredAt": {
-              "type": "string",
-              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-            },
-            "complete": {
-              "const": false
-            },
-            "missingChunkIndices": {
-              "type": "array",
-              "minItems": 1,
-              "maxItems": 10,
-              "uniqueItems": true,
-              "items": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9
-              }
-            },
-            "persistenceBlocker": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "providerError",
-                "message"
-              ],
-              "properties": {
-                "providerError": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "message": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            },
-            "temporaryTransport": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "provider",
-                "workflowRunId",
-                "retention",
-                "authority"
-              ],
-              "properties": {
-                "provider": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "workflowRunId": {
-                  "type": "integer",
-                  "minimum": 1
-                },
-                "retention": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "authority": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            },
-            "sourceIdentity": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "sourceFilenameShaAggregate",
-                "cropFilenameShaAggregate",
-                "canonicalRowsSha256"
-              ],
-              "properties": {
-                "sourceFilenameShaAggregate": {
-                  "type": "string",
-                  "pattern": "^[0-9a-f]{64}$"
-                },
-                "cropFilenameShaAggregate": {
-                  "type": "string",
-                  "pattern": "^[0-9a-f]{64}$"
-                },
-                "canonicalRowsSha256": {
-                  "type": "string",
-                  "pattern": "^[0-9a-f]{64}$"
-                }
-              }
-            },
-            "frameCoverage": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "expectedFrameCount",
-                "chunkCount",
-                "reconstructionRule"
-              ],
-              "properties": {
-                "expectedFrameCount": {
-                  "const": 451
-                },
-                "chunkCount": {
-                  "const": 10
-                },
-                "reconstructionRule": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            },
-            "chunks": {
-              "type": "array",
-              "minItems": 10,
-              "maxItems": 10,
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "index",
-                  "byteSize",
-                  "digest",
-                  "sourceArtifactId",
-                  "libraryFilename",
-                  "persistentFileId"
-                ],
-                "properties": {
-                  "index": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 9
-                  },
-                  "byteSize": {
-                    "type": "integer",
-                    "minimum": 1
-                  },
-                  "digest": {
-                    "type": "string",
-                    "pattern": "^sha256:[0-9a-f]{64}$"
-                  },
-                  "sourceArtifactId": {
-                    "type": "integer",
-                    "minimum": 1
-                  },
-                  "libraryFilename": {
-                    "type": "string",
-                    "pattern": "^chunk-[0-9]\\.zip$"
-                  },
-                  "persistentFileId": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
-                    "minLength": 1
-                  }
-                }
+        "chunks": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "index",
+              "byteSize",
+              "digest",
+              "sourceArtifactName",
+              "libraryFilename"
+            ],
+            "properties": {
+              "index": { "type": "integer", "minimum": 0, "maximum": 9 },
+              "byteSize": { "type": "integer", "minimum": 1 },
+              "digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "sourceArtifactName": { "type": "string", "minLength": 1 },
+              "libraryFilename": {
+                "type": "string",
+                "pattern": "^chunk-[0-9]\\.zip$"
               }
             }
           }
         }
-      ]
+      }
     }
   }
 }
