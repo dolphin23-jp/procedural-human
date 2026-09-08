@@ -1,0 +1,54 @@
+name: Probe VHP female CT
+
+on:
+  push:
+    branches:
+      - task-a06-atlas-assisted-correction
+    paths:
+      - .github/workflows/probe-vhp-female-ct.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe likely NLM paths
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError, URLError
+
+          roots = [
+            "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/PNG_format",
+            "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images",
+          ]
+          candidates = [
+            "",
+            "/CT",
+            "/ct",
+            "/radiological",
+            "/Radiological",
+            "/abdomen",
+            "/head",
+            "/thorax",
+            "/pelvis",
+            "/README",
+            "/README.txt",
+          ]
+          for root in roots:
+            for suffix in candidates:
+              url=root+suffix
+              try:
+                req=Request(url,headers={"User-Agent":"procedural-human-authoring/0.0 (+probe)"})
+                with urlopen(req,timeout=20) as r:
+                  head=r.read(4000)
+                  print("OK",r.status,r.headers.get("Content-Type"),url)
+                  print(head[:1000].decode("utf-8","replace").replace("\n"," ")[:1000])
+              except Exception as e:
+                print("ERR",url,type(e).__name__,e)
+          PY
