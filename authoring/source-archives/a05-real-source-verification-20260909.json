@@ -117,7 +117,7 @@
     ]
   },
   "persistentHandoff": {
-    "complete": false,
+    "complete": true,
     "storageProvider": "Google Drive",
     "folderId": "1A4klX4_pV5pIvfj3NM1xOJ5DSJUZ9OwX",
     "folderPath": "Procedural Human/A05 Visible Human Female Source/",
@@ -125,43 +125,82 @@
     "storedChunks": [
       {
         "index": 0,
-        "fileId": "17iDOUi4pmKshasSJOQe1sxkeqIJyrey5"
+        "fileId": "1DTUI7t58S2nPohn6UuAnQlK3h8r06o-z",
+        "libraryFilename": "chunk-0.zip",
+        "byteSize": 26031165,
+        "sha256": "78b1b2c1e1ffa006f3b07711e3497bb74ba7133f777709eebcd008b1b429623d"
       },
       {
         "index": 1,
-        "fileId": "1pSip_om5DUeOAf1Gghm3PYOGK4zVhlsA"
+        "fileId": "1xlb4SQ0Iz3Y-d0IASyq2mJr0n8YB5eWY",
+        "libraryFilename": "chunk-1.zip",
+        "byteSize": 25803357,
+        "sha256": "01d54d17761091fc576e8cb7acb47bfc5b178185ffadb50415ff806bdfd7c837"
       },
       {
         "index": 2,
-        "fileId": "1k_idepF0NxTxIIFeFs7R68nh8NNrmVa4"
+        "fileId": "1f9Tl7eqtlay9uaX4fSEcXoxsIRd0ytdx",
+        "libraryFilename": "chunk-2.zip",
+        "byteSize": 25331225,
+        "sha256": "56e2c3cb8382a4b6eb96fa4c04e12793281f8214a48fe5880c36628508663352"
       },
       {
         "index": 3,
-        "fileId": "1Tp4yIrG8AoC9i55d3UoBnLPA7VTWWcWS"
+        "fileId": "1gEgas1UUhHgLLbwaS-jqmq5pNoJPohr0",
+        "libraryFilename": "chunk-3.zip",
+        "byteSize": 25451281,
+        "sha256": "8577b8e831bfd7d6d590562bd4c2603d9ca0e455179c426ac4860f05f517b44c"
       },
       {
         "index": 4,
-        "fileId": "1SvISbQx9PKEo9rgRRsdzABGItR16AU1i"
+        "fileId": "1wt0IeHsG6gfPLMNBwO4D7ffE6xH67jTs",
+        "libraryFilename": "chunk-4.zip",
+        "byteSize": 25368674,
+        "sha256": "f912d7e745e3d817c555f8ea223b9bd1c5c07a52932f5a94464a3de215845816"
       },
       {
         "index": 5,
-        "fileId": "1pmEazuMr8o-jMs3kKvbbZEX8NHc59N4g"
+        "fileId": "1OON-FRPNbYOBiOHB9ShJtb0TTB2e3R6H",
+        "libraryFilename": "chunk-5.zip",
+        "byteSize": 25100034,
+        "sha256": "4e702ab792ebd6af5aaff975221344c0b8e5a11feb9c89d33b42268dc01c5372"
       },
       {
         "index": 6,
-        "fileId": "1UAchOE3y3-czdM1WigWNDUMbAOTQhjhP"
+        "fileId": "1IA0iYY9D5c6BxoqHJEmGrc9GdOHJig6L",
+        "libraryFilename": "chunk-6.zip",
+        "byteSize": 25140770,
+        "sha256": "d5ecf42796bdf1a20d6540b49a2e5992524d5e85ba25bfc60245ab734f3e073f"
       },
       {
         "index": 7,
-        "fileId": "1zStkcmtBqdUqb6DRIGN1da5hLu_mQqAn"
+        "fileId": "1IgJEWRkWZfMAIZE8uLbWKLcOaU6r9_lj",
+        "libraryFilename": "chunk-7.zip",
+        "byteSize": 25076645,
+        "sha256": "d0ba39a31449fac6754e9999051ad463b3a9ec39b62365568741623f20cd78c7"
+      },
+      {
+        "index": 8,
+        "fileId": "1v78cXY2vPdVXLweWrXBoUlkXN0wWDgIi",
+        "libraryFilename": "chunk-8.zip",
+        "byteSize": 25408260,
+        "sha256": "316aff6722ca56c67d8ea4bde02e613501190849e24bcdc3eafe3621cc944a2e"
+      },
+      {
+        "index": 9,
+        "fileId": "1lGyAeg5sqxyXVSgBKj_yKqXUghetBiS_",
+        "libraryFilename": "chunk-9.zip",
+        "byteSize": 20650491,
+        "sha256": "91c11d65506128cad36a2ba70284b154ee07811bbf3dc8674dceeb8cbd2aae63"
       }
     ],
-    "missingChunkIndices": [8, 9],
-    "blocker": {
-      "providerError": "storageQuotaExceeded",
-      "message": "The user's Drive storage quota has been exceeded."
+    "postUploadVerification": {
+      "allTenFilesReadBackFromPersistentStorage": true,
+      "allByteSizesMatch": true,
+      "allSha256Match": true,
+      "verifiedAt": "2026-09-09"
     },
-    "reconstructionRule": "A complete persistent handoff requires chunk-0.zip through chunk-9.zip. Verify each ZIP byte size/SHA-256, validate manifest.json, verify all per-crop SHA-256 values, and reconstruct exactly 451 frames in global-frame order. Output remains source-image-stack only."
+    "reconstructionRule": "Read back chunk-0.zip through chunk-9.zip from persistent storage; verify each byte size and SHA-256, validate each ZIP and manifest, verify every crop SHA-256/globalFrameIndex, and reconstruct exactly 451 frames. Output remains source-image-stack only."
   },
   "claims": {
     "patientSpaceGeometry": false,
