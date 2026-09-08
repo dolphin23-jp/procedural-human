@@ -17,38 +17,27 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Probe likely NLM paths
+      - name: Probe radiological metadata and likely files
         run: |
           python - <<'PY'
           from urllib.request import Request, urlopen
-          from urllib.error import HTTPError, URLError
 
-          roots = [
-            "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/PNG_format",
-            "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images",
+          base="https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/Radiological"
+          candidates=[
+            "README","README.txt",
+            "CT/README","CT/README.txt","ct/README","ct/README.txt",
+            "MRI/README","MRI/README.txt","mri/README","mri/README.txt",
+            "ct001.png","ct0001.png","f_ct001.png","fct001.png",
+            "CT/ct001.png","CT/ct0001.png","CT/f_ct001.png","CT/fct001.png",
           ]
-          candidates = [
-            "",
-            "/CT",
-            "/ct",
-            "/radiological",
-            "/Radiological",
-            "/abdomen",
-            "/head",
-            "/thorax",
-            "/pelvis",
-            "/README",
-            "/README.txt",
-          ]
-          for root in roots:
-            for suffix in candidates:
-              url=root+suffix
-              try:
-                req=Request(url,headers={"User-Agent":"procedural-human-authoring/0.0 (+probe)"})
-                with urlopen(req,timeout=20) as r:
-                  head=r.read(4000)
-                  print("OK",r.status,r.headers.get("Content-Type"),url)
-                  print(head[:1000].decode("utf-8","replace").replace("\n"," ")[:1000])
-              except Exception as e:
-                print("ERR",url,type(e).__name__,e)
+          for name in candidates:
+            url=f"{base}/{name}"
+            try:
+              req=Request(url,headers={"User-Agent":"procedural-human-authoring/0.0 (+probe)"})
+              with urlopen(req,timeout=30) as r:
+                head=r.read(16000)
+                print("\nOK",r.status,r.headers.get("Content-Type"),len(head),url)
+                print(head.decode("utf-8","replace")[:12000])
+            except Exception as e:
+              print("ERR",url,type(e).__name__,e)
           PY
