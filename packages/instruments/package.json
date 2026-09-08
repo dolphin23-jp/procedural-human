@@ -13,8 +13,5 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit"
-  },
-  "dependencies": {
-    "@procedural-human/math": "workspace:*"
   }
 }
