@@ -6,8 +6,7 @@ type InstrumentIdentifier<Kind extends string> = string & {
 
 export type InstrumentDefinitionId =
   InstrumentIdentifier<'InstrumentDefinitionId'>;
-export type InstrumentInstanceId =
-  InstrumentIdentifier<'InstrumentInstanceId'>;
+export type InstrumentInstanceId = InstrumentIdentifier<'InstrumentInstanceId'>;
 export type InstrumentPartId = InstrumentIdentifier<'InstrumentPartId'>;
 
 /** Tagged Patient Space point, structurally compatible with math PatientSpacePoint. */
@@ -123,9 +122,7 @@ function copyUnitQuaternion(
   });
 }
 
-export const instrumentDefinitionId = (
-  value: string,
-): InstrumentDefinitionId =>
+export const instrumentDefinitionId = (value: string): InstrumentDefinitionId =>
   nonEmptyIdentifier<'InstrumentDefinitionId'>(
     value,
     'Instrument definition ID',
@@ -176,7 +173,7 @@ export function createInstrumentDefinition(input: {
     }
     const visited = new Set<InstrumentPartId>();
     let current: InstrumentPart | undefined = part;
-    while (current?.parentPartId !== null) {
+    while (current && current.parentPartId !== null) {
       if (visited.has(current.id)) {
         throw new RangeError(
           'Instrument part hierarchy must not contain a cycle.',
