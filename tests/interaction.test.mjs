@@ -293,8 +293,10 @@ test('TASK-071 repeats, reversal and small displacement have no accumulated stat
 });
 
 test('TASK-071 malformed movements fail before any query, including stationary input', () => {
+  let queryCalls = 0;
   const noQuery = new InteractionEngine({
     querySegment() {
+      queryCalls += 1;
       assert.fail('Invalid movement must not query');
     },
   });
@@ -328,6 +330,7 @@ test('TASK-071 malformed movements fail before any query, including stationary i
     () => noQuery.observeNeedleMovement({ previous: a, current: b }),
     /overflow/,
   );
+  assert.equal(queryCalls, 0);
   for (const dependency of [undefined, null, {}, { querySegment: 1 }]) {
     assert.throws(() => new InteractionEngine(dependency), /Spatial Query/);
   }
