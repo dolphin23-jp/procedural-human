@@ -123,7 +123,7 @@ def _safe_members(archive: ZipFile) -> dict[str, str]:
 
 
 def _png_dimensions(payload: bytes, *, context: str) -> tuple[int, int]:
-    if len(payload) < 24 or payload[:8] != b"\\x89PNG\\r\\n\\x1a\\n":
+    if len(payload) < 24 or payload[:8] != b"\x89PNG\r\n\x1a\n":
         raise HandoffVerificationError(f"{context} is not a PNG")
     if payload[12:16] != b"IHDR":
         raise HandoffVerificationError(f"{context} has no leading PNG IHDR")
