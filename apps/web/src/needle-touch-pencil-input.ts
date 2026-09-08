@@ -6,10 +6,7 @@ import {
   type NeedleControlIntent,
 } from '@procedural-human/instruments';
 
-export type TouchPencilNeedleControlMode =
-  | 'translate'
-  | 'rotate'
-  | 'advance';
+export type TouchPencilNeedleControlMode = 'translate' | 'rotate' | 'advance';
 
 export interface TouchPencilNeedleInputOptions {
   readonly emit: (intent: NeedleControlIntent) => void;
