@@ -108,6 +108,9 @@ importers:
 
   packages/instruments:
     dependencies:
+      '@procedural-human/math':
+        specifier: workspace:*
+        version: link:../math
       '@procedural-human/units':
         specifier: workspace:*
         version: link:../units
