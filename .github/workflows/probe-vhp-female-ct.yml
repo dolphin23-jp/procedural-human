@@ -79,15 +79,16 @@ jobs:
       - name: Verify PNG dimensions and header consistency
         run: |
           python - <<'PY'
-          from PIL import Image
           from pathlib import Path
-          import json
+          import json, struct
           root=Path("build/vhp-ct")
           manifest=json.loads((root/"manifest.json").read_text())
           dims=set()
           for row in manifest["files"]:
-              with Image.open(root/"images"/row["image"]["filename"]) as im:
-                  dims.add(im.size)
+              data=(root/"images"/row["image"]["filename"]).read_bytes()
+              assert data[:8] == b"\\x89PNG\\r\\n\\x1a\\n"
+              width,height=struct.unpack(">II",data[16:24])
+              dims.add((width,height))
           print("dimensions",sorted(dims))
           assert dims == {(512,512)}
           assert len(manifest["files"]) == 151
