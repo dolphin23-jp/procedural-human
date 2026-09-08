@@ -89,11 +89,9 @@ export function patientPlaneFromCornerstoneCamera(
   );
 
   return createPatientImagingPlane({
-    kind: 'patient-imaging-plane',
     origin: patientSpacePoint(focalPoint[0], focalPoint[1], focalPoint[2]),
     directionI: patientSpaceDirection(column[0], column[1], column[2]),
     directionJ: patientSpaceDirection(row[0], row[1], row[2]),
-    normal: patientSpaceDirection(normal[0], normal[1], normal[2]),
   });
 }
 
