@@ -4,7 +4,18 @@
   "title": "TASK-A05 Draft Segmentation Manifest v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema", "task", "pipelineProfile", "status", "coordinateSpace", "source", "labels", "blockedVesselLabels", "ambiguities", "claims"],
+  "required": [
+    "schema",
+    "task",
+    "pipelineProfile",
+    "status",
+    "coordinateSpace",
+    "source",
+    "labels",
+    "blockedVesselLabels",
+    "ambiguities",
+    "claims"
+  ],
   "properties": {
     "schema": { "const": "ph-draft-segmentation-manifest.v1" },
     "task": { "const": "TASK-A05" },
@@ -14,10 +25,20 @@
     "source": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["dataset", "sourceManifestDigestSha256", "sliceCount", "firstSourceFile", "lastSourceFile", "sourceFilesVerified"],
+      "required": [
+        "dataset",
+        "sourceManifestDigestSha256",
+        "sliceCount",
+        "firstSourceFile",
+        "lastSourceFile",
+        "sourceFilesVerified"
+      ],
       "properties": {
         "dataset": { "type": "string", "minLength": 1 },
-        "sourceManifestDigestSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "sourceManifestDigestSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
         "sliceCount": { "type": "integer", "minimum": 1 },
         "firstSourceFile": { "type": "string", "minLength": 1 },
         "lastSourceFile": { "type": "string", "minLength": 1 },
@@ -31,9 +52,23 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["draftLabel", "semanticMappingStatus", "status", "maskEncoding", "coverage"],
+        "required": [
+          "draftLabel",
+          "semanticMappingStatus",
+          "status",
+          "maskEncoding",
+          "coverage"
+        ],
         "properties": {
-          "draftLabel": { "enum": ["skin", "subcutaneous_soft_tissue", "radius", "ulna", "major_muscle_tendon_region"] },
+          "draftLabel": {
+            "enum": [
+              "skin",
+              "subcutaneous_soft_tissue",
+              "radius",
+              "ulna",
+              "major_muscle_tendon_region"
+            ]
+          },
           "semanticMappingStatus": { "const": "not-assigned-task-a07" },
           "status": { "$ref": "#/$defs/draftStatus" },
           "maskEncoding": { "const": "pgm8-binary-candidate-mask" },
@@ -50,7 +85,9 @@
         "additionalProperties": false,
         "required": ["draftLabel", "maskGeneration", "reason", "status"],
         "properties": {
-          "draftLabel": { "enum": ["radial_artery", "ulnar_artery", "superficial_target_vein"] },
+          "draftLabel": {
+            "enum": ["radial_artery", "ulnar_artery", "superficial_target_vein"]
+          },
           "maskGeneration": { "const": "blocked" },
           "reason": { "type": "string", "minLength": 1 },
           "status": { "$ref": "#/$defs/draftStatus" }
@@ -61,7 +98,11 @@
     "claims": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["patientSpaceGeometry", "medicalValidation", "automaticPromotion"],
+      "required": [
+        "patientSpaceGeometry",
+        "medicalValidation",
+        "automaticPromotion"
+      ],
       "properties": {
         "patientSpaceGeometry": { "const": false },
         "medicalValidation": { "const": false },
@@ -73,7 +114,12 @@
     "draftStatus": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["validationLevel", "reviewStatus", "candidateOnly", "medicalValidation"],
+      "required": [
+        "validationLevel",
+        "reviewStatus",
+        "candidateOnly",
+        "medicalValidation"
+      ],
       "properties": {
         "validationLevel": { "const": "V0" },
         "reviewStatus": { "const": "unreviewed" },
@@ -94,12 +140,22 @@
     "coverage": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["sliceCount", "slicesWithCandidate", "totalCandidatePixels", "candidatePixelFraction", "maxCandidatePixelsPerSlice"],
+      "required": [
+        "sliceCount",
+        "slicesWithCandidate",
+        "totalCandidatePixels",
+        "candidatePixelFraction",
+        "maxCandidatePixelsPerSlice"
+      ],
       "properties": {
         "sliceCount": { "type": "integer", "minimum": 1 },
         "slicesWithCandidate": { "type": "integer", "minimum": 0 },
         "totalCandidatePixels": { "type": "integer", "minimum": 0 },
-        "candidatePixelFraction": { "type": "number", "minimum": 0, "maximum": 1 },
+        "candidatePixelFraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
         "maxCandidatePixelsPerSlice": { "type": "integer", "minimum": 0 }
       }
     }
