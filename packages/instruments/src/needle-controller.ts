@@ -1,14 +1,16 @@
-import { toRadians, toMillimetres, type Angle, type Length } from '@procedural-human/units';
+import {
+  toRadians,
+  toMillimetres,
+  type Angle,
+  type Length,
+} from '@procedural-human/units';
 import {
   createInstrumentPose,
   type InstrumentPoseOrientation,
   type InstrumentPosePosition,
 } from './base.js';
 import type { NeedleControlIntent } from './needle-control-intent.js';
-import {
-  type NeedleInstance,
-  updateNeedlePose,
-} from './needle-instance.js';
+import { type NeedleInstance, updateNeedlePose } from './needle-instance.js';
 
 export interface NeedleMotionControllerConfig {
   /** Maximum Patient Space lateral/vertical displacement per full-scale intent. */
@@ -67,25 +69,13 @@ function multiply(
 ): InstrumentPoseOrientation {
   return {
     x:
-      left.w * right.x +
-      left.x * right.w +
-      left.y * right.z -
-      left.z * right.y,
+      left.w * right.x + left.x * right.w + left.y * right.z - left.z * right.y,
     y:
-      left.w * right.y -
-      left.x * right.z +
-      left.y * right.w +
-      left.z * right.x,
+      left.w * right.y - left.x * right.z + left.y * right.w + left.z * right.x,
     z:
-      left.w * right.z +
-      left.x * right.y -
-      left.y * right.x +
-      left.z * right.w,
+      left.w * right.z + left.x * right.y - left.y * right.x + left.z * right.w,
     w:
-      left.w * right.w -
-      left.x * right.x -
-      left.y * right.y -
-      left.z * right.z,
+      left.w * right.w - left.x * right.x - left.y * right.y - left.z * right.z,
   };
 }
 
@@ -147,7 +137,10 @@ export class NeedleMotionController {
     // followed by pitch (+X). Deltas are left-multiplied into the current pose.
     const yaw = axisAngle(0, 1, 0, intent.yaw * this.#rotationStepRadians);
     const pitch = axisAngle(1, 0, 0, intent.pitch * this.#rotationStepRadians);
-    const orientation = multiply(pitch, multiply(yaw, instance.pose.orientation));
+    const orientation = multiply(
+      pitch,
+      multiply(yaw, instance.pose.orientation),
+    );
     return updateNeedlePose(
       instance,
       createInstrumentPose({
