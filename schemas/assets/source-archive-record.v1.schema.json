@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/source-archive-record/v1",
+  "title": "Authoring Source Archive Record v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "archiveId", "dataset", "sourceIdentifier", "url", "expectedSha256", "licenseSummary", "acquisitionStatus", "coordinateSpace", "alignmentClaim", "patientSpaceClaim", "registrationCorrectnessClaim"],
+      "properties": {
+        "schema": { "const": "ph-source-archive-manifest.v1" },
+        "archiveId": { "type": "string", "minLength": 1 },
+        "dataset": { "type": "string", "minLength": 1 },
+        "sourceIdentifier": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "pattern": "^https?://" },
+        "expectedSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "licenseSummary": { "type": "string", "minLength": 1 },
+        "acquisitionStatus": { "const": "not-acquired" },
+        "coordinateSpace": { "const": "source-archive-only" },
+        "alignmentClaim": { "const": "not-established" },
+        "patientSpaceClaim": { "const": false },
+        "registrationCorrectnessClaim": { "const": false }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "archiveId", "dataset", "sourceIdentifier", "sha256", "acquisitionStatus", "alignmentClaim", "patientSpaceClaim", "registrationCorrectnessClaim"],
+      "properties": {
+        "schema": { "const": "ph-source-archive-acquisition-receipt.v1" },
+        "archiveId": { "type": "string", "minLength": 1 },
+        "dataset": { "type": "string", "minLength": 1 },
+        "sourceIdentifier": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "acquisitionStatus": { "const": "acquired-unregistered" },
+        "alignmentClaim": { "const": "not-established" },
+        "patientSpaceClaim": { "const": false },
+        "registrationCorrectnessClaim": { "const": false }
+      }
+    }
+  ]
+}
