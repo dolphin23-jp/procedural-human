@@ -1,3 +1,15 @@
+from .manual_correction import (
+    ALLOWED_STRUCTURE_STATUSES,
+    ManualCorrectionRecordError,
+    ManualCorrectionStructure,
+    build_manual_correction_record,
+)
+from .semantic_mapping import (
+    KNOWN_IDENTITIES,
+    SemanticIdentity,
+    SemanticMappingError,
+    build_semantic_mapping_record,
+)
 from .manifest_io import (
     ManifestError,
     SourceSliceRecord,
@@ -27,7 +39,11 @@ from .vessel_feasibility import (
 )
 
 __all__ = [
+    "ALLOWED_STRUCTURE_STATUSES",
     "AnchorTrack",
+    "KNOWN_IDENTITIES",
+    "ManualCorrectionRecordError",
+    "ManualCorrectionStructure",
     "CandidateGenerationBlocked",
     "DEFAULT_VISIBLE_HUMAN_V0_RULES",
     "FeasibilityThresholds",
@@ -36,12 +52,16 @@ __all__ = [
     "RgbImage",
     "RgbRule",
     "SliceDecodeError",
+    "SemanticIdentity",
+    "SemanticMappingError",
     "SourceAnchor",
     "SourceSliceRecord",
     "SourceStackManifest",
     "VesselGenerationBlocked",
     "VesselSliceObservation",
     "analyze_structure_feasibility",
+    "build_manual_correction_record",
+    "build_semantic_mapping_record",
     "build_vascular_feasibility_report",
     "candidate_masks_for_image",
     "generate_nonvascular_draft",
