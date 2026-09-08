@@ -124,7 +124,17 @@ importers:
         specifier: workspace:*
         version: link:../units
 
-  packages/interaction: {}
+  packages/interaction:
+    dependencies:
+      '@procedural-human/instruments':
+        specifier: workspace:*
+        version: link:../instruments
+      '@procedural-human/math':
+        specifier: workspace:*
+        version: link:../math
+      '@procedural-human/spatial':
+        specifier: workspace:*
+        version: link:../spatial
 
   packages/math: {}
 

@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const forbiddenWorkspaceEdges = new Map([
-  ['patient', new Set(['procedures', 'spatial'])],
+  ['patient', new Set(['procedures', 'spatial', 'interaction'])],
   ['instruments', new Set(['procedures'])],
   ['rendering-core', new Set(['imaging-core', 'session'])],
 ]);
@@ -15,6 +15,17 @@ const spatialAllowedWorkspaceTargets = new Set([
   'units',
   'math',
   'anatomy',
+  'patient',
+]);
+
+const interactionAllowedWorkspaceTargets = new Set([
+  'core',
+  'units',
+  'math',
+  'instruments',
+  'spatial',
+  'physics-api',
+  'physiology',
   'patient',
 ]);
 
@@ -139,7 +150,34 @@ export async function checkPackageBoundaries(rootDir) {
 
     const source = await readFile(filePath, 'utf8');
     for (const specifier of extractImportSpecifiers(source)) {
-      const workspaceTarget = workspacePackageFromSpecifier(specifier);
+      let workspaceTarget = workspacePackageFromSpecifier(specifier);
+      // Resolve relative edges at the new Interaction boundary too.
+      const relativeOwner = specifier.startsWith('.')
+        ? ownerFor(
+            path.relative(
+              rootDir,
+              path.resolve(path.dirname(filePath), specifier),
+            ),
+          )
+        : null;
+      if (
+        owner.name === 'interaction' ||
+        relativeOwner?.name === 'interaction'
+      ) {
+        workspaceTarget ??=
+          relativeOwner?.kind === 'package' ? relativeOwner.name : null;
+        if (
+          owner.name === 'interaction' &&
+          (relativeOwner?.kind === 'app' ||
+            (workspaceTarget &&
+              workspaceTarget !== 'interaction' &&
+              specifier !== `@procedural-human/${workspaceTarget}`))
+        ) {
+          violations.push(
+            `${relativePath}: Interaction must use public package entry points`,
+          );
+        }
+      }
       if (
         owner.kind === 'package' &&
         owner.name === 'anatomy' &&
@@ -166,6 +204,16 @@ export async function checkPackageBoundaries(rootDir) {
       ) {
         violations.push(
           `${relativePath}: @procedural-human/spatial may only depend on @procedural-human/core, @procedural-human/units, @procedural-human/math, @procedural-human/anatomy, or @procedural-human/patient`,
+        );
+      } else if (
+        owner.kind === 'package' &&
+        owner.name === 'interaction' &&
+        workspaceTarget &&
+        workspaceTarget !== 'interaction' &&
+        !interactionAllowedWorkspaceTargets.has(workspaceTarget)
+      ) {
+        violations.push(
+          `${relativePath}: Interaction dependency is outside its domain boundary`,
         );
       } else if (
         owner.kind === 'package' &&
