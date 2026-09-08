@@ -10,17 +10,7 @@
   "inspection": {
     "method": "primary-agent direct image inspection of reconstructed source-space crops; not clinician review",
     "representativeGlobalFrameIndices": [
-      0,
-      45,
-      90,
-      135,
-      180,
-      225,
-      270,
-      315,
-      360,
-      405,
-      450
+      0, 45, 90, 135, 180, 225, 270, 315, 360, 405, 450
     ],
     "representativeFilenames": [
       "avf1567a.png",
