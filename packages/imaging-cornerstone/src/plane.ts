@@ -27,7 +27,7 @@ function finitePoint3(value: Point3, name: string): void {
 function checkedPatientPlane(
   plane: PatientImagingPlane,
 ): PatientImagingPlane {
-  const checked = checkedPatientPlane(plane);
+  const checked = createPatientImagingPlane(plane);
   if (
     plane?.kind !== 'patient-imaging-plane' ||
     !plane.normal ||
@@ -74,7 +74,7 @@ function normalize(value: Point3, name: string): [number, number, number] {
 export function patientPlaneToCornerstoneCamera(
   plane: PatientImagingPlane,
 ): CornerstoneCameraPlane {
-  const checked = createPatientImagingPlane(plane);
+  const checked = checkedPatientPlane(plane);
   const normal = checked.normal.value;
   const j = checked.directionJ.value;
   return Object.freeze({
