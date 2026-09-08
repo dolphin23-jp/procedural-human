@@ -33,12 +33,6 @@ jobs:
       - run: uv sync --locked
 
       - run: pnpm lint
-      - name: TASK-A05 source archive schema format capture
-        run: |
-          pnpm exec prettier --write schemas/assets/source-archive-record.v1.schema.json
-          echo '=== A05_SOURCE_ARCHIVE_SCHEMA ==='
-          cat schemas/assets/source-archive-record.v1.schema.json
-          echo '=== END_A05_SOURCE_ARCHIVE_SCHEMA ==='
       - run: pnpm format:check
       - run: pnpm typecheck
       - run: pnpm test
