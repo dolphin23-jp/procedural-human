@@ -22,17 +22,25 @@ medical landmark correspondence is claimed.
   Source axial planes retain `AxialSliceState`; arbitrary oblique MPR commits the
   shared `PatientImagingPlane` with `slice = null` rather than inventing source-k metadata.
 
-Cornerstone translates the camera focal point and position along patient Z,
-retaining pan, zoom and camera distance. It recovers source k from actual focal
-point coordinates and reads display index independently. It never assumes
+For declared axial source-plane commands, Cornerstone translates the current
+focal point only along the target plane normal, preserving in-plane pan. Camera
+distance and presentation zoom are retained while orientation is aligned to the
+source plane. Source k is recovered from actual focal-point coordinates and
+display index is read independently. The adapter never assumes
 `displayIndex === k` or `displayIndex === count - 1 - k`.
+
+For arbitrary TASK-063 oblique commands, the explicitly requested
+`PatientImagingPlane` supplies the focal-plane origin and orientation. Camera
+distance is preserved, and the actual camera plane is read back before Session
+commits the shared Patient Space plane.
 
 TASK-061 source-k navigation remains restricted to declared axial sample planes.
 TASK-063 adds arbitrary oblique MPR through the generic Patient Space plane port.
 The Cornerstone camera basis is read back and checked before the shared plane is
 committed. Oblique state intentionally has no source `displayIndex`/`voxelK`.
-Returning to an explicit source-k command restores axial source-plane semantics. The existing `1e-4`
-voxel-k readback tolerance covers Cornerstone numerical error, not medical
+Returning to an explicit source-k command restores axial source-plane semantics.
+The existing `1e-4` voxel-k readback tolerance covers Cornerstone numerical
+error, not medical
 registration accuracy or arbitrary snapping. An accepted request moves to the
 canonical sample plane, then validates readback. Wheel input explicitly stops
 at volume ends; the public plane command never silently clamps.
