@@ -34,9 +34,9 @@ def _png_chunk(kind: bytes, payload: bytes) -> bytes:
 
 
 def valid_crop_png() -> bytes:
-    rows = (b"\\x00" + b"\\x00" * EXPECTED_CROP_WIDTH) * EXPECTED_CROP_HEIGHT
+    rows = (b"\x00" + b"\x00" * EXPECTED_CROP_WIDTH) * EXPECTED_CROP_HEIGHT
     return (
-        b"\\x89PNG\\r\\n\\x1a\\n"
+        b"\x89PNG\r\n\x1a\n"
         + _png_chunk(
             b"IHDR",
             struct.pack(
