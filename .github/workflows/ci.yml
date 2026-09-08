@@ -33,11 +33,7 @@ jobs:
       - run: uv sync --locked
 
       - run: pnpm lint
-      - name: TASK-067 temporary formatter diagnostic
-        run: |
-          pnpm prettier --write tests/instruments.test.mjs
-          git diff -- tests/instruments.test.mjs
-          exit 1
+      - run: pnpm format:check
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm spatial:baseline
