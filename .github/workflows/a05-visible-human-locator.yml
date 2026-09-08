@@ -25,9 +25,9 @@ jobs:
       - name: Acquire sparse NLM Visible Human Female locator set
         run: |
           python authoring/source-acquisition/vhp_female_locator.py \
-            --start 1600 \
-            --stop 1760 \
-            --step 10 \
+            --start 1670 \
+            --stop 1695 \
+            --step 1 \
             --suffix a \
             --output .artifacts/a05-vhp-female-wrist-locator
 
