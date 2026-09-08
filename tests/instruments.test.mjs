@@ -8,9 +8,11 @@ import {
   createInstrumentPart,
   createInstrumentPose,
   createNeedleDefinition,
+  createNeedleInstance,
   instrumentDefinitionId,
   instrumentInstanceId,
   instrumentPartId,
+  updateNeedlePose,
 } from '../packages/instruments/dist/index.js';
 
 test('TASK-065 builds a generic instrument definition from semantic parts', () => {
@@ -238,4 +240,80 @@ test('TASK-066 needle definition fails closed on invalid functional mapping and 
       }),
     /lumen diameter must be smaller/,
   );
+});
+
+
+function task067NeedleDefinition() {
+  const shaft = instrumentPartId('task067.shaft');
+  const bevel = instrumentPartId('task067.bevel');
+  const tip = instrumentPartId('task067.tip');
+  const lumen = instrumentPartId('task067.lumen');
+  return createNeedleDefinition({
+    id: instrumentDefinitionId('task067.needle'),
+    name: 'TASK-067 needle',
+    parts: [
+      createInstrumentPart({ id: shaft, name: 'Shaft' }),
+      createInstrumentPart({ id: bevel, name: 'Bevel' }),
+      createInstrumentPart({ id: tip, name: 'Tip' }),
+      createInstrumentPart({ id: lumen, name: 'Lumen' }),
+    ],
+    functionalParts: { tip, bevel, shaft, lumen },
+    geometry: {
+      shaftLength: millimetres(40),
+      bevelLength: millimetres(3),
+      outerDiameter: millimetres(1.2),
+      lumenDiameter: millimetres(0.7),
+    },
+  });
+}
+
+test('TASK-067 needle instance derives tip position, direction, and trajectory from pose', () => {
+  const definition = task067NeedleDefinition();
+  const instance = createNeedleInstance({
+    id: instrumentInstanceId('task067.instance'),
+    definition,
+    pose: createInstrumentPose({
+      position: patientSpacePoint(1, 2, 3),
+      orientation: { x: 0, y: 0, z: 0, w: 1 },
+    }),
+  });
+
+  assert.deepEqual(instance.tipPosition.value, { x: 1, y: 2, z: 3 });
+  assert.deepEqual(instance.tipDirection.value, { x: 0, y: 0, z: 1 });
+  assert.equal(instance.trajectory.length, 1);
+  assert.ok(Object.isFrozen(instance.trajectory));
+  assert.ok(Object.isFrozen(instance.trajectory[0]));
+});
+
+test('TASK-067 pose updates rotate +Z tip direction and append only changed samples', () => {
+  const definition = task067NeedleDefinition();
+  const initial = createNeedleInstance({
+    id: instrumentInstanceId('task067.rotated'),
+    definition,
+    pose: createInstrumentPose({
+      position: patientSpacePoint(0, 0, 0),
+      orientation: { x: 0, y: 0, z: 0, w: 1 },
+    }),
+  });
+  const quarterTurnY = {
+    x: 0,
+    y: Math.SQRT1_2,
+    z: 0,
+    w: Math.SQRT1_2,
+  };
+  const moved = updateNeedlePose(
+    initial,
+    createInstrumentPose({
+      position: patientSpacePoint(4, -2, 8),
+      orientation: quarterTurnY,
+    }),
+  );
+
+  assert.ok(Math.abs(moved.tipDirection.value.x - 1) < 1e-12);
+  assert.ok(Math.abs(moved.tipDirection.value.y) < 1e-12);
+  assert.ok(Math.abs(moved.tipDirection.value.z) < 1e-12);
+  assert.equal(moved.trajectory.length, 2);
+
+  const repeated = updateNeedlePose(moved, moved.pose);
+  assert.equal(repeated.trajectory.length, 2);
 });
