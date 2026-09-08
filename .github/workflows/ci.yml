@@ -33,11 +33,7 @@ jobs:
       - run: uv sync --locked
 
       - run: pnpm lint
-      - name: TASK-069 temporary formatter diagnostic
-        run: |
-          pnpm prettier --write apps/web/src/App.tsx apps/web/src/needle-mouse-input.ts packages/instruments/src/needle-controller.ts tests/instruments.test.mjs
-          git diff -- apps/web/src/App.tsx apps/web/src/needle-mouse-input.ts packages/instruments/src/needle-controller.ts tests/instruments.test.mjs
-          exit 1
+      - run: pnpm format:check
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm spatial:baseline
