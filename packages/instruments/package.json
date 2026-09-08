@@ -15,6 +15,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@procedural-human/units": "workspace:*"
+    "@procedural-human/units": "workspace:*",
+    "@procedural-human/math": "workspace:*"
   }
 }
