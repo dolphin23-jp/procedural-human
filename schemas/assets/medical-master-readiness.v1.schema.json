@@ -43,11 +43,19 @@
   "allOf": [
     {
       "if": { "properties": { "status": { "const": "blocked" } } },
-      "then": { "properties": { "blockers": { "minItems": 1 } } }
+      "then": {
+        "properties": {
+          "blockers": { "type": "array", "minItems": 1 }
+        }
+      }
     },
     {
       "if": { "properties": { "status": { "const": "ready" } } },
-      "then": { "properties": { "blockers": { "maxItems": 0 } } }
+      "then": {
+        "properties": {
+          "blockers": { "type": "array", "maxItems": 0 }
+        }
+      }
     }
   ]
 }
