@@ -138,9 +138,7 @@ export class ImagingPlaneSynchronizer {
 
   setClippingEnabled(enabled: boolean): void {
     this.#assertAlive();
-    this.#render.setClippingPlane(
-      enabled ? (this.#state.plane ?? null) : null,
-    );
+    this.#render.setClippingPlane(enabled ? (this.#state.plane ?? null) : null);
     this.#state = Object.freeze({ ...this.#state, clippingEnabled: enabled });
     this.#changed(this.#state);
   }
