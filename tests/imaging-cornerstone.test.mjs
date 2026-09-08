@@ -67,28 +67,31 @@ test('TASK-059 derives source k through Patient Space instead of equating displa
   );
 });
 
-test('TASK-063 arbitrary Patient Space plane round-trips through Cornerstone camera convention', () => {
-  const plane = createPatientImagingPlane({
-    origin: patientSpacePoint(7.25, -13.5, 4.75),
-    directionI: patientSpaceDirection(Math.SQRT1_2, 0, Math.SQRT1_2),
-    directionJ: patientSpaceDirection(0, 1, 0),
-  });
+test(
+  'TASK-063 arbitrary Patient Space plane round-trips through Cornerstone camera convention',
+  () => {
+      const plane = createPatientImagingPlane({
+      origin: patientSpacePoint(7.25, -13.5, 4.75),
+      directionI: patientSpaceDirection(Math.SQRT1_2, 0, Math.SQRT1_2),
+      directionJ: patientSpaceDirection(0, 1, 0),
+    });
 
-  const camera = patientPlaneToCornerstoneCamera(plane);
-  assert.deepEqual(camera.viewUp, [0, -1, 0]);
-  assert.deepEqual(camera.viewPlaneNormal, [
-    -Math.SQRT1_2,
-    0,
-    Math.SQRT1_2,
-  ]);
+    const camera = patientPlaneToCornerstoneCamera(plane);
+    assert.deepEqual(camera.viewUp, [0, -1, 0]);
+    assert.deepEqual(camera.viewPlaneNormal, [
+      -Math.SQRT1_2,
+      0,
+      Math.SQRT1_2,
+    ]);
 
-  const recovered = patientPlaneFromCornerstoneCamera(
-    [plane.origin.value.x, plane.origin.value.y, plane.origin.value.z],
-    camera.viewPlaneNormal,
-    camera.viewUp,
-  );
-  assert.doesNotThrow(() => assertPatientPlanesEquivalent(plane, recovered));
-  assert.deepEqual(recovered.directionI.value, plane.directionI.value);
-  assert.deepEqual(recovered.directionJ.value, plane.directionJ.value);
-  assert.deepEqual(recovered.normal.value, plane.normal.value);
-});
+    const recovered = patientPlaneFromCornerstoneCamera(
+      [plane.origin.value.x, plane.origin.value.y, plane.origin.value.z],
+      camera.viewPlaneNormal,
+      camera.viewUp,
+    );
+    assert.doesNotThrow(() => assertPatientPlanesEquivalent(plane, recovered));
+    assert.deepEqual(recovered.directionI.value, plane.directionI.value);
+    assert.deepEqual(recovered.directionJ.value, plane.directionJ.value);
+      assert.deepEqual(recovered.normal.value, plane.normal.value);
+  },
+);
