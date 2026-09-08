@@ -6,13 +6,15 @@ Downstream packages should depend on the small `SpatialQueryApi` contract instea
 constructing `BasicSpatialIndex`, `PointQuery`, `BoundaryQuery`,
 `DistanceQuery`, or `OrderedPenetrationPathQuery` themselves.
 
-The public consumer surface is deliberately limited to:
+The original public SpatialQueryApi contract remains limited to:
 
 - `queryPoint(PatientSpacePoint)`
 - `querySegment(PatientSpaceSegment)`
 - `distanceTo(PatientSpacePoint, StructureId)`
 
-`SpatialQueryService` is the default implementation.
+`SpatialQueryService` is the default implementation. TASK-072 adds the separate
+`SpatialContactQueryApi.queryContacts` capability; see [contact evidence](CONTACT_QUERY.md).
+Existing implementations of the original interface remain compatible.
 
 ## Semantics
 

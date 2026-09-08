@@ -47,3 +47,27 @@ const invalid: NeedleInstance = {
 void invalid;
 // @ts-expect-error An explicit public Spatial Query dependency is required.
 new InteractionEngine();
+
+declare const contactApi: import('../../packages/spatial/src/index').SpatialContactQueryApi;
+declare const contact: import('../../packages/interaction/src/index').InstrumentContact;
+const contactPoint: PatientSpacePoint = contact.at.position;
+const contactDistance: import('../../packages/units/src/index').Length =
+  contact.at.distanceFromStart;
+const contactStructure: import('../../packages/core/src/index').StructureId =
+  contact.structureId;
+void [contactPoint, contactDistance, contactStructure];
+// @ts-expect-error Contact position cannot be Render Space.
+const wrongContactPoint: typeof contact.at.position = renderSpacePoint(0, 0, 0);
+// @ts-expect-error Contact distance requires physical Length.
+const wrongContactDistance: typeof contact.at.distanceFromStart = 1;
+// @ts-expect-error Structure identity remains branded.
+const wrongContactStructure: typeof contact.structureId = 'structure';
+void [wrongContactPoint, wrongContactDistance, wrongContactStructure];
+contactApi.queryContacts({
+  // @ts-expect-error Contact query requires explicit Patient Space.
+  start: renderSpacePoint(0, 0, 0),
+  end: current.tipPosition,
+});
+engine.detectNeedleContacts(request);
+// @ts-expect-error Contact detection requires both needle states.
+engine.detectNeedleContacts({ current });

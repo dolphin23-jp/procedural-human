@@ -1,3 +1,13 @@
+export type {
+  SpatialContactInterval,
+  SpatialContactLocation,
+  SpatialContactQueryApi,
+} from './contact-query.js';
+import {
+  ContactQuery,
+  type SpatialContactInterval,
+  type SpatialContactQueryApi,
+} from './contact-query.js';
 export * from './penetration-path.js';
 export * from './boundary-query.js';
 import { DistanceQuery, type DistanceQueryResult } from './distance-query.js';
@@ -573,10 +583,13 @@ const snapshotIndexEntry = <T extends SpatialIndexEntry>(entry: T): T =>
  * TASK-035 through TASK-042. It emits no Interaction events and performs no
  * procedure evaluation or medical-state mutation.
  */
-export class SpatialQueryService implements SpatialQueryApi {
+export class SpatialQueryService
+  implements SpatialQueryApi, SpatialContactQueryApi
+{
   readonly #pointQuery: PointQuery;
   readonly #segmentQuery: OrderedPenetrationPathQuery;
   readonly #distanceQuery: DistanceQuery;
+  readonly #contactQuery: ContactQuery;
 
   constructor(config: SpatialQueryServiceConfig) {
     const regions: readonly SpatialRegionBinding[] = Object.freeze(
@@ -594,6 +607,7 @@ export class SpatialQueryService implements SpatialQueryApi {
       config.boundaries ?? [],
     );
     this.#distanceQuery = new DistanceQuery(distanceEntries);
+    this.#contactQuery = new ContactQuery(regions);
   }
 
   queryPoint(point: PatientSpacePoint): PointQueryResult {
@@ -611,5 +625,11 @@ export class SpatialQueryService implements SpatialQueryApi {
     structureId: StructureId,
   ): DistanceQueryResult {
     return this.#distanceQuery.execute(point, structureId);
+  }
+
+  queryContacts(
+    segment: PatientSpaceSegment,
+  ): readonly SpatialContactInterval[] {
+    return this.#contactQuery.execute(segment);
   }
 }
