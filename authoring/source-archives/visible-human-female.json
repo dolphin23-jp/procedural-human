@@ -1,0 +1,203 @@
+{
+  "schemaVersion": "1",
+  "sourceArchiveId": "source.nlm.vhp-female",
+  "dataset": {
+    "provider": "U.S. National Library of Medicine",
+    "name": "Visible Human Project — Visible Human Female",
+    "portalDatasetId": "ux2j-9i9a",
+    "subjectId": "VHP-F",
+    "sourceClass": "cadaver-derived"
+  },
+  "recordedAt": "2026-09-08",
+  "retrievalDate": "2026-09-08",
+  "retrievalStatus": "bounded-a05-source-stack-materialized-and-exported-to-user-library",
+  "canonicalLocations": {
+    "root": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/",
+    "fullcolor": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/Fullcolor/fullbody/",
+    "pngAbdomen": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/PNG_format/abdomen/",
+    "ct": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/radiological/normalCT/",
+    "ctHeaders": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/radiological/normalCTHeaders/"
+  },
+  "remoteInventorySnapshot": {
+    "observedAt": "2026-09-08",
+    "index": {
+      "path": "INDEX",
+      "byteSize": 1579987,
+      "lastModified": "2024-08-28T19:20:27Z",
+      "sha256": null,
+      "hashStatus": "not-part-of-a05-bounded-acquisition"
+    },
+    "indexCompressed": {
+      "path": "INDEX.Z",
+      "byteSize": 187009,
+      "lastModified": "2024-08-28T19:20:27Z",
+      "sha256": null,
+      "hashStatus": "not-part-of-a05-bounded-acquisition"
+    },
+    "readme": {
+      "path": "README",
+      "byteSize": 1176,
+      "lastModified": "2024-08-28T19:05:47Z",
+      "sha256": null,
+      "hashStatus": "not-part-of-a05-bounded-acquisition"
+    }
+  },
+  "acquisitions": [
+    {
+      "acquisitionId": "a05-vhp-female-left-wrist-roi-20260908",
+      "purpose": "TASK-A05 bounded draft-segmentation source stack",
+      "sourceLocation": "PNG_format/abdomen/",
+      "sourceRange": {
+        "first": "avf1567a.png",
+        "last": "avf1717a.png",
+        "frameCount": 451,
+        "nominalIntervalMm": 0.3333333333333333
+      },
+      "derivedCropPixels": {
+        "left": 1450,
+        "top": 250,
+        "rightExclusive": 2000,
+        "bottomExclusive": 1000
+      },
+      "sourceHashStatus": "sha256-recorded-per-source-file-in-artifact-manifest",
+      "workflowRun": {
+        "id": 34180309604,
+        "startedAt": "2026-09-08T02:30:48Z"
+      },
+      "artifact": {
+        "id": 10038734797,
+        "name": "a05-vhp-female-left-wrist-roi",
+        "createdAt": "2026-09-08T02:34:45Z",
+        "byteSize": 249299004,
+        "digest": "sha256:58951de89aba4cf6d1ecd75eb46420883d0409f8eff8411ab2fb891810839fbc",
+        "retention": "ephemeral-github-actions-artifact"
+      },
+      "coordinateStatus": "source-image-stack-only; not DICOM Patient Space and not verified CT registration",
+      "storagePolicy": "medical image bytes are not committed to Git"
+    }
+  ],
+  "payloads": [
+    {
+      "role": "primary-anatomical-source",
+      "path": "Fullcolor/fullbody/",
+      "format": "raw.Z",
+      "hashStatus": "full-dataset-not-acquired"
+    },
+    {
+      "role": "a05-bounded-primary-anatomical-source",
+      "path": "PNG_format/abdomen/avf1567a.png..avf1717a.png",
+      "format": "PNG",
+      "hashStatus": "451-source-files-sha256-recorded"
+    },
+    {
+      "role": "reference-ct",
+      "path": "radiological/normalCT/",
+      "format": "GE source",
+      "hashStatus": "pending"
+    },
+    {
+      "role": "ct-header-metadata",
+      "path": "radiological/normalCTHeaders/",
+      "format": "text",
+      "hashStatus": "pending"
+    }
+  ],
+  "license": {
+    "termsUrl": "https://www.nlm.nih.gov/databases/download/terms_and_conditions.html",
+    "access": "public",
+    "registrationRequired": false,
+    "requiredAttribution": "Courtesy of the U.S. National Library of Medicine",
+    "noEndorsement": true,
+    "redistributionCondition": "Maintain the current NLM data version or conspicuously state that redistributed data may not reflect the most current or accurate NLM data."
+  },
+  "integrity": {
+    "requiredHashAlgorithm": "SHA-256",
+    "complete": false,
+    "boundedA05AcquisitionComplete": true,
+    "blockMedicalPromotionUntilRequiredSourceAndRegistrationIntegrityComplete": true,
+    "note": "The bounded A05 source stack has per-file SHA-256 provenance in its artifact manifest. This does not claim that the complete Visible Human Female archive or CT source has been acquired or registered."
+  },
+  "persistentHandoff": {
+    "storageClass": "external-user-library-handoff",
+    "authority": "handoff copy only; not the project Medical Master or runtime asset store",
+    "libraryPath": "/Procedural Human/A05 Visible Human Female Source/",
+    "exportedAt": "2026-09-08",
+    "frameCoverage": {
+      "expectedFrameCount": 451,
+      "chunkCount": 10,
+      "reconstructionRule": "Verify chunk 0 through 9 against the recorded byte sizes and SHA-256 digests; extract each chunk, verify every cropSha256, then reconstruct exactly 451 PNG frames in avf1567a.png through avf1717a.png filename order. The result remains source-image-stack only."
+    },
+    "chunks": [
+      {
+        "index": 0,
+        "byteSize": 26008764,
+        "digest": "sha256:39a5bc6cfe916ea54374302d470191c401cc9d65a0e9e4e03ce39abf3db28545",
+        "sourceArtifactName": "a05-vhp-female-left-wrist-roi-chunk-0.zip",
+        "libraryFilename": "chunk-0.zip"
+      },
+      {
+        "index": 1,
+        "byteSize": 25780946,
+        "digest": "sha256:dd08bc203fcabb64bc506a628c5522e0f5c5841d4498b76429f9dcfbc229870d",
+        "sourceArtifactName": "a05-vhp-female-left-wrist-roi-chunk-1.zip",
+        "libraryFilename": "chunk-1.zip"
+      },
+      {
+        "index": 2,
+        "byteSize": 25308776,
+        "digest": "sha256:c76cbcf047845170913784052acf20201c35d2d6069ab15c74ba985339c920cc",
+        "sourceArtifactName": "a05-vhp-female-left-wrist-roi-chunk-2.zip",
+        "libraryFilename": "chunk-2.zip"
+      },
+      {
+        "index": 3,
+        "byteSize": 25428824,
+        "digest": "sha256:06c06cb76068b56ca5e2c29cd5dce62a47c14f93c1342f7555226c368f8de731",
+        "sourceArtifactName": "a05-vhp-female-left-wrist-roi-chunk-3.zip",
+        "libraryFilename": "chunk-3.zip"
+      },
+      {
+        "index": 4,
+        "byteSize": 25346217,
+        "digest": "sha256:cd35a02cd0e34645c0f1281068fddbd707987eca2e404977233000d5f4d9b3af",
+        "sourceArtifactName": "a05-vhp-female-left-wrist-roi-chunk-4.zip",
+        "libraryFilename": "chunk-4.zip"
+      },
+      {
+        "index": 5,
+        "byteSize": 25077577,
+        "digest": "sha256:6b08e716899d3ba385ee704e86737b9d4876639037428453c048b1bc3efa6ec9",
+        "sourceArtifactName": "a05-vhp-female-left-wrist-roi-chunk-5.zip",
+        "libraryFilename": "chunk-5.zip"
+      },
+      {
+        "index": 6,
+        "byteSize": 25118313,
+        "digest": "sha256:d0dfa1841713587d766abbcc1f51ee1a77b114cd97120a21810d36fcc66568ca",
+        "sourceArtifactName": "a05-vhp-female-left-wrist-roi-chunk-6.zip",
+        "libraryFilename": "chunk-6.zip"
+      },
+      {
+        "index": 7,
+        "byteSize": 25054188,
+        "digest": "sha256:41f3a71de7817ec5273390ab3ab2ccdff0b96dfba3a6b7e6518a4a6b634ebfff",
+        "sourceArtifactName": "a05-vhp-female-left-wrist-roi-chunk-7.zip",
+        "libraryFilename": "chunk-7.zip"
+      },
+      {
+        "index": 8,
+        "byteSize": 25385803,
+        "digest": "sha256:c1d447880af82a91b99dc764b0faf099b85f28ceb10f1e9b6d1806b4449d3011",
+        "sourceArtifactName": "a05-vhp-female-left-wrist-roi-chunk-8.zip",
+        "libraryFilename": "chunk-8.zip"
+      },
+      {
+        "index": 9,
+        "byteSize": 20632345,
+        "digest": "sha256:7e85a05ffb43edba47fc0b38fe54987f2f1203d3c00d89c5b8e4ada6e0e83517",
+        "sourceArtifactName": "a05-vhp-female-left-wrist-roi-chunk-9.zip",
+        "libraryFilename": "chunk-9.zip"
+      }
+    ]
+  }
+}
