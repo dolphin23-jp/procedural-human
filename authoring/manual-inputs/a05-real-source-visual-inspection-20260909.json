@@ -1,0 +1,73 @@
+{
+  "schema": "ph-a05-source-space-visual-inspection.v1",
+  "task": "TASK-A05",
+  "recordedAt": "2026-09-09",
+  "sourceIdentity": {
+    "sourceFilenameShaAggregate": "0c330a99eedf1a446ca6502b4a7bde12e9893e96dc75f65348cb16f32d701f48",
+    "cropFilenameShaAggregate": "f6e46638ecb84a16dd20cc604931874ec36815091d050b31843392b7d73c7171",
+    "frameCount": 451
+  },
+  "inspection": {
+    "method": "primary-agent direct image inspection of reconstructed source-space crops; not clinician review",
+    "representativeGlobalFrameIndices": [
+      0, 45, 90, 135, 180, 225, 270, 315, 360, 405, 450
+    ],
+    "representativeFilenames": [
+      "avf1567a.png",
+      "avf1582a.png",
+      "avf1597a.png",
+      "avf1612a.png",
+      "avf1627a.png",
+      "avf1642a.png",
+      "avf1657a.png",
+      "avf1672a.png",
+      "avf1687a.png",
+      "avf1702a.png",
+      "avf1717a.png"
+    ],
+    "coordinateSpace": "source-image-stack-only"
+  },
+  "nonvascular": {
+    "radius": {
+      "completeAnchorTrackEstablished": false,
+      "disposition": "mask-generation-blocked",
+      "reason": "Two forearm-bone cross-sections are visually supportable in more proximal representative slices, but distal representative slices transition into wrist/hand osseous anatomy. A radius identity track spanning global frames 0 through 450 cannot be established without prohibited extrapolation or identity guessing."
+    },
+    "ulna": {
+      "completeAnchorTrackEstablished": false,
+      "disposition": "mask-generation-blocked",
+      "reason": "Two forearm-bone cross-sections are visually supportable in more proximal representative slices, but distal representative slices transition into wrist/hand osseous anatomy. An ulna identity track spanning global frames 0 through 450 cannot be established without prohibited extrapolation or identity guessing."
+    }
+  },
+  "vascular": {
+    "radial_artery": {
+      "positiveContinuousEvidenceEstablished": false,
+      "classification": "not-established",
+      "maskGenerationBlocked": true
+    },
+    "ulnar_artery": {
+      "positiveContinuousEvidenceEstablished": false,
+      "classification": "not-established",
+      "maskGenerationBlocked": true
+    },
+    "superficial_target_vein": {
+      "positiveContinuousEvidenceEstablished": false,
+      "classification": "not-established",
+      "maskGenerationBlocked": true
+    },
+    "note": "Representative source photographs do not provide enough confidently attributable, continuous vessel evidence for TASK-A05 automatic vessel masks. No vessel identity is inferred from expected anatomy."
+  },
+  "status": {
+    "validationLevel": "V0",
+    "reviewStatus": "unreviewed",
+    "candidateOnly": true,
+    "medicalValidation": false
+  },
+  "claims": {
+    "patientSpaceGeometry": false,
+    "ctRegistrationEstablished": false,
+    "medicalValidation": false,
+    "clinicianReviewed": false,
+    "automaticPromotion": false
+  }
+}

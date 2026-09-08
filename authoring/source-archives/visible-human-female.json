@@ -1,0 +1,202 @@
+{
+  "schema": "ph-source-archive-record.v1",
+  "schemaVersion": "1",
+  "sourceArchiveId": "source.nlm.vhp-female",
+  "dataset": {
+    "provider": "U.S. National Library of Medicine",
+    "name": "Visible Human Project — Visible Human Female",
+    "portalDatasetId": "ux2j-9i9a",
+    "subjectId": "VHP-F",
+    "sourceClass": "cadaver-derived"
+  },
+  "recordedAt": "2026-09-09",
+  "retrievalDate": "2026-09-08",
+  "retrievalStatus": "bounded-a05-source-stack-reacquired-verified-and-persisted-complete",
+  "canonicalLocations": {
+    "root": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/",
+    "fullcolor": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/Fullcolor/fullbody/",
+    "pngAbdomen": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/PNG_format/abdomen/",
+    "ct": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/radiological/normalCT/",
+    "ctHeaders": "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/radiological/normalCTHeaders/"
+  },
+  "remoteInventorySnapshot": {
+    "observedAt": "2026-09-08",
+    "index": {
+      "path": "INDEX",
+      "byteSize": 1579987,
+      "lastModified": "2024-08-28T19:20:27Z",
+      "sha256": null,
+      "hashStatus": "not-part-of-a05-bounded-acquisition"
+    },
+    "indexCompressed": {
+      "path": "INDEX.Z",
+      "byteSize": 187009,
+      "lastModified": "2024-08-28T19:20:27Z",
+      "sha256": null,
+      "hashStatus": "not-part-of-a05-bounded-acquisition"
+    },
+    "readme": {
+      "path": "README",
+      "byteSize": 1176,
+      "lastModified": "2024-08-28T19:05:47Z",
+      "sha256": null,
+      "hashStatus": "not-part-of-a05-bounded-acquisition"
+    }
+  },
+  "acquisitions": [
+    {
+      "acquisitionId": "a05-vhp-female-left-wrist-roi-20260908",
+      "purpose": "TASK-A05 bounded draft-segmentation source stack",
+      "sourceLocation": "PNG_format/abdomen/",
+      "sourceRange": {
+        "first": "avf1567a.png",
+        "last": "avf1717a.png",
+        "frameCount": 451,
+        "nominalIntervalMm": 0.3333333333333333
+      },
+      "derivedCropPixels": {
+        "left": 1450,
+        "top": 250,
+        "rightExclusive": 2000,
+        "bottomExclusive": 1000
+      },
+      "sourceHashStatus": "sha256-recorded-per-source-file-in-chunk-manifests-and-independently-verified",
+      "workflowRun": {
+        "id": 34229461795,
+        "startedAt": "2026-09-08T13:01:34Z"
+      },
+      "artifact": {
+        "namePattern": "a05-handoff-chunk-{0..9}",
+        "chunkCount": 10,
+        "retention": "ephemeral-github-actions-artifacts",
+        "verificationRecord": "authoring/source-archives/a05-real-source-verification-20260909.json"
+      },
+      "coordinateStatus": "source-image-stack-only; not DICOM Patient Space and not verified CT registration",
+      "storagePolicy": "medical image bytes are not committed to Git"
+    }
+  ],
+  "payloads": [
+    {
+      "role": "primary-anatomical-source",
+      "path": "Fullcolor/fullbody/",
+      "format": "raw.Z",
+      "hashStatus": "full-dataset-not-acquired"
+    },
+    {
+      "role": "a05-bounded-primary-anatomical-source",
+      "path": "PNG_format/abdomen/avf1567a.png..avf1717a.png",
+      "format": "PNG",
+      "hashStatus": "451-source-files-sha256-recorded"
+    },
+    {
+      "role": "reference-ct",
+      "path": "radiological/normalCT/",
+      "format": "GE source",
+      "hashStatus": "pending"
+    },
+    {
+      "role": "ct-header-metadata",
+      "path": "radiological/normalCTHeaders/",
+      "format": "text",
+      "hashStatus": "pending"
+    }
+  ],
+  "license": {
+    "termsUrl": "https://www.nlm.nih.gov/databases/download/terms_and_conditions.html",
+    "access": "public",
+    "registrationRequired": false,
+    "requiredAttribution": "Courtesy of the U.S. National Library of Medicine",
+    "noEndorsement": true,
+    "redistributionCondition": "Maintain the current NLM data version or conspicuously state that redistributed data may not reflect the most current or accurate NLM data."
+  },
+  "integrity": {
+    "requiredHashAlgorithm": "SHA-256",
+    "complete": false,
+    "boundedA05AcquisitionComplete": true,
+    "blockMedicalPromotionUntilRequiredSourceAndRegistrationIntegrityComplete": true,
+    "note": "The bounded A05 source stack has per-file SHA-256 provenance in its artifact manifest. This does not claim that the complete Visible Human Female archive or CT source has been acquired or registered."
+  },
+  "persistentHandoff": {
+    "storageClass": "external-user-library-handoff",
+    "authority": "persistent authoring handoff copy only; not the project Medical Master or runtime asset store",
+    "libraryPath": "/Procedural Human/A05 Visible Human Female Source/",
+    "exportedAt": "2026-09-09",
+    "frameCoverage": {
+      "expectedFrameCount": 451,
+      "chunkCount": 10,
+      "reconstructionRule": "Verify chunk 0 through 9 against the recorded byte sizes and SHA-256 digests; extract each chunk, validate manifest.json, verify every cropSha256 and globalFrameIndex, then reconstruct exactly 451 PNG frames in avf1567a.png through avf1717a.png order. The result remains source-image-stack only."
+    },
+    "chunks": [
+      {
+        "index": 0,
+        "byteSize": 26031165,
+        "digest": "sha256:78b1b2c1e1ffa006f3b07711e3497bb74ba7133f777709eebcd008b1b429623d",
+        "sourceArtifactName": "a05-handoff-chunk-0",
+        "libraryFilename": "chunk-0.zip"
+      },
+      {
+        "index": 1,
+        "byteSize": 25803357,
+        "digest": "sha256:01d54d17761091fc576e8cb7acb47bfc5b178185ffadb50415ff806bdfd7c837",
+        "sourceArtifactName": "a05-handoff-chunk-1",
+        "libraryFilename": "chunk-1.zip"
+      },
+      {
+        "index": 2,
+        "byteSize": 25331225,
+        "digest": "sha256:56e2c3cb8382a4b6eb96fa4c04e12793281f8214a48fe5880c36628508663352",
+        "sourceArtifactName": "a05-handoff-chunk-2",
+        "libraryFilename": "chunk-2.zip"
+      },
+      {
+        "index": 3,
+        "byteSize": 25451281,
+        "digest": "sha256:8577b8e831bfd7d6d590562bd4c2603d9ca0e455179c426ac4860f05f517b44c",
+        "sourceArtifactName": "a05-handoff-chunk-3",
+        "libraryFilename": "chunk-3.zip"
+      },
+      {
+        "index": 4,
+        "byteSize": 25368674,
+        "digest": "sha256:f912d7e745e3d817c555f8ea223b9bd1c5c07a52932f5a94464a3de215845816",
+        "sourceArtifactName": "a05-handoff-chunk-4",
+        "libraryFilename": "chunk-4.zip"
+      },
+      {
+        "index": 5,
+        "byteSize": 25100034,
+        "digest": "sha256:4e702ab792ebd6af5aaff975221344c0b8e5a11feb9c89d33b42268dc01c5372",
+        "sourceArtifactName": "a05-handoff-chunk-5",
+        "libraryFilename": "chunk-5.zip"
+      },
+      {
+        "index": 6,
+        "byteSize": 25140770,
+        "digest": "sha256:d5ecf42796bdf1a20d6540b49a2e5992524d5e85ba25bfc60245ab734f3e073f",
+        "sourceArtifactName": "a05-handoff-chunk-6",
+        "libraryFilename": "chunk-6.zip"
+      },
+      {
+        "index": 7,
+        "byteSize": 25076645,
+        "digest": "sha256:d0ba39a31449fac6754e9999051ad463b3a9ec39b62365568741623f20cd78c7",
+        "sourceArtifactName": "a05-handoff-chunk-7",
+        "libraryFilename": "chunk-7.zip"
+      },
+      {
+        "index": 8,
+        "byteSize": 25408260,
+        "digest": "sha256:316aff6722ca56c67d8ea4bde02e613501190849e24bcdc3eafe3621cc944a2e",
+        "sourceArtifactName": "a05-handoff-chunk-8",
+        "libraryFilename": "chunk-8.zip"
+      },
+      {
+        "index": 9,
+        "byteSize": 20650491,
+        "digest": "sha256:91c11d65506128cad36a2ba70284b154ee07811bbf3dc8674dceeb8cbd2aae63",
+        "sourceArtifactName": "a05-handoff-chunk-9",
+        "libraryFilename": "chunk-9.zip"
+      }
+    ]
+  }
+}

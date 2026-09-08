@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/draft-segmentation-manifest/v1",
+  "title": "TASK-A05 Draft Segmentation Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "task",
+    "pipelineProfile",
+    "status",
+    "coordinateSpace",
+    "source",
+    "labels",
+    "blockedVesselLabels",
+    "ambiguities",
+    "claims"
+  ],
+  "properties": {
+    "schema": { "const": "ph-draft-segmentation-manifest.v1" },
+    "task": { "const": "TASK-A05" },
+    "pipelineProfile": { "type": "string", "minLength": 1 },
+    "status": { "$ref": "#/$defs/draftStatus" },
+    "coordinateSpace": { "$ref": "#/$defs/sourceSpace" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset",
+        "sourceManifestDigestSha256",
+        "sliceCount",
+        "firstSourceFile",
+        "lastSourceFile",
+        "sourceFilesVerified"
+      ],
+      "properties": {
+        "dataset": { "type": "string", "minLength": 1 },
+        "sourceManifestDigestSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "sliceCount": { "type": "integer", "minimum": 1 },
+        "firstSourceFile": { "type": "string", "minLength": 1 },
+        "lastSourceFile": { "type": "string", "minLength": 1 },
+        "sourceFilesVerified": { "type": "boolean" }
+      }
+    },
+    "labels": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "draftLabel",
+          "semanticMappingStatus",
+          "status",
+          "maskEncoding",
+          "coverage"
+        ],
+        "properties": {
+          "draftLabel": {
+            "enum": [
+              "skin",
+              "subcutaneous_soft_tissue",
+              "radius",
+              "ulna",
+              "major_muscle_tendon_region"
+            ]
+          },
+          "semanticMappingStatus": { "const": "not-assigned-task-a07" },
+          "status": { "$ref": "#/$defs/draftStatus" },
+          "maskEncoding": { "const": "pgm8-binary-candidate-mask" },
+          "coverage": { "$ref": "#/$defs/coverage" }
+        }
+      }
+    },
+    "blockedVesselLabels": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["draftLabel", "maskGeneration", "reason", "status"],
+        "properties": {
+          "draftLabel": {
+            "enum": ["radial_artery", "ulnar_artery", "superficial_target_vein"]
+          },
+          "maskGeneration": { "const": "blocked" },
+          "reason": { "type": "string", "minLength": 1 },
+          "status": { "$ref": "#/$defs/draftStatus" }
+        }
+      }
+    },
+    "ambiguities": { "type": "array", "items": { "type": "object" } },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "patientSpaceGeometry",
+        "medicalValidation",
+        "automaticPromotion"
+      ],
+      "properties": {
+        "patientSpaceGeometry": { "const": false },
+        "medicalValidation": { "const": false },
+        "automaticPromotion": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "draftStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validationLevel",
+        "reviewStatus",
+        "candidateOnly",
+        "medicalValidation"
+      ],
+      "properties": {
+        "validationLevel": { "const": "V0" },
+        "reviewStatus": { "const": "unreviewed" },
+        "candidateOnly": { "const": true },
+        "medicalValidation": { "const": false }
+      }
+    },
+    "sourceSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "patientSpaceClaim", "registrationStatus"],
+      "properties": {
+        "kind": { "const": "source-image-stack" },
+        "patientSpaceClaim": { "const": false },
+        "registrationStatus": { "const": "not-established" }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sliceCount",
+        "slicesWithCandidate",
+        "totalCandidatePixels",
+        "candidatePixelFraction",
+        "maxCandidatePixelsPerSlice"
+      ],
+      "properties": {
+        "sliceCount": { "type": "integer", "minimum": 1 },
+        "slicesWithCandidate": { "type": "integer", "minimum": 0 },
+        "totalCandidatePixels": { "type": "integer", "minimum": 0 },
+        "candidatePixelFraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "maxCandidatePixelsPerSlice": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}
