@@ -27,6 +27,10 @@ import {
 } from '@procedural-human/session';
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { MouseNeedleInputAdapter } from './needle-mouse-input.js';
+import {
+  TouchPencilNeedleInputAdapter,
+  type TouchPencilNeedleControlMode,
+} from './needle-touch-pencil-input.js';
 
 const imagingFixture = createSyntheticAxialVolumeFixture();
 
@@ -214,11 +218,16 @@ function ImagingPanel({
 export function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageElementRef = useRef<HTMLDivElement>(null);
-  const needleMouseRef = useRef<HTMLDivElement>(null);
+  const needleControlRef = useRef<HTMLDivElement>(null);
+  const needleTouchAdapterRef = useRef<TouchPencilNeedleInputAdapter | null>(
+    null,
+  );
   const syncRef = useRef<ImagingPlaneSynchronizer | null>(null);
   const [renderError, setRenderError] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [selection, setSelection] = useState<SemanticPickResult | null>(null);
+  const [needleTouchMode, setNeedleTouchMode] =
+    useState<TouchPencilNeedleControlMode>('translate');
   const [needle, setNeedle] = useState<NeedleInstance>(() =>
     createDevelopmentNeedleInstance(),
   );
@@ -308,15 +317,29 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    const element = needleMouseRef.current;
+    const element = needleControlRef.current;
     if (!element) return;
-    const adapter = new MouseNeedleInputAdapter(element, {
-      emit: (intent) => {
-        setNeedle((current) => needleMotionController.apply(current, intent));
-      },
+    const emit = (intent: Parameters<NeedleMotionController['apply']>[1]) => {
+      setNeedle((current) => needleMotionController.apply(current, intent));
+    };
+    const mouseAdapter = new MouseNeedleInputAdapter(element, { emit });
+    const touchAdapter = new TouchPencilNeedleInputAdapter(element, {
+      emit,
+      mode: 'translate',
     });
-    return () => adapter.dispose();
+    needleTouchAdapterRef.current = touchAdapter;
+    return () => {
+      if (needleTouchAdapterRef.current === touchAdapter) {
+        needleTouchAdapterRef.current = null;
+      }
+      mouseAdapter.dispose();
+      touchAdapter.dispose();
+    };
   }, []);
+
+  useEffect(() => {
+    needleTouchAdapterRef.current?.setMode(needleTouchMode);
+  }, [needleTouchMode]);
 
   const run = (command: (sync: ImagingPlaneSynchronizer) => Promise<void>) => {
     const sync = syncRef.current;
@@ -388,13 +411,41 @@ export function App() {
             </output>
           </div>
           <aside
-            ref={needleMouseRef}
+            ref={needleControlRef}
             className="viewer__needle-control"
-            aria-label="Mouse needle control"
+            aria-label="Needle control"
           >
             <p className="metadata__eyebrow">M6 · Generic needle</p>
-            <strong>Mouse needle control</strong>
-            <p>Drag: translate · Shift-drag: rotate · wheel: advance/retract</p>
+            <strong>Needle control</strong>
+            <p>Mouse: drag translate · Shift-drag rotate · wheel advance</p>
+            <p>Touch/Pencil: choose a mode, then drag.</p>
+            <div
+              className="needle-control__modes"
+              role="group"
+              aria-label="Touch and Pencil needle mode"
+            >
+              {(
+                [
+                  ['translate', 'Move'],
+                  ['rotate', 'Rotate'],
+                  ['advance', 'Advance'],
+                ] as const
+              ).map(([mode, label]) => (
+                <button
+                  key={mode}
+                  type="button"
+                  aria-pressed={needleTouchMode === mode}
+                  onClick={() => setNeedleTouchMode(mode)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <p className="needle-control__mode-help">
+              {needleTouchMode === 'advance'
+                ? 'Drag up to advance · down to retract'
+                : 'Drag across the control surface'}
+            </p>
             <output>
               Tip ({needle.tipPosition.value.x.toFixed(1)},{' '}
               {needle.tipPosition.value.y.toFixed(1)},{' '}
