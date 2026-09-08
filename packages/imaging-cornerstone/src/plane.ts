@@ -24,9 +24,7 @@ function finitePoint3(value: Point3, name: string): void {
   }
 }
 
-function checkedPatientPlane(
-  plane: PatientImagingPlane,
-): PatientImagingPlane {
+function checkedPatientPlane(plane: PatientImagingPlane): PatientImagingPlane {
   const checked = createPatientImagingPlane(plane);
   if (
     plane?.kind !== 'patient-imaging-plane' ||
@@ -129,7 +127,9 @@ export function assertPatientPlaneOrientationEquivalent(
         Math.abs(a[key].value[axis] - b[key].value[axis]) >
         MPR_DIRECTION_TOLERANCE
       ) {
-        throw new Error('Cornerstone camera orientation does not match the requested Patient Space plane.');
+        throw new Error(
+          'Cornerstone camera orientation does not match the requested Patient Space plane.',
+        );
       }
     }
   }
@@ -148,6 +148,8 @@ export function assertPatientPlanesEquivalent(
     a.origin.value.z - b.origin.value.z,
   );
   if (distance > MPR_POSITION_TOLERANCE_MM) {
-    throw new Error('Cornerstone camera position does not match the requested Patient Space plane.');
+    throw new Error(
+      'Cornerstone camera position does not match the requested Patient Space plane.',
+    );
   }
 }
