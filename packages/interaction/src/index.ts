@@ -38,9 +38,7 @@ function copyPoint(point: PatientSpacePoint): PatientSpacePoint {
     point.kind !== 'point' ||
     ![point.value?.x, point.value?.y, point.value?.z].every(Number.isFinite)
   ) {
-    throw new TypeError(
-      'Needle movement requires finite Patient Space points.',
-    );
+    throw new TypeError('Needle movement requires finite Patient Space points.');
   }
   return Object.freeze({
     space: 'patient',
@@ -51,9 +49,7 @@ function copyPoint(point: PatientSpacePoint): PatientSpacePoint {
 
 function samePosition(a: PatientSpacePoint, b: PatientSpacePoint): boolean {
   return (
-    a.value.x === b.value.x &&
-    a.value.y === b.value.y &&
-    a.value.z === b.value.z
+    a.value.x === b.value.x && a.value.y === b.value.y && a.value.z === b.value.z
   );
 }
 
@@ -66,16 +62,12 @@ function tipFor(instance: NeedleInstance): PatientSpacePoint {
   const tip = copyPoint(instance.tipPosition);
   const origin = copyPoint(instance.pose?.position);
   if (!samePosition(tip, origin)) {
-    throw new RangeError(
-      'Needle tip must equal its Patient Space pose origin.',
-    );
+    throw new RangeError('Needle tip must equal its Patient Space pose origin.');
   }
   return tip;
 }
 
-function movementSegment(
-  request: NeedleMovementRequest,
-): PatientSpaceSegment {
+function movementSegment(request: NeedleMovementRequest): PatientSpaceSegment {
   const start = tipFor(request?.previous);
   const end = tipFor(request?.current);
   const { previous, current } = request;
@@ -83,9 +75,7 @@ function movementSegment(
     previous.id !== current.id ||
     previous.definitionId !== current.definitionId
   ) {
-    throw new RangeError(
-      'Needle movement states must identify the same needle.',
-    );
+    throw new RangeError('Needle movement states must identify the same needle.');
   }
   if (samePosition(start, end)) {
     return patientSpaceSegment(start, end);
@@ -119,9 +109,7 @@ export class InteractionEngine {
 
   constructor(spatial: SpatialQueryApi & Partial<SpatialContactQueryApi>) {
     if (typeof spatial?.querySegment !== 'function') {
-      throw new TypeError(
-        'InteractionEngine requires Spatial Query querySegment.',
-      );
+      throw new TypeError('InteractionEngine requires Spatial Query querySegment.');
     }
     this.#spatial = spatial;
   }
