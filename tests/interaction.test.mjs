@@ -201,6 +201,7 @@ test('TASK-071 preserves raw Spatial crossings without events or medical mutatio
   for (const y of [-10, 10]) {
     const a = needle(p(0, y, -5));
     const b = updateNeedlePose(a, pose(p(0, y, 25)));
+    engine.detectNeedleContacts({ previous: a, current: b });
     const result = engine.observeNeedleMovement({ previous: a, current: b });
     assert.deepEqual(Object.keys(result).sort(), [
       'instrumentId',
@@ -382,4 +383,136 @@ test('TASK-071 package declares only necessary dependencies and no DOM library',
     await readFile('packages/interaction/tsconfig.json', 'utf8'),
   );
   assert.deepEqual(config.compilerOptions.lib, ['ES2022']);
+});
+
+const contactsBetween = (start, end, api = engine) => {
+  const a = needle(start);
+  const b = updateNeedlePose(a, pose(end));
+  return api.detectNeedleContacts({ previous: a, current: b });
+};
+
+test('TASK-072 emits first structure contact with Patient Space identity and distance', () => {
+  const contacts = engine.detectNeedleContacts(request);
+  assert.deepEqual(
+    contacts.map((c) => [
+      c.kind,
+      c.instrumentId,
+      c.structureId,
+      c.at.position.value.z,
+      toMillimetres(c.at.distanceFromStart),
+    ]),
+    [
+      ['contact', previous.id, 'structure.skin', -1, 4],
+      ['contact', previous.id, 'structure.soft', 1, 6],
+      ['contact', previous.id, 'structure.vein', 7, 12],
+    ],
+  );
+  assert.equal(contacts[2].canonicalEntityId, 'entity.fixture.vein');
+  assert.ok(Object.isFrozen(contacts));
+  assert.ok(contacts.every(Object.isFrozen));
+  assert.ok(Object.isFrozen(contacts[2].at.position.value));
+  assert.doesNotMatch(
+    JSON.stringify(contacts),
+    /BoundaryCrossed|LumenEntered|LumenExited|punctured|success|unsafe/,
+  );
+  const arterial = contactsBetween(p(0, 10, -5), p(0, 10, 25));
+  assert.equal(arterial[2].structureId, 'structure.artery');
+  assert.equal(arterial[2].kind, 'contact');
+});
+
+test('TASK-072 endpoint contact occurs once across consecutive movements', () => {
+  const first = contactsBetween(p(0, -10, 2), p(0, -10, 7));
+  assert.equal(first.length, 1);
+  assert.equal(first[0].structureId, 'structure.vein');
+  assert.equal(first[0].at.t, 1);
+  assert.deepEqual(contactsBetween(p(0, -10, 7), p(0, -10, 10)), []);
+  assert.deepEqual(contactsBetween(p(0, -10, 10), p(0, -10, 20)), []);
+  const reentry = contactsBetween(p(0, -10, 20), p(0, -10, 10));
+  assert.equal(reentry.length, 1);
+  assert.deepEqual(reentry[0].at.position, p(0, -10, 13));
+});
+
+test('TASK-072 tangency and surface-following contacts need no fabricated crossing', () => {
+  const tangent = contactsBetween(p(0, -13, 2), p(0, -13, 20));
+  assert.equal(tangent.length, 1);
+  assert.equal(tangent[0].structureId, 'structure.vein');
+  assert.deepEqual(tangent[0].at.position, p(0, -13, 10));
+  const overlap = contactsBetween(p(-60, 0, 1), p(60, 0, 1));
+  assert.deepEqual(
+    overlap.map((c) => [c.structureId, c.at.position.value.x]),
+    [
+      ['structure.skin', -50],
+      ['structure.soft', -50],
+    ],
+  );
+  assert.deepEqual(contactsBetween(p(0, 0, 1), p(10, 0, 1)), []);
+});
+
+test('TASK-072 initial occupancy, no movement and misses do not fabricate contact', () => {
+  assert.deepEqual(contactsBetween(p(0, -10, 8), p(0, -10, 9)), []);
+  assert.deepEqual(contactsBetween(p(100, 100, 0), p(100, 100, 20)), []);
+  const api = new InteractionEngine({
+    querySegment() {
+      assert.fail('Contact must not call penetration query');
+    },
+    queryContacts() {
+      assert.fail('Stationary tip must not query');
+    },
+  });
+  assert.deepEqual(
+    api.detectNeedleContacts({ previous, current: previous }),
+    [],
+  );
+  const rotated = updateNeedlePose(
+    previous,
+    createInstrumentPose({
+      position: previous.tipPosition,
+      orientation: { x: 0, y: 1, z: 0, w: 0 },
+    }),
+  );
+  assert.deepEqual(
+    api.detectNeedleContacts({ previous, current: rotated }),
+    [],
+  );
+});
+
+test('TASK-072 uses the injected contact API and propagates errors without fallback', () => {
+  let calls = 0;
+  const api = new InteractionEngine({
+    querySegment() {
+      assert.fail('Contact must not call penetration query');
+    },
+    queryContacts(segment) {
+      calls += 1;
+      assert.deepEqual(segment, {
+        start: previous.tipPosition,
+        end: current.tipPosition,
+      });
+      return service.queryContacts(segment);
+    },
+  });
+  assert.deepEqual(
+    api.detectNeedleContacts(request),
+    engine.detectNeedleContacts(request),
+  );
+  assert.equal(calls, 1);
+  assert.throws(() => api.detectNeedleContacts({ previous }), /NeedleInstance/);
+  assert.equal(calls, 1);
+  const unavailable = new InteractionEngine({ querySegment: () => [] });
+  assert.throws(() => unavailable.detectNeedleContacts(request), /unavailable/);
+  const failure = new Error('Contact geometry unavailable');
+  const broken = new InteractionEngine({
+    querySegment: () => [],
+    queryContacts() {
+      throw failure;
+    },
+  });
+  assert.throws(
+    () => broken.detectNeedleContacts(request),
+    (error) => error === failure,
+  );
+  assert.deepEqual(
+    engine.detectNeedleContacts(request),
+    engine.detectNeedleContacts(request),
+  );
 });
