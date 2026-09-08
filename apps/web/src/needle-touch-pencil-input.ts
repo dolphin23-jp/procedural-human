@@ -6,9 +6,18 @@ import {
   type NeedleControlIntent,
 } from '@procedural-human/instruments';
 
-export interface MouseNeedleInputOptions {
+export type TouchPencilNeedleControlMode = 'translate' | 'rotate' | 'advance';
+
+export interface TouchPencilNeedleInputOptions {
   readonly emit: (intent: NeedleControlIntent) => void;
+  readonly mode?: TouchPencilNeedleControlMode;
 }
+
+const touchPencilModes = new Set<TouchPencilNeedleControlMode>([
+  'translate',
+  'rotate',
+  'advance',
+]);
 
 function clampAxis(value: number): number {
   return Math.max(-1, Math.min(1, value));
@@ -25,25 +34,38 @@ function isInteractiveControl(target: EventTarget | null): boolean {
   );
 }
 
+function isTouchOrPencil(event: PointerEvent): boolean {
+  return event.pointerType === 'touch' || event.pointerType === 'pen';
+}
+
 /**
- * Browser-only mouse adapter. It emits normalized domain intents and never
- * reads or mutates NeedleInstance, anatomy, rendering, or procedure state.
+ * Browser-only touch/Apple Pencil adapter. Pressure is intentionally ignored.
+ * A selected UI mode maps one primary pointer drag to normalized domain intent.
  */
-export class MouseNeedleInputAdapter {
+export class TouchPencilNeedleInputAdapter {
   readonly #element: HTMLElement;
   readonly #emit: (intent: NeedleControlIntent) => void;
+  #mode: TouchPencilNeedleControlMode;
   #pointerId: number | null = null;
   #lastX = 0;
   #lastY = 0;
 
-  constructor(element: HTMLElement, options: MouseNeedleInputOptions) {
+  constructor(element: HTMLElement, options: TouchPencilNeedleInputOptions) {
     this.#element = element;
     this.#emit = options.emit;
+    this.#mode = options.mode ?? 'translate';
+    this.setMode(this.#mode);
     element.addEventListener('pointerdown', this.#onPointerDown);
     element.addEventListener('pointermove', this.#onPointerMove);
     element.addEventListener('pointerup', this.#onPointerUp);
     element.addEventListener('pointercancel', this.#onPointerUp);
-    element.addEventListener('wheel', this.#onWheel, { passive: false });
+  }
+
+  setMode(mode: TouchPencilNeedleControlMode): void {
+    if (!touchPencilModes.has(mode)) {
+      throw new TypeError('Unknown touch/Pencil needle control mode.');
+    }
+    this.#mode = mode;
   }
 
   dispose(): void {
@@ -51,14 +73,13 @@ export class MouseNeedleInputAdapter {
     this.#element.removeEventListener('pointermove', this.#onPointerMove);
     this.#element.removeEventListener('pointerup', this.#onPointerUp);
     this.#element.removeEventListener('pointercancel', this.#onPointerUp);
-    this.#element.removeEventListener('wheel', this.#onWheel);
     this.#pointerId = null;
   }
 
   readonly #onPointerDown = (event: PointerEvent): void => {
     if (
-      event.pointerType !== 'mouse' ||
-      event.button !== 0 ||
+      !isTouchOrPencil(event) ||
+      !event.isPrimary ||
       isInteractiveControl(event.target)
     ) {
       return;
@@ -71,7 +92,11 @@ export class MouseNeedleInputAdapter {
   };
 
   readonly #onPointerMove = (event: PointerEvent): void => {
-    if (event.pointerType !== 'mouse' || this.#pointerId !== event.pointerId) {
+    if (
+      !isTouchOrPencil(event) ||
+      !event.isPrimary ||
+      this.#pointerId !== event.pointerId
+    ) {
       return;
     }
     const rect = this.#element.getBoundingClientRect();
@@ -81,13 +106,20 @@ export class MouseNeedleInputAdapter {
     const dy = clampAxis((event.clientY - this.#lastY) / rect.height);
     this.#lastX = event.clientX;
     this.#lastY = event.clientY;
-    if (dx === 0 && dy === 0) return;
 
-    this.#emit(
-      event.shiftKey
-        ? needleRotationIntent(dx, dy)
-        : needleTranslationIntent(dx, -dy),
-    );
+    if (this.#mode === 'translate') {
+      if (dx === 0 && dy === 0) return;
+      this.#emit(needleTranslationIntent(dx, -dy));
+    } else if (this.#mode === 'rotate') {
+      if (dx === 0 && dy === 0) return;
+      this.#emit(needleRotationIntent(dx, dy));
+    } else {
+      if (dy === 0) return;
+      const amount = clampMagnitude(Math.abs(dy));
+      this.#emit(
+        dy < 0 ? needleAdvanceIntent(amount) : needleRetractIntent(amount),
+      );
+    }
     event.preventDefault();
   };
 
@@ -97,16 +129,5 @@ export class MouseNeedleInputAdapter {
       this.#element.releasePointerCapture(event.pointerId);
     }
     this.#pointerId = null;
-  };
-
-  readonly #onWheel = (event: WheelEvent): void => {
-    if (event.deltaY === 0) return;
-    const amount = clampMagnitude(Math.abs(event.deltaY) / 100);
-    this.#emit(
-      event.deltaY < 0
-        ? needleAdvanceIntent(amount)
-        : needleRetractIntent(amount),
-    );
-    event.preventDefault();
   };
 }

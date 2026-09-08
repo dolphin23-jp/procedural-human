@@ -414,3 +414,27 @@ h1,
   margin-top: 7px;
   color: #91a4bf;
 }
+
+.needle-control__modes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 9px;
+}
+.needle-control__modes button {
+  min-height: 44px;
+  padding: 7px 8px;
+  border: 1px solid #45657a;
+  border-radius: 8px;
+  color: #dbe5f2;
+  background: #101b28;
+  touch-action: manipulation;
+}
+.needle-control__modes button[aria-pressed='true'] {
+  border-color: #8eb6e8;
+  background: #203c5d;
+}
+.viewer__needle-control .needle-control__mode-help {
+  margin-top: 6px;
+  color: #a9bbd1;
+}
