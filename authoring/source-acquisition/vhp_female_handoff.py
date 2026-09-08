@@ -12,6 +12,14 @@ FIRST_NUMERIC_POSITION = 1567
 LAST_NUMERIC_POSITION = 1717
 EXPECTED_FRAME_COUNT = 451
 EXPECTED_CHUNK_COUNT = 10
+EXPECTED_CROP_WIDTH = 550
+EXPECTED_CROP_HEIGHT = 750
+EXPECTED_CROP = {
+    "left": 1450,
+    "top": 250,
+    "rightExclusive": 2000,
+    "bottomExclusive": 1000,
+}
 
 
 class HandoffVerificationError(RuntimeError):
@@ -114,6 +122,16 @@ def _safe_members(archive: ZipFile) -> dict[str, str]:
     return result
 
 
+def _png_dimensions(payload: bytes, *, context: str) -> tuple[int, int]:
+    if len(payload) < 24 or payload[:8] != b"\\x89PNG\\r\\n\\x1a\\n":
+        raise HandoffVerificationError(f"{context} is not a PNG")
+    if payload[12:16] != b"IHDR":
+        raise HandoffVerificationError(f"{context} has no leading PNG IHDR")
+    width = int.from_bytes(payload[16:20], "big")
+    height = int.from_bytes(payload[20:24], "big")
+    return width, height
+
+
 def _read_chunk_manifest(archive: ZipFile, members: dict[str, str]) -> dict[str, Any]:
     member = members.get("manifest.json")
     if member is None:
@@ -179,9 +197,21 @@ def reconstruct_handoff(
             for offset, row in enumerate(files):
                 if not isinstance(row, dict):
                     raise HandoffVerificationError(f"chunk {expected.index} contains invalid file record")
+                expected_global_index = first_index + offset
+                global_frame_index = row.get("globalFrameIndex")
+                if global_frame_index != expected_global_index:
+                    raise HandoffVerificationError(
+                        f"chunk {expected.index} frame {offset} global index mismatch: "
+                        f"expected {expected_global_index}, got {global_frame_index}"
+                    )
                 filename = row.get("filename")
                 if not isinstance(filename, str) or filename not in expected_name_set:
                     raise HandoffVerificationError(f"chunk {expected.index} has unexpected frame {filename}")
+                if expected_global_index >= len(expected_names) or filename != expected_names[expected_global_index]:
+                    raise HandoffVerificationError(
+                        f"chunk {expected.index} frame ordering mismatch at global index "
+                        f"{expected_global_index}: {filename}"
+                    )
                 if filename in combined:
                     raise HandoffVerificationError(f"duplicate reconstructed frame: {filename}")
                 member = members.get(filename)
@@ -190,23 +220,46 @@ def reconstruct_handoff(
 
                 crop_digest = _normalise_digest(row.get("cropSha256"), context=f"crop {filename}")
                 source_digest = _normalise_digest(row.get("sourceSha256"), context=f"source {filename}")
+                source_byte_size = row.get("sourceByteSize")
+                if not isinstance(source_byte_size, int) or source_byte_size <= 0:
+                    raise HandoffVerificationError(f"source byte size missing for {filename}")
+                source_url = row.get("sourceUrl")
+                if not isinstance(source_url, str) or not source_url.endswith("/" + filename):
+                    raise HandoffVerificationError(f"source URL missing or inconsistent for {filename}")
+                if row.get("sourceSpaceOnly") is not True:
+                    raise HandoffVerificationError(f"source-space-only status missing for {filename}")
+                if row.get("cropPixels") != EXPECTED_CROP:
+                    raise HandoffVerificationError(f"crop coordinates mismatch for {filename}")
                 payload = archive.read(member)
                 if sha256(payload).hexdigest() != crop_digest:
                     raise HandoffVerificationError(f"crop SHA-256 mismatch for {filename}")
+                dimensions = _png_dimensions(payload, context=filename)
+                if dimensions != (EXPECTED_CROP_WIDTH, EXPECTED_CROP_HEIGHT):
+                    raise HandoffVerificationError(
+                        f"crop dimensions mismatch for {filename}: {dimensions}"
+                    )
                 crop_byte_size = row.get("cropByteSize")
                 if isinstance(crop_byte_size, int) and crop_byte_size != len(payload):
                     raise HandoffVerificationError(f"crop byte-size mismatch for {filename}")
 
                 (output_frames / filename).write_bytes(payload)
-                manifest_indices.append(first_index + offset)
+                manifest_indices.append(global_frame_index)
                 combined[filename] = {
                     "filename": filename,
+                    "globalFrameIndex": global_frame_index,
                     "sha256": crop_digest,
                     "cropSha256": crop_digest,
                     "sourceSha256": source_digest,
-                    "sourceByteSize": row.get("sourceByteSize"),
+                    "sourceByteSize": source_byte_size,
+                    "sourceUrl": source_url,
                     "cropByteSize": len(payload),
                     "nominalSourcePositionMm": row.get("nominalSourcePositionMm"),
+                    "cropPixels": EXPECTED_CROP.copy(),
+                    "cropDimensionsPixels": {
+                        "width": EXPECTED_CROP_WIDTH,
+                        "height": EXPECTED_CROP_HEIGHT,
+                    },
+                    "sourceSpaceOnly": True,
                     "chunkIndex": expected.index,
                 }
 
@@ -266,6 +319,13 @@ def reconstruct_handoff(
         "noMissingFrames": True,
         "noDuplicateFrames": True,
         "filenameOrderingVerified": True,
+        "globalFrameIndexOrderingVerified": True,
+        "sourceSha256MetadataPresent": True,
+        "identicalCropDimensionsVerified": True,
+        "cropDimensionsPixels": {
+            "width": EXPECTED_CROP_WIDTH,
+            "height": EXPECTED_CROP_HEIGHT,
+        },
         "coordinateSpace": "source-image-stack-only",
         "patientSpaceClaim": False,
         "medicalValidation": False,
