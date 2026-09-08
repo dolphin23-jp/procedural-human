@@ -12,10 +12,11 @@
     "schema:validate": "node tools/validate-schemas.mjs",
     "schema:validate:python": "uv run --package ph_validation python authoring/python/ph_validation/src/ph_validation/shared_schema_validation.py",
     "schema:validate:shared": "pnpm schema:validate && pnpm schema:validate:python",
-    "test": "pnpm build:contracts && pnpm schema:validate:shared && node --test tools/*.test.mjs tests/*.test.mjs",
+    "test": "pnpm build:contracts && pnpm schema:validate:shared && pnpm test:authoring && node --test tools/*.test.mjs tests/*.test.mjs",
     "typecheck": "pnpm --filter @procedural-human/core typecheck && pnpm --filter @procedural-human/units typecheck && pnpm --filter @procedural-human/math typecheck && pnpm --filter @procedural-human/anatomy typecheck && pnpm --filter @procedural-human/patient typecheck && pnpm --filter @procedural-human/physiology typecheck && pnpm --filter @procedural-human/spatial typecheck && pnpm --filter @procedural-human/rendering-core typecheck && pnpm --filter @procedural-human/rendering-three typecheck && pnpm --filter @procedural-human/imaging-core typecheck && pnpm --filter @procedural-human/imaging-cornerstone typecheck && pnpm --filter @procedural-human/session typecheck && pnpm --filter @procedural-human/web typecheck",
     "check:boundaries": "node tools/check-package-boundaries.mjs",
-    "spatial:baseline": "pnpm build:contracts && node tools/spatial-performance-baseline.mjs"
+    "spatial:baseline": "pnpm build:contracts && node tools/spatial-performance-baseline.mjs",
+    "test:authoring": "uv run --package ph_segmentation python -m unittest discover -s authoring/python/ph_segmentation/tests && uv run --package ph_dicom python -m unittest discover -s authoring/python/ph_dicom/tests"
   },
   "devDependencies": {
     "@eslint/js": "9.34.0",
