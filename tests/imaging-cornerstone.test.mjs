@@ -18,6 +18,7 @@ import {
   patientPlaneToCornerstoneCamera,
 } from '../packages/imaging-cornerstone/dist/index.js';
 import { createSyntheticAxialVolumeFixture } from '../packages/imaging-cornerstone/dist/fixture.js';
+import { cornerstoneCameraForParallelPatientPlane } from '../packages/imaging-cornerstone/dist/plane.js';
 
 function assertVectorClose(actual, expected, tolerance = 1e-12) {
   assert.equal(actual.length, expected.length);
@@ -91,4 +92,19 @@ test('TASK-063 arbitrary Patient Space plane round-trips through Cornerstone cam
     camera.viewUp,
   );
   assert.doesNotThrow(() => assertPatientPlanesEquivalent(plane, recovered));
+});
+
+test('TASK-061 regression: axial source-plane movement preserves in-plane camera pan', () => {
+  const source = createSyntheticAxialVolumeFixture();
+  const target = new ImagePatientTransform(source.frame).planeAtK(7);
+  const moved = cornerstoneCameraForParallelPatientPlane(
+    [11.5, -6.25, -2],
+    [11.5, -6.25, 98],
+    target,
+  );
+
+  assertVectorClose(moved.focalPoint, [11.5, -6.25, 6]);
+  assertVectorClose(moved.position, [11.5, -6.25, 106]);
+  assertVectorClose(moved.viewPlaneNormal, [0, 0, 1]);
+  assertVectorClose(moved.viewUp, [0, -1, 0]);
 });
