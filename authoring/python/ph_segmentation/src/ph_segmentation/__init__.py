@@ -13,6 +13,7 @@ from .nonvascular import (
     SourceAnchor,
     candidate_masks_for_image,
     generate_nonvascular_draft,
+    generate_tissue_only_draft,
 )
 from .slice_io import RgbImage, SliceDecodeError, read_png_rgb
 from .vessel_feasibility import (
@@ -44,6 +45,7 @@ __all__ = [
     "build_vascular_feasibility_report",
     "candidate_masks_for_image",
     "generate_nonvascular_draft",
+    "generate_tissue_only_draft",
     "load_source_stack_manifest",
     "read_png_rgb",
     "request_vessel_mask_generation",
