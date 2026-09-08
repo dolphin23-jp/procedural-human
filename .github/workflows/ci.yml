@@ -33,11 +33,7 @@ jobs:
       - run: uv sync --locked
 
       - run: pnpm lint
-      - name: TASK-063 temporary formatter diagnostic
-        run: |
-          pnpm prettier --write packages/imaging-cornerstone/src/cornerstone-viewer.ts tests/imaging-cornerstone.test.mjs
-          git diff -- packages/imaging-cornerstone/src/cornerstone-viewer.ts tests/imaging-cornerstone.test.mjs
-          exit 1
+      - run: pnpm format:check
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm spatial:baseline
