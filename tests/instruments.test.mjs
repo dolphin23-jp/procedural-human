@@ -144,7 +144,6 @@ test('TASK-065 rejects malformed identities, part graphs, coordinates, and rotat
   );
 });
 
-
 test('TASK-066 defines a generic needle by semantic tip, bevel, shaft, and lumen parts', () => {
   const shaft = instrumentPartId('needle.part.shaft');
   const bevel = instrumentPartId('needle.part.bevel');
@@ -198,7 +197,12 @@ test('TASK-066 needle definition fails closed on invalid functional mapping and 
     () =>
       createNeedleDefinition({
         ...base,
-        functionalParts: { tip, bevel, shaft, lumen: instrumentPartId('missing') },
+        functionalParts: {
+          tip,
+          bevel,
+          shaft,
+          lumen: instrumentPartId('missing'),
+        },
         geometry: {
           shaftLength: millimetres(40),
           bevelLength: millimetres(3),
