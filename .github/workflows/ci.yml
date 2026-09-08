@@ -33,6 +33,16 @@ jobs:
       - run: uv sync --locked
 
       - run: pnpm lint
+      - name: TASK-A05 temporary schema format capture
+        run: |
+          pnpm exec prettier --write schemas/assets/draft-segmentation-manifest.v1.schema.json schemas/assets/source-archive-record.v1.schema.json schemas/assets/vascular-feasibility-report.v1.schema.json
+          echo '=== DRAFT_SCHEMA ==='
+          cat schemas/assets/draft-segmentation-manifest.v1.schema.json
+          echo '=== SOURCE_ARCHIVE_SCHEMA ==='
+          cat schemas/assets/source-archive-record.v1.schema.json
+          echo '=== VASCULAR_SCHEMA ==='
+          cat schemas/assets/vascular-feasibility-report.v1.schema.json
+          echo '=== END_TASK_A05_SCHEMAS ==='
       - run: pnpm format:check
       - run: pnpm typecheck
       - run: pnpm test
