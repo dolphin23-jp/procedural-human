@@ -43,6 +43,10 @@ function checkedPatientPlane(plane: PatientImagingPlane): PatientImagingPlane {
   return checked;
 }
 
+function canonicalZero(value: number): number {
+  return Object.is(value, -0) ? 0 : value;
+}
+
 function dot(a: Point3, b: Point3): number {
   return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
@@ -76,11 +80,15 @@ export function patientPlaneToCornerstoneCamera(
   const normal = checked.normal.value;
   const j = checked.directionJ.value;
   const viewPlaneNormal: [number, number, number] = [
-    normal.x,
-    normal.y,
-    normal.z,
+    canonicalZero(normal.x),
+    canonicalZero(normal.y),
+    canonicalZero(normal.z),
   ];
-  const viewUp: [number, number, number] = [-j.x, -j.y, -j.z];
+  const viewUp: [number, number, number] = [
+    canonicalZero(-j.x),
+    canonicalZero(-j.y),
+    canonicalZero(-j.z),
+  ];
   return Object.freeze({ viewPlaneNormal, viewUp });
 }
 
