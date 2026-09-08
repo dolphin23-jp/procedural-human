@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "1",
+  "roiId": "mvp0-left-distal-forearm-wrist-v0",
+  "sourceArchiveId": "source.nlm.vhp-female",
+  "status": "source-space-stack-acquired-patient-space-extent-pending-explicit-alignment",
+  "laterality": "left",
+  "region": "distal forearm/wrist",
+  "purpose": "MVP 0 Medical Master authoring",
+  "coordinateContract": {
+    "requiredInput": "aligned DICOM series with explicit ImagePositionPatient, ImageOrientationPatient, and PixelSpacing",
+    "frameOfReferenceUid": null,
+    "patientSpaceExtent": null,
+    "extentSemantics": "selected-voxel-center-aabb",
+    "selectedSopInstanceUids": [],
+    "pixelCrop": null
+  },
+  "sourceSpaceAcquisition": {
+    "acquisitionId": "a05-vhp-female-left-wrist-roi-20260908",
+    "sourceRange": {
+      "first": "avf1567a.png",
+      "last": "avf1717a.png",
+      "frameCount": 451,
+      "nominalIntervalMm": 0.3333333333333333
+    },
+    "cropPixels": {
+      "left": 1450,
+      "top": 250,
+      "rightExclusive": 2000,
+      "bottomExclusive": 1000
+    },
+    "provisionalRadiocarpalLevelCandidate": "avf1687a.png",
+    "provisionalLandmarkStatus": "source-space visual localization only; not anatomically reviewed and not Patient Space",
+    "artifactDigest": "sha256:58951de89aba4cf6d1ecd75eb46420883d0409f8eff8411ab2fb891810839fbc",
+    "sourceHashStatus": "per-source-file SHA-256 recorded in artifact manifest",
+    "coordinateWarning": "Original female cryosections contain transverse offsets. Filename-derived source position and this rectangular crop are not a substitute for explicit Patient Space alignment."
+  },
+  "selectionProtocol": {
+    "referenceLandmark": "radiocarpal-joint-center",
+    "landmarkMethod": "manually identify the radiocarpal joint center on the aligned anatomical source before patient-space promotion; record the source instance and patient-space point",
+    "sliceNormalRequirement": "all selected aligned source instances must pass ph_dicom.validate_and_sort_series",
+    "longitudinalBounds": {
+      "proximal": "include source slices through at least 120 mm proximal to the radiocarpal-joint-center along the validated series slice-normal direction",
+      "distal": "include source slices through at least 30 mm distal to the radiocarpal-joint-center along the validated series slice-normal direction",
+      "reason": "bounded engineering ROI for distal forearm/wrist authoring; these distances define crop scope and are not anatomical-accuracy claims"
+    },
+    "inPlaneBounds": {
+      "method": "smallest single rectangular pixel crop containing the complete left-limb skin envelope on every selected aligned slice, expanded by 15 mm on each in-plane side",
+      "reason": "retain local context while keeping the runtime/authoring region bounded; the margin is an engineering crop margin, not a medical measurement"
+    },
+    "outputMethod": "record selected SOP Instance UIDs and PixelCrop, then compute the exact patient-space AABB with ph_dicom.patient_extent_for_crop"
+  },
+  "blockingChecks": [
+    "candidate cryosection series has an explicit documented alignment state",
+    "left laterality is verified from aligned source orientation rather than filename inference",
+    "required aligned source instances contain usable DICOM patient geometry",
+    "FrameOfReferenceUID is internally consistent when supplied",
+    "required vessel visibility is reviewed before vessel draft-mask creation/promotion",
+    "CT-to-cryosection registration is not assumed"
+  ],
+  "completedChecks": [
+    "bounded source archive bytes for A05 were acquired",
+    "SHA-256 provenance is recorded per acquired source file in the A05 artifact manifest",
+    "source-space forearm/wrist crop was materialized without committing medical image bytes to Git"
+  ],
+  "knownSourceConstraint": "The original Visible Human Female cryosection sequence contains transverse-plane offsets, and the source CT is not automatically a precise registration target for the cryosections. Raw filename-derived coordinates therefore do not satisfy this ROI's patient-space contract.",
+  "completionCondition": "Populate coordinateContract only from an explicitly aligned source series with measured Patient Space geometry. The acquired source-space stack is sufficient for A05 draft authoring work, but not for a patient-space or CT-registration claim."
+}
