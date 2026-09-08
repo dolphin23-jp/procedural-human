@@ -52,7 +52,7 @@ jobs:
               "basilic_vein": [r"^Basilic vein\.l(?:\.\d+)?$"],
           }
           os.makedirs(out_dir, exist_ok=True)
-          all_objects = [o for o in bpy.data.objects if o.type == "MESH"]
+          all_objects = list(bpy.data.objects)
           summary = {"blenderVersion": bpy.app.version_string, "structures": {}}
 
           for key, pats in targets.items():
@@ -71,7 +71,7 @@ jobs:
                           "basilic_vein":"basilic vein.l",
                       }[key]
                   ]
-              print("TARGET",key,[o.name for o in matches])
+              print("TARGET",key,[(o.name,o.type) for o in matches])
               if not matches:
                   summary["structures"][key]={"found":False}
                   continue
@@ -84,7 +84,13 @@ jobs:
               depsgraph=bpy.context.evaluated_depsgraph_get()
               for o in matches:
                   evaluated=o.evaluated_get(depsgraph)
-                  mesh=evaluated.to_mesh()
+                  try:
+                      mesh=evaluated.to_mesh()
+                  except Exception:
+                      mesh=None
+                  if mesh is None:
+                      print("SKIP_NONCONVERTIBLE",key,o.name,o.type)
+                      continue
                   try:
                       world=o.matrix_world
                       for v in mesh.vertices:
