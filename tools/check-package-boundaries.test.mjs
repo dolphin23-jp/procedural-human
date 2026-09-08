@@ -111,3 +111,51 @@ test('TASK-056 imaging core cannot depend on rendering/session or leak Three/Cor
     await rm(rootDir, { recursive: true, force: true });
   }
 });
+
+test('TASK-071 enforces Interaction direction and public domain imports', async () => {
+  const rootDir = await mkdtemp(
+    path.join(os.tmpdir(), 'procedural-human-interaction-boundary-'),
+  );
+  try {
+    for (const [owner, target] of [
+      ['interaction', '@procedural-human/procedures'],
+      ['interaction', '@procedural-human/rendering-core'],
+      ['interaction', '@procedural-human/rendering-three'],
+      ['interaction', '@procedural-human/session'],
+      ['interaction', '@procedural-human/event-log'],
+      ['interaction', 'react'],
+      ['interaction', 'three'],
+      ['interaction', '@cornerstonejs/core'],
+      ['interaction', '@procedural-human/spatial/src/index'],
+      ['interaction', '../../spatial/src/index.js'],
+      ['interaction', '../../../apps/web/src/needle-touch-pencil-input.js'],
+      ['spatial', '@procedural-human/interaction'],
+      ['instruments', '@procedural-human/interaction'],
+      ['patient', '@procedural-human/interaction'],
+      ['patient', '../../interaction/src/index.js'],
+    ]) {
+      const dir = path.join(rootDir, 'packages', owner, 'src');
+      await mkdir(dir, { recursive: true });
+      const file = path.join(dir, 'violation.ts');
+      await writeFile(file, `export * from '${target}';\n`);
+      assert.ok(
+        (await checkPackageBoundaries(rootDir)).length > 0,
+        `${owner} -> ${target}`,
+      );
+      await rm(file);
+    }
+    const dir = path.join(rootDir, 'packages', 'interaction', 'src');
+    await writeFile(
+      path.join(dir, 'allowed.ts'),
+      [
+        "import '@procedural-human/instruments';",
+        "import type { PatientSpacePoint } from '@procedural-human/math';",
+        "import '@procedural-human/spatial';",
+        "export * from './local.js';",
+      ].join('\n'),
+    );
+    assert.deepEqual(await checkPackageBoundaries(rootDir), []);
+  } finally {
+    await rm(rootDir, { recursive: true, force: true });
+  }
+});
