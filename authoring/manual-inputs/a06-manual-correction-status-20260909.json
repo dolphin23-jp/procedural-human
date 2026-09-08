@@ -24,42 +24,58 @@
     {
       "draftLabel": "skin",
       "status": "pending-human-edit",
-      "reason": "V0 automatic candidate requires human anatomical correction/review before promotion."
+      "reason": "V0 automatic candidate requires human anatomical correction/review before promotion.",
+      "outputUri": null,
+      "outputDigest": null
     },
     {
       "draftLabel": "subcutaneous_soft_tissue",
       "status": "pending-human-edit",
-      "reason": "V0 automatic candidate requires human anatomical correction/review before promotion."
+      "reason": "V0 automatic candidate requires human anatomical correction/review before promotion.",
+      "outputUri": null,
+      "outputDigest": null
     },
     {
       "draftLabel": "major_muscle_tendon_region",
       "status": "pending-human-edit",
-      "reason": "V0 automatic candidate requires human anatomical correction/review before promotion."
+      "reason": "V0 automatic candidate requires human anatomical correction/review before promotion.",
+      "outputUri": null,
+      "outputDigest": null
     },
     {
       "draftLabel": "radius",
       "status": "blocked-source-evidence",
-      "reason": "Complete source-space radius identity track across all 451 frames is not established without prohibited extrapolation."
+      "reason": "Complete source-space radius identity track across all 451 frames is not established without prohibited extrapolation.",
+      "outputUri": null,
+      "outputDigest": null
     },
     {
       "draftLabel": "ulna",
       "status": "blocked-source-evidence",
-      "reason": "Complete source-space ulna identity track across all 451 frames is not established without prohibited extrapolation."
+      "reason": "Complete source-space ulna identity track across all 451 frames is not established without prohibited extrapolation.",
+      "outputUri": null,
+      "outputDigest": null
     },
     {
       "draftLabel": "radial_artery",
       "status": "blocked-source-evidence",
-      "reason": "A05 vascular feasibility is not-established; no vessel mask exists to manually correct."
+      "reason": "A05 vascular feasibility is not-established; no vessel mask exists to manually correct.",
+      "outputUri": null,
+      "outputDigest": null
     },
     {
       "draftLabel": "ulnar_artery",
       "status": "blocked-source-evidence",
-      "reason": "A05 vascular feasibility is not-established; no vessel mask exists to manually correct."
+      "reason": "A05 vascular feasibility is not-established; no vessel mask exists to manually correct.",
+      "outputUri": null,
+      "outputDigest": null
     },
     {
       "draftLabel": "superficial_target_vein",
       "status": "blocked-source-evidence",
-      "reason": "A05 vascular feasibility is not-established and named superficial vein identity is unresolved."
+      "reason": "A05 vascular feasibility is not-established and named superficial vein identity is unresolved.",
+      "outputUri": null,
+      "outputDigest": null
     }
   ],
   "claims": {
