@@ -54,7 +54,10 @@ test('TASK-065 instrument pose is explicit Patient Space with a unit quaternion'
   assert.deepEqual(instance.pose.position, position);
   assert.equal(instance.pose.position.space, 'patient');
   assert.equal(instance.pose.position.kind, 'point');
-  assert.ok(Math.abs(Math.hypot(...Object.values(instance.pose.orientation)) - 1) < 1e-12);
+  assert.ok(
+    Math.abs(Math.hypot(...Object.values(instance.pose.orientation)) - 1) <
+      1e-12,
+  );
   assert.ok(Object.isFrozen(instance));
   assert.ok(Object.isFrozen(instance.pose));
   assert.ok(Object.isFrozen(instance.pose.position.value));
@@ -64,7 +67,8 @@ test('TASK-065 rejects malformed identities, part graphs, coordinates, and rotat
   assert.throws(() => instrumentDefinitionId('   '), /non-empty/);
   const partId = instrumentPartId('part.same');
   assert.throws(
-    () => createInstrumentPart({ id: partId, name: 'Same', parentPartId: partId }),
+    () =>
+      createInstrumentPart({ id: partId, name: 'Same', parentPartId: partId }),
     /own parent/,
   );
   assert.throws(
@@ -93,6 +97,28 @@ test('TASK-065 rejects malformed identities, part graphs, coordinates, and rotat
         ],
       }),
     /unknown parent/,
+  );
+  const cycleA = instrumentPartId('part.cycle-a');
+  const cycleB = instrumentPartId('part.cycle-b');
+  assert.throws(
+    () =>
+      createInstrumentDefinition({
+        id: instrumentDefinitionId('instrument.bad-cycle'),
+        name: 'Bad cycle',
+        parts: [
+          createInstrumentPart({
+            id: cycleA,
+            name: 'Cycle A',
+            parentPartId: cycleB,
+          }),
+          createInstrumentPart({
+            id: cycleB,
+            name: 'Cycle B',
+            parentPartId: cycleA,
+          }),
+        ],
+      }),
+    /must not contain a cycle/,
   );
   assert.throws(
     () =>
