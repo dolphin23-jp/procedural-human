@@ -55,6 +55,29 @@ class TaskA06A07Tests(unittest.TestCase):
                 crop_filename_sha_aggregate="b" * 64,
                 candidate_output_digest="c" * 64,
                 structures=(
+                    ManualCorrectionStructure(
+                        "skin",
+                        "edited",
+                        output_uri="corrected://skin",
+                        output_digest="d" * 64,
+                    ),
+                ),
+            )
+
+    def test_completed_structure_requires_hashed_corrected_output(self) -> None:
+        with self.assertRaisesRegex(
+            ManualCorrectionRecordError,
+            "requires output_uri and output_digest",
+        ):
+            build_manual_correction_record(
+                recorded_at="2026-09-09",
+                source_frame_count=451,
+                source_filename_sha_aggregate="a" * 64,
+                crop_filename_sha_aggregate="b" * 64,
+                candidate_output_digest="c" * 64,
+                editor_reference="qualified-human-editor",
+                completed_at="2026-09-09T12:00:00+09:00",
+                structures=(
                     ManualCorrectionStructure("skin", "edited"),
                 ),
             )
