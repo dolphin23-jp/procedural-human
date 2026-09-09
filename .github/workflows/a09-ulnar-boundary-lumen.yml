@@ -67,12 +67,22 @@ jobs:
           topology=report["topologyValidation"]
           assert topology["singleConnectedLumenComponentEveryFrame"] is True
           assert topology["closedOuterBoundaryEveryFrame"] is True
-          assert topology["centerlinePointInsideLumenEveryFrame"] is True
+          assert topology["correctedCenterlinePointInsideLumenEveryFrame"] is True
+          diagnostic=report["sourceCenterlineDiagnostic"]
+          assert diagnostic["maxInputToCorrectedCenterlineDistancePixels"] <= 6
+          assert diagnostic["maxCorrectedCenterlineJumpPixels"] <= 6
           assert topology["consecutiveFrameCoverage"] is True
           assert report["semantics"]["anatomicalWallThicknessClaim"] is False
           assert report["claims"]["medicalValidation"] is False
           assert report["claims"]["patientSpaceGeometry"] is False
           assert report["claims"]["runtimeRepresentation"] is False
+          corrected_centerline=json.loads((root/"a08-ulnar-lumen-centered-source-stack-centerline-v0.json").read_text())
+          corrected_schema=json.loads(Path("schemas/assets/a08-source-stack-centerline-candidate.v1.schema.json").read_text())
+          Draft202012Validator.check_schema(corrected_schema)
+          Draft202012Validator(corrected_schema).validate(corrected_centerline)
+          assert corrected_centerline["support"]["pointCount"] == 106
+          assert len(corrected_centerline["points"]) == 106
+
           assert len(report["frames"]) == 106
           assert len(list((root/"lumen"/"ulnar_artery").glob("*.pgm"))) == 106
           assert len(list((root/"boundary"/"ulnar_artery").glob("*.pgm"))) == 106
@@ -81,6 +91,7 @@ jobs:
               "support": report["support"],
               "topologyValidation": topology,
               "summary": report["summary"],
+              "sourceCenterlineDiagnostic": report["sourceCenterlineDiagnostic"],
               "claims": report["claims"],
           },indent=2))
           PY
