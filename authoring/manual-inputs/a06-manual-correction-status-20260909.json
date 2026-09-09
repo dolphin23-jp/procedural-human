@@ -15,19 +15,26 @@
     "candidateOutputDigest": "sha256:6a9f302ab5a1efd5d5d9c60e3c29aeee6b2082f3e04df2bcbe880e886b8b3ef4",
     "supplementalCandidateOutputs": [
       {
-        "labels": ["radius", "ulna"],
+        "labels": [
+          "radius",
+          "ulna"
+        ],
         "uri": "drive://1RqfSfjMtmssxnm0CJRYqgoIUeHi8rEfq/a06-support-aware-radius-ulna-v0.zip",
         "digest": "sha256:407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b",
         "supportStatus": "partial-support-v0-candidate; avf1567a.png through avf1685c.png; outside interval unknown"
       },
       {
-        "labels": ["ulnar_artery"],
+        "labels": [
+          "ulnar_artery"
+        ],
         "uri": "drive://1QR2LIlFP0OSTq4FodVGkr-o6Dpw50Krw/a06-source-evidence-vessel-candidates-v0.zip",
         "digest": "sha256:94134f3d5547597365181596511d440e21ac768b6df7a1eb8a16ea1666b72f5b",
         "supportStatus": "intermittent-v0-candidate; 157 source-supported mask frames within avf1624a.png through avf1685a.png; gaps remain unknown and human anatomical correction/review is pending"
       },
       {
-        "labels": ["ulnar_artery"],
+        "labels": [
+          "ulnar_artery"
+        ],
         "uri": "drive://1_h_HvF9kfTvqDkDDY3gA6CnTD5fZWj_U/a06-a08-ulnar-continuous-segment-v0.zip",
         "digest": "sha256:9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75",
         "supportStatus": "bounded continuous V0 candidate; 106 consecutive source frames avf1646a.png through avf1681a.png; complete vessel extent remains unknown"
@@ -79,7 +86,7 @@
     {
       "draftLabel": "radial_artery",
       "status": "blocked-source-evidence",
-      "reason": "Atlas-guided source-image diagnostic track failed vessel-confidence thresholds; no radial artery mask is accepted for manual correction.",
+      "reason": "Two reproducible source-image diagnostics are recorded in authoring/outputs/a06-vessel-source-diagnostic-provenance-20260909.json. The radius-ulna atlas prior and a verified-ulnar-anchor correction both failed bounded source-support promotion gates; no radial artery mask is accepted for manual correction.",
       "outputUri": null,
       "outputDigest": null
     },
@@ -93,7 +100,7 @@
     {
       "draftLabel": "superficial_target_vein",
       "status": "blocked-source-evidence",
-      "reason": "Cephalic and basilic atlas priors are not sufficiently supported by VHP source-image tissue, so the named superficial target vein identity remains unresolved.",
+      "reason": "Source-first superficial vessel discovery without atlas or named-vein priors found vessel-like tracks, but none met the shallow continuous high-confidence gate. Cephalic/basilic identity remains unresolved and no superficial target vein mask is accepted for manual correction; see authoring/outputs/a06-vessel-source-diagnostic-provenance-20260909.json.",
       "outputUri": null,
       "outputDigest": null
     }
