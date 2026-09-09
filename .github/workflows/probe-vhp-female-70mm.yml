@@ -147,6 +147,84 @@ jobs:
           print(json.dumps(rows,indent=2))
           PY
 
+      - name: Match exact A05 left-forearm crop into 70mm film
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import cv2
+          import numpy as np
+
+          indices=[1567,1619,1646,1656,1681]
+          out=Path("build/analysis/roi-match")
+          out.mkdir(parents=True,exist_ok=True)
+          rows=[]
+
+          for idx in indices:
+              standard=cv2.imread(f"build/fullcolor/avf{idx}a.png")
+              film=cv2.imread(f"build/70mm-2k/{idx}.png")
+              if standard is None or film is None:
+                  raise RuntimeError(idx)
+
+              roi=standard[250:1000,1450:2000]
+              roi_gray=cv2.cvtColor(roi,cv2.COLOR_BGR2GRAY)
+              film_gray=cv2.cvtColor(film,cv2.COLOR_BGR2GRAY)
+
+              orb=cv2.ORB_create(nfeatures=8000,fastThreshold=7)
+              kp1,des1=orb.detectAndCompute(roi_gray,None)
+              kp2,des2=orb.detectAndCompute(film_gray,None)
+              if des1 is None or des2 is None:
+                  rows.append({"index":idx,"goodMatches":0,"inliers":0,"inlierFraction":0})
+                  continue
+
+              matcher=cv2.BFMatcher(cv2.NORM_HAMMING)
+              knn=matcher.knnMatch(des1,des2,k=2)
+              good=[m for m,n in knn if m.distance < 0.72*n.distance]
+
+              H=None
+              inlier_mask=None
+              if len(good)>=8:
+                  src=np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1,1,2)
+                  dst=np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1,1,2)
+                  H,inlier_mask=cv2.findHomography(src,dst,cv2.RANSAC,4.0)
+
+              inliers=int(inlier_mask.sum()) if inlier_mask is not None else 0
+              fraction=inliers/len(good) if good else 0.0
+              projected=None
+              plausible=False
+              if H is not None:
+                  corners=np.float32([[[0,0],[roi.shape[1]-1,0],[roi.shape[1]-1,roi.shape[0]-1],[0,roi.shape[0]-1]]])
+                  projected=cv2.perspectiveTransform(corners,H)[0]
+                  area=abs(cv2.contourArea(projected.astype(np.float32)))
+                  plausible=(
+                      inliers>=12
+                      and fraction>=0.35
+                      and area>=10000
+                      and np.isfinite(projected).all()
+                  )
+                  vis=film.copy()
+                  cv2.polylines(vis,[projected.astype(np.int32)],True,(0,255,0),4)
+                  # inlier feature endpoints
+                  if inlier_mask is not None:
+                      for m,keep in zip(good,inlier_mask.ravel()):
+                          if keep:
+                              x,y=kp2[m.trainIdx].pt
+                              cv2.circle(vis,(int(round(x)),int(round(y))),4,(0,0,255),-1)
+                  cv2.imwrite(str(out/f"{idx}-roi-projection.png"),vis)
+
+              rows.append({
+                  "index":idx,
+                  "goodMatches":len(good),
+                  "inliers":inliers,
+                  "inlierFraction":fraction,
+                  "plausibleA05ForearmMatch":plausible,
+                  "projectedCorners2kFilm": projected.tolist() if projected is not None else None,
+              })
+
+          (out/"a05-forearm-to-70mm-match.json").write_text(json.dumps(rows,indent=2)+"\n")
+          print(json.dumps(rows,indent=2))
+          PY
+
       - uses: actions/upload-artifact@v4
         with:
           name: a06-vhp-female-70mm-forearm-probe
