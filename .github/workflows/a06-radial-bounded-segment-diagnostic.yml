@@ -8,6 +8,7 @@ on:
       - .github/workflows/a06-radial-bounded-segment-diagnostic.yml
       - authoring/source-acquisition/a06_diagnose_radial_bounded_segments.py
       - authoring/source-acquisition/a06_diagnose_radial_expanded_prior.py
+      - authoring/source-acquisition/a06_diagnose_radial_source_first.py
   workflow_dispatch:
 
 permissions:
@@ -82,6 +83,13 @@ jobs:
           python authoring/source-acquisition/a06_diagnose_radial_expanded_prior.py \
             --bone-report build/bones/a06-multimodality-bone-candidate-report.v0.json \
             --atlas-root build/zref \
+            --cryo-root build/a05-source \
+            --output-root build/radial-diagnostic
+
+      - name: Diagnose radial artery from source and bone constraints
+        run: |
+          python authoring/source-acquisition/a06_diagnose_radial_source_first.py \
+            --bone-report build/bones/a06-multimodality-bone-candidate-report.v0.json \
             --cryo-root build/a05-source \
             --output-root build/radial-diagnostic
 
