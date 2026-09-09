@@ -1,0 +1,90 @@
+name: A06 radial bounded segment diagnostic
+
+on:
+  push:
+    branches:
+      - task-a06-radial-bounded-segment-diagnostic
+    paths:
+      - .github/workflows/a06-radial-bounded-segment-diagnostic.yml
+      - authoring/source-acquisition/a06_diagnose_radial_bounded_segments.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deterministic image-analysis dependencies
+        run: |
+          python -m pip install --disable-pip-version-check             numpy==2.2.6             opencv-python-headless==4.12.0.88             Pillow==11.3.0
+
+      - name: Download verified radius/ulna candidate package
+        run: |
+          mkdir -p build/bones
+          curl --fail --location --silent --show-error             -H "Accept: application/vnd.github+json"             -H "Authorization: Bearer $GH_TOKEN"             -H "X-GitHub-Api-Version: 2022-11-28"             "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/10088808577/zip"             -o build/a06-bones.zip
+          test "$(wc -c < build/a06-bones.zip)" = "664033"
+          test "$(sha256sum build/a06-bones.zip | awk '{print $1}')" = "407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b"
+          unzip -q build/a06-bones.zip -d build/bones
+
+      - name: Download verified Z-Anatomy forearm reference
+        run: |
+          mkdir -p build/zref
+          curl --fail --location --silent --show-error             -H "Accept: application/vnd.github+json"             -H "Authorization: Bearer $GH_TOKEN"             -H "X-GitHub-Api-Version: 2022-11-28"             "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/10081007930/zip"             -o build/zref.zip
+          test "$(wc -c < build/zref.zip)" = "196995"
+          test "$(sha256sum build/zref.zip | awk '{print $1}')" = "9b1c58de04f78e533e2d339f4ad6d3d93dc32d9f74c5d14d6c816b3cab2aa625"
+          unzip -q build/zref.zip -d build/zref
+
+      - name: Download and verify exact A05 source handoff
+        run: |
+          set -euo pipefail
+          mkdir -p build/a05-zips build/a05-source
+          ids=(10057281755 10057282711 10057283651 10057284584 10057285605 10057286644 10057287687 10057288822 10057289930 10057291004)
+          sizes=(26031165 25803357 25331225 25451281 25368674 25100034 25140770 25076645 25408260 20650491)
+          hashes=(
+            78b1b2c1e1ffa006f3b07711e3497bb74ba7133f777709eebcd008b1b429623d
+            01d54d17761091fc576e8cb7acb47bfc5b178185ffadb50415ff806bdfd7c837
+            56e2c3cb8382a4b6eb96fa4c04e12793281f8214a48fe5880c36628508663352
+            8577b8e831bfd7d6d590562bd4c2603d9ca0e455179c426ac4860f05f517b44c
+            f912d7e745e3d817c555f8ea223b9bd1c5c07a52932f5a94464a3de215845816
+            4e702ab792ebd6af5aaff975221344c0b8e5a11feb9c89d33b42268dc01c5372
+            d5ecf42796bdf1a20d6540b49a2e5992524d5e85ba25bfc60245ab734f3e073f
+            d0ba39a31449fac6754e9999051ad463b3a9ec39b62365568741623f20cd78c7
+            316aff6722ca56c67d8ea4bde02e613501190849e24bcdc3eafe3621cc944a2e
+            91c11d65506128cad36a2ba70284b154ee07811bbf3dc8674dceeb8cbd2aae63
+          )
+          for i in $(seq 0 9); do
+            curl --fail --location --silent --show-error               -H "Accept: application/vnd.github+json"               -H "Authorization: Bearer $GH_TOKEN"               -H "X-GitHub-Api-Version: 2022-11-28"               "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/${ids[$i]}/zip"               -o "build/a05-zips/chunk-$i.zip"
+            test "$(wc -c < "build/a05-zips/chunk-$i.zip")" = "${sizes[$i]}"
+            test "$(sha256sum "build/a05-zips/chunk-$i.zip" | awk '{print $1}')" = "${hashes[$i]}"
+            unzip -q -o "build/a05-zips/chunk-$i.zip" -d build/a05-source
+          done
+          test "$(find build/a05-source -maxdepth 1 -name 'avf*.png' | wc -l)" = "451"
+
+      - name: Diagnose radial artery bounded source-supported segments
+        run: |
+          python authoring/source-acquisition/a06_diagnose_radial_bounded_segments.py             --bone-report build/bones/a06-multimodality-bone-candidate-report.v0.json             --atlas-root build/zref             --cryo-root build/a05-source             --output-root build/radial-diagnostic
+
+      - id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: a06-radial-bounded-segment-diagnostic-v0
+          path: build/radial-diagnostic/
+          compression-level: 9
+          retention-days: 30
+
+      - name: Record artifact identity
+        run: |
+          echo "artifact-id=${{ steps.upload.outputs.artifact-id }}"
+          echo "artifact-digest=${{ steps.upload.outputs.artifact-digest }}"
