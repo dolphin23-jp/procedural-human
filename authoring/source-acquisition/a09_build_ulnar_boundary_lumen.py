@@ -91,6 +91,22 @@ def _write_boundary_mask(path: Path, mask: np.ndarray) -> str:
     return _sha256_path(path)
 
 
+def _interior_center(mask: np.ndarray) -> tuple[float, float, float]:
+    distance = cv2.distanceTransform(
+        mask.astype(np.uint8),
+        cv2.DIST_L2,
+        5,
+    )
+    flat_index = int(np.argmax(distance))
+    y, x = np.unravel_index(flat_index, distance.shape)
+    clearance = float(distance[y, x])
+    if clearance <= 0 or not bool(mask[y, x]):
+        raise BoundaryLumenCandidateError(
+            "failed to derive an interior lumen center"
+        )
+    return float(x), float(y), clearance
+
+
 def _frame_metrics(mask: np.ndarray, contour: np.ndarray) -> dict[str, float | int]:
     area = int(mask.sum())
     perimeter = float(cv2.arcLength(contour[:, None, :].astype(np.int32), True))
@@ -143,7 +159,9 @@ def main() -> None:
         )
 
     output_frames: list[dict[str, object]] = []
-    centroid_inside_count = 0
+    corrected_centerline_points: list[dict[str, object]] = []
+    input_centerline_outside_frames: list[int] = []
+    input_to_corrected_distances: list[float] = []
 
     for mask_record in report["maskFiles"]:
         frame_index = int(mask_record["globalFrameIndex"])
@@ -160,20 +178,34 @@ def main() -> None:
                 f"centerline point missing for frame {frame_index}"
             )
 
-        x = float(centerline_point["xSourcePixels"])
-        y = float(centerline_point["ySourcePixels"])
-        xi = int(round(x))
-        yi = int(round(y))
-        if not (0 <= xi < 550 and 0 <= yi < 750):
+        input_x = float(centerline_point["xSourcePixels"])
+        input_y = float(centerline_point["ySourcePixels"])
+        input_xi = int(round(input_x))
+        input_yi = int(round(input_y))
+        if not (0 <= input_xi < 550 and 0 <= input_yi < 750):
             raise BoundaryLumenCandidateError(
-                f"centerline point leaves source crop at frame {frame_index}"
+                f"input centerline point leaves source crop at frame {frame_index}"
             )
-        centerline_inside = bool(mask[yi, xi])
-        if centerline_inside:
-            centroid_inside_count += 1
-        else:
+        input_centerline_inside = bool(mask[input_yi, input_xi])
+        if not input_centerline_inside:
+            input_centerline_outside_frames.append(frame_index)
+
+        corrected_x, corrected_y, corrected_clearance = _interior_center(mask)
+        corrected_xi = int(round(corrected_x))
+        corrected_yi = int(round(corrected_y))
+        if not bool(mask[corrected_yi, corrected_xi]):
             raise BoundaryLumenCandidateError(
-                f"centerline point is outside lumen candidate at frame {frame_index}"
+                f"corrected centerline point is outside lumen candidate at frame {frame_index}"
+            )
+        input_to_corrected_distance = hypot(
+            corrected_x - input_x,
+            corrected_y - input_y,
+        )
+        input_to_corrected_distances.append(input_to_corrected_distance)
+        if input_to_corrected_distance > 6.0:
+            raise BoundaryLumenCandidateError(
+                f"lumen-centered correction exceeds 6 source pixels at frame {frame_index}: "
+                f"{input_to_corrected_distance:.3f}"
             )
 
         lumen_target = (
@@ -216,8 +248,26 @@ def main() -> None:
                 "outsideRegionDefinition": (
                     "source-crop complement of lumen candidate mask"
                 ),
-                "centerlinePointInsideLumen": centerline_inside,
+                "inputCenterlinePointInsideLumen": input_centerline_inside,
+                "correctedCenterlinePointInsideLumen": True,
+                "correctedCenterlineSourcePixels": {
+                    "x": corrected_x,
+                    "y": corrected_y,
+                },
+                "correctedCenterlineClearancePixels": corrected_clearance,
+                "inputToCorrectedCenterlineDistancePixels": (
+                    input_to_corrected_distance
+                ),
                 **metrics,
+            }
+        )
+        corrected_centerline_points.append(
+            {
+                "globalFrameIndex": frame_index,
+                "sourceFilename": source_filename,
+                "xSourcePixels": corrected_x,
+                "ySourcePixels": corrected_y,
+                "evidenceKind": mask_record["evidenceKind"],
             }
         )
 
@@ -243,6 +293,37 @@ def main() -> None:
         [float(row["boundaryPerimeterPixels"]) for row in output_frames],
         dtype=float,
     )
+
+    corrected_centerline_points.sort(
+        key=lambda row: int(row["globalFrameIndex"])
+    )
+    if [
+        int(row["globalFrameIndex"]) for row in corrected_centerline_points
+    ] != list(
+        range(EXPECTED_FIRST_GLOBAL_FRAME, EXPECTED_LAST_GLOBAL_FRAME + 1)
+    ):
+        raise BoundaryLumenCandidateError(
+            "corrected centerline does not cover the exact bounded segment"
+        )
+
+    centerline_jumps = np.asarray(
+        [
+            hypot(
+                float(right["xSourcePixels"]) - float(left["xSourcePixels"]),
+                float(right["ySourcePixels"]) - float(left["ySourcePixels"]),
+            )
+            for left, right in zip(
+                corrected_centerline_points[:-1],
+                corrected_centerline_points[1:],
+            )
+        ],
+        dtype=float,
+    )
+    if float(centerline_jumps.max()) > 6.0:
+        raise BoundaryLumenCandidateError(
+            f"corrected lumen-centered centerline jump exceeds 6 pixels: "
+            f"{float(centerline_jumps.max()):.3f}"
+        )
 
     result = {
         "schema": "ph-a09-boundary-lumen-candidate.v1",
@@ -281,10 +362,28 @@ def main() -> None:
         "topologyValidation": {
             "singleConnectedLumenComponentEveryFrame": True,
             "closedOuterBoundaryEveryFrame": True,
-            "centerlinePointInsideLumenEveryFrame": (
-                centroid_inside_count == EXPECTED_FRAME_COUNT
-            ),
+            "correctedCenterlinePointInsideLumenEveryFrame": True,
             "consecutiveFrameCoverage": True,
+        },
+        "sourceCenterlineDiagnostic": {
+            "inputCenterlineOutsideLumenFrameCount": len(
+                input_centerline_outside_frames
+            ),
+            "inputCenterlineOutsideLumenFrames": (
+                input_centerline_outside_frames
+            ),
+            "maxInputToCorrectedCenterlineDistancePixels": float(
+                max(input_to_corrected_distances)
+            ),
+            "meanInputToCorrectedCenterlineDistancePixels": float(
+                np.mean(input_to_corrected_distances)
+            ),
+            "maxCorrectedCenterlineJumpPixels": float(
+                centerline_jumps.max()
+            ),
+            "meanCorrectedCenterlineJumpPixels": float(
+                centerline_jumps.mean()
+            ),
         },
         "summary": {
             "medianLumenAreaPixels": float(np.median(lumen_areas)),
@@ -303,11 +402,16 @@ def main() -> None:
             "sourceCenterlineCandidate": (
                 "a08-ulnar-source-stack-centerline-v0.json"
             ),
+            "correctedCenterlineCandidate": (
+                "a08-ulnar-lumen-centered-source-stack-centerline-v0.json"
+            ),
             "derivation": (
                 "lumen candidate is copied byte-for-byte from the bounded "
                 "continuous A06 mask; boundary is a reproducible 1-pixel "
                 "inner morphological edge; outside is defined as its "
-                "source-crop complement"
+                "source-crop complement; a corrected A08 centerline is "
+                "derived as the maximum Euclidean distance-to-boundary "
+                "point inside each lumen mask"
             ),
         },
         "claims": {
@@ -322,7 +426,52 @@ def main() -> None:
         },
     }
 
+    corrected_centerline = {
+        "schema": "ph-a08-source-stack-centerline-candidate.v1",
+        "schemaVersion": "1",
+        "task": "TASK-A08",
+        "recordedAt": "2026-09-09",
+        "anatomicalId": "structure.ulnar_artery.left",
+        "status": "generated-v0-candidate",
+        "coordinateSpace": {
+            "kind": "source-image-stack",
+            "patientSpaceClaim": False,
+            "nominalSliceIntervalMm": 0.33,
+            "physicalXyClaim": False,
+        },
+        "support": {
+            "firstGlobalFrameIndex": EXPECTED_FIRST_GLOBAL_FRAME,
+            "lastGlobalFrameIndex": EXPECTED_LAST_GLOBAL_FRAME,
+            "firstSourceFilename": EXPECTED_FIRST_SOURCE,
+            "lastSourceFilename": EXPECTED_LAST_SOURCE,
+            "pointCount": EXPECTED_FRAME_COUNT,
+            "completeVesselExtentClaim": False,
+        },
+        "points": corrected_centerline_points,
+        "lineage": {
+            "sourceReport": "a06-ulnar-continuous-segment-report.v0.json",
+            "pointDerivation": (
+                "maximum Euclidean distance-to-boundary point inside each "
+                "bounded A06 lumen candidate mask; supersedes raw mask-centroid "
+                "points for lumen-membership topology"
+            ),
+        },
+        "claims": {
+            "medicalValidation": False,
+            "patientSpaceGeometry": False,
+            "runtimeCenterline": False,
+            "automaticPromotionAllowed": False,
+        },
+    }
+
     args.output_root.mkdir(parents=True, exist_ok=True)
+    (
+        args.output_root
+        / "a08-ulnar-lumen-centered-source-stack-centerline-v0.json"
+    ).write_text(
+        json.dumps(corrected_centerline, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
     destination = (
         args.output_root / "a09-ulnar-boundary-lumen-v0.json"
     )
