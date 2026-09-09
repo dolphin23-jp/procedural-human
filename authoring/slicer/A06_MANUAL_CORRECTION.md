@@ -67,27 +67,34 @@ The editor must be able to compare the original cropped photograph and candidate
 
 Do not assign physical spacing, Patient Space coordinates, or CT registration merely to make a viewer convenient.
 
-## 3. Review the generated A05 candidates
+## 3. Review the available V0 candidates
 
-The existing V0 generated structures are:
+The original A05 generated structures are:
 
 - skin
 - subcutaneous soft tissue
 - major muscle/tendon region
 
-They require human review/correction before TASK-A06 can be complete.
+Supplemental source-evidence work has also produced:
 
-The following are not generated and must not be represented by empty or guessed masks:
+- radius — partial-support V0 candidate for `avf1567a.png` through `avf1685c.png`
+- ulna — partial-support V0 candidate for `avf1567a.png` through `avf1685c.png`
+- ulnar artery — bounded continuous V0 candidate for all 106 frames from `avf1646a.png` through `avf1681a.png`
 
-- radius
-- ulna
+These remain candidate authoring representations. They require human review/correction before TASK-A06 can be complete, and no complete-extent claim is implied outside their documented support interval.
+
+The following remain blocked by source evidence and must not be represented by empty, atlas-substituted, or guessed masks:
+
 - radial artery
-- ulnar artery
 - superficial target vein
 
-A human editor may add a previously blocked structure only when the source image itself supports the identity and extent well enough to document the correction. Expected anatomy alone is not evidence.
+The current fail-closed vessel diagnostics are recorded in:
 
-If the source still does not support a structure, leave it blocked.
+`authoring/outputs/a06-vessel-source-diagnostic-provenance-20260909.json`
+
+A human editor may add a previously blocked structure only when the source image itself supports the identity and extent well enough to document the correction. Expected anatomy, atlas position, or a procedure role alone is not evidence.
+
+If the source still does not support a structure, leave it `blocked-source-evidence`.
 
 ## 4. Export corrected representations
 
@@ -129,6 +136,31 @@ The record must still state:
 - `automaticPromotionAllowed = false`
 
 TASK-A06 is manual authoring provenance, not TASK-A12 anatomical acceptance.
+
+### Validate the completed record against materialized outputs
+
+Before changing the repository status to completed, materialize one reproducible file per structure marked `edited` or `reviewed-no-change` (for example, a structure-specific lossless ZIP export) and run:
+
+```bash
+uv run --package ph_assets python -m ph_assets.manual_correction \
+  --record <completed-a06-record.json> \
+  --output skin=<skin-output.zip> \
+  --output subcutaneous_soft_tissue=<subcutaneous-output.zip> \
+  --output major_muscle_tendon_region=<muscle-tendon-output.zip>
+```
+
+Repeat `--output` for every structure whose status is `edited` or `reviewed-no-change`.
+
+The validator fails closed when:
+
+- any MVP0 A06 structure remains `pending-human-edit`
+- a reviewed structure has no materialized output
+- the materialized file SHA-256 differs from the provenance record
+- a `blocked-source-evidence` structure carries an output
+- source-space / non-validation claims are changed
+- `claims.humanEdited` disagrees with the actual structure statuses
+
+Passing this validator proves only provenance and file integrity. It does not establish TASK-A12 anatomical review, TASK-A13 procedure-specific review, Patient Space geometry, CT registration, or medical validation.
 
 ## 6. Downstream gates
 

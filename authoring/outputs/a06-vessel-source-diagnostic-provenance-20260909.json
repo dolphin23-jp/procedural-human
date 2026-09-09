@@ -1,0 +1,182 @@
+{
+  "schema": "ph-a06-vessel-source-diagnostic-provenance.v1",
+  "schemaVersion": "1",
+  "task": "TASK-A06",
+  "recordedAt": "2026-09-09",
+  "coordinateSpace": {
+    "kind": "source-image-stack",
+    "patientSpaceClaim": false,
+    "ctRegistrationEstablished": false
+  },
+  "inputs": {
+    "sourceFrameCount": 451,
+    "sourceFilenameRange": ["avf1567a.png", "avf1717a.png"],
+    "a05CandidateArtifact": {
+      "artifactId": 10078955143,
+      "archiveByteSize": 6943149,
+      "archiveSha256": "6a9f302ab5a1efd5d5d9c60e3c29aeee6b2082f3e04df2bcbe880e886b8b3ef4"
+    },
+    "boneCandidateArtifact": {
+      "artifactId": 10088808577,
+      "archiveByteSize": 664033,
+      "archiveSha256": "407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b"
+    },
+    "atlasReferenceArtifact": {
+      "artifactId": 10081007930,
+      "archiveByteSize": 196995,
+      "archiveSha256": "9b1c58de04f78e533e2d339f4ad6d3d93dc32d9f74c5d14d6c816b3cab2aa625"
+    },
+    "verifiedUlnarAnchorArtifact": {
+      "artifactId": 10092590748,
+      "archiveByteSize": 80834,
+      "archiveSha256": "9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75",
+      "frameCount": 106,
+      "firstSourceFilename": "avf1646a.png",
+      "lastSourceFilename": "avf1681a.png"
+    }
+  },
+  "radialArtery": {
+    "anatomicalId": "structure.radial_artery.left",
+    "workflowRunId": 34362012587,
+    "outputArtifactId": 10108277141,
+    "outputArchiveByteSize": 15898,
+    "outputArchiveSha256": "9a6c91481231720d6f763388feaabad19e0b3e98ef17ba0a5d905fb111dad1c3",
+    "basePairPrior": {
+      "disposition": "diagnostic-only",
+      "bestBaselineTrack": {
+        "nodeCount": 88,
+        "spanFrameCount": 111,
+        "coverageFraction": 0.7927927927927928,
+        "firstSourceFilename": "avf1619b.png",
+        "lastSourceFilename": "avf1656a.png",
+        "meanJumpSourcePixels": 2.882643141672147,
+        "maxJumpSourcePixels": 20.60681956044392,
+        "medianCircularity": 0.3292445893941579,
+        "medianContrast": 11.86819076538086,
+        "meanPriorDistanceSourcePixels": 21.75482517171336
+      },
+      "conclusion": "The radius-ulna pair atlas prior did not establish a source-supported radial artery segment meeting bounded candidate promotion thresholds."
+    },
+    "ulnarAnchoredCorrection": {
+      "method": "Rolling-median source-stack translation residual from the verified bounded ulnar artery candidate applied to the mapped radial artery prior.",
+      "correctionStatistics": {
+        "frameCount": 106,
+        "rawResidualMedianSourcePixels": 17.21038086888929,
+        "rawResidualP90SourcePixels": 31.843098613510065,
+        "rawResidualMaximumSourcePixels": 37.72253256825409,
+        "smoothedCorrectionMedianSourcePixels": 17.014017866762323,
+        "smoothedCorrectionP90SourcePixels": 29.207527466818604,
+        "smoothedCorrectionMaximumSourcePixels": 36.34970760065726,
+        "smoothedStepMedianSourcePixels": 1.0609489876764868,
+        "smoothedStepMaximumSourcePixels": 10.99894081870756
+      },
+      "bestBaselineTrack": {
+        "nodeCount": 17,
+        "spanFrameCount": 18,
+        "coverageFraction": 0.9444444444444444,
+        "firstSourceFilename": "avf1660c.png",
+        "lastSourceFilename": "avf1666b.png",
+        "meanJumpSourcePixels": 1.2546796664007247,
+        "maxJumpSourcePixels": 3.034696478405937,
+        "medianCircularity": 0.735508568562059,
+        "medianContrast": 18.48278045654297,
+        "meanPriorDistanceSourcePixels": 37.505125630721814
+      },
+      "boundedSegmentWorthDedicatedSourceBuilder": false,
+      "qualifyingSegmentCount": 0,
+      "conclusion": "The verified ulnar third anchor did not establish a radial artery segment long and source-supported enough for a dedicated fail-closed mask builder."
+    },
+    "representationEstablished": false,
+    "maskGenerationAllowed": false
+  },
+  "superficialTargetVein": {
+    "anatomicalId": null,
+    "semanticRole": "venous_access_target",
+    "workflowRunId": 34362180911,
+    "outputArtifactId": 10108333880,
+    "outputArchiveByteSize": 41931,
+    "outputArchiveSha256": "c5ef8f1ef8df47f484cf80aca2f491aa26b1335423948d4101287c68c938c4cd",
+    "search": {
+      "atlasPriorUsed": false,
+      "namedVeinIdentityUsed": false,
+      "scoreTargetSkinDepthPixels": 12,
+      "scoreDepthScalePixels": 12,
+      "frameCount": 451,
+      "framesWithAtLeastOneCandidate": 451,
+      "meanCandidatesPerFrame": 11.991130820399112,
+      "medianCandidatesPerFrame": 12,
+      "maxCandidatesPerFrameObserved": 28
+    },
+    "tracks": [
+      {
+        "rank": 1,
+        "classification": "diagnostic-track-only",
+        "nodeCount": 180,
+        "spanFrameCount": 213,
+        "coverageFraction": 0.8450704225352113,
+        "medianCircularity": 0.5095965004353129,
+        "medianContrast": 24.867618560791016,
+        "medianSkinDepthPixels": 37
+      },
+      {
+        "rank": 2,
+        "classification": "diagnostic-track-only",
+        "nodeCount": 151,
+        "spanFrameCount": 179,
+        "coverageFraction": 0.8435754189944135,
+        "medianCircularity": 0.3786059926781023,
+        "medianContrast": 26.877777099609375,
+        "medianSkinDepthPixels": 49
+      },
+      {
+        "rank": 3,
+        "classification": "diagnostic-track-only",
+        "nodeCount": 104,
+        "spanFrameCount": 124,
+        "coverageFraction": 0.8387096774193549,
+        "medianCircularity": 0.4808581308776241,
+        "medianContrast": 26.725677490234375,
+        "medianSkinDepthPixels": 55
+      },
+      {
+        "rank": 4,
+        "classification": "diagnostic-track-only",
+        "nodeCount": 25,
+        "spanFrameCount": 26,
+        "coverageFraction": 0.9615384615384616,
+        "medianCircularity": 1.6170362762841628,
+        "medianContrast": 22.850830078125,
+        "medianSkinDepthPixels": 26
+      },
+      {
+        "rank": 5,
+        "classification": "diagnostic-track-only",
+        "nodeCount": 22,
+        "spanFrameCount": 28,
+        "coverageFraction": 0.7857142857142857,
+        "medianCircularity": 0.8079424600049006,
+        "medianContrast": 34.633644104003906,
+        "medianSkinDepthPixels": 23
+      }
+    ],
+    "namedVeinIdentityEstablished": false,
+    "boundedSuperficialBranchEstablished": false,
+    "maskGenerationAllowed": false,
+    "conclusion": "Source-first discovery finds vessel-like tracks, but none satisfies the shallow, continuous, high-confidence gate required for a bounded superficial vessel candidate; no cephalic/basilic identity is assigned."
+  },
+  "disposition": {
+    "radialArteryStatus": "blocked-source-evidence",
+    "superficialTargetVeinStatus": "blocked-source-evidence",
+    "taskA06Status": "pending-human-edit",
+    "automaticPromotionAllowed": false
+  },
+  "claims": {
+    "humanEdited": false,
+    "anatomicallyReviewed": false,
+    "medicalValidation": false,
+    "patientSpaceGeometry": false,
+    "atlasGeometryUsedAsSubjectGeometry": false,
+    "namedVeinIdentityInferred": false,
+    "automaticPromotionAllowed": false
+  }
+}

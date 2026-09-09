@@ -79,7 +79,7 @@
     {
       "draftLabel": "radial_artery",
       "status": "blocked-source-evidence",
-      "reason": "Atlas-guided source-image diagnostic track failed vessel-confidence thresholds; no radial artery mask is accepted for manual correction.",
+      "reason": "Two reproducible source-image diagnostics are recorded in authoring/outputs/a06-vessel-source-diagnostic-provenance-20260909.json. The radius-ulna atlas prior and a verified-ulnar-anchor correction both failed bounded source-support promotion gates; no radial artery mask is accepted for manual correction.",
       "outputUri": null,
       "outputDigest": null
     },
@@ -93,7 +93,7 @@
     {
       "draftLabel": "superficial_target_vein",
       "status": "blocked-source-evidence",
-      "reason": "Cephalic and basilic atlas priors are not sufficiently supported by VHP source-image tissue, so the named superficial target vein identity remains unresolved.",
+      "reason": "Source-first superficial vessel discovery without atlas or named-vein priors found vessel-like tracks, but none met the shallow continuous high-confidence gate. Cephalic/basilic identity remains unresolved and no superficial target vein mask is accepted for manual correction; see authoring/outputs/a06-vessel-source-diagnostic-provenance-20260909.json.",
       "outputUri": null,
       "outputDigest": null
     }
