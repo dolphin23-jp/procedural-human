@@ -25,7 +25,7 @@
       "outsideRegion": null,
       "wallBoundary": null,
       "lumenRegion": null,
-      "reason": "vessel centerline is not generated; vessel segmentation/lumen mask is unavailable; TASK-A06 human manual anatomical correction is not complete"
+      "reason": "a bounded source-stack centerline candidate is generated, but the V0 dark-component masks are not yet established as anatomically reviewed wall/lumen segmentation, complete vessel extent is unknown, and TASK-A06 human manual anatomical correction is not complete"
     },
     {
       "draftLabel": "superficial_target_vein",

@@ -1,0 +1,353 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/a06-ulnar-continuous-segment-report/v1",
+  "title": "A06 Ulnar Continuous Segment Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "classification",
+    "anatomicalId",
+    "coordinateSpace",
+    "registration",
+    "strictTrackBeforeRecovery",
+    "continuousSegment",
+    "maskFrameCount",
+    "maskFiles",
+    "claims"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ph-a06-ulnar-continuous-segment-report.v1"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "task": {
+      "const": "TASK-A06"
+    },
+    "recordedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "classification": {
+      "const": "continuous-candidate"
+    },
+    "anatomicalId": {
+      "const": "structure.ulnar_artery.left"
+    },
+    "coordinateSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "patientSpaceClaim"],
+      "properties": {
+        "kind": {
+          "const": "source-image-stack"
+        },
+        "patientSpaceClaim": {
+          "const": false
+        }
+      }
+    },
+    "registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "proximalAtlasZ",
+        "distalAtlasZ",
+        "orientation",
+        "atlasGeometryUsedAsSubjectGeometry",
+        "atlasPriorTissueSupport"
+      ],
+      "properties": {
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "proximalAtlasZ": {
+          "const": 0.95
+        },
+        "distalAtlasZ": {
+          "const": 0.885
+        },
+        "orientation": {
+          "const": 1
+        },
+        "atlasGeometryUsedAsSubjectGeometry": {
+          "const": false
+        },
+        "atlasPriorTissueSupport": {
+          "type": "object"
+        }
+      }
+    },
+    "strictTrackBeforeRecovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeCount",
+        "spanFrameCount",
+        "coverageFraction",
+        "firstGlobalFrameIndex",
+        "lastGlobalFrameIndex",
+        "meanJumpSourcePixels",
+        "maxJumpSourcePixels",
+        "medianCircularity",
+        "p25Circularity",
+        "medianContrast",
+        "p25Contrast"
+      ],
+      "properties": {
+        "nodeCount": {
+          "const": 103
+        },
+        "spanFrameCount": {
+          "const": 106
+        },
+        "coverageFraction": {
+          "type": "number",
+          "minimum": 0.95,
+          "maximum": 1
+        },
+        "firstGlobalFrameIndex": {
+          "const": 237
+        },
+        "lastGlobalFrameIndex": {
+          "const": 342
+        },
+        "meanJumpSourcePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "maxJumpSourcePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "medianCircularity": {
+          "type": "number",
+          "minimum": 0.9
+        },
+        "p25Circularity": {
+          "type": "number",
+          "minimum": 0.7
+        },
+        "medianContrast": {
+          "type": "number",
+          "minimum": 55
+        },
+        "p25Contrast": {
+          "type": "number",
+          "minimum": 45
+        }
+      }
+    },
+    "continuousSegment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frameCount",
+        "firstGlobalFrameIndex",
+        "lastGlobalFrameIndex",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "directDetectionFrameCount",
+        "sourceRecoveredGapFrameCount",
+        "sourceRecoveredGapFrames",
+        "coverageFraction",
+        "meanJumpSourcePixels",
+        "maxJumpSourcePixels",
+        "medianCircularity",
+        "p25Circularity",
+        "medianContrast",
+        "p25Contrast",
+        "minimumContrast"
+      ],
+      "properties": {
+        "frameCount": {
+          "const": 106
+        },
+        "firstGlobalFrameIndex": {
+          "const": 237
+        },
+        "lastGlobalFrameIndex": {
+          "const": 342
+        },
+        "firstSourceFilename": {
+          "const": "avf1646a.png"
+        },
+        "lastSourceFilename": {
+          "const": "avf1681a.png"
+        },
+        "directDetectionFrameCount": {
+          "const": 103
+        },
+        "sourceRecoveredGapFrameCount": {
+          "const": 3
+        },
+        "sourceRecoveredGapFrames": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "enum": [239, 241, 244]
+          },
+          "uniqueItems": true
+        },
+        "coverageFraction": {
+          "const": 1
+        },
+        "meanJumpSourcePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.5
+        },
+        "maxJumpSourcePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "medianCircularity": {
+          "type": "number",
+          "minimum": 0.9
+        },
+        "p25Circularity": {
+          "type": "number",
+          "minimum": 0.7
+        },
+        "medianContrast": {
+          "type": "number",
+          "minimum": 55
+        },
+        "p25Contrast": {
+          "type": "number",
+          "minimum": 45
+        },
+        "minimumContrast": {
+          "type": "number",
+          "minimum": 25
+        }
+      }
+    },
+    "maskFrameCount": {
+      "const": 106
+    },
+    "maskFiles": {
+      "type": "array",
+      "minItems": 106,
+      "maxItems": 106,
+      "items": {
+        "$ref": "#/$defs/maskFile"
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "humanEdited",
+        "anatomicallyReviewed",
+        "medicalValidation",
+        "completeUlnarArteryExtent",
+        "continuousCandidateWithinBoundedSegment",
+        "patientSpaceGeometry",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "humanEdited": {
+          "const": false
+        },
+        "anatomicallyReviewed": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "completeUlnarArteryExtent": {
+          "const": false
+        },
+        "continuousCandidateWithinBoundedSegment": {
+          "const": true
+        },
+        "patientSpaceGeometry": {
+          "const": false
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "maskFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "globalFrameIndex",
+        "sourceFilename",
+        "centroidSourcePixels",
+        "areaPixels",
+        "circularity",
+        "contrast",
+        "atlasPriorDistanceSourcePixels",
+        "evidenceKind",
+        "maskPath",
+        "maskSha256"
+      ],
+      "properties": {
+        "globalFrameIndex": {
+          "type": "integer",
+          "minimum": 237,
+          "maximum": 342
+        },
+        "sourceFilename": {
+          "type": "string",
+          "pattern": "^avf\\d{4}[abc]\\.png$"
+        },
+        "centroidSourcePixels": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "y"],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          }
+        },
+        "areaPixels": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "circularity": {
+          "type": "number",
+          "minimum": 0
+        },
+        "contrast": {
+          "type": "number"
+        },
+        "atlasPriorDistanceSourcePixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "evidenceKind": {
+          "enum": ["strict-source-detection", "source-recovered-isolated-gap"]
+        },
+        "maskPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "maskSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

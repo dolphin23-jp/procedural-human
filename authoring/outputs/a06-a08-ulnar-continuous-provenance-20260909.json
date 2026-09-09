@@ -1,0 +1,59 @@
+{
+  "schema": "ph-a06-a08-ulnar-continuous-provenance.v1",
+  "schemaVersion": "1",
+  "tasks": ["TASK-A06", "TASK-A08"],
+  "recordedAt": "2026-09-09",
+  "sourceEvidence": {
+    "a05SourceFrameCount": 451,
+    "boneCandidateArtifactId": 10088808577,
+    "vesselCandidateArtifactId": 10091172378,
+    "atlasReferenceArtifactId": 10081007930
+  },
+  "execution": {
+    "workflowRunId": 34322915991,
+    "outputArtifactId": 10092590748,
+    "outputArchiveByteSize": 80834,
+    "outputArchiveSha256": "9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75",
+    "persistentStorage": {
+      "provider": "Google Drive",
+      "folderId": "1h56jvLLOnYsjINiFbvv_rWQ2TlFkvgjF",
+      "fileId": "1_h_HvF9kfTvqDkDDY3gA6CnTD5fZWj_U",
+      "filename": "a06-a08-ulnar-continuous-segment-v0.zip",
+      "readBackByteSizeVerified": true,
+      "readBackSha256Verified": true
+    }
+  },
+  "continuousSegment": {
+    "classification": "continuous-candidate",
+    "anatomicalId": "structure.ulnar_artery.left",
+    "firstGlobalFrameIndex": 237,
+    "lastGlobalFrameIndex": 342,
+    "firstSourceFilename": "avf1646a.png",
+    "lastSourceFilename": "avf1681a.png",
+    "frameCount": 106,
+    "directDetectionFrameCount": 103,
+    "sourceRecoveredGapFrameCount": 3,
+    "sourceRecoveredGapFrames": [239, 241, 244],
+    "coverageFraction": 1,
+    "meanJumpSourcePixels": 1.069230082437802,
+    "maxJumpSourcePixels": 5.656036606494801,
+    "medianCircularity": 0.9692594292747251,
+    "medianContrast": 66.98301696777344,
+    "minimumContrast": 31.017112731933594
+  },
+  "centerline": {
+    "status": "generated-v0-candidate",
+    "pointCount": 106,
+    "uri": "drive://1_h_HvF9kfTvqDkDDY3gA6CnTD5fZWj_U#a08-ulnar-source-stack-centerline-v0.json",
+    "coordinateSpaceKind": "source-image-stack"
+  },
+  "claims": {
+    "humanEdited": false,
+    "anatomicallyReviewed": false,
+    "medicalValidation": false,
+    "completeUlnarArteryExtent": false,
+    "patientSpaceGeometry": false,
+    "runtimeCenterline": false,
+    "automaticPromotionAllowed": false
+  }
+}

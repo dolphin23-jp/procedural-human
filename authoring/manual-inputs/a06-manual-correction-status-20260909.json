@@ -25,6 +25,12 @@
         "uri": "drive://1QR2LIlFP0OSTq4FodVGkr-o6Dpw50Krw/a06-source-evidence-vessel-candidates-v0.zip",
         "digest": "sha256:94134f3d5547597365181596511d440e21ac768b6df7a1eb8a16ea1666b72f5b",
         "supportStatus": "intermittent-v0-candidate; 157 source-supported mask frames within avf1624a.png through avf1685a.png; gaps remain unknown and human anatomical correction/review is pending"
+      },
+      {
+        "labels": ["ulnar_artery"],
+        "uri": "drive://1_h_HvF9kfTvqDkDDY3gA6CnTD5fZWj_U/a06-a08-ulnar-continuous-segment-v0.zip",
+        "digest": "sha256:9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75",
+        "supportStatus": "bounded continuous V0 candidate; 106 consecutive source frames avf1646a.png through avf1681a.png; complete vessel extent remains unknown"
       }
     ]
   },
@@ -80,7 +86,7 @@
     {
       "draftLabel": "ulnar_artery",
       "status": "pending-human-edit",
-      "reason": "Source-image-supported intermittent V0 candidate track is available on 157 frames spanning avf1624a.png through avf1685a.png; gaps and complete extent remain unknown and human anatomical correction/review is pending.",
+      "reason": "A bounded continuous source-supported V0 segment is available for all 106 frames from avf1646a.png through avf1681a.png, including three isolated gaps recovered by direct source-image re-detection; complete vessel extent remains unknown and human anatomical correction/review is still pending.",
       "outputUri": null,
       "outputDigest": null
     },

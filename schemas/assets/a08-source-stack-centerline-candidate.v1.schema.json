@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/a08-source-stack-centerline-candidate/v1",
+  "title": "A08 Source Stack Centerline Candidate v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "anatomicalId",
+    "status",
+    "coordinateSpace",
+    "support",
+    "points",
+    "lineage",
+    "claims"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ph-a08-source-stack-centerline-candidate.v1"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "task": {
+      "const": "TASK-A08"
+    },
+    "recordedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "anatomicalId": {
+      "const": "structure.ulnar_artery.left"
+    },
+    "status": {
+      "const": "generated-v0-candidate"
+    },
+    "coordinateSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "patientSpaceClaim",
+        "nominalSliceIntervalMm",
+        "physicalXyClaim"
+      ],
+      "properties": {
+        "kind": {
+          "const": "source-image-stack"
+        },
+        "patientSpaceClaim": {
+          "const": false
+        },
+        "nominalSliceIntervalMm": {
+          "const": 0.33
+        },
+        "physicalXyClaim": {
+          "const": false
+        }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firstGlobalFrameIndex",
+        "lastGlobalFrameIndex",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "pointCount",
+        "completeVesselExtentClaim"
+      ],
+      "properties": {
+        "firstGlobalFrameIndex": {
+          "const": 237
+        },
+        "lastGlobalFrameIndex": {
+          "const": 342
+        },
+        "firstSourceFilename": {
+          "const": "avf1646a.png"
+        },
+        "lastSourceFilename": {
+          "const": "avf1681a.png"
+        },
+        "pointCount": {
+          "const": 106
+        },
+        "completeVesselExtentClaim": {
+          "const": false
+        }
+      }
+    },
+    "points": {
+      "type": "array",
+      "minItems": 106,
+      "maxItems": 106,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "globalFrameIndex",
+          "sourceFilename",
+          "xSourcePixels",
+          "ySourcePixels",
+          "evidenceKind"
+        ],
+        "properties": {
+          "globalFrameIndex": {
+            "type": "integer",
+            "minimum": 237,
+            "maximum": 342
+          },
+          "sourceFilename": {
+            "type": "string",
+            "pattern": "^avf\\d{4}[abc]\\.png$"
+          },
+          "xSourcePixels": {
+            "type": "number"
+          },
+          "ySourcePixels": {
+            "type": "number"
+          },
+          "evidenceKind": {
+            "enum": ["strict-source-detection", "source-recovered-isolated-gap"]
+          }
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceReport", "pointDerivation"],
+      "properties": {
+        "sourceReport": {
+          "const": "a06-ulnar-continuous-segment-report.v0.json"
+        },
+        "pointDerivation": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "medicalValidation",
+        "patientSpaceGeometry",
+        "runtimeCenterline",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "medicalValidation": {
+          "const": false
+        },
+        "patientSpaceGeometry": {
+          "const": false
+        },
+        "runtimeCenterline": {
+          "const": false
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}

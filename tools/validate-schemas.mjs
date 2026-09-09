@@ -60,6 +60,21 @@ const authoringContracts = [
     'authoring/outputs/a06-source-evidence-vessel-provenance-20260909.json',
   ],
   [
+    'a06-ulnar-continuous-segment-report',
+    'schemas/assets/a06-ulnar-continuous-segment-report.v1.schema.json',
+    null,
+  ],
+  [
+    'a08-source-stack-centerline-candidate',
+    'schemas/assets/a08-source-stack-centerline-candidate.v1.schema.json',
+    null,
+  ],
+  [
+    'a06-a08-ulnar-continuous-provenance',
+    'schemas/assets/a06-a08-ulnar-continuous-provenance.v1.schema.json',
+    'authoring/outputs/a06-a08-ulnar-continuous-provenance-20260909.json',
+  ],
+  [
     'semantic-structure-mapping',
     'schemas/assets/semantic-structure-mapping.v1.schema.json',
     'authoring/semantic/a07-semantic-structure-mapping-20260909.json',
