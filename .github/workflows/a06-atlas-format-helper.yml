@@ -1,0 +1,40 @@
+name: A06 atlas format helper
+
+on:
+  push:
+    branches:
+      - task-a06-atlas-assisted-correction
+    paths:
+      - .github/workflows/a06-atlas-format-helper.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Apply repository Prettier
+        run: |
+          pnpm exec prettier --write             authoring/manual-inputs/a06-manual-correction-status-20260909.json             schemas/assets/a06-bone-candidate-provenance.v1.schema.json             schemas/assets/a06-multimodality-bone-candidate-report.v1.schema.json             schemas/assets/manual-edit-provenance.v1.schema.json
+      - name: Commit exact formatting output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add             authoring/manual-inputs/a06-manual-correction-status-20260909.json             schemas/assets/a06-bone-candidate-provenance.v1.schema.json             schemas/assets/a06-multimodality-bone-candidate-report.v1.schema.json             schemas/assets/manual-edit-provenance.v1.schema.json
+          if git diff --cached --quiet; then
+            echo "No formatting changes"
+          else
+            git commit -m "chore: format A06 atlas-assisted authoring records"
+            git push
+          fi
