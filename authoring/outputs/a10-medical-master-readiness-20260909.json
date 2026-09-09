@@ -9,7 +9,7 @@
     "TASK-A07 contains unresolved anatomical identities",
     "TASK-A08 required vessel centerlines are unavailable",
     "TASK-A09 boundary/lumen representations are unavailable",
-    "required semantic identities lack candidate representations: structure.radius.left, structure.ulna.left, structure.radial_artery.left, structure.ulnar_artery.left"
+    "required semantic identities lack candidate representations: structure.radial_artery.left, structure.ulnar_artery.left"
   ],
   "claims": {
     "medicalMasterCreated": false,
