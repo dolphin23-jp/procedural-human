@@ -203,7 +203,7 @@ def main() -> None:
             corrected_y - input_y,
         )
         input_to_corrected_distances.append(input_to_corrected_distance)
-        if input_to_corrected_distance > 6.0:
+        if input_to_corrected_distance > 10.0:
             raise BoundaryLumenCandidateError(
                 f"lumen-centered correction exceeds 10 source pixels at frame {frame_index}: "
                 f"{input_to_corrected_distance:.3f}"
