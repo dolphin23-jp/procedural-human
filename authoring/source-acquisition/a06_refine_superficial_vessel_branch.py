@@ -20,14 +20,14 @@ SELECT_MAX_MEDIAN_SKIN_DEPTH = 20.0
 SELECT_MIN_MEDIAN_CONTRAST = 25.0
 SELECT_MIN_COVERAGE = 0.85
 
-STRICT_NODE_MAX_SKIN_DEPTH = 25.0
-STRICT_NODE_MIN_CONTRAST = 20.0
-STRICT_NODE_MIN_CIRCULARITY = 0.25
-STRICT_NODE_MAX_AREA = 160
+STRICT_NODE_MAX_SKIN_DEPTH = 35.0
+STRICT_NODE_MIN_CONTRAST = 12.0
+STRICT_NODE_MIN_CIRCULARITY = 0.15
+STRICT_NODE_MAX_AREA = 220
 
 STRICT_MAX_GAP = 3
-STRICT_MAX_JUMP_PER_FRAME = 4.5
-STRICT_MAX_DEPTH_CHANGE_PER_FRAME = 8.0
+STRICT_MAX_JUMP_PER_FRAME = 5.5
+STRICT_MAX_DEPTH_CHANGE_PER_FRAME = 12.0
 
 RECOVERY_MAX_DISTANCE = 5.0
 RECOVERY_MIN_CONTRAST = 20.0
@@ -427,9 +427,29 @@ def main() -> None:
     first_frame = int(segment[0]["globalFrameIndex"])
     last_frame = int(segment[-1]["globalFrameIndex"])
     span = last_frame - first_frame + 1
+    segment_diagnostics = [
+        {
+            "firstGlobalFrameIndex": int(candidate[0]["globalFrameIndex"]),
+            "lastGlobalFrameIndex": int(candidate[-1]["globalFrameIndex"]),
+            "directNodeCount": len(candidate),
+            "spanFrameCount": (
+                int(candidate[-1]["globalFrameIndex"])
+                - int(candidate[0]["globalFrameIndex"])
+                + 1
+            ),
+        }
+        for candidate in segments[:5]
+    ]
+    print(
+        json.dumps(
+            {"strictSegmentDiagnostics": segment_diagnostics},
+            indent=2,
+        )
+    )
     if span < MIN_CONTINUOUS_FRAME_COUNT:
         raise SuperficialBranchRefinementError(
-            f"strict superficial segment is too short: {span} frames"
+            f"strict superficial segment is too short: {span} frames; "
+            f"diagnostics={segment_diagnostics}"
         )
 
     direct = {
