@@ -1,0 +1,272 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/a06-a08-ulnar-continuous-provenance/v1",
+  "title": "A06/A08 Ulnar Continuous Segment Provenance v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "tasks",
+    "recordedAt",
+    "sourceEvidence",
+    "execution",
+    "continuousSegment",
+    "centerline",
+    "claims"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ph-a06-a08-ulnar-continuous-provenance.v1"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "enum": [
+          "TASK-A06",
+          "TASK-A08"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "recordedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "sourceEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "a05SourceFrameCount",
+        "boneCandidateArtifactId",
+        "vesselCandidateArtifactId",
+        "atlasReferenceArtifactId"
+      ],
+      "properties": {
+        "a05SourceFrameCount": {
+          "const": 451
+        },
+        "boneCandidateArtifactId": {
+          "const": 10088808577
+        },
+        "vesselCandidateArtifactId": {
+          "const": 10091172378
+        },
+        "atlasReferenceArtifactId": {
+          "const": 10081007930
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workflowRunId",
+        "outputArtifactId",
+        "outputArchiveByteSize",
+        "outputArchiveSha256",
+        "persistentStorage"
+      ],
+      "properties": {
+        "workflowRunId": {
+          "const": 34322915991
+        },
+        "outputArtifactId": {
+          "const": 10092590748
+        },
+        "outputArchiveByteSize": {
+          "const": 80834
+        },
+        "outputArchiveSha256": {
+          "const": "9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75"
+        },
+        "persistentStorage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider",
+            "folderId",
+            "fileId",
+            "filename",
+            "readBackByteSizeVerified",
+            "readBackSha256Verified"
+          ],
+          "properties": {
+            "provider": {
+              "const": "Google Drive"
+            },
+            "folderId": {
+              "const": "1h56jvLLOnYsjINiFbvv_rWQ2TlFkvgjF"
+            },
+            "fileId": {
+              "const": "1_h_HvF9kfTvqDkDDY3gA6CnTD5fZWj_U"
+            },
+            "filename": {
+              "const": "a06-a08-ulnar-continuous-segment-v0.zip"
+            },
+            "readBackByteSizeVerified": {
+              "const": true
+            },
+            "readBackSha256Verified": {
+              "const": true
+            }
+          }
+        }
+      }
+    },
+    "continuousSegment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "anatomicalId",
+        "firstGlobalFrameIndex",
+        "lastGlobalFrameIndex",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "frameCount",
+        "directDetectionFrameCount",
+        "sourceRecoveredGapFrameCount",
+        "sourceRecoveredGapFrames",
+        "coverageFraction",
+        "meanJumpSourcePixels",
+        "maxJumpSourcePixels",
+        "medianCircularity",
+        "medianContrast",
+        "minimumContrast"
+      ],
+      "properties": {
+        "classification": {
+          "const": "continuous-candidate"
+        },
+        "anatomicalId": {
+          "const": "structure.ulnar_artery.left"
+        },
+        "firstGlobalFrameIndex": {
+          "const": 237
+        },
+        "lastGlobalFrameIndex": {
+          "const": 342
+        },
+        "firstSourceFilename": {
+          "const": "avf1646a.png"
+        },
+        "lastSourceFilename": {
+          "const": "avf1681a.png"
+        },
+        "frameCount": {
+          "const": 106
+        },
+        "directDetectionFrameCount": {
+          "const": 103
+        },
+        "sourceRecoveredGapFrameCount": {
+          "const": 3
+        },
+        "sourceRecoveredGapFrames": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "enum": [
+              239,
+              241,
+              244
+            ]
+          },
+          "uniqueItems": true
+        },
+        "coverageFraction": {
+          "const": 1
+        },
+        "meanJumpSourcePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.5
+        },
+        "maxJumpSourcePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "medianCircularity": {
+          "type": "number",
+          "minimum": 0.9
+        },
+        "medianContrast": {
+          "type": "number",
+          "minimum": 55
+        },
+        "minimumContrast": {
+          "type": "number",
+          "minimum": 25
+        }
+      }
+    },
+    "centerline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "pointCount",
+        "uri",
+        "coordinateSpaceKind"
+      ],
+      "properties": {
+        "status": {
+          "const": "generated-v0-candidate"
+        },
+        "pointCount": {
+          "const": 106
+        },
+        "uri": {
+          "const": "drive://1_h_HvF9kfTvqDkDDY3gA6CnTD5fZWj_U#a08-ulnar-source-stack-centerline-v0.json"
+        },
+        "coordinateSpaceKind": {
+          "const": "source-image-stack"
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "humanEdited",
+        "anatomicallyReviewed",
+        "medicalValidation",
+        "completeUlnarArteryExtent",
+        "patientSpaceGeometry",
+        "runtimeCenterline",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "humanEdited": {
+          "const": false
+        },
+        "anatomicallyReviewed": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "completeUlnarArteryExtent": {
+          "const": false
+        },
+        "patientSpaceGeometry": {
+          "const": false
+        },
+        "runtimeCenterline": {
+          "const": false
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}
