@@ -1,0 +1,404 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/a06-human-review-receipt/v1",
+  "title": "TASK-A06 Human Review Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "sourceSession",
+    "source",
+    "structures",
+    "claims"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ph-a06-human-review-receipt.v1"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "task": {
+      "const": "TASK-A06"
+    },
+    "recordedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "sourceSession": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "assetRevision",
+        "reviewerReference",
+        "reviewTool",
+        "reviewToolVersion",
+        "startedAt",
+        "exportedAt",
+        "sessionStatus",
+        "persistentStorage"
+      ],
+      "properties": {
+        "schema": {
+          "const": "ph-a06-human-review-session.v1"
+        },
+        "assetRevision": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "reviewerReference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewTool": {
+          "const": "Procedural Human A06 iPad Review"
+        },
+        "reviewToolVersion": {
+          "const": "1"
+        },
+        "startedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "exportedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "sessionStatus": {
+          "const": "complete-no-flags"
+        },
+        "persistentStorage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider",
+            "folderId",
+            "fileId",
+            "filename",
+            "uri",
+            "byteSize",
+            "digest",
+            "uploadAccepted",
+            "metadataReadBackByteSizeVerified",
+            "sha256ReadBackVerified"
+          ],
+          "properties": {
+            "provider": {
+              "const": "Google Drive"
+            },
+            "folderId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fileId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "filename": {
+              "const": "a06-human-review-2026-09-09.json"
+            },
+            "uri": {
+              "type": "string",
+              "minLength": 1
+            },
+            "byteSize": {
+              "const": 215158
+            },
+            "digest": {
+              "const": "sha256:b27d91db3714446d231aa27fca16cc620753b5cc96e0157d56e90a1afed9a8d4"
+            },
+            "uploadAccepted": {
+              "const": true
+            },
+            "metadataReadBackByteSizeVerified": {
+              "const": true
+            },
+            "sha256ReadBackVerified": {
+              "const": true
+            }
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frameCount",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "cropFilenameShaAggregate"
+      ],
+      "properties": {
+        "frameCount": {
+          "const": 451
+        },
+        "firstSourceFilename": {
+          "const": "avf1567a.png"
+        },
+        "lastSourceFilename": {
+          "const": "avf1717a.png"
+        },
+        "cropFilenameShaAggregate": {
+          "const": "sha256:f6e46638ecb84a16dd20cc604931874ec36815091d050b31843392b7d73c7171"
+        }
+      }
+    },
+    "structures": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "draftLabel",
+          "supportedFrameCount",
+          "reviewedFrameCount",
+          "acceptedFrameCount",
+          "flaggedFrameCount",
+          "complete"
+        ],
+        "properties": {
+          "draftLabel": {
+            "enum": [
+              "skin",
+              "subcutaneous_soft_tissue",
+              "major_muscle_tendon_region",
+              "radius",
+              "ulna",
+              "ulnar_artery"
+            ]
+          },
+          "supportedFrameCount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 451
+          },
+          "reviewedFrameCount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 451
+          },
+          "acceptedFrameCount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 451
+          },
+          "flaggedFrameCount": {
+            "const": 0
+          },
+          "complete": {
+            "const": true
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "draftLabel": {
+                  "enum": [
+                    "skin",
+                    "subcutaneous_soft_tissue",
+                    "major_muscle_tendon_region"
+                  ]
+                }
+              },
+              "required": [
+                "draftLabel"
+              ]
+            },
+            "then": {
+              "properties": {
+                "supportedFrameCount": {
+                  "const": 451
+                },
+                "reviewedFrameCount": {
+                  "const": 451
+                },
+                "acceptedFrameCount": {
+                  "const": 451
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "draftLabel": {
+                  "enum": [
+                    "radius",
+                    "ulna"
+                  ]
+                }
+              },
+              "required": [
+                "draftLabel"
+              ]
+            },
+            "then": {
+              "properties": {
+                "supportedFrameCount": {
+                  "const": 357
+                },
+                "reviewedFrameCount": {
+                  "const": 357
+                },
+                "acceptedFrameCount": {
+                  "const": 357
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "draftLabel": {
+                  "const": "ulnar_artery"
+                }
+              },
+              "required": [
+                "draftLabel"
+              ]
+            },
+            "then": {
+              "properties": {
+                "supportedFrameCount": {
+                  "const": 106
+                },
+                "reviewedFrameCount": {
+                  "const": 106
+                },
+                "acceptedFrameCount": {
+                  "const": 106
+                }
+              }
+            }
+          }
+        ]
+      },
+      "allOf": [
+        {
+          "contains": {
+            "properties": {
+              "draftLabel": {
+                "const": "skin"
+              }
+            },
+            "required": [
+              "draftLabel"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "draftLabel": {
+                "const": "subcutaneous_soft_tissue"
+              }
+            },
+            "required": [
+              "draftLabel"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "draftLabel": {
+                "const": "major_muscle_tendon_region"
+              }
+            },
+            "required": [
+              "draftLabel"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "draftLabel": {
+                "const": "radius"
+              }
+            },
+            "required": [
+              "draftLabel"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "draftLabel": {
+                "const": "ulna"
+              }
+            },
+            "required": [
+              "draftLabel"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "draftLabel": {
+                "const": "ulnar_artery"
+              }
+            },
+            "required": [
+              "draftLabel"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "humanReviewInputRecorded",
+        "humanEdited",
+        "anatomicallyReviewed",
+        "medicalValidation",
+        "patientSpaceGeometry",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "humanReviewInputRecorded": {
+          "const": true
+        },
+        "humanEdited": {
+          "const": false
+        },
+        "anatomicallyReviewed": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "patientSpaceGeometry": {
+          "const": false
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}
