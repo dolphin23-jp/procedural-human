@@ -124,10 +124,7 @@
         "additionalProperties": false,
         "properties": {
           "draftLabel": {
-            "enum": [
-              "radius",
-              "ulna"
-            ]
+            "enum": ["radius", "ulna"]
           },
           "semanticId": {
             "type": "string",
