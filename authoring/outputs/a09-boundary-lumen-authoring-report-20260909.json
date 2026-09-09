@@ -21,11 +21,11 @@
     {
       "draftLabel": "ulnar_artery",
       "anatomicalId": "structure.ulnar_artery.left",
-      "representationStatus": "blocked",
-      "outsideRegion": null,
-      "wallBoundary": null,
-      "lumenRegion": null,
-      "reason": "a bounded source-stack centerline candidate is generated, but the V0 dark-component masks are not yet established as anatomically reviewed wall/lumen segmentation, complete vessel extent is unknown, and TASK-A06 human manual anatomical correction is not complete"
+      "representationStatus": "generated",
+      "outsideRegion": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#outside=source-crop-complement-of-lumen",
+      "wallBoundary": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#boundary/ulnar_artery",
+      "lumenRegion": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#lumen/ulnar_artery",
+      "reason": "A bounded 106-frame V0/source-stack topology candidate is generated from avf1646a.png through avf1681a.png. Lumen is the source-image-supported mask, outside is its source-crop complement, and wallBoundary is the topological lumen/outside interface. No anatomical wall-thickness, complete-vessel-extent, Patient Space, anatomical-review, or medical-validation claim is made."
     },
     {
       "draftLabel": "superficial_target_vein",
@@ -38,7 +38,7 @@
     }
   ],
   "claims": {
-    "boundaryLumenRepresentationsCreated": false,
+    "boundaryLumenRepresentationsCreated": true,
     "patientSpaceGeometry": false,
     "medicalValidation": false,
     "automaticPromotionAllowed": false
