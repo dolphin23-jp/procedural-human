@@ -33,10 +33,7 @@
     "coordinateSpace": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "kind",
-        "patientSpaceClaim"
-      ],
+      "required": ["kind", "patientSpaceClaim"],
       "properties": {
         "kind": {
           "const": "source-image-stack"
