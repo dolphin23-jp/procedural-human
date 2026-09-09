@@ -1,0 +1,123 @@
+{
+  "schema": "ph-manual-edit-provenance.v1",
+  "schemaVersion": "1",
+  "task": "TASK-A06",
+  "recordedAt": "2026-09-10",
+  "coordinateSpace": {
+    "kind": "source-image-stack",
+    "patientSpaceClaim": false,
+    "ctRegistrationEstablished": false
+  },
+  "source": {
+    "sourceFrameCount": 451,
+    "sourceFilenameShaAggregate": "sha256:0c330a99eedf1a446ca6502b4a7bde12e9893e96dc75f65348cb16f32d701f48",
+    "cropFilenameShaAggregate": "sha256:f6e46638ecb84a16dd20cc604931874ec36815091d050b31843392b7d73c7171",
+    "candidateOutputDigest": "sha256:6a9f302ab5a1efd5d5d9c60e3c29aeee6b2082f3e04df2bcbe880e886b8b3ef4",
+    "supplementalCandidateOutputs": [
+      {
+        "labels": [
+          "radius",
+          "ulna"
+        ],
+        "uri": "drive://1RqfSfjMtmssxnm0CJRYqgoIUeHi8rEfq/a06-support-aware-radius-ulna-v0.zip",
+        "digest": "sha256:407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b",
+        "supportStatus": "partial-support-v0-candidate; avf1567a.png through avf1685c.png; outside interval unknown"
+      },
+      {
+        "labels": [
+          "ulnar_artery"
+        ],
+        "uri": "drive://1QR2LIlFP0OSTq4FodVGkr-o6Dpw50Krw/a06-source-evidence-vessel-candidates-v0.zip",
+        "digest": "sha256:94134f3d5547597365181596511d440e21ac768b6df7a1eb8a16ea1666b72f5b",
+        "supportStatus": "intermittent-v0-candidate; 157 source-supported mask frames within avf1624a.png through avf1685a.png; gaps remain unknown and human anatomical correction/review is pending"
+      },
+      {
+        "labels": [
+          "ulnar_artery"
+        ],
+        "uri": "drive://1_h_HvF9kfTvqDkDDY3gA6CnTD5fZWj_U/a06-a08-ulnar-continuous-segment-v0.zip",
+        "digest": "sha256:9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75",
+        "supportStatus": "bounded continuous V0 candidate; 106 consecutive source frames avf1646a.png through avf1681a.png; complete vessel extent remains unknown"
+      }
+    ]
+  },
+  "manualCorrection": {
+    "status": "human-correction-recorded",
+    "editorReference": "N.P",
+    "tool": "Procedural Human A06 iPad Review v1",
+    "completedAt": "2026-09-09T22:04:50.394Z",
+    "reviewEvidence": {
+      "sessionSchema": "ph-a06-human-review-session.v1",
+      "receiptPath": "authoring/manual-inputs/a06-human-review-receipt-20260910.json",
+      "sourceSessionUri": "drive://15kHqXOree3lM2TAxRHlEm8pMf5sUNHO5/a06-human-review-2026-09-09.json",
+      "sourceSessionDigest": "sha256:b27d91db3714446d231aa27fca16cc620753b5cc96e0157d56e90a1afed9a8d4",
+      "assetRevision": "sha256:8ab5c0ec345f5307da6932d468a16a0fe825eb74fc461c6cef45d54eaa72ef30",
+      "sessionStatus": "complete-no-flags"
+    }
+  },
+  "structures": [
+    {
+      "draftLabel": "skin",
+      "status": "reviewed-no-change",
+      "reason": "Human source-mask review accepted all 451 source-supported frames with zero flags; no mask edits were requested. This is TASK-A06 review provenance only and does not establish TASK-A12 anatomical review or medical validation.",
+      "outputUri": "drive://1ODbpp-EL-VojrI1Dc2sZdBHO22QGnFZc/a05-real-v0-output-from-verified-handoff.zip",
+      "outputDigest": "sha256:6a9f302ab5a1efd5d5d9c60e3c29aeee6b2082f3e04df2bcbe880e886b8b3ef4"
+    },
+    {
+      "draftLabel": "subcutaneous_soft_tissue",
+      "status": "reviewed-no-change",
+      "reason": "Human source-mask review accepted all 451 source-supported frames with zero flags; no mask edits were requested. This is TASK-A06 review provenance only and does not establish TASK-A12 anatomical review or medical validation.",
+      "outputUri": "drive://1ODbpp-EL-VojrI1Dc2sZdBHO22QGnFZc/a05-real-v0-output-from-verified-handoff.zip",
+      "outputDigest": "sha256:6a9f302ab5a1efd5d5d9c60e3c29aeee6b2082f3e04df2bcbe880e886b8b3ef4"
+    },
+    {
+      "draftLabel": "major_muscle_tendon_region",
+      "status": "reviewed-no-change",
+      "reason": "Human source-mask review accepted all 451 source-supported frames with zero flags; no mask edits were requested. This is TASK-A06 review provenance only and does not establish TASK-A12 anatomical review or medical validation.",
+      "outputUri": "drive://1ODbpp-EL-VojrI1Dc2sZdBHO22QGnFZc/a05-real-v0-output-from-verified-handoff.zip",
+      "outputDigest": "sha256:6a9f302ab5a1efd5d5d9c60e3c29aeee6b2082f3e04df2bcbe880e886b8b3ef4"
+    },
+    {
+      "draftLabel": "radius",
+      "status": "reviewed-no-change",
+      "reason": "Human source-mask review accepted all 357 source-supported frames with zero flags; no mask edits were requested. This is TASK-A06 review provenance only and does not establish TASK-A12 anatomical review or medical validation.",
+      "outputUri": "drive://1RqfSfjMtmssxnm0CJRYqgoIUeHi8rEfq/a06-support-aware-radius-ulna-v0.zip",
+      "outputDigest": "sha256:407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b"
+    },
+    {
+      "draftLabel": "ulna",
+      "status": "reviewed-no-change",
+      "reason": "Human source-mask review accepted all 357 source-supported frames with zero flags; no mask edits were requested. This is TASK-A06 review provenance only and does not establish TASK-A12 anatomical review or medical validation.",
+      "outputUri": "drive://1RqfSfjMtmssxnm0CJRYqgoIUeHi8rEfq/a06-support-aware-radius-ulna-v0.zip",
+      "outputDigest": "sha256:407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b"
+    },
+    {
+      "draftLabel": "radial_artery",
+      "status": "blocked-source-evidence",
+      "reason": "Multiple reproducible source-image diagnostics are recorded in authoring/outputs/a06-vessel-source-diagnostic-provenance-20260909.json. Radius-ulna atlas prior, expanded 60/80/100 px priors, a verified-ulnar-anchor correction, and an atlas-center-free bone-constrained source-first search all failed fixed bounded continuity gates; no radial artery mask is accepted for manual correction.",
+      "outputUri": null,
+      "outputDigest": null
+    },
+    {
+      "draftLabel": "ulnar_artery",
+      "status": "reviewed-no-change",
+      "reason": "Human source-mask review accepted all 106 source-supported frames with zero flags; no mask edits were requested. This is TASK-A06 review provenance only and does not establish TASK-A12 anatomical review or medical validation.",
+      "outputUri": "drive://1_h_HvF9kfTvqDkDDY3gA6CnTD5fZWj_U/a06-a08-ulnar-continuous-segment-v0.zip",
+      "outputDigest": "sha256:9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75"
+    },
+    {
+      "draftLabel": "superficial_target_vein",
+      "status": "blocked-source-evidence",
+      "reason": "Two independent source-first superficial vessel diagnostic families, both without named-vein atlas binding, found vessel-like tracks but none met fixed shallow/continuous/local-stability gates. Cephalic/basilic identity remains unresolved and no superficial target vein mask is accepted for manual correction; see authoring/outputs/a06-vessel-source-diagnostic-provenance-20260909.json.",
+      "outputUri": null,
+      "outputDigest": null
+    }
+  ],
+  "claims": {
+    "humanEdited": false,
+    "anatomicallyReviewed": false,
+    "medicalValidation": false,
+    "patientSpaceGeometry": false,
+    "automaticPromotionAllowed": false
+  }
+}
