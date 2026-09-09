@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/a06-human-review-session/v1",
+  "title": "TASK-A06 Human Review Session v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "assetRevision",
+    "reviewerReference",
+    "reviewTool",
+    "reviewToolVersion",
+    "startedAt",
+    "exportedAt",
+    "sessionStatus",
+    "coordinateSpace",
+    "source",
+    "structures",
+    "claims"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ph-a06-human-review-session.v1"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "task": {
+      "const": "TASK-A06"
+    },
+    "assetRevision": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "reviewerReference": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reviewTool": {
+      "const": "Procedural Human A06 iPad Review"
+    },
+    "reviewToolVersion": {
+      "const": "1"
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "exportedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sessionStatus": {
+      "enum": ["partial", "complete-no-flags", "complete-with-flags"]
+    },
+    "coordinateSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "patientSpaceClaim", "ctRegistrationEstablished"],
+      "properties": {
+        "kind": {
+          "const": "source-image-stack"
+        },
+        "patientSpaceClaim": {
+          "const": false
+        },
+        "ctRegistrationEstablished": {
+          "const": false
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frameCount",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "cropFilenameShaAggregate"
+      ],
+      "properties": {
+        "frameCount": {
+          "const": 451
+        },
+        "firstSourceFilename": {
+          "const": "avf1567a.png"
+        },
+        "lastSourceFilename": {
+          "const": "avf1717a.png"
+        },
+        "cropFilenameShaAggregate": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "structures": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "draftLabel",
+          "supportedFrameCount",
+          "reviewedFrameCount",
+          "flaggedFrameCount",
+          "complete",
+          "decisions"
+        ],
+        "properties": {
+          "draftLabel": {
+            "enum": [
+              "skin",
+              "subcutaneous_soft_tissue",
+              "major_muscle_tendon_region",
+              "radius",
+              "ulna",
+              "ulnar_artery"
+            ]
+          },
+          "supportedFrameCount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 451
+          },
+          "reviewedFrameCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 451
+          },
+          "flaggedFrameCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 451
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "decisions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sourceFilename", "decision"],
+              "properties": {
+                "sourceFilename": {
+                  "type": "string",
+                  "pattern": "^avf[0-9]{4}[abc]\\.png$"
+                },
+                "decision": {
+                  "enum": ["accepted", "flagged"]
+                },
+                "note": {
+                  "type": "string",
+                  "maxLength": 2000
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "humanReviewInputRecorded",
+        "anatomicallyReviewed",
+        "medicalValidation",
+        "patientSpaceGeometry",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "humanReviewInputRecorded": {
+          "const": true
+        },
+        "anatomicallyReviewed": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "patientSpaceGeometry": {
+          "const": false
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}
