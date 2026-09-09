@@ -208,7 +208,10 @@
                   ]
                 }
               },
-              "required": ["draftLabel"]
+              "required": [
+                "draftLabel"
+              ],
+              "type": "object"
             },
             "then": {
               "properties": {
@@ -221,17 +224,24 @@
                 "acceptedFrameCount": {
                   "const": 451
                 }
-              }
+              },
+              "type": "object"
             }
           },
           {
             "if": {
               "properties": {
                 "draftLabel": {
-                  "enum": ["radius", "ulna"]
+                  "enum": [
+                    "radius",
+                    "ulna"
+                  ]
                 }
               },
-              "required": ["draftLabel"]
+              "required": [
+                "draftLabel"
+              ],
+              "type": "object"
             },
             "then": {
               "properties": {
@@ -244,7 +254,8 @@
                 "acceptedFrameCount": {
                   "const": 357
                 }
-              }
+              },
+              "type": "object"
             }
           },
           {
@@ -254,7 +265,10 @@
                   "const": "ulnar_artery"
                 }
               },
-              "required": ["draftLabel"]
+              "required": [
+                "draftLabel"
+              ],
+              "type": "object"
             },
             "then": {
               "properties": {
@@ -267,7 +281,8 @@
                 "acceptedFrameCount": {
                   "const": 106
                 }
-              }
+              },
+              "type": "object"
             }
           }
         ]
@@ -280,7 +295,10 @@
                 "const": "skin"
               }
             },
-            "required": ["draftLabel"]
+            "required": [
+              "draftLabel"
+            ],
+            "type": "object"
           },
           "minContains": 1,
           "maxContains": 1
@@ -292,7 +310,10 @@
                 "const": "subcutaneous_soft_tissue"
               }
             },
-            "required": ["draftLabel"]
+            "required": [
+              "draftLabel"
+            ],
+            "type": "object"
           },
           "minContains": 1,
           "maxContains": 1
@@ -304,7 +325,10 @@
                 "const": "major_muscle_tendon_region"
               }
             },
-            "required": ["draftLabel"]
+            "required": [
+              "draftLabel"
+            ],
+            "type": "object"
           },
           "minContains": 1,
           "maxContains": 1
@@ -316,7 +340,10 @@
                 "const": "radius"
               }
             },
-            "required": ["draftLabel"]
+            "required": [
+              "draftLabel"
+            ],
+            "type": "object"
           },
           "minContains": 1,
           "maxContains": 1
@@ -328,7 +355,10 @@
                 "const": "ulna"
               }
             },
-            "required": ["draftLabel"]
+            "required": [
+              "draftLabel"
+            ],
+            "type": "object"
           },
           "minContains": 1,
           "maxContains": 1
@@ -340,7 +370,10 @@
                 "const": "ulnar_artery"
               }
             },
-            "required": ["draftLabel"]
+            "required": [
+              "draftLabel"
+            ],
+            "type": "object"
           },
           "minContains": 1,
           "maxContains": 1
