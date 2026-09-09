@@ -145,7 +145,7 @@ It is not selected as the primary MVP 0 source at TASK-A01 because its published
 This decision authorizes source acquisition/recording work in TASK-A02 and ingest tooling in TASK-A03. It does not authorize medical validation, runtime release, or fabricated completion of structures not supported by the source.
 
 
-## 7.1 2026-09-10 cross-subject atlas fallback diagnostic
+## 9. 2026-09-10 cross-subject atlas fallback diagnostic
 
 A bounded Z-Anatomy/BodyParts3D vessel fallback was tested after the same-subject VHP source-first radial-artery and superficial-vein searches failed closed. The atlas remained explicitly `atlas-derived`; it was not treated as acquired VHP geometry.
 
@@ -154,3 +154,16 @@ The registration used the VHP radius/ulna candidates, then calibrated a constant
 The mapped cephalic and basilic trajectories also had zero median overlap with the reviewed A05 subcutaneous candidate, while the mapped radial-artery trajectory strongly overlapped the major muscle/tendon candidate. These findings make direct cross-subject atlas substitution unsuitable for the current Medical Master strategy.
 
 Decision: **REJECT direct registered-atlas vessel substitution for this VHP individual.** The diagnostic is retained as negative evidence. TASK-A07 and TASK-A10 remain unchanged, and no human anatomical-review, procedure-specific-review, Patient Space, or medical-validation claim is created. A materially different source strategy is required for the missing radial artery and superficial target vein.
+
+
+## 10. 2026-09-10 same-source manual vessel identification strategy
+
+After the automated same-subject source searches and the direct cross-subject atlas-registration fallback both failed closed, the next evidence path is independent human identification directly on the unchanged Visible Human Female cryosection stack.
+
+The HuBMAP Human Reference Atlas female blood-vasculature reference object was also evaluated as a possible secondary source. Its published crosswalks do not provide the required distal-forearm radial artery, ulnar artery, cephalic vein, or basilic vein as corresponding female VHP 3D reference structures for this ROI. It therefore does not resolve the missing vessel representations and is not substituted into the Medical Master.
+
+TASK-A07 will use a sparse, source-space-only identification pass over global frames 237 through 342 at a stride of three frames (36 anchors). The reviewer will inspect the original VHP source images and may optionally display only the already human-reviewed radius, ulna, and bounded ulnar-artery masks as orientation context. Failed algorithmic vessel candidates and failed atlas-derived vessel trajectories are deliberately not shown, reducing anchoring toward evidence that has already failed acceptance.
+
+For each anchor, the reviewer may record a directly source-visible vessel center, mark the frame uncertain, or mark it not identifiable. The radial-artery identity is fixed by the task being reviewed. The superficial vein may remain anatomically unresolved; a cephalic- or basilic-vein identity may be recorded only as a human source candidate when sequence continuity supports that interpretation. No procedure-target role is assigned by this step.
+
+The exported session is human source-identification input only. It does not itself establish source-image support, anatomical review, procedure-specific review, Patient Space geometry, or medical validation. Any interpolation between accepted anchors remains a V0 candidate and must undergo a separate full-slice review before TASK-A08/TASK-A09 or Medical Master readiness can be reconsidered.
