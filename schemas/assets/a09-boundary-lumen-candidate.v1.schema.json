@@ -344,10 +344,7 @@
           "pattern": "^avf\\d{4}[abc]\\.png$"
         },
         "evidenceKind": {
-          "enum": [
-            "strict-source-detection",
-            "source-recovered-isolated-gap"
-          ]
+          "enum": ["strict-source-detection", "source-recovered-isolated-gap"]
         },
         "lumenMaskPath": {
           "type": "string",
@@ -393,10 +390,7 @@
         "correctedCenterlineSourcePixels": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "x",
-            "y"
-          ],
+          "required": ["x", "y"],
           "properties": {
             "x": {
               "type": "number"

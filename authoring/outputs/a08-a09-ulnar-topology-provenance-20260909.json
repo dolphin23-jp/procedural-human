@@ -1,10 +1,7 @@
 {
   "schema": "ph-a08-a09-ulnar-topology-provenance.v1",
   "schemaVersion": "1",
-  "tasks": [
-    "TASK-A08",
-    "TASK-A09"
-  ],
+  "tasks": ["TASK-A08", "TASK-A09"],
   "recordedAt": "2026-09-09",
   "sourceEvidence": {
     "continuousSegmentArtifactId": 10092590748,
@@ -30,9 +27,7 @@
     "pointCount": 106,
     "uri": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#a08-ulnar-lumen-centered-source-stack-centerline-v0.json",
     "inputCenterlineOutsideLumenFrameCount": 1,
-    "inputCenterlineOutsideLumenFrames": [
-      333
-    ],
+    "inputCenterlineOutsideLumenFrames": [333],
     "maxInputToCorrectedCenterlineDistancePixels": 6.366932184638628,
     "maxCorrectedCenterlineJumpPixels": 3.605551275463989,
     "meanCorrectedCenterlineJumpPixels": 1.1168323202481427
