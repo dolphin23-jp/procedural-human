@@ -7,6 +7,14 @@ import json
 from pathlib import Path
 from typing import Mapping
 
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError, ValidationError
+
+
+ROOT = Path(__file__).resolve().parents[5]
+MANUAL_EDIT_SCHEMA_PATH = (
+    ROOT / "schemas/assets/manual-edit-provenance.v1.schema.json"
+)
 
 EXPECTED_DRAFT_LABELS = frozenset(
     {
@@ -109,6 +117,34 @@ def _structure_rows(
     return rows
 
 
+def _validate_schema(record: Mapping[str, object]) -> None:
+    try:
+        schema = json.loads(
+            MANUAL_EDIT_SCHEMA_PATH.read_text(encoding="utf-8")
+        )
+        Draft202012Validator.check_schema(schema)
+        Draft202012Validator(schema).validate(record)
+    except OSError as exc:
+        raise ManualCorrectionValidationError(
+            f"cannot read TASK-A06 schema: {MANUAL_EDIT_SCHEMA_PATH}"
+        ) from exc
+    except json.JSONDecodeError as exc:
+        raise ManualCorrectionValidationError(
+            "TASK-A06 schema is not valid JSON"
+        ) from exc
+    except SchemaError as exc:
+        raise ManualCorrectionValidationError(
+            f"TASK-A06 schema is invalid: {exc.message}"
+        ) from exc
+    except ValidationError as exc:
+        location = ".".join(str(part) for part in exc.absolute_path)
+        where = location or "<root>"
+        raise ManualCorrectionValidationError(
+            "manual-correction record violates "
+            f"manual-edit-provenance.v1 at {where}: {exc.message}"
+        ) from exc
+
+
 def _validate_fixed_claims(record: Mapping[str, object]) -> None:
     coordinate_space = record.get("coordinateSpace")
     if not isinstance(coordinate_space, dict):
@@ -153,6 +189,8 @@ def validate_manual_correction_record(
     This is an authoring/provenance gate only. Passing it does not establish
     anatomical review, medical validation, Patient Space, or CT registration.
     """
+
+    _validate_schema(record)
 
     if record.get("schema") != "ph-manual-edit-provenance.v1":
         raise ManualCorrectionValidationError(
