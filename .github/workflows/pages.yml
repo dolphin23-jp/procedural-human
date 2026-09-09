@@ -153,7 +153,7 @@ jobs:
             --bones-root "$root/bones" \
             --ulnar-root "$root/ulnar" \
             --source-verification authoring/source-archives/a05-real-source-verification-20260909.json \
-            --manual-status authoring/manual-inputs/a06-manual-correction-status-20260909.json \
+            --manual-status authoring/manual-inputs/a06-manual-correction-status-20260910.json \
             --output-root apps/web/dist/a06-review-data
 
       - name: Record unavailable TASK-A06 review data without blocking preview
