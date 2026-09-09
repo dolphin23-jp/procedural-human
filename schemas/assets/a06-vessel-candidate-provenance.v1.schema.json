@@ -1,0 +1,374 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/a06-vessel-candidate-provenance/v1",
+  "title": "A06 Vessel Candidate Provenance v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "sourceEvidence",
+    "execution",
+    "registration",
+    "arteries",
+    "namedSuperficialVeinPriors",
+    "claims"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ph-a06-vessel-candidate-provenance.v1"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "task": {
+      "const": "TASK-A06"
+    },
+    "recordedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "sourceEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "a05SourceFrameCount",
+        "a05SourceFilenameShaAggregate",
+        "boneCandidatePackage",
+        "atlasReferencePackage"
+      ],
+      "properties": {
+        "a05SourceFrameCount": {
+          "const": 451
+        },
+        "a05SourceFilenameShaAggregate": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "boneCandidatePackage": {
+          "$ref": "#/$defs/artifactReference"
+        },
+        "atlasReferencePackage": {
+          "$ref": "#/$defs/artifactReference"
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workflowRunId",
+        "outputArtifactId",
+        "outputArchiveByteSize",
+        "outputArchiveSha256",
+        "persistentStorage"
+      ],
+      "properties": {
+        "workflowRunId": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "outputArtifactId": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "outputArchiveByteSize": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "outputArchiveSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "persistentStorage": {
+          "$ref": "#/$defs/persistentStorage"
+        }
+      }
+    },
+    "registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "proximalAtlasZ",
+        "distalAtlasZ",
+        "orientation",
+        "searchRadiusSourcePixels",
+        "atlasGeometryUsedAsSubjectGeometry"
+      ],
+      "properties": {
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "proximalAtlasZ": {
+          "const": 0.95
+        },
+        "distalAtlasZ": {
+          "const": 0.885
+        },
+        "orientation": {
+          "const": 1
+        },
+        "searchRadiusSourcePixels": {
+          "const": 40
+        },
+        "atlasGeometryUsedAsSubjectGeometry": {
+          "const": false
+        }
+      }
+    },
+    "arteries": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/arterySummary"
+      }
+    },
+    "namedSuperficialVeinPriors": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/veinSummary"
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "humanEdited",
+        "anatomicallyReviewed",
+        "medicalValidation",
+        "completeVesselExtent",
+        "vesselCenterlineEstablished",
+        "superficialTargetVeinIdentityEstablished",
+        "patientSpaceGeometry",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "humanEdited": {
+          "const": false
+        },
+        "anatomicallyReviewed": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "completeVesselExtent": {
+          "const": false
+        },
+        "vesselCenterlineEstablished": {
+          "const": false
+        },
+        "superficialTargetVeinIdentityEstablished": {
+          "const": false
+        },
+        "patientSpaceGeometry": {
+          "const": false
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "artifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifactId",
+        "archiveByteSize",
+        "archiveSha256"
+      ],
+      "properties": {
+        "artifactId": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "archiveByteSize": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "archiveSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "persistentStorage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "folderId",
+        "fileId",
+        "filename",
+        "readBackByteSizeVerified",
+        "readBackSha256Verified"
+      ],
+      "properties": {
+        "provider": {
+          "const": "Google Drive"
+        },
+        "folderId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fileId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "filename": {
+          "type": "string",
+          "minLength": 1
+        },
+        "readBackByteSizeVerified": {
+          "const": true
+        },
+        "readBackSha256Verified": {
+          "const": true
+        }
+      }
+    },
+    "trackSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeCount",
+        "spanFrameCount",
+        "coverageFraction",
+        "firstGlobalFrameIndex",
+        "lastGlobalFrameIndex",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "medianCircularity",
+        "medianContrast",
+        "meanJumpSourcePixels"
+      ],
+      "properties": {
+        "nodeCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "spanFrameCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "coverageFraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "firstGlobalFrameIndex": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lastGlobalFrameIndex": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "firstSourceFilename": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lastSourceFilename": {
+          "type": "string",
+          "minLength": 1
+        },
+        "medianCircularity": {
+          "type": "number",
+          "minimum": 0
+        },
+        "medianContrast": {
+          "type": "number"
+        },
+        "meanJumpSourcePixels": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "arterySummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "draftLabel",
+        "anatomicalId",
+        "classification",
+        "maskFrameCount",
+        "track"
+      ],
+      "properties": {
+        "draftLabel": {
+          "enum": [
+            "radial_artery",
+            "ulnar_artery"
+          ]
+        },
+        "anatomicalId": {
+          "enum": [
+            "structure.radial_artery.left",
+            "structure.ulnar_artery.left"
+          ]
+        },
+        "classification": {
+          "enum": [
+            "not-established",
+            "intermittent-candidate"
+          ]
+        },
+        "maskFrameCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "track": {
+          "$ref": "#/$defs/trackSummary"
+        }
+      }
+    },
+    "veinSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "draftLabel",
+        "anatomicalId",
+        "classification",
+        "meanTissueSupport",
+        "medianTissueSupport"
+      ],
+      "properties": {
+        "draftLabel": {
+          "enum": [
+            "cephalic_vein",
+            "basilic_vein"
+          ]
+        },
+        "anatomicalId": {
+          "enum": [
+            "structure.cephalic_vein.left",
+            "structure.basilic_vein.left"
+          ]
+        },
+        "classification": {
+          "const": "not-established"
+        },
+        "meanTissueSupport": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "medianTissueSupport": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  }
+}
