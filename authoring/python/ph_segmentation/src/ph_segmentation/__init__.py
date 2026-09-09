@@ -2,6 +2,7 @@ from .manual_correction import (
     ALLOWED_STRUCTURE_STATUSES,
     ManualCorrectionRecordError,
     ManualCorrectionStructure,
+    SupplementalCandidateOutput,
     build_manual_correction_record,
 )
 from .semantic_mapping import (
@@ -44,6 +45,7 @@ __all__ = [
     "KNOWN_IDENTITIES",
     "ManualCorrectionRecordError",
     "ManualCorrectionStructure",
+    "SupplementalCandidateOutput",
     "CandidateGenerationBlocked",
     "DEFAULT_VISIBLE_HUMAN_V0_RULES",
     "FeasibilityThresholds",
