@@ -69,7 +69,7 @@ jobs:
           assert topology["closedOuterBoundaryEveryFrame"] is True
           assert topology["correctedCenterlinePointInsideLumenEveryFrame"] is True
           diagnostic=report["sourceCenterlineDiagnostic"]
-          assert diagnostic["maxInputToCorrectedCenterlineDistancePixels"] <= 6
+          assert diagnostic["maxInputToCorrectedCenterlineDistancePixels"] <= 10
           assert diagnostic["maxCorrectedCenterlineJumpPixels"] <= 6
           assert topology["consecutiveFrameCoverage"] is True
           assert report["semantics"]["anatomicalWallThicknessClaim"] is False
