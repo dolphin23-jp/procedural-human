@@ -147,7 +147,7 @@ function ReviewImage({
     >
       <span className="a06-review__image-stack">
         <img
-          src={`${REVIEW_DATA_ROOT}${structure ? 'source/' : ''}${stem}.webp`}
+          src={`${REVIEW_DATA_ROOT}source/${stem}.webp`}
           alt=""
           loading="lazy"
         />
