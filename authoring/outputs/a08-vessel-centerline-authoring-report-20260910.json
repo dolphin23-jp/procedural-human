@@ -1,0 +1,43 @@
+{
+  "schema": "ph-vessel-centerline-authoring-report.v1",
+  "schemaVersion": "1",
+  "task": "TASK-A08",
+  "recordedAt": "2026-09-10",
+  "coordinateSpace": {
+    "kind": "source-image-stack",
+    "patientSpaceClaim": false,
+    "ctRegistrationEstablished": false
+  },
+  "structures": [
+    {
+      "draftLabel": "radial_artery",
+      "anatomicalId": "structure.radial_artery.left",
+      "feasibilityClassification": "not-established",
+      "centerlineStatus": "blocked",
+      "centerlineUri": null,
+      "reason": "Source feasibility remains not-established after TASK-A06 human review. No radial artery mask was accepted because multiple independent source-image diagnostics failed fixed bounded continuity gates; no centerline is fabricated."
+    },
+    {
+      "draftLabel": "ulnar_artery",
+      "anatomicalId": "structure.ulnar_artery.left",
+      "feasibilityClassification": "continuous-candidate",
+      "centerlineStatus": "generated",
+      "centerlineUri": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#a08-ulnar-lumen-centered-source-stack-centerline-v0.json",
+      "reason": "The bounded 106-frame source-stack continuous candidate from avf1646a.png through avf1681a.png was accepted unchanged by TASK-A06 human source-mask review. Its lumen-centered V0 centerline remains source-space only and does not claim complete vessel extent, Patient Space geometry, TASK-A12 anatomical review, or medical validation."
+    },
+    {
+      "draftLabel": "superficial_target_vein",
+      "anatomicalId": null,
+      "feasibilityClassification": "not-established",
+      "centerlineStatus": "blocked",
+      "centerlineUri": null,
+      "reason": "Source feasibility remains not-established after TASK-A06 human review; no accepted superficial target vein mask exists and named cephalic/basilic identity remains unresolved, so no centerline is fabricated."
+    }
+  ],
+  "claims": {
+    "centerlinesCreated": true,
+    "patientSpaceGeometry": false,
+    "medicalValidation": false,
+    "automaticPromotionAllowed": false
+  }
+}
