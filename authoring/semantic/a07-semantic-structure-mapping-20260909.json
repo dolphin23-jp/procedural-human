@@ -91,7 +91,7 @@
       "draftLabel": "superficial_target_vein",
       "semanticRole": "venous_access_target",
       "anatomicalId": null,
-      "reason": "Source evidence does not establish a named superficial vein identity; a procedure role must not be substituted for an anatomical entity ID."
+      "reason": "Source-first A06 discovery, including a shallow-prioritized rerun, did not establish a bounded superficial vessel representation or named cephalic/basilic identity. A procedure role must not be substituted for an anatomical entity ID; see authoring/outputs/a06-vessel-source-diagnostic-provenance-20260909.json."
     }
   ],
   "claims": {
