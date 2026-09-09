@@ -80,6 +80,10 @@ def _record(
         },
         "source": {
             "sourceFrameCount": 451,
+            "sourceFilenameShaAggregate": "sha256:" + "1" * 64,
+            "cropFilenameShaAggregate": "sha256:" + "2" * 64,
+            "candidateOutputDigest": "sha256:" + "3" * 64,
+            "supplementalCandidateOutputs": [],
         },
         "manualCorrection": {
             "status": "human-correction-recorded",
@@ -233,6 +237,33 @@ class TaskA06ManualCorrectionTests(unittest.TestCase):
             with self.assertRaisesRegex(
                 ManualCorrectionValidationError,
                 "claims.humanEdited",
+            ):
+                validate_manual_correction_record(
+                    record,
+                    output_files={
+                        "skin": skin,
+                        "subcutaneous_soft_tissue": subcutaneous,
+                    },
+                )
+
+    def test_schema_validation_runs_before_completion_invariants(self) -> None:
+        skin_payload = b"skin"
+        subcutaneous_payload = b"subcutaneous"
+        record = _record(skin_payload, subcutaneous_payload)
+        source = record["source"]
+        assert isinstance(source, dict)
+        del source["sourceFilenameShaAggregate"]
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            skin = root / "skin.zip"
+            subcutaneous = root / "subcutaneous.zip"
+            skin.write_bytes(skin_payload)
+            subcutaneous.write_bytes(subcutaneous_payload)
+
+            with self.assertRaisesRegex(
+                ManualCorrectionValidationError,
+                "violates manual-edit-provenance.v1",
             ):
                 validate_manual_correction_record(
                     record,
