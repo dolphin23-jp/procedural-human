@@ -1,0 +1,75 @@
+{
+  "schema": "ph-a07-atlas-fallback-provenance.v1",
+  "schemaVersion": "1",
+  "task": "TASK-A07",
+  "recordedAt": "2026-09-10",
+  "execution": {
+    "workflowRunId": 34414335275,
+    "outputArtifactId": 10128463142,
+    "outputArchiveByteSize": 51129,
+    "outputArchiveSha256": "sha256:867e7d679a87fe84029f85ee8090ef065d61feb363bf261ef977defbaf26251f"
+  },
+  "registrationValidation": {
+    "calibrationFrameCount": 53,
+    "holdoutFrameCount": 53,
+    "holdoutMedianSourcePixels": 26.08567170608894,
+    "holdoutP90SourcePixels": 33.812392292953696,
+    "technicalTriageMedianMaxSourcePixels": 25,
+    "technicalTriageP90MaxSourcePixels": 50,
+    "triagePassed": false
+  },
+  "structures": [
+    {
+      "draftLabel": "radial_artery",
+      "anatomicalId": "structure.radial_artery.left",
+      "inCropFraction": 1,
+      "medianSubcutaneousDiskFraction": 0.358974358974359,
+      "medianMuscleTendonDiskFraction": 0.9629629629629629,
+      "medianSkinDepthSourcePixels": 231,
+      "candidateForHumanOverlayReview": false
+    },
+    {
+      "draftLabel": "ulnar_artery",
+      "anatomicalId": "structure.ulnar_artery.left",
+      "inCropFraction": 1,
+      "medianSubcutaneousDiskFraction": 1,
+      "medianMuscleTendonDiskFraction": 0.3,
+      "medianSkinDepthSourcePixels": 170,
+      "candidateForHumanOverlayReview": false
+    },
+    {
+      "draftLabel": "cephalic_vein",
+      "anatomicalId": "structure.cephalic_vein.left",
+      "inCropFraction": 1,
+      "medianSubcutaneousDiskFraction": 0,
+      "medianMuscleTendonDiskFraction": 0,
+      "medianSkinDepthSourcePixels": 200.629150390625,
+      "candidateForHumanOverlayReview": false
+    },
+    {
+      "draftLabel": "basilic_vein",
+      "anatomicalId": "structure.basilic_vein.left",
+      "inCropFraction": 0.9439775910364145,
+      "medianSubcutaneousDiskFraction": 0,
+      "medianMuscleTendonDiskFraction": 0,
+      "medianSkinDepthSourcePixels": 78,
+      "candidateForHumanOverlayReview": false
+    }
+  ],
+  "disposition": {
+    "status": "rejected-gross-registration-mismatch",
+    "reason": "A Z-Anatomy/BodyParts3D atlas-derived fallback was registered to the VHP radius/ulna and calibrated on 53 human-reviewed ulnar-artery frames, then evaluated on a disjoint 53-frame holdout. Holdout median error exceeded the predeclared gross-mismatch triage threshold, and mapped superficial veins had zero median overlap with the reviewed A05 subcutaneous candidate. Relaxing the gate would convert a failed cross-subject registration into unsupported anatomy, so no overlay review or semantic/Medical Master promotion is authorized.",
+    "a07SemanticMappingChanged": false,
+    "a10MedicalMasterReadinessChanged": false
+  },
+  "claims": {
+    "atlasGeometryPromoted": false,
+    "sourceImageSupportEstablished": false,
+    "humanAnatomicalReview": false,
+    "procedureSpecificReview": false,
+    "medicalValidation": false,
+    "patientSpaceGeometry": false,
+    "superficialTargetVeinSelected": false,
+    "automaticPromotionAllowed": false
+  }
+}
