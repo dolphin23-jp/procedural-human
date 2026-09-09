@@ -171,7 +171,9 @@ export function A06Review() {
   const [maskOpacity, setMaskOpacity] = useState(0.45);
   const [reviewerReference, setReviewerReference] = useState('');
   const [startedAt, setStartedAt] = useState(() => new Date().toISOString());
-  const [decisions, setDecisions] = useState<Record<string, ReviewDecision>>({});
+  const [decisions, setDecisions] = useState<Record<string, ReviewDecision>>(
+    {},
+  );
   const [openFilename, setOpenFilename] = useState<string | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
 
@@ -206,7 +208,9 @@ export function A06Review() {
       .catch((error: unknown) => {
         if (!cancelled) {
           setLoadError(
-            error instanceof Error ? error.message : 'Unable to load review data.',
+            error instanceof Error
+              ? error.message
+              : 'Unable to load review data.',
           );
         }
       });
@@ -332,7 +336,10 @@ export function A06Review() {
     });
 
     const complete = rows.every((row) => row.complete);
-    const flagged = rows.reduce((total, row) => total + row.flaggedFrameCount, 0);
+    const flagged = rows.reduce(
+      (total, row) => total + row.flaggedFrameCount,
+      0,
+    );
     const payload = {
       schema: 'ph-a06-human-review-session.v1',
       schemaVersion: '1',
@@ -386,7 +393,8 @@ export function A06Review() {
 
   const resetReview = () => {
     if (!manifest) return;
-    if (!window.confirm('Clear all locally saved TASK-A06 review decisions?')) return;
+    if (!window.confirm('Clear all locally saved TASK-A06 review decisions?'))
+      return;
     window.localStorage.removeItem(`ph-a06-review:${manifest.assetRevision}`);
     setReviewerReference('');
     setStartedAt(new Date().toISOString());
@@ -427,12 +435,14 @@ export function A06Review() {
     <main className="a06-review">
       <header className="a06-review__header">
         <div>
-          <p className="a06-review__eyebrow">TASK-A06 · Human correction input</p>
+          <p className="a06-review__eyebrow">
+            TASK-A06 · Human correction input
+          </p>
           <h1>Distal forearm source / mask review</h1>
           <p className="a06-review__subhead">
-            V0 candidate review in source-image-stack coordinates only. This does
-            not establish anatomical review, medical validation, Patient Space, or
-            Medical Master status.
+            V0 candidate review in source-image-stack coordinates only. This
+            does not establish anatomical review, medical validation, Patient
+            Space, or Medical Master status.
           </p>
         </div>
         <a className="a06-review__back" href={import.meta.env.BASE_URL}>
@@ -472,7 +482,11 @@ export function A06Review() {
           <button type="button" onClick={exportReview}>
             Export review JSON
           </button>
-          <button type="button" className="a06-review__secondary" onClick={resetReview}>
+          <button
+            type="button"
+            className="a06-review__secondary"
+            onClick={resetReview}
+          >
             Reset local review
           </button>
         </div>
@@ -549,7 +563,10 @@ export function A06Review() {
         </button>
       </section>
 
-      <section className="a06-review__grid" aria-label="Source frame review grid">
+      <section
+        className="a06-review__grid"
+        aria-label="Source frame review grid"
+      >
         {pageFrames.map((filename) => {
           const key = decisionKey(structure.draftLabel, filename);
           const decision = decisions[key];
@@ -650,7 +667,11 @@ export function A06Review() {
                 value={openDecision?.note ?? ''}
                 maxLength={2000}
                 onChange={(event) =>
-                  setNote(structure.draftLabel, openFilename, event.target.value)
+                  setNote(
+                    structure.draftLabel,
+                    openFilename,
+                    event.target.value,
+                  )
                 }
                 placeholder="Describe the boundary or identity concern."
               />
