@@ -181,11 +181,7 @@
     "artifactReference": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "artifactId",
-        "archiveByteSize",
-        "archiveSha256"
-      ],
+      "required": ["artifactId", "archiveByteSize", "archiveSha256"],
       "properties": {
         "artifactId": {
           "type": "integer",
@@ -306,10 +302,7 @@
       ],
       "properties": {
         "draftLabel": {
-          "enum": [
-            "radial_artery",
-            "ulnar_artery"
-          ]
+          "enum": ["radial_artery", "ulnar_artery"]
         },
         "anatomicalId": {
           "enum": [
@@ -318,10 +311,7 @@
           ]
         },
         "classification": {
-          "enum": [
-            "not-established",
-            "intermittent-candidate"
-          ]
+          "enum": ["not-established", "intermittent-candidate"]
         },
         "maskFrameCount": {
           "type": "integer",
@@ -344,10 +334,7 @@
       ],
       "properties": {
         "draftLabel": {
-          "enum": [
-            "cephalic_vein",
-            "basilic_vein"
-          ]
+          "enum": ["cephalic_vein", "basilic_vein"]
         },
         "anatomicalId": {
           "enum": [
