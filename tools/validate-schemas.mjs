@@ -75,6 +75,16 @@ const authoringContracts = [
     'authoring/outputs/a06-a08-ulnar-continuous-provenance-20260909.json',
   ],
   [
+    'a09-boundary-lumen-candidate',
+    'schemas/assets/a09-boundary-lumen-candidate.v1.schema.json',
+    null,
+  ],
+  [
+    'a08-a09-ulnar-topology-provenance',
+    'schemas/assets/a08-a09-ulnar-topology-provenance.v1.schema.json',
+    'authoring/outputs/a08-a09-ulnar-topology-provenance-20260909.json',
+  ],
+  [
     'semantic-structure-mapping',
     'schemas/assets/semantic-structure-mapping.v1.schema.json',
     'authoring/semantic/a07-semantic-structure-mapping-20260909.json',

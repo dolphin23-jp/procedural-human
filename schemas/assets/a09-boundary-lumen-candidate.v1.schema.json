@@ -1,0 +1,415 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/a09-boundary-lumen-candidate/v1",
+  "title": "A09 Boundary/Lumen Candidate v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "anatomicalId",
+    "status",
+    "coordinateSpace",
+    "support",
+    "semantics",
+    "topologyValidation",
+    "sourceCenterlineDiagnostic",
+    "summary",
+    "frames",
+    "lineage",
+    "claims"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ph-a09-boundary-lumen-candidate.v1"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "task": {
+      "const": "TASK-A09"
+    },
+    "recordedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "anatomicalId": {
+      "const": "structure.ulnar_artery.left"
+    },
+    "status": {
+      "const": "generated-v0-candidate"
+    },
+    "coordinateSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "patientSpaceClaim",
+        "nominalSliceIntervalMm",
+        "physicalXyClaim"
+      ],
+      "properties": {
+        "kind": {
+          "const": "source-image-stack"
+        },
+        "patientSpaceClaim": {
+          "const": false
+        },
+        "nominalSliceIntervalMm": {
+          "const": 0.33
+        },
+        "physicalXyClaim": {
+          "const": false
+        }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firstGlobalFrameIndex",
+        "lastGlobalFrameIndex",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "frameCount",
+        "completeVesselExtentClaim"
+      ],
+      "properties": {
+        "firstGlobalFrameIndex": {
+          "const": 237
+        },
+        "lastGlobalFrameIndex": {
+          "const": 342
+        },
+        "firstSourceFilename": {
+          "const": "avf1646a.png"
+        },
+        "lastSourceFilename": {
+          "const": "avf1681a.png"
+        },
+        "frameCount": {
+          "const": 106
+        },
+        "completeVesselExtentClaim": {
+          "const": false
+        }
+      }
+    },
+    "semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lumenRegion",
+        "outsideRegion",
+        "wallBoundary",
+        "anatomicalWallThicknessClaim"
+      ],
+      "properties": {
+        "lumenRegion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outsideRegion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "wallBoundary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "anatomicalWallThicknessClaim": {
+          "const": false
+        }
+      }
+    },
+    "topologyValidation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "singleConnectedLumenComponentEveryFrame",
+        "closedOuterBoundaryEveryFrame",
+        "correctedCenterlinePointInsideLumenEveryFrame",
+        "consecutiveFrameCoverage"
+      ],
+      "properties": {
+        "singleConnectedLumenComponentEveryFrame": {
+          "const": true
+        },
+        "closedOuterBoundaryEveryFrame": {
+          "const": true
+        },
+        "consecutiveFrameCoverage": {
+          "const": true
+        },
+        "correctedCenterlinePointInsideLumenEveryFrame": {
+          "const": true
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "medianLumenAreaPixels",
+        "minLumenAreaPixels",
+        "maxLumenAreaPixels",
+        "medianEquivalentLumenRadiusPixels",
+        "minEquivalentLumenRadiusPixels",
+        "maxEquivalentLumenRadiusPixels",
+        "medianBoundaryPerimeterPixels"
+      ],
+      "properties": {
+        "medianLumenAreaPixels": {
+          "type": "number",
+          "minimum": 1
+        },
+        "minLumenAreaPixels": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxLumenAreaPixels": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "medianEquivalentLumenRadiusPixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "minEquivalentLumenRadiusPixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxEquivalentLumenRadiusPixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "medianBoundaryPerimeterPixels": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "frames": {
+      "type": "array",
+      "minItems": 106,
+      "maxItems": 106,
+      "items": {
+        "$ref": "#/$defs/frame"
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceContinuousSegmentReport",
+        "sourceCenterlineCandidate",
+        "derivation",
+        "correctedCenterlineCandidate"
+      ],
+      "properties": {
+        "sourceContinuousSegmentReport": {
+          "const": "a06-ulnar-continuous-segment-report.v0.json"
+        },
+        "sourceCenterlineCandidate": {
+          "const": "a08-ulnar-source-stack-centerline-v0.json"
+        },
+        "derivation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correctedCenterlineCandidate": {
+          "const": "a08-ulnar-lumen-centered-source-stack-centerline-v0.json"
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "humanEdited",
+        "anatomicallyReviewed",
+        "medicalValidation",
+        "completeVesselExtent",
+        "anatomicalWallThickness",
+        "patientSpaceGeometry",
+        "runtimeRepresentation",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "humanEdited": {
+          "const": false
+        },
+        "anatomicallyReviewed": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "completeVesselExtent": {
+          "const": false
+        },
+        "anatomicalWallThickness": {
+          "const": false
+        },
+        "patientSpaceGeometry": {
+          "const": false
+        },
+        "runtimeRepresentation": {
+          "const": false
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    },
+    "sourceCenterlineDiagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputCenterlineOutsideLumenFrameCount",
+        "inputCenterlineOutsideLumenFrames",
+        "maxInputToCorrectedCenterlineDistancePixels",
+        "meanInputToCorrectedCenterlineDistancePixels",
+        "maxCorrectedCenterlineJumpPixels",
+        "meanCorrectedCenterlineJumpPixels"
+      ],
+      "properties": {
+        "inputCenterlineOutsideLumenFrameCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "inputCenterlineOutsideLumenFrames": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 237,
+            "maximum": 342
+          },
+          "uniqueItems": true
+        },
+        "maxInputToCorrectedCenterlineDistancePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "meanInputToCorrectedCenterlineDistancePixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxCorrectedCenterlineJumpPixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "meanCorrectedCenterlineJumpPixels": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    }
+  },
+  "$defs": {
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "globalFrameIndex",
+        "sourceFilename",
+        "evidenceKind",
+        "lumenMaskPath",
+        "lumenMaskSha256",
+        "boundaryMaskPath",
+        "boundaryMaskSha256",
+        "outsideRegionDefinition",
+        "inputCenterlinePointInsideLumen",
+        "lumenAreaPixels",
+        "boundaryPointCount",
+        "boundaryPerimeterPixels",
+        "equivalentLumenRadiusPixels",
+        "correctedCenterlinePointInsideLumen",
+        "correctedCenterlineSourcePixels",
+        "correctedCenterlineClearancePixels",
+        "inputToCorrectedCenterlineDistancePixels"
+      ],
+      "properties": {
+        "globalFrameIndex": {
+          "type": "integer",
+          "minimum": 237,
+          "maximum": 342
+        },
+        "sourceFilename": {
+          "type": "string",
+          "pattern": "^avf\\d{4}[abc]\\.png$"
+        },
+        "evidenceKind": {
+          "enum": ["strict-source-detection", "source-recovered-isolated-gap"]
+        },
+        "lumenMaskPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lumenMaskSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "boundaryMaskPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "boundaryMaskSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "outsideRegionDefinition": {
+          "const": "source-crop complement of lumen candidate mask"
+        },
+        "lumenAreaPixels": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "boundaryPointCount": {
+          "type": "integer",
+          "minimum": 4
+        },
+        "boundaryPerimeterPixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "equivalentLumenRadiusPixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "inputCenterlinePointInsideLumen": {
+          "type": "boolean"
+        },
+        "correctedCenterlinePointInsideLumen": {
+          "const": true
+        },
+        "correctedCenterlineSourcePixels": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "y"],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          }
+        },
+        "correctedCenterlineClearancePixels": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "inputToCorrectedCenterlineDistancePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        }
+      }
+    }
+  }
+}

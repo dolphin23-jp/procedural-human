@@ -22,8 +22,8 @@
       "anatomicalId": "structure.ulnar_artery.left",
       "feasibilityClassification": "continuous-candidate",
       "centerlineStatus": "generated",
-      "centerlineUri": "drive://1_h_HvF9kfTvqDkDDY3gA6CnTD5fZWj_U#a08-ulnar-source-stack-centerline-v0.json",
-      "reason": "A bounded 106-frame source-stack continuous candidate is established from avf1646a.png through avf1681a.png; the generated centerline is V0/source-space only, does not claim complete vessel extent, Patient Space geometry, anatomical review, or medical validation."
+      "centerlineUri": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#a08-ulnar-lumen-centered-source-stack-centerline-v0.json",
+      "reason": "A bounded 106-frame source-stack continuous candidate is established from avf1646a.png through avf1681a.png. The centerline has been re-derived from the lumen masks using an in-mask distance-transform center and is inside the lumen candidate on every supported frame. It remains V0/source-space only and does not claim complete vessel extent, Patient Space geometry, anatomical review, or medical validation."
     },
     {
       "draftLabel": "superficial_target_vein",

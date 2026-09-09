@@ -40,6 +40,45 @@ class TaskA08Tests(unittest.TestCase):
             self.assertEqual(row["centerlineStatus"], "blocked")
             self.assertIsNone(row["centerlineUri"])
 
+    def test_explicit_v0_candidate_can_be_recorded_before_human_review(self) -> None:
+        feasibility = {
+            "radial_artery": {"classification": "not-established"},
+            "ulnar_artery": {"classification": "continuous-candidate"},
+            "superficial_target_vein": {"classification": "not-established"},
+        }
+        report = build_vessel_centerline_authoring_report(
+            recorded_at="2026-09-09",
+            vascular_feasibility=feasibility,
+            manual_correction_complete=False,
+            semantic_ids={
+                "radial_artery": "structure.radial_artery.left",
+                "ulnar_artery": "structure.ulnar_artery.left",
+                "superficial_target_vein": None,
+            },
+            candidate_centerline_uris={
+                "ulnar_artery": "drive://candidate#a08-ulnar-centerline-v0.json",
+            },
+        )
+        by_label = {
+            row["draftLabel"]: row
+            for row in report["structures"]
+        }
+        self.assertTrue(report["claims"]["centerlinesCreated"])
+        self.assertEqual(
+            by_label["ulnar_artery"]["centerlineStatus"],
+            "generated",
+        )
+        self.assertEqual(
+            by_label["ulnar_artery"]["centerlineUri"],
+            "drive://candidate#a08-ulnar-centerline-v0.json",
+        )
+        self.assertEqual(
+            by_label["radial_artery"]["centerlineStatus"],
+            "blocked",
+        )
+        self.assertFalse(report["claims"]["patientSpaceGeometry"])
+        self.assertFalse(report["claims"]["medicalValidation"])
+
     def test_eligible_centerline_does_not_silently_invent_geometry(self) -> None:
         feasibility = {
             name: {"classification": "continuous-candidate"}

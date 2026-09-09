@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/a08-a09-ulnar-topology-provenance/v1",
+  "title": "A08/A09 Ulnar Topology Provenance v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "tasks",
+    "recordedAt",
+    "sourceEvidence",
+    "execution",
+    "correctedCenterline",
+    "boundaryLumen",
+    "claims"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ph-a08-a09-ulnar-topology-provenance.v1"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "enum": ["TASK-A08", "TASK-A09"]
+      },
+      "uniqueItems": true
+    },
+    "recordedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "sourceEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "continuousSegmentArtifactId",
+        "continuousSegmentArchiveByteSize",
+        "continuousSegmentArchiveSha256"
+      ],
+      "properties": {
+        "continuousSegmentArtifactId": {
+          "const": 10092590748
+        },
+        "continuousSegmentArchiveByteSize": {
+          "const": 80834
+        },
+        "continuousSegmentArchiveSha256": {
+          "const": "9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75"
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workflowRunId",
+        "outputArtifactId",
+        "outputArchiveByteSize",
+        "outputArchiveSha256",
+        "persistentStorage"
+      ],
+      "properties": {
+        "workflowRunId": {
+          "const": 34326476865
+        },
+        "outputArtifactId": {
+          "const": 10093960946
+        },
+        "outputArchiveByteSize": {
+          "const": 150204
+        },
+        "outputArchiveSha256": {
+          "const": "19c67a9031948e3b7169e62e500b43939a39193178d60582c5949b01ac8a3d70"
+        },
+        "persistentStorage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider",
+            "folderId",
+            "fileId",
+            "filename",
+            "readBackByteSizeVerified",
+            "readBackSha256Verified"
+          ],
+          "properties": {
+            "provider": {
+              "const": "Google Drive"
+            },
+            "folderId": {
+              "const": "1nPP92BIgjC9PaRqKhsxwoBshIj2qWljM"
+            },
+            "fileId": {
+              "const": "10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ"
+            },
+            "filename": {
+              "const": "a09-ulnar-boundary-lumen-v0.zip"
+            },
+            "readBackByteSizeVerified": {
+              "const": true
+            },
+            "readBackSha256Verified": {
+              "const": true
+            }
+          }
+        }
+      }
+    },
+    "correctedCenterline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "pointCount",
+        "uri",
+        "inputCenterlineOutsideLumenFrameCount",
+        "inputCenterlineOutsideLumenFrames",
+        "maxInputToCorrectedCenterlineDistancePixels",
+        "maxCorrectedCenterlineJumpPixels",
+        "meanCorrectedCenterlineJumpPixels"
+      ],
+      "properties": {
+        "status": {
+          "const": "generated-v0-candidate"
+        },
+        "pointCount": {
+          "const": 106
+        },
+        "uri": {
+          "const": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#a08-ulnar-lumen-centered-source-stack-centerline-v0.json"
+        },
+        "inputCenterlineOutsideLumenFrameCount": {
+          "const": 1
+        },
+        "inputCenterlineOutsideLumenFrames": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "const": 333
+          }
+        },
+        "maxInputToCorrectedCenterlineDistancePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "maxCorrectedCenterlineJumpPixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "meanCorrectedCenterlineJumpPixels": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "boundaryLumen": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "frameCount",
+        "singleConnectedLumenComponentEveryFrame",
+        "closedOuterBoundaryEveryFrame",
+        "correctedCenterlinePointInsideLumenEveryFrame",
+        "medianLumenAreaPixels",
+        "minLumenAreaPixels",
+        "maxLumenAreaPixels",
+        "medianEquivalentLumenRadiusPixels",
+        "medianBoundaryPerimeterPixels",
+        "outsideRegionUri",
+        "wallBoundaryUri",
+        "lumenRegionUri"
+      ],
+      "properties": {
+        "status": {
+          "const": "generated-v0-candidate"
+        },
+        "firstSourceFilename": {
+          "const": "avf1646a.png"
+        },
+        "lastSourceFilename": {
+          "const": "avf1681a.png"
+        },
+        "frameCount": {
+          "const": 106
+        },
+        "singleConnectedLumenComponentEveryFrame": {
+          "const": true
+        },
+        "closedOuterBoundaryEveryFrame": {
+          "const": true
+        },
+        "correctedCenterlinePointInsideLumenEveryFrame": {
+          "const": true
+        },
+        "medianLumenAreaPixels": {
+          "type": "number",
+          "minimum": 1
+        },
+        "minLumenAreaPixels": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxLumenAreaPixels": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "medianEquivalentLumenRadiusPixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "medianBoundaryPerimeterPixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "outsideRegionUri": {
+          "const": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#outside=source-crop-complement-of-lumen"
+        },
+        "wallBoundaryUri": {
+          "const": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#boundary/ulnar_artery"
+        },
+        "lumenRegionUri": {
+          "const": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#lumen/ulnar_artery"
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "humanEdited",
+        "anatomicallyReviewed",
+        "medicalValidation",
+        "completeVesselExtent",
+        "anatomicalWallThickness",
+        "patientSpaceGeometry",
+        "runtimeRepresentation",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "humanEdited": {
+          "const": false
+        },
+        "anatomicallyReviewed": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "completeVesselExtent": {
+          "const": false
+        },
+        "anatomicalWallThickness": {
+          "const": false
+        },
+        "patientSpaceGeometry": {
+          "const": false
+        },
+        "runtimeRepresentation": {
+          "const": false
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}

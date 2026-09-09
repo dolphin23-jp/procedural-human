@@ -54,6 +54,65 @@ class TaskA09Tests(unittest.TestCase):
             self.assertIsNone(row["wallBoundary"])
             self.assertIsNone(row["lumenRegion"])
 
+    def test_explicit_v0_boundary_lumen_candidate_can_be_recorded_before_human_review(self) -> None:
+        centerline_report = {
+            "structures": [
+                {
+                    "draftLabel": "radial_artery",
+                    "anatomicalId": "structure.radial_artery.left",
+                    "centerlineStatus": "blocked",
+                },
+                {
+                    "draftLabel": "ulnar_artery",
+                    "anatomicalId": "structure.ulnar_artery.left",
+                    "centerlineStatus": "generated",
+                },
+                {
+                    "draftLabel": "superficial_target_vein",
+                    "anatomicalId": None,
+                    "centerlineStatus": "blocked",
+                },
+            ]
+        }
+        report = build_boundary_lumen_authoring_report(
+            recorded_at="2026-09-09",
+            centerline_report=centerline_report,
+            vessel_mask_available={
+                "radial_artery": False,
+                "ulnar_artery": True,
+                "superficial_target_vein": False,
+            },
+            manual_correction_complete=False,
+            candidate_representations={
+                "ulnar_artery": {
+                    "outsideRegion": "drive://candidate#outside",
+                    "wallBoundary": "drive://candidate#boundary",
+                    "lumenRegion": "drive://candidate#lumen",
+                }
+            },
+        )
+        by_label = {
+            row["draftLabel"]: row
+            for row in report["structures"]
+        }
+        self.assertTrue(
+            report["claims"]["boundaryLumenRepresentationsCreated"]
+        )
+        self.assertEqual(
+            by_label["ulnar_artery"]["representationStatus"],
+            "generated",
+        )
+        self.assertEqual(
+            by_label["ulnar_artery"]["lumenRegion"],
+            "drive://candidate#lumen",
+        )
+        self.assertEqual(
+            by_label["radial_artery"]["representationStatus"],
+            "blocked",
+        )
+        self.assertFalse(report["claims"]["patientSpaceGeometry"])
+        self.assertFalse(report["claims"]["medicalValidation"])
+
     def test_eligible_representation_does_not_invent_boundary_geometry(self) -> None:
         centerline_report = {
             "structures": [
