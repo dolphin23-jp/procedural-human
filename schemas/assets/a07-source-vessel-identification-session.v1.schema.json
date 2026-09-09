@@ -1,0 +1,398 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/a07-source-vessel-identification-session/v1",
+  "title": "TASK-A07 Source Vessel Identification Session v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "assetRevision",
+    "reviewerReference",
+    "reviewTool",
+    "reviewToolVersion",
+    "startedAt",
+    "exportedAt",
+    "sessionStatus",
+    "coordinateSpace",
+    "source",
+    "anchorPlan",
+    "evidenceStrategy",
+    "targets",
+    "claims"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ph-a07-source-vessel-identification-session.v1"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "task": {
+      "const": "TASK-A07"
+    },
+    "assetRevision": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "reviewerReference": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reviewTool": {
+      "const": "Procedural Human A07 iPad Source Vessel Identification"
+    },
+    "reviewToolVersion": {
+      "const": "1"
+    },
+    "startedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"
+    },
+    "exportedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"
+    },
+    "sessionStatus": {
+      "enum": [
+        "partial",
+        "complete-all-identified",
+        "complete-with-gaps"
+      ]
+    },
+    "coordinateSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "patientSpaceClaim",
+        "ctRegistrationEstablished"
+      ],
+      "properties": {
+        "kind": {
+          "const": "source-image-stack"
+        },
+        "patientSpaceClaim": {
+          "const": false
+        },
+        "ctRegistrationEstablished": {
+          "const": false
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset",
+        "frameCount",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "cropWidthPixels",
+        "cropHeightPixels",
+        "cropFilenameShaAggregate"
+      ],
+      "properties": {
+        "dataset": {
+          "const": "U.S. National Library of Medicine — Visible Human Project — Visible Human Female"
+        },
+        "frameCount": {
+          "const": 451
+        },
+        "firstSourceFilename": {
+          "const": "avf1567a.png"
+        },
+        "lastSourceFilename": {
+          "const": "avf1717a.png"
+        },
+        "cropWidthPixels": {
+          "const": 550
+        },
+        "cropHeightPixels": {
+          "const": 750
+        },
+        "cropFilenameShaAggregate": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "anchorPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firstGlobalFrameIndex",
+        "lastGlobalFrameIndex",
+        "strideFrames",
+        "anchorCount"
+      ],
+      "properties": {
+        "firstGlobalFrameIndex": {
+          "const": 237
+        },
+        "lastGlobalFrameIndex": {
+          "const": 342
+        },
+        "strideFrames": {
+          "const": 3
+        },
+        "anchorCount": {
+          "const": 36
+        }
+      }
+    },
+    "evidenceStrategy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithmicVesselSuggestionShown",
+        "contextOverlays",
+        "interpretationRule"
+      ],
+      "properties": {
+        "algorithmicVesselSuggestionShown": {
+          "const": false
+        },
+        "contextOverlays": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "radius",
+              "ulna",
+              "ulnar_artery"
+            ]
+          }
+        },
+        "interpretationRule": {
+          "const": "mark-only-source-visible-vessel-do-not-place-by-anatomical-expectation-alone"
+        }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/target"
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "humanSourceIdentificationInputRecorded",
+        "sourceImageSupportEstablished",
+        "anatomicallyReviewed",
+        "procedureSpecificReview",
+        "medicalValidation",
+        "patientSpaceGeometry",
+        "superficialTargetVeinSelected",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "humanSourceIdentificationInputRecorded": {
+          "const": true
+        },
+        "sourceImageSupportEstablished": {
+          "const": false
+        },
+        "anatomicallyReviewed": {
+          "const": false
+        },
+        "procedureSpecificReview": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "patientSpaceGeometry": {
+          "const": false
+        },
+        "superficialTargetVeinSelected": {
+          "const": false
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "globalFrameIndex",
+        "sourceFilename",
+        "decision"
+      ],
+      "properties": {
+        "globalFrameIndex": {
+          "type": "integer",
+          "minimum": 237,
+          "maximum": 342
+        },
+        "sourceFilename": {
+          "type": "string",
+          "pattern": "^avf[0-9]{4}[abc]\\.png$"
+        },
+        "decision": {
+          "enum": [
+            "identified",
+            "uncertain",
+            "not-identifiable"
+          ]
+        },
+        "xSourcePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 550
+        },
+        "ySourcePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 750
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 2000
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "decision": {
+                "const": "identified"
+              }
+            },
+            "required": [
+              "decision"
+            ]
+          },
+          "then": {
+            "required": [
+              "xSourcePixels",
+              "ySourcePixels"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "decision": {
+                "enum": [
+                  "uncertain",
+                  "not-identifiable"
+                ]
+              }
+            },
+            "required": [
+              "decision"
+            ]
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "xSourcePixels"
+                  ]
+                },
+                {
+                  "required": [
+                    "ySourcePixels"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "targetKey",
+        "anatomicalIdentity",
+        "identityDisposition",
+        "anchorCount",
+        "decidedCount",
+        "identifiedCount",
+        "uncertainCount",
+        "notIdentifiableCount",
+        "complete",
+        "decisions"
+      ],
+      "properties": {
+        "targetKey": {
+          "enum": [
+            "radial_artery",
+            "superficial_target_vein"
+          ]
+        },
+        "anatomicalIdentity": {
+          "oneOf": [
+            {
+              "const": "structure.radial_artery.left"
+            },
+            {
+              "const": "structure.cephalic_vein.left"
+            },
+            {
+              "const": "structure.basilic_vein.left"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "identityDisposition": {
+          "enum": [
+            "fixed-by-task",
+            "human-source-candidate",
+            "unresolved"
+          ]
+        },
+        "anchorCount": {
+          "const": 36
+        },
+        "decidedCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 36
+        },
+        "identifiedCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 36
+        },
+        "uncertainCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 36
+        },
+        "notIdentifiableCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 36
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "decisions": {
+          "type": "array",
+          "maxItems": 36,
+          "items": {
+            "$ref": "#/$defs/decision"
+          }
+        }
+      }
+    }
+  }
+}
