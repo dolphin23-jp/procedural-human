@@ -6,6 +6,7 @@ on:
       - main
       - task-048-053-runtime-interaction
       - task-a06-ipad-human-review
+      - task-a07-manual-source-vessel-identification
   workflow_dispatch:
 
 permissions:
