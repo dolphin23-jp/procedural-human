@@ -20,10 +20,10 @@
     {
       "draftLabel": "ulnar_artery",
       "anatomicalId": "structure.ulnar_artery.left",
-      "feasibilityClassification": "intermittent-candidate",
-      "centerlineStatus": "blocked",
-      "centerlineUri": null,
-      "reason": "source feasibility is intermittent-candidate, not continuous-candidate; TASK-A06 human manual anatomical correction is not complete"
+      "feasibilityClassification": "continuous-candidate",
+      "centerlineStatus": "generated",
+      "centerlineUri": "drive://1_h_HvF9kfTvqDkDDY3gA6CnTD5fZWj_U#a08-ulnar-source-stack-centerline-v0.json",
+      "reason": "A bounded 106-frame source-stack continuous candidate is established from avf1646a.png through avf1681a.png; the generated centerline is V0/source-space only, does not claim complete vessel extent, Patient Space geometry, anatomical review, or medical validation."
     },
     {
       "draftLabel": "superficial_target_vein",
@@ -35,7 +35,7 @@
     }
   ],
   "claims": {
-    "centerlinesCreated": false,
+    "centerlinesCreated": true,
     "patientSpaceGeometry": false,
     "medicalValidation": false,
     "automaticPromotionAllowed": false
