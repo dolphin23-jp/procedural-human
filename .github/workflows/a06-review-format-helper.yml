@@ -1,0 +1,51 @@
+name: A06 review format helper
+
+on:
+  push:
+    branches:
+      - task-a06-ipad-human-review
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: task-a06-ipad-human-review
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Format A06 review records
+        run: |
+          pnpm exec prettier --write \
+            schemas/assets/manual-edit-provenance.v1.schema.json \
+            schemas/assets/a06-human-review-receipt.v1.schema.json \
+            authoring/manual-inputs/a06-manual-correction-status-20260910.json
+
+      - name: Commit formatting
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            schemas/assets/manual-edit-provenance.v1.schema.json \
+            schemas/assets/a06-human-review-receipt.v1.schema.json \
+            authoring/manual-inputs/a06-manual-correction-status-20260910.json
+          git commit -m "A06: format review provenance records"
+          git push origin HEAD:task-a06-ipad-human-review
