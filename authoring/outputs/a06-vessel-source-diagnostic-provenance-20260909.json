@@ -10,7 +10,10 @@
   },
   "inputs": {
     "sourceFrameCount": 451,
-    "sourceFilenameRange": ["avf1567a.png", "avf1717a.png"],
+    "sourceFilenameRange": [
+      "avf1567a.png",
+      "avf1717a.png"
+    ],
     "a05CandidateArtifact": {
       "artifactId": 10078955143,
       "archiveByteSize": 6943149,
@@ -87,7 +90,63 @@
       "conclusion": "The verified ulnar third anchor did not establish a radial artery segment long and source-supported enough for a dedicated fail-closed mask builder."
     },
     "representationEstablished": false,
-    "maskGenerationAllowed": false
+    "maskGenerationAllowed": false,
+    "independentNegativeDiagnostics": {
+      "sourceBranchHead": "c75b4892c32dd9018b188fa3232ef1de1a44baa5",
+      "workflowRunId": 34353946687,
+      "outputArtifactId": 10104961928,
+      "outputArchiveByteSize": 3912,
+      "outputArchiveSha256": "399d35d1d7cdceaec85a5b3479fa02e8208e41593dbf0bc7ff1445508bca1204",
+      "boundedAtlasPrior": {
+        "fixedAcceptedMinSpanFrames": 45,
+        "framesWithAnyFixedQualityCandidate": 19,
+        "totalFixedQualityCandidates": 20,
+        "acceptedSegmentCount": 0,
+        "bestStrictPath": {
+          "nodeCount": 1,
+          "spanFrameCount": 1,
+          "coverageFraction": 1,
+          "sourceFilename": "avf1651b.png",
+          "medianCircularity": 1.9347481822815686,
+          "medianContrast": 57.723670959472656,
+          "medianPriorDistanceSourcePixels": 34.40571078958056
+        }
+      },
+      "expandedAtlasPrior": {
+        "searchRadiiSourcePixels": [
+          60,
+          80,
+          100
+        ],
+        "searchRadiiWithAcceptedSegment": [],
+        "reproducibleAcceptedPairCount": 0,
+        "bestSpanFramesByRadius": {
+          "60": 4,
+          "80": 2,
+          "100": 3
+        }
+      },
+      "sourceFirstBoneConstrained": {
+        "atlasCenterUsed": false,
+        "fixedAcceptedMinSpanFrames": 60,
+        "framesWithCandidate": 93,
+        "totalCandidateCount": 121,
+        "acceptedSegmentCount": 0,
+        "bestPath": {
+          "nodeCount": 11,
+          "spanFrameCount": 11,
+          "coverageFraction": 1,
+          "firstSourceFilename": "avf1639a.png",
+          "lastSourceFilename": "avf1642b.png",
+          "meanJumpPerFrameSourcePixels": 0.8954363248973125,
+          "maxJumpPerFrameSourcePixels": 1.2297746456210534,
+          "medianCircularity": 1.6646373855973162,
+          "medianContrast": 50.37965774536133,
+          "medianDistanceToRadiusPixels": 82.61541103002766
+        }
+      },
+      "conclusion": "Independent bounded, expanded-prior, and atlas-center-free bone-constrained source-first diagnostics all failed fixed continuity gates. This materially reduces the likelihood that the existing blocker is explained only by an overly narrow atlas search prior."
+    }
   },
   "superficialTargetVein": {
     "anatomicalId": null,
@@ -162,7 +221,61 @@
     "namedVeinIdentityEstablished": false,
     "boundedSuperficialBranchEstablished": false,
     "maskGenerationAllowed": false,
-    "conclusion": "Source-first discovery finds vessel-like tracks, but none satisfies the shallow, continuous, high-confidence gate required for a bounded superficial vessel candidate; no cephalic/basilic identity is assigned."
+    "conclusion": "Source-first discovery finds vessel-like tracks, but none satisfies the shallow, continuous, high-confidence gate required for a bounded superficial vessel candidate; no cephalic/basilic identity is assigned.",
+    "independentNegativeDiagnostic": {
+      "sourceBranchHead": "3f7cd1e2fc117ff398a520115b1558a4506f9cc6",
+      "workflowRunId": 34354887759,
+      "outputArtifactId": 10105362877,
+      "outputArchiveByteSize": 2581,
+      "outputArchiveSha256": "d5d5bac59333dba61e0fa8a82abffeec620483735e442a034bf2076bd067df2e",
+      "searchModel": {
+        "namedVeinAtlasUsed": false,
+        "sourceImageUsed": true,
+        "radiusUlnaTracksUsedForStableLocalCoordinates": true,
+        "a05SubcutaneousCandidateUsed": true,
+        "a05MuscleCandidateUsedAsExclusionEvidence": true,
+        "a05SkinCandidateUsedForDepth": true
+      },
+      "fixedAcceptedMinSpanFrames": 75,
+      "acceptedTrackCount": 0,
+      "notableRejectedTracks": [
+        {
+          "trackIndex": 0,
+          "nodeCount": 316,
+          "spanFrameCount": 318,
+          "coverageFraction": 0.9937106918238994,
+          "medianContrast": 46.249162673950195,
+          "medianSkinDistancePixels": 38,
+          "medianRingSubcutaneousFraction": 0.08893313422930148,
+          "normalizedAxisIqr": 1.015706297990121,
+          "normalizedPerpendicularIqr": 0.46040554981591275,
+          "rejectionSummary": "Long continuous vessel-like track, but weak subcutaneous support and unstable local position exceed fixed acceptance gates."
+        },
+        {
+          "trackIndex": 2,
+          "nodeCount": 39,
+          "spanFrameCount": 51,
+          "coverageFraction": 0.7647058823529411,
+          "medianContrast": 58.82591247558594,
+          "medianSkinDistancePixels": 20,
+          "medianRingSubcutaneousFraction": 0.986046511627907,
+          "medianRingMuscleFraction": 0.6120857699805068,
+          "rejectionSummary": "Shallower high-contrast track, but too short, below coverage gate, and too muscle-associated."
+        },
+        {
+          "trackIndex": 5,
+          "nodeCount": 22,
+          "spanFrameCount": 24,
+          "coverageFraction": 0.9166666666666666,
+          "medianContrast": 50.55315399169922,
+          "medianSkinDistancePixels": 5,
+          "medianRingSubcutaneousFraction": 0.9652248028979331,
+          "medianRingMuscleFraction": 0.5972560975609755,
+          "rejectionSummary": "Very shallow stable track, but only 24 frames and too muscle-associated."
+        }
+      ],
+      "conclusion": "A second anonymous source-first diagnostic also failed the fixed superficial-vein gate. Long tracks were positionally unstable or poorly subcutaneous; shallow stable tracks were too short and/or muscle-associated. No named vein identity or procedural target binding is justified."
+    }
   },
   "disposition": {
     "radialArteryStatus": "blocked-source-evidence",
