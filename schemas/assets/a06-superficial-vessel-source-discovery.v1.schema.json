@@ -5,8 +5,16 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "schema","schemaVersion","task","recordedAt","coordinateSpace",
-    "searchDefinition","candidateStatistics","tracks","disposition","claims"
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "coordinateSpace",
+    "searchDefinition",
+    "candidateStatistics",
+    "tracks",
+    "disposition",
+    "claims"
   ],
   "properties": {
     "schema": { "const": "ph-a06-superficial-vessel-source-discovery.v1" },
@@ -16,7 +24,7 @@
     "coordinateSpace": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind","patientSpaceClaim"],
+      "required": ["kind", "patientSpaceClaim"],
       "properties": {
         "kind": { "const": "source-image-stack" },
         "patientSpaceClaim": { "const": false }
@@ -26,15 +34,26 @@
     "candidateStatistics": {
       "type": "object",
       "required": [
-        "frameCount","framesWithAtLeastOneCandidate","meanCandidatesPerFrame",
-        "medianCandidatesPerFrame","maxCandidatesPerFrameObserved"
+        "frameCount",
+        "framesWithAtLeastOneCandidate",
+        "meanCandidatesPerFrame",
+        "medianCandidatesPerFrame",
+        "maxCandidatesPerFrameObserved"
       ],
       "properties": {
         "frameCount": { "const": 451 },
-        "framesWithAtLeastOneCandidate": { "type": "integer", "minimum": 0, "maximum": 451 },
+        "framesWithAtLeastOneCandidate": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 451
+        },
         "meanCandidatesPerFrame": { "type": "number", "minimum": 0 },
         "medianCandidatesPerFrame": { "type": "number", "minimum": 0 },
-        "maxCandidatesPerFrameObserved": { "type": "integer", "minimum": 0, "maximum": 80 }
+        "maxCandidatesPerFrameObserved": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        }
       }
     },
     "tracks": {
@@ -46,8 +65,10 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "superficialTargetVeinAnatomicalId","targetIdentityEstablished",
-        "maskGenerationAllowed","reason"
+        "superficialTargetVeinAnatomicalId",
+        "targetIdentityEstablished",
+        "maskGenerationAllowed",
+        "reason"
       ],
       "properties": {
         "superficialTargetVeinAnatomicalId": { "type": "null" },
@@ -60,9 +81,14 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "humanEdited","anatomicallyReviewed","medicalValidation",
-        "namedVeinIdentityEstablished","superficialTargetVeinIdentityEstablished",
-        "vesselMaskGenerated","centerlineGenerated","patientSpaceGeometry",
+        "humanEdited",
+        "anatomicallyReviewed",
+        "medicalValidation",
+        "namedVeinIdentityEstablished",
+        "superficialTargetVeinIdentityEstablished",
+        "vesselMaskGenerated",
+        "centerlineGenerated",
+        "patientSpaceGeometry",
         "automaticPromotionAllowed"
       ],
       "properties": {
@@ -82,12 +108,28 @@
     "track": {
       "type": "object",
       "required": [
-        "rank","nodeCount","spanFrameCount","coverageFraction",
-        "firstGlobalFrameIndex","lastGlobalFrameIndex","firstSourceFilename",
-        "lastSourceFilename","meanGap","maxGap","meanJumpSourcePixels",
-        "maxJumpSourcePixels","medianAreaPixels","medianCircularity",
-        "p25Circularity","medianContrast","p25Contrast","medianSkinDepthPixels",
-        "p25SkinDepthPixels","p75SkinDepthPixels","meanNodeScore","nodes",
+        "rank",
+        "nodeCount",
+        "spanFrameCount",
+        "coverageFraction",
+        "firstGlobalFrameIndex",
+        "lastGlobalFrameIndex",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "meanGap",
+        "maxGap",
+        "meanJumpSourcePixels",
+        "maxJumpSourcePixels",
+        "medianAreaPixels",
+        "medianCircularity",
+        "p25Circularity",
+        "medianContrast",
+        "p25Contrast",
+        "medianSkinDepthPixels",
+        "p25SkinDepthPixels",
+        "p75SkinDepthPixels",
+        "meanNodeScore",
+        "nodes",
         "discoveryClassification"
       ],
       "properties": {
@@ -95,10 +137,24 @@
         "nodeCount": { "type": "integer", "minimum": 1 },
         "spanFrameCount": { "type": "integer", "minimum": 1 },
         "coverageFraction": { "type": "number", "minimum": 0, "maximum": 1 },
-        "firstGlobalFrameIndex": { "type": "integer", "minimum": 0, "maximum": 450 },
-        "lastGlobalFrameIndex": { "type": "integer", "minimum": 0, "maximum": 450 },
-        "firstSourceFilename": { "type": "string", "pattern": "^avf\\d{4}[abc]\\.png$" },
-        "lastSourceFilename": { "type": "string", "pattern": "^avf\\d{4}[abc]\\.png$" },
+        "firstGlobalFrameIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 450
+        },
+        "lastGlobalFrameIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 450
+        },
+        "firstSourceFilename": {
+          "type": "string",
+          "pattern": "^avf\\d{4}[abc]\\.png$"
+        },
+        "lastSourceFilename": {
+          "type": "string",
+          "pattern": "^avf\\d{4}[abc]\\.png$"
+        },
         "meanGap": { "type": "number", "minimum": 0 },
         "maxGap": { "type": "integer", "minimum": 0 },
         "meanJumpSourcePixels": { "type": "number", "minimum": 0 },
