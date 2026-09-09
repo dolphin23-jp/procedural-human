@@ -42,10 +42,7 @@
     "coordinateSpace": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "kind",
-        "patientSpaceClaim"
-      ],
+      "required": ["kind", "patientSpaceClaim"],
       "properties": {
         "kind": {
           "const": "source-image-stack"
@@ -198,11 +195,7 @@
           "minItems": 3,
           "maxItems": 3,
           "items": {
-            "enum": [
-              239,
-              241,
-              244
-            ]
+            "enum": [239, 241, 244]
           },
           "uniqueItems": true
         },
@@ -318,10 +311,7 @@
         "centroidSourcePixels": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "x",
-            "y"
-          ],
+          "required": ["x", "y"],
           "properties": {
             "x": {
               "type": "number"
@@ -347,10 +337,7 @@
           "minimum": 0
         },
         "evidenceKind": {
-          "enum": [
-            "strict-source-detection",
-            "source-recovered-isolated-gap"
-          ]
+          "enum": ["strict-source-detection", "source-recovered-isolated-gap"]
         },
         "maskPath": {
           "type": "string",

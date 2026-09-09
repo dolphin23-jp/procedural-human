@@ -124,10 +124,7 @@
             "type": "number"
           },
           "evidenceKind": {
-            "enum": [
-              "strict-source-detection",
-              "source-recovered-isolated-gap"
-            ]
+            "enum": ["strict-source-detection", "source-recovered-isolated-gap"]
           }
         }
       }
@@ -135,10 +132,7 @@
     "lineage": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "sourceReport",
-        "pointDerivation"
-      ],
+      "required": ["sourceReport", "pointDerivation"],
       "properties": {
         "sourceReport": {
           "const": "a06-ulnar-continuous-segment-report.v0.json"

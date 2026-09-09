@@ -27,10 +27,7 @@
       "minItems": 2,
       "maxItems": 2,
       "items": {
-        "enum": [
-          "TASK-A06",
-          "TASK-A08"
-        ]
+        "enum": ["TASK-A06", "TASK-A08"]
       },
       "uniqueItems": true
     },
@@ -173,11 +170,7 @@
           "minItems": 3,
           "maxItems": 3,
           "items": {
-            "enum": [
-              239,
-              241,
-              244
-            ]
+            "enum": [239, 241, 244]
           },
           "uniqueItems": true
         },
@@ -211,12 +204,7 @@
     "centerline": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "status",
-        "pointCount",
-        "uri",
-        "coordinateSpaceKind"
-      ],
+      "required": ["status", "pointCount", "uri", "coordinateSpaceKind"],
       "properties": {
         "status": {
           "const": "generated-v0-candidate"
