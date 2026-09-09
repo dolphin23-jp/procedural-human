@@ -45,6 +45,11 @@ const authoringContracts = [
     'authoring/manual-inputs/a06-manual-correction-status-20260909.json',
   ],
   [
+    'a06-human-review-session',
+    'schemas/assets/a06-human-review-session.v1.schema.json',
+    null,
+  ],
+  [
     'a06-bone-candidate-provenance',
     'schemas/assets/a06-bone-candidate-provenance.v1.schema.json',
     'authoring/outputs/a06-support-aware-radius-ulna-provenance-20260909.json',
