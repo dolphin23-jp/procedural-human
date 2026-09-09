@@ -35,7 +35,7 @@ jobs:
           indices=(1567 1619 1646 1656 1681)
           for idx in "${indices[@]}"; do
             curl --fail --location --silent --show-error \
-              "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/PNG_format/fullcolor/avf${idx}a.png" \
+              "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/PNG_format/abdomen/avf${idx}a.png" \
               -o "build/fullcolor/avf${idx}a.png"
             curl --fail --location --silent --show-error \
               "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/70mm/2K_PNG-Images/${idx}.png" \
