@@ -1,0 +1,48 @@
+name: A06 independent diagnostics format helper
+
+on:
+  push:
+    branches:
+      - task-a06-preserve-independent-vessel-diagnostics
+    paths:
+      - .github/workflows/a06-independent-diagnostics-format-helper.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: |
+          pnpm exec prettier --write \
+            authoring/outputs/a06-vessel-source-diagnostic-provenance-20260909.json \
+            authoring/manual-inputs/a06-manual-correction-status-20260909.json \
+            authoring/outputs/a10-medical-master-readiness-20260909.json \
+            .github/workflows/a06-radial-bounded-segment-diagnostic.yml \
+            .github/workflows/a06-superficial-vein-source-diagnostic.yml
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            authoring/outputs/a06-vessel-source-diagnostic-provenance-20260909.json \
+            authoring/manual-inputs/a06-manual-correction-status-20260909.json \
+            authoring/outputs/a10-medical-master-readiness-20260909.json \
+            .github/workflows/a06-radial-bounded-segment-diagnostic.yml \
+            .github/workflows/a06-superficial-vein-source-diagnostic.yml
+          if git diff --cached --quiet; then
+            echo "No formatting changes"
+          else
+            git commit -m "chore: format independent A06 diagnostics"
+            git push
+          fi
