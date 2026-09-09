@@ -100,6 +100,11 @@ const authoringContracts = [
     'authoring/outputs/a07-atlas-fallback-provenance-20260910.json',
   ],
   [
+    'a07-source-vessel-identification-session',
+    'schemas/assets/a07-source-vessel-identification-session.v1.schema.json',
+    null,
+  ],
+  [
     'semantic-structure-mapping',
     'schemas/assets/semantic-structure-mapping.v1.schema.json',
     'authoring/semantic/a07-semantic-structure-mapping-20260909.json',
