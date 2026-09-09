@@ -15,12 +15,12 @@ import a06_detect_vessel_candidates as base
 
 MIN_AREA = 8
 MAX_AREA = 500
-MIN_CIRCULARITY = 0.10
-MIN_CONTRAST = 10.0
-MIN_RING_SUBCUT_FRACTION = 0.30
-MAX_RING_MUSCLE_FRACTION = 0.45
+MIN_CIRCULARITY = 0.05
+MIN_CONTRAST = 8.0
+MIN_RING_SUBCUT_FRACTION = 0.0
+MAX_RING_MUSCLE_FRACTION = 0.70
 MIN_SKIN_DISTANCE = 4.0
-MAX_SKIN_DISTANCE = 70.0
+MAX_SKIN_DISTANCE = 110.0
 
 MAX_GAP = 3
 MAX_JUMP_PER_FRAME = 6.0
@@ -28,15 +28,15 @@ MAX_JUMP_BUFFER = 1.5
 
 ACCEPT_MIN_SPAN = 75
 ACCEPT_MIN_COVERAGE = 0.80
-ACCEPT_MIN_MEDIAN_CIRCULARITY = 0.25
-ACCEPT_MIN_P25_CIRCULARITY = 0.15
-ACCEPT_MIN_MEDIAN_CONTRAST = 20.0
-ACCEPT_MIN_P25_CONTRAST = 12.0
-ACCEPT_MIN_MEDIAN_RING_SUBCUT = 0.45
-ACCEPT_MIN_P25_RING_SUBCUT = 0.30
-ACCEPT_MAX_MEDIAN_RING_MUSCLE = 0.30
+ACCEPT_MIN_MEDIAN_CIRCULARITY = 0.20
+ACCEPT_MIN_P25_CIRCULARITY = 0.10
+ACCEPT_MIN_MEDIAN_CONTRAST = 18.0
+ACCEPT_MIN_P25_CONTRAST = 10.0
+ACCEPT_MIN_MEDIAN_RING_SUBCUT = 0.20
+ACCEPT_MIN_P25_RING_SUBCUT = 0.05
+ACCEPT_MAX_MEDIAN_RING_MUSCLE = 0.45
 ACCEPT_MIN_MEDIAN_SKIN_DISTANCE = 5.0
-ACCEPT_MAX_MEDIAN_SKIN_DISTANCE = 55.0
+ACCEPT_MAX_MEDIAN_SKIN_DISTANCE = 80.0
 ACCEPT_MAX_MEAN_JUMP_PER_FRAME = 3.5
 ACCEPT_MAX_JUMP_PER_FRAME = 6.0
 ACCEPT_MAX_LOCAL_IQR = 0.25
@@ -90,8 +90,8 @@ def _candidate_components(
         return []
 
     threshold = min(
-        105.0,
-        float(np.quantile(reference_values, 0.12)),
+        140.0,
+        float(np.quantile(reference_values, 0.25)),
     )
     dark = (luminance <= threshold) & ~blue_background
 
@@ -520,9 +520,9 @@ def main() -> None:
             "a05SkinCandidateUsedForDepth": True,
             "radiusUlnaTracksUsedForStableLocalCoordinates": True,
             "candidateDefinition": (
-                "dark component whose surrounding ring is predominantly "
-                "A05 subcutaneous candidate tissue, is relatively non-muscular, "
-                "and lies at a superficial bounded depth"
+                "dark component at bounded skin depth with non-background "
+                "surrounding tissue; A05 subcutaneous and muscle masks are "
+                "recorded as soft contextual evidence rather than hard identity gates"
             ),
         },
         "fixedThresholds": {
