@@ -199,6 +199,7 @@
         "allOf": [
           {
             "if": {
+              "type": "object",
               "properties": {
                 "draftLabel": {
                   "enum": [
@@ -208,12 +209,10 @@
                   ]
                 }
               },
-              "required": [
-                "draftLabel"
-              ],
-              "type": "object"
+              "required": ["draftLabel"]
             },
             "then": {
+              "type": "object",
               "properties": {
                 "supportedFrameCount": {
                   "const": 451
@@ -224,26 +223,21 @@
                 "acceptedFrameCount": {
                   "const": 451
                 }
-              },
-              "type": "object"
+              }
             }
           },
           {
             "if": {
+              "type": "object",
               "properties": {
                 "draftLabel": {
-                  "enum": [
-                    "radius",
-                    "ulna"
-                  ]
+                  "enum": ["radius", "ulna"]
                 }
               },
-              "required": [
-                "draftLabel"
-              ],
-              "type": "object"
+              "required": ["draftLabel"]
             },
             "then": {
+              "type": "object",
               "properties": {
                 "supportedFrameCount": {
                   "const": 357
@@ -254,23 +248,21 @@
                 "acceptedFrameCount": {
                   "const": 357
                 }
-              },
-              "type": "object"
+              }
             }
           },
           {
             "if": {
+              "type": "object",
               "properties": {
                 "draftLabel": {
                   "const": "ulnar_artery"
                 }
               },
-              "required": [
-                "draftLabel"
-              ],
-              "type": "object"
+              "required": ["draftLabel"]
             },
             "then": {
+              "type": "object",
               "properties": {
                 "supportedFrameCount": {
                   "const": 106
@@ -281,8 +273,7 @@
                 "acceptedFrameCount": {
                   "const": 106
                 }
-              },
-              "type": "object"
+              }
             }
           }
         ]
@@ -290,90 +281,78 @@
       "allOf": [
         {
           "contains": {
+            "type": "object",
             "properties": {
               "draftLabel": {
                 "const": "skin"
               }
             },
-            "required": [
-              "draftLabel"
-            ],
-            "type": "object"
+            "required": ["draftLabel"]
           },
           "minContains": 1,
           "maxContains": 1
         },
         {
           "contains": {
+            "type": "object",
             "properties": {
               "draftLabel": {
                 "const": "subcutaneous_soft_tissue"
               }
             },
-            "required": [
-              "draftLabel"
-            ],
-            "type": "object"
+            "required": ["draftLabel"]
           },
           "minContains": 1,
           "maxContains": 1
         },
         {
           "contains": {
+            "type": "object",
             "properties": {
               "draftLabel": {
                 "const": "major_muscle_tendon_region"
               }
             },
-            "required": [
-              "draftLabel"
-            ],
-            "type": "object"
+            "required": ["draftLabel"]
           },
           "minContains": 1,
           "maxContains": 1
         },
         {
           "contains": {
+            "type": "object",
             "properties": {
               "draftLabel": {
                 "const": "radius"
               }
             },
-            "required": [
-              "draftLabel"
-            ],
-            "type": "object"
+            "required": ["draftLabel"]
           },
           "minContains": 1,
           "maxContains": 1
         },
         {
           "contains": {
+            "type": "object",
             "properties": {
               "draftLabel": {
                 "const": "ulna"
               }
             },
-            "required": [
-              "draftLabel"
-            ],
-            "type": "object"
+            "required": ["draftLabel"]
           },
           "minContains": 1,
           "maxContains": 1
         },
         {
           "contains": {
+            "type": "object",
             "properties": {
               "draftLabel": {
                 "const": "ulnar_artery"
               }
             },
-            "required": [
-              "draftLabel"
-            ],
-            "type": "object"
+            "required": ["draftLabel"]
           },
           "minContains": 1,
           "maxContains": 1
