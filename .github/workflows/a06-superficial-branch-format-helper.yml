@@ -24,14 +24,14 @@ jobs:
           node-version: '22'
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec prettier --write schemas/assets/a06-superficial-vessel-branch-candidate.v1.schema.json
+      - run: pnpm exec prettier --write schemas/assets/a06-superficial-vessel-branch-candidate.v1.schema.json schemas/assets/a06-superficial-vessel-source-discovery.v1.schema.json
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add schemas/assets/a06-superficial-vessel-branch-candidate.v1.schema.json
+          git add schemas/assets/a06-superficial-vessel-branch-candidate.v1.schema.json schemas/assets/a06-superficial-vessel-source-discovery.v1.schema.json
           if git diff --cached --quiet; then
             echo "No formatting changes"
           else
-            git commit -m "chore: format A06 superficial branch candidate schema"
+            git commit -m "chore: format A06 superficial vessel schemas"
             git push
           fi
