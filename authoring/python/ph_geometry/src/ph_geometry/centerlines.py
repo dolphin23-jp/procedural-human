@@ -13,6 +13,7 @@ def build_vessel_centerline_authoring_report(
     vascular_feasibility: Mapping[str, Mapping[str, Any]],
     manual_correction_complete: bool,
     semantic_ids: Mapping[str, str | None],
+    candidate_centerline_uris: Mapping[str, str] | None = None,
 ) -> dict[str, object]:
     expected = (
         "radial_artery",
@@ -21,6 +22,7 @@ def build_vessel_centerline_authoring_report(
     )
     structures: list[dict[str, object]] = []
     centerlines_created = False
+    candidate_uris = candidate_centerline_uris or {}
 
     for label in expected:
         if label not in vascular_feasibility:
@@ -38,20 +40,43 @@ def build_vessel_centerline_authoring_report(
             )
 
         semantic_id = semantic_ids.get(label)
-        reasons: list[str] = []
+        hard_reasons: list[str] = []
         if classification != "continuous-candidate":
-            reasons.append(
+            hard_reasons.append(
                 f"source feasibility is {classification}, not continuous-candidate"
             )
+        if semantic_id is None:
+            hard_reasons.append("named anatomical identity is unresolved")
+
+        candidate_uri = candidate_uris.get(label)
+        if not hard_reasons and candidate_uri:
+            centerlines_created = True
+            review_note = (
+                "TASK-A06 human manual anatomical correction is not complete; "
+                if not manual_correction_complete
+                else ""
+            )
+            structures.append(
+                {
+                    "draftLabel": label,
+                    "anatomicalId": semantic_id,
+                    "feasibilityClassification": classification,
+                    "centerlineStatus": "generated",
+                    "centerlineUri": candidate_uri,
+                    "reason": (
+                        "bounded V0/source-space centerline candidate is generated; "
+                        + review_note
+                        + "no Patient Space, complete-vessel-extent, anatomical-review, "
+                        "or medical-validation claim is implied"
+                    ),
+                }
+            )
+            continue
+
+        reasons = list(hard_reasons)
         if not manual_correction_complete:
             reasons.append("TASK-A06 human manual anatomical correction is not complete")
-        if semantic_id is None:
-            reasons.append("named anatomical identity is unresolved")
-
-        blocked = bool(reasons)
-        if not blocked:
-            # The actual extraction implementation is intentionally not guessed here.
-            # A future established/manual-corrected representation may reach this branch.
+        if not candidate_uri and not hard_reasons:
             raise CenterlineAuthoringError(
                 f"{label} is eligible for centerline extraction, but no extraction implementation is configured"
             )
