@@ -1,0 +1,102 @@
+name: Acquire VHP female CT reference
+
+on:
+  push:
+    branches:
+      - task-a06-atlas-assisted-correction
+    paths:
+      - .github/workflows/probe-vhp-female-ct.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Acquire matching VHP Female CT slices and headers
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+          from pathlib import Path
+          from hashlib import sha256
+          import json
+
+          out=Path("build/vhp-ct")
+          images=out/"images"
+          headers=out/"headers"
+          images.mkdir(parents=True,exist_ok=True)
+          headers.mkdir(parents=True,exist_ok=True)
+
+          img_base="https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/PNG_format/radiological/normalCT"
+          hdr_base="https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/PNG_format/radiological/normalCTHeaders"
+
+          rows=[]
+          aggregate=sha256()
+          for n in range(1567,1718):
+              img_name=f"cvf{n:04d}f.png"
+              hdr_name=f"c_vf{n:04d}.txt"
+              row={"nominalIndex":n}
+              for kind,name,base,target_dir in (
+                  ("image",img_name,img_base,images),
+                  ("header",hdr_name,hdr_base,headers),
+              ):
+                  url=f"{base}/{name}"
+                  req=Request(url,headers={"User-Agent":"procedural-human-authoring/0.0 (+A06 CT reference)"})
+                  with urlopen(req,timeout=60) as resp:
+                      data=resp.read()
+                  target=target_dir/name
+                  target.write_bytes(data)
+                  digest=sha256(data).hexdigest()
+                  row[kind]={"filename":name,"url":url,"byteSize":len(data),"sha256":digest}
+                  aggregate.update(name.encode())
+                  aggregate.update(digest.encode())
+              rows.append(row)
+              if n % 25 == 0 or n in (1567,1717):
+                  print("acquired",n,row["image"]["byteSize"],row["image"]["sha256"])
+
+          manifest={
+              "schema":"ph-a06-vhp-female-ct-reference.v1",
+              "source":"NLM Visible Human Project — Visible Human Female normal CT PNG",
+              "sourceRange":{"start":1567,"stop":1717,"sliceCount":151,"nominalIntervalMm":1.0},
+              "relationToA05":{
+                  "sameCadaver":True,
+                  "cryosectionIntegerSliceRelation":"cvfNNNNf.png compared with avfNNNNa.png by shared nominal source index",
+                  "registrationStatus":"not-established",
+                  "patientSpaceClaim":False
+              },
+              "aggregateFilenameSha256":aggregate.hexdigest(),
+              "files":rows,
+              "claims":{"medicalValidation":False,"ctToCryosectionRegistrationEstablished":False}
+          }
+          (out/"manifest.json").write_text(json.dumps(manifest,indent=2,sort_keys=True)+"\n")
+          PY
+
+      - name: Verify PNG dimensions and header consistency
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, struct
+          root=Path("build/vhp-ct")
+          manifest=json.loads((root/"manifest.json").read_text())
+          dims=set()
+          for row in manifest["files"]:
+              data=(root/"images"/row["image"]["filename"]).read_bytes()
+              assert data[:8] == bytes.fromhex("89504e470d0a1a0a")
+              width,height=struct.unpack(">II",data[16:24])
+              dims.add((width,height))
+          print("dimensions",sorted(dims))
+          assert dims == {(512,512)}
+          assert len(manifest["files"]) == 151
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a06-vhp-female-ct-1567-1717
+          path: build/vhp-ct/
+          compression-level: 6
+          retention-days: 30

@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/a06-bone-candidate-provenance/v1",
+  "title": "A06 Bone Candidate Provenance v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "source",
+    "execution",
+    "support",
+    "identityCorroboration",
+    "structures",
+    "claims"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ph-a06-bone-candidate-provenance.v1"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "task": {
+      "const": "TASK-A06"
+    },
+    "recordedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "source": {
+      "type": "object"
+    },
+    "execution": {
+      "type": "object"
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firstGlobalFrameIndex",
+        "lastGlobalFrameIndex",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "supportedFrameCount",
+        "outsideSupportDisposition"
+      ],
+      "properties": {
+        "firstGlobalFrameIndex": {
+          "const": 0
+        },
+        "lastGlobalFrameIndex": {
+          "const": 356
+        },
+        "firstSourceFilename": {
+          "const": "avf1567a.png"
+        },
+        "lastSourceFilename": {
+          "const": "avf1685c.png"
+        },
+        "supportedFrameCount": {
+          "const": 357
+        },
+        "outsideSupportDisposition": {
+          "const": "not-supported-by-this-pass"
+        }
+      }
+    },
+    "identityCorroboration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directMeanResidualPixels",
+        "directMedianResidualPixels",
+        "swappedMeanResidualPixels",
+        "swappedMedianResidualPixels",
+        "directToSwappedMeanRatio",
+        "directAssignmentClearlyPreferred"
+      ],
+      "properties": {
+        "directMeanResidualPixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "directMedianResidualPixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "swappedMeanResidualPixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "swappedMedianResidualPixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "directToSwappedMeanRatio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.35
+        },
+        "directAssignmentClearlyPreferred": {
+          "const": true
+        }
+      }
+    },
+    "structures": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "draftLabel",
+          "semanticId",
+          "representationStatus",
+          "supportedFrameCount",
+          "minCandidatePixelsPerSupportedFrame",
+          "maxCandidatePixelsPerSupportedFrame",
+          "meanCandidatePixelsPerSupportedFrame"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "draftLabel": {
+            "enum": ["radius", "ulna"]
+          },
+          "semanticId": {
+            "type": "string",
+            "pattern": "^structure\\.(radius|ulna)\\.left$"
+          },
+          "representationStatus": {
+            "const": "partial-support-v0-candidate"
+          },
+          "supportedFrameCount": {
+            "const": 357
+          },
+          "minCandidatePixelsPerSupportedFrame": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "maxCandidatePixelsPerSupportedFrame": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "meanCandidatePixelsPerSupportedFrame": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "humanEdited",
+        "anatomicallyReviewed",
+        "medicalValidation",
+        "completeStructureExtent",
+        "patientSpaceGeometry",
+        "ctRegistrationEstablished",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "humanEdited": {
+          "const": false
+        },
+        "anatomicallyReviewed": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "completeStructureExtent": {
+          "const": false
+        },
+        "patientSpaceGeometry": {
+          "const": false
+        },
+        "ctRegistrationEstablished": {
+          "const": false
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}

@@ -45,6 +45,11 @@ const authoringContracts = [
     'authoring/manual-inputs/a06-manual-correction-status-20260909.json',
   ],
   [
+    'a06-bone-candidate-provenance',
+    'schemas/assets/a06-bone-candidate-provenance.v1.schema.json',
+    'authoring/outputs/a06-support-aware-radius-ulna-provenance-20260909.json',
+  ],
+  [
     'semantic-structure-mapping',
     'schemas/assets/semantic-structure-mapping.v1.schema.json',
     'authoring/semantic/a07-semantic-structure-mapping-20260909.json',

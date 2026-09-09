@@ -1,0 +1,137 @@
+name: A06 same-cadaver CT bone candidates
+
+on:
+  push:
+    branches:
+      - task-a06-atlas-assisted-correction
+    paths:
+      - .github/workflows/a06-support-aware-bones.yml
+      - authoring/source-acquisition/a06_support_aware_bones.py
+      - schemas/assets/a06-multimodality-bone-candidate-report.v1.schema.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deterministic image-analysis dependencies
+        run: |
+          python -m pip install --disable-pip-version-check \
+            numpy==2.2.6 \
+            opencv-python-headless==4.12.0.88 \
+            Pillow==11.3.0
+
+      - name: Download and verify exact A05 source handoff
+        run: |
+          set -euo pipefail
+          mkdir -p build/a05-zips build/a05-source
+          ids=(10057281755 10057282711 10057283651 10057284584 10057285605 10057286644 10057287687 10057288822 10057289930 10057291004)
+          sizes=(26031165 25803357 25331225 25451281 25368674 25100034 25140770 25076645 25408260 20650491)
+          hashes=(
+            78b1b2c1e1ffa006f3b07711e3497bb74ba7133f777709eebcd008b1b429623d
+            01d54d17761091fc576e8cb7acb47bfc5b178185ffadb50415ff806bdfd7c837
+            56e2c3cb8382a4b6eb96fa4c04e12793281f8214a48fe5880c36628508663352
+            8577b8e831bfd7d6d590562bd4c2603d9ca0e455179c426ac4860f05f517b44c
+            f912d7e745e3d817c555f8ea223b9bd1c5c07a52932f5a94464a3de215845816
+            4e702ab792ebd6af5aaff975221344c0b8e5a11feb9c89d33b42268dc01c5372
+            d5ecf42796bdf1a20d6540b49a2e5992524d5e85ba25bfc60245ab734f3e073f
+            d0ba39a31449fac6754e9999051ad463b3a9ec39b62365568741623f20cd78c7
+            316aff6722ca56c67d8ea4bde02e613501190849e24bcdc3eafe3621cc944a2e
+            91c11d65506128cad36a2ba70284b154ee07811bbf3dc8674dceeb8cbd2aae63
+          )
+          for i in $(seq 0 9); do
+            url="https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/${ids[$i]}/zip"
+            curl --fail --location --silent --show-error \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "$url" -o "build/a05-zips/chunk-$i.zip"
+            actual_size=$(wc -c < "build/a05-zips/chunk-$i.zip")
+            actual_hash=$(sha256sum "build/a05-zips/chunk-$i.zip" | awk '{print $1}')
+            test "$actual_size" = "${sizes[$i]}"
+            test "$actual_hash" = "${hashes[$i]}"
+            unzip -q -o "build/a05-zips/chunk-$i.zip" -d build/a05-source
+          done
+
+      - name: Download and verify exact same-cadaver CT reference
+        run: |
+          curl --fail --location --silent --show-error \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/10081784194/zip" \
+            -o build/a06-vhp-ct.zip
+          test "$(wc -c < build/a06-vhp-ct.zip)" = "40224195"
+          test "$(sha256sum build/a06-vhp-ct.zip | awk '{print $1}')" = "e00dc54d5e65e41e248ecf9c528b28a2493245ca97df9135a13455f62501d3dc"
+          mkdir -p build/a06-ct
+          unzip -q build/a06-vhp-ct.zip -d build/a06-ct
+          test -f build/a06-ct/images/cvf1567f.png
+          test -f build/a06-ct/images/cvf1717f.png
+
+      - name: Generate support-aware radius/ulna V0 candidates
+        run: |
+          python authoring/source-acquisition/a06_support_aware_bones.py \
+            --cryo-root build/a05-source \
+            --ct-root build/a06-ct/images \
+            --output-root build/a06-bones
+
+      - name: Validate report schema and output invariants
+        run: |
+          python -m pip install --disable-pip-version-check jsonschema==4.25.1
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          root=Path("build/a06-bones")
+          report=json.loads((root/"a06-multimodality-bone-candidate-report.v0.json").read_text())
+          schema=json.loads(Path("schemas/assets/a06-multimodality-bone-candidate-report.v1.schema.json").read_text())
+          Draft202012Validator.check_schema(schema)
+          Draft202012Validator(schema).validate(report)
+          assert report["support"]["supportedFrameCount"] == 357
+          assert report["support"]["lastSourceFilename"] == "avf1685c.png"
+          assert report["sameCadaverCtEvidence"]["affineCorroboration"]["directToSwappedMeanRatio"] < 0.35
+          for structure in report["structures"]:
+              assert structure["supportedFrameCount"] == 357
+              assert structure["minCandidatePixelsPerSupportedFrame"] >= 700
+              assert len(structure["files"]) == 357
+          assert len(list((root/"masks"/"radius").glob("*.pgm"))) == 357
+          assert len(list((root/"masks"/"ulna").glob("*.pgm"))) == 357
+          print(json.dumps({
+              "support": report["support"],
+              "affineCorroboration": report["sameCadaverCtEvidence"]["affineCorroboration"],
+              "structures": [
+                  {
+                      "draftLabel": s["draftLabel"],
+                      "supportedFrameCount": s["supportedFrameCount"],
+                      "minCandidatePixels": s["minCandidatePixelsPerSupportedFrame"],
+                      "meanCandidatePixels": s["meanCandidatePixelsPerSupportedFrame"]
+                  } for s in report["structures"]
+              ]
+          }, indent=2))
+          PY
+
+      - id: output
+        uses: actions/upload-artifact@v4
+        with:
+          name: a06-support-aware-radius-ulna-v0
+          path: build/a06-bones/
+          compression-level: 9
+          retention-days: 30
+
+      - name: Record output identity
+        run: |
+          echo "artifact-id=${{ steps.output.outputs.artifact-id }}"
+          echo "artifact-digest=${{ steps.output.outputs.artifact-digest }}"

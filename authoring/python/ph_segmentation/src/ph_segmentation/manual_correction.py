@@ -19,6 +19,14 @@ class ManualCorrectionRecordError(ValueError):
 
 
 @dataclass(frozen=True)
+class SupplementalCandidateOutput:
+    labels: tuple[str, ...]
+    uri: str
+    digest: str
+    support_status: str
+
+
+@dataclass(frozen=True)
 class ManualCorrectionStructure:
     draft_label: str
     status: str
@@ -42,11 +50,13 @@ def build_manual_correction_record(
     crop_filename_sha_aggregate: str,
     candidate_output_digest: str,
     structures: Iterable[ManualCorrectionStructure],
+    supplemental_candidate_outputs: Iterable[SupplementalCandidateOutput] = (),
     editor_reference: str | None = None,
     tool: str | None = None,
     completed_at: str | None = None,
 ) -> dict[str, object]:
     rows = tuple(structures)
+    supplemental = tuple(supplemental_candidate_outputs)
     if source_frame_count <= 0:
         raise ManualCorrectionRecordError("source_frame_count must be positive")
     if not rows:
@@ -110,6 +120,26 @@ def build_manual_correction_record(
             "completed_at cannot be recorded before human correction/review"
         )
 
+    supplemental_rows: list[dict[str, object]] = []
+    for item in supplemental:
+        if not item.labels or len(set(item.labels)) != len(item.labels):
+            raise ManualCorrectionRecordError(
+                "supplemental candidate labels must be non-empty and unique"
+            )
+        if not item.uri:
+            raise ManualCorrectionRecordError("supplemental candidate output requires uri")
+        supplemental_rows.append(
+            {
+                "labels": list(item.labels),
+                "uri": item.uri,
+                "digest": _normalise_digest(
+                    item.digest,
+                    field="supplemental_candidate_output.digest",
+                ),
+                "supportStatus": item.support_status,
+            }
+        )
+
     overall_status = (
         "human-correction-recorded"
         if has_completed_human_action
@@ -139,6 +169,7 @@ def build_manual_correction_record(
                 candidate_output_digest,
                 field="candidate_output_digest",
             ),
+            "supplementalCandidateOutputs": supplemental_rows,
         },
         "manualCorrection": {
             "status": overall_status,

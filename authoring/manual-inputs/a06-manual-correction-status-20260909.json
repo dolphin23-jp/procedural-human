@@ -12,7 +12,15 @@
     "sourceFrameCount": 451,
     "sourceFilenameShaAggregate": "sha256:0c330a99eedf1a446ca6502b4a7bde12e9893e96dc75f65348cb16f32d701f48",
     "cropFilenameShaAggregate": "sha256:f6e46638ecb84a16dd20cc604931874ec36815091d050b31843392b7d73c7171",
-    "candidateOutputDigest": "sha256:6a9f302ab5a1efd5d5d9c60e3c29aeee6b2082f3e04df2bcbe880e886b8b3ef4"
+    "candidateOutputDigest": "sha256:6a9f302ab5a1efd5d5d9c60e3c29aeee6b2082f3e04df2bcbe880e886b8b3ef4",
+    "supplementalCandidateOutputs": [
+      {
+        "labels": ["radius", "ulna"],
+        "uri": "drive://1RqfSfjMtmssxnm0CJRYqgoIUeHi8rEfq/a06-support-aware-radius-ulna-v0.zip",
+        "digest": "sha256:407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b",
+        "supportStatus": "partial-support-v0-candidate; avf1567a.png through avf1685c.png; outside interval unknown"
+      }
+    ]
   },
   "manualCorrection": {
     "status": "pending-human-edit",
@@ -44,15 +52,15 @@
     },
     {
       "draftLabel": "radius",
-      "status": "blocked-source-evidence",
-      "reason": "Complete source-space radius identity track across all 451 frames is not established without prohibited extrapolation.",
+      "status": "pending-human-edit",
+      "reason": "Same-cadaver CT-corroborated partial-support V0 candidate is available for avf1567a.png through avf1685c.png; extent outside that interval remains unknown and human anatomical correction/review is still pending.",
       "outputUri": null,
       "outputDigest": null
     },
     {
       "draftLabel": "ulna",
-      "status": "blocked-source-evidence",
-      "reason": "Complete source-space ulna identity track across all 451 frames is not established without prohibited extrapolation.",
+      "status": "pending-human-edit",
+      "reason": "Same-cadaver CT-corroborated partial-support V0 candidate is available for avf1567a.png through avf1685c.png; extent outside that interval remains unknown and human anatomical correction/review is still pending.",
       "outputUri": null,
       "outputDigest": null
     },

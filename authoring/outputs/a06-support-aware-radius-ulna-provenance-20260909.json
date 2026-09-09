@@ -1,0 +1,84 @@
+{
+  "schema": "ph-a06-bone-candidate-provenance.v1",
+  "schemaVersion": "1",
+  "task": "TASK-A06",
+  "recordedAt": "2026-09-09",
+  "source": {
+    "a05SourceFrameCount": 451,
+    "a05SourceFilenameShaAggregate": "0c330a99eedf1a446ca6502b4a7bde12e9893e96dc75f65348cb16f32d701f48",
+    "sameCadaverCt": {
+      "nominalIndexStart": 1567,
+      "nominalIndexStop": 1717,
+      "sliceCount": 151,
+      "artifactId": 10081784194,
+      "archiveByteSize": 40224195,
+      "archiveSha256": "e00dc54d5e65e41e248ecf9c528b28a2493245ca97df9135a13455f62501d3dc",
+      "persistentStorage": {
+        "provider": "Google Drive",
+        "folderId": "1RnUFHMt7f5iahMfGPBJ_b-VRgCbmgjYL",
+        "fileId": "1MUMntf6v2chal-Cpwi__FcKTt5gxsbiz",
+        "readBackByteSizeVerified": true,
+        "readBackSha256Verified": true
+      }
+    }
+  },
+  "execution": {
+    "workflowRunId": 34312277371,
+    "outputArtifactId": 10088808577,
+    "outputArchiveByteSize": 664033,
+    "outputArchiveSha256": "407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b",
+    "persistentStorage": {
+      "provider": "Google Drive",
+      "folderId": "1-klzu1ZVEOnhkfTbzEv1ETF7tplKU0NF",
+      "fileId": "1RqfSfjMtmssxnm0CJRYqgoIUeHi8rEfq",
+      "filename": "a06-support-aware-radius-ulna-v0.zip",
+      "readBackByteSizeVerified": true,
+      "readBackSha256Verified": true
+    }
+  },
+  "support": {
+    "firstGlobalFrameIndex": 0,
+    "lastGlobalFrameIndex": 356,
+    "firstSourceFilename": "avf1567a.png",
+    "lastSourceFilename": "avf1685c.png",
+    "supportedFrameCount": 357,
+    "outsideSupportDisposition": "not-supported-by-this-pass"
+  },
+  "identityCorroboration": {
+    "directMeanResidualPixels": 9.895194437349101,
+    "directMedianResidualPixels": 6.259964295968334,
+    "swappedMeanResidualPixels": 75.9581886894137,
+    "swappedMedianResidualPixels": 62.55749188869811,
+    "directToSwappedMeanRatio": 0.13027159557226506,
+    "directAssignmentClearlyPreferred": true
+  },
+  "structures": [
+    {
+      "draftLabel": "radius",
+      "semanticId": "structure.radius.left",
+      "representationStatus": "partial-support-v0-candidate",
+      "supportedFrameCount": 357,
+      "minCandidatePixelsPerSupportedFrame": 971,
+      "maxCandidatePixelsPerSupportedFrame": 3432,
+      "meanCandidatePixelsPerSupportedFrame": 1825.296918767507
+    },
+    {
+      "draftLabel": "ulna",
+      "semanticId": "structure.ulna.left",
+      "representationStatus": "partial-support-v0-candidate",
+      "supportedFrameCount": 357,
+      "minCandidatePixelsPerSupportedFrame": 845,
+      "maxCandidatePixelsPerSupportedFrame": 4048,
+      "meanCandidatePixelsPerSupportedFrame": 1750.6750700280113
+    }
+  ],
+  "claims": {
+    "humanEdited": false,
+    "anatomicallyReviewed": false,
+    "medicalValidation": false,
+    "completeStructureExtent": false,
+    "patientSpaceGeometry": false,
+    "ctRegistrationEstablished": false,
+    "automaticPromotionAllowed": false
+  }
+}

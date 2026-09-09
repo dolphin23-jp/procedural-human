@@ -48,8 +48,8 @@
       "type": "bone",
       "laterality": "left",
       "region": "left-distal-forearm-wrist",
-      "mappingStatus": "semantic-id-reserved-no-representation",
-      "representationAvailable": false,
+      "mappingStatus": "mapped-candidate-representation",
+      "representationAvailable": true,
       "validationLevel": "V0"
     },
     {
@@ -59,8 +59,8 @@
       "type": "bone",
       "laterality": "left",
       "region": "left-distal-forearm-wrist",
-      "mappingStatus": "semantic-id-reserved-no-representation",
-      "representationAvailable": false,
+      "mappingStatus": "mapped-candidate-representation",
+      "representationAvailable": true,
       "validationLevel": "V0"
     },
     {

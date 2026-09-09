@@ -11,6 +11,7 @@ from ph_segmentation import (  # noqa: E402
     ManualCorrectionRecordError,
     ManualCorrectionStructure,
     SemanticMappingError,
+    SupplementalCandidateOutput,
     build_manual_correction_record,
     build_semantic_mapping_record,
 )
@@ -81,6 +82,33 @@ class TaskA06A07Tests(unittest.TestCase):
                     ManualCorrectionStructure("skin", "edited"),
                 ),
             )
+
+    def test_supplemental_candidate_package_is_hash_bound_without_claiming_human_edit(self) -> None:
+        record = build_manual_correction_record(
+            recorded_at="2026-09-09",
+            source_frame_count=451,
+            source_filename_sha_aggregate="a" * 64,
+            crop_filename_sha_aggregate="b" * 64,
+            candidate_output_digest="c" * 64,
+            supplemental_candidate_outputs=(
+                SupplementalCandidateOutput(
+                    labels=("radius", "ulna"),
+                    uri="drive://candidate.zip",
+                    digest="d" * 64,
+                    support_status="partial-support-v0-candidate",
+                ),
+            ),
+            structures=(
+                ManualCorrectionStructure("radius", "pending-human-edit"),
+                ManualCorrectionStructure("ulna", "pending-human-edit"),
+            ),
+        )
+        supplemental = record["source"]["supplementalCandidateOutputs"]
+        self.assertEqual(len(supplemental), 1)
+        self.assertEqual(supplemental[0]["labels"], ["radius", "ulna"])
+        self.assertEqual(supplemental[0]["digest"], "sha256:" + "d" * 64)
+        self.assertFalse(record["claims"]["humanEdited"])
+        self.assertFalse(record["claims"]["medicalValidation"])
 
     def test_semantic_mapping_separates_identity_from_representation(self) -> None:
         record = build_semantic_mapping_record(

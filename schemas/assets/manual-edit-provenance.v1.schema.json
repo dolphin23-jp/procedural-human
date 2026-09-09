@@ -52,7 +52,8 @@
         "sourceFrameCount",
         "sourceFilenameShaAggregate",
         "cropFilenameShaAggregate",
-        "candidateOutputDigest"
+        "candidateOutputDigest",
+        "supplementalCandidateOutputs"
       ],
       "properties": {
         "sourceFrameCount": {
@@ -70,6 +71,37 @@
         "candidateOutputDigest": {
           "type": "string",
           "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "supplementalCandidateOutputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["labels", "uri", "digest", "supportStatus"],
+            "properties": {
+              "labels": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "uri": {
+                "type": "string",
+                "minLength": 1
+              },
+              "digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "supportStatus": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
         }
       }
     },
