@@ -15,6 +15,7 @@
     "support",
     "semantics",
     "topologyValidation",
+    "sourceCenterlineDiagnostic",
     "summary",
     "frames",
     "lineage",
@@ -129,7 +130,7 @@
       "required": [
         "singleConnectedLumenComponentEveryFrame",
         "closedOuterBoundaryEveryFrame",
-        "centerlinePointInsideLumenEveryFrame",
+        "correctedCenterlinePointInsideLumenEveryFrame",
         "consecutiveFrameCoverage"
       ],
       "properties": {
@@ -139,10 +140,10 @@
         "closedOuterBoundaryEveryFrame": {
           "const": true
         },
-        "centerlinePointInsideLumenEveryFrame": {
+        "consecutiveFrameCoverage": {
           "const": true
         },
-        "consecutiveFrameCoverage": {
+        "correctedCenterlinePointInsideLumenEveryFrame": {
           "const": true
         }
       }
@@ -204,7 +205,8 @@
       "required": [
         "sourceContinuousSegmentReport",
         "sourceCenterlineCandidate",
-        "derivation"
+        "derivation",
+        "correctedCenterlineCandidate"
       ],
       "properties": {
         "sourceContinuousSegmentReport": {
@@ -216,6 +218,9 @@
         "derivation": {
           "type": "string",
           "minLength": 1
+        },
+        "correctedCenterlineCandidate": {
+          "const": "a08-ulnar-lumen-centered-source-stack-centerline-v0.json"
         }
       }
     },
@@ -258,6 +263,51 @@
           "const": false
         }
       }
+    },
+    "sourceCenterlineDiagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputCenterlineOutsideLumenFrameCount",
+        "inputCenterlineOutsideLumenFrames",
+        "maxInputToCorrectedCenterlineDistancePixels",
+        "meanInputToCorrectedCenterlineDistancePixels",
+        "maxCorrectedCenterlineJumpPixels",
+        "meanCorrectedCenterlineJumpPixels"
+      ],
+      "properties": {
+        "inputCenterlineOutsideLumenFrameCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "inputCenterlineOutsideLumenFrames": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 237,
+            "maximum": 342
+          },
+          "uniqueItems": true
+        },
+        "maxInputToCorrectedCenterlineDistancePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "meanInputToCorrectedCenterlineDistancePixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxCorrectedCenterlineJumpPixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "meanCorrectedCenterlineJumpPixels": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
     }
   },
   "$defs": {
@@ -273,11 +323,15 @@
         "boundaryMaskPath",
         "boundaryMaskSha256",
         "outsideRegionDefinition",
-        "centerlinePointInsideLumen",
+        "inputCenterlinePointInsideLumen",
         "lumenAreaPixels",
         "boundaryPointCount",
         "boundaryPerimeterPixels",
-        "equivalentLumenRadiusPixels"
+        "equivalentLumenRadiusPixels",
+        "correctedCenterlinePointInsideLumen",
+        "correctedCenterlineSourcePixels",
+        "correctedCenterlineClearancePixels",
+        "inputToCorrectedCenterlineDistancePixels"
       ],
       "properties": {
         "globalFrameIndex": {
@@ -314,9 +368,6 @@
         "outsideRegionDefinition": {
           "const": "source-crop complement of lumen candidate mask"
         },
-        "centerlinePointInsideLumen": {
-          "const": true
-        },
         "lumenAreaPixels": {
           "type": "integer",
           "minimum": 1
@@ -332,6 +383,37 @@
         "equivalentLumenRadiusPixels": {
           "type": "number",
           "minimum": 0
+        },
+        "inputCenterlinePointInsideLumen": {
+          "type": "boolean"
+        },
+        "correctedCenterlinePointInsideLumen": {
+          "const": true
+        },
+        "correctedCenterlineSourcePixels": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "x",
+            "y"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          }
+        },
+        "correctedCenterlineClearancePixels": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "inputToCorrectedCenterlineDistancePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 6
         }
       }
     }
