@@ -1,0 +1,86 @@
+name: A06 VHP female MRI series probe
+
+on:
+  push:
+    branches:
+      - task-a06-vhp-female-mri-probe
+    paths:
+      - .github/workflows/probe-vhp-female-mri.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install image dependency
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Download representative Female MRI T1 slices and headers
+        run: |
+          set -euo pipefail
+          mkdir -p build/mri/images build/mri/headers
+          indices=(1014 3387 4390 5379 6395 7380)
+          for idx in "${indices[@]}"; do
+            curl --fail --location --silent --show-error               "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/PNG_format/radiological/mri/mvf${idx}1.png"               -o "build/mri/images/mvf${idx}1.png"
+            curl --fail --location --silent --show-error               "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/radiological/mriHeaders/m_vf${idx}.t1.txt"               -o "build/mri/headers/m_vf${idx}.t1.txt"
+            sha256sum "build/mri/images/mvf${idx}1.png" "build/mri/headers/m_vf${idx}.t1.txt"
+          done
+
+      - name: Summarize header fields
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          patterns = re.compile(
+              r"(series|description|location|position|orientation|pixel|slice|spacing|field of view|fov|matrix|plane|protocol|scan)",
+              re.I,
+          )
+          for path in sorted(Path("build/mri/headers").glob("*.txt")):
+              print("\n===", path.name, "===")
+              lines=path.read_text(errors="replace").splitlines()
+              matches=[line for line in lines if patterns.search(line)]
+              for line in matches[:120]:
+                  print(line)
+          PY
+
+      - name: Build representative montage
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageDraw
+
+          files=sorted(Path("build/mri/images").glob("*.png"))
+          thumbs=[]
+          for path in files:
+              image=Image.open(path).convert("L")
+              image.thumbnail((320,320))
+              canvas=Image.new("L",(340,360),255)
+              x=(340-image.width)//2
+              y=20+(300-image.height)//2
+              canvas.paste(image,(x,y))
+              draw=ImageDraw.Draw(canvas)
+              draw.text((10,335),path.stem,fill=0)
+              thumbs.append(canvas)
+
+          sheet=Image.new("L",(340*3,360*2),255)
+          for i,thumb in enumerate(thumbs):
+              sheet.paste(thumb,((i%3)*340,(i//3)*360))
+          sheet.save("build/mri/vhp-female-mri-series-probe.png")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a06-vhp-female-mri-series-probe
+          path: build/mri/
+          compression-level: 6
+          retention-days: 30
