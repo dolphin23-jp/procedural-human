@@ -292,7 +292,7 @@
         "maxInputToCorrectedCenterlineDistancePixels": {
           "type": "number",
           "minimum": 0,
-          "maximum": 6
+          "maximum": 10
         },
         "meanInputToCorrectedCenterlineDistancePixels": {
           "type": "number",
@@ -413,7 +413,7 @@
         "inputToCorrectedCenterlineDistancePixels": {
           "type": "number",
           "minimum": 0,
-          "maximum": 6
+          "maximum": 10
         }
       }
     }
