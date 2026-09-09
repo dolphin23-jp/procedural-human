@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/a07-atlas-fallback-provenance/v1",
+  "title": "A07 Atlas Fallback Diagnostic Provenance v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "execution",
+    "registrationValidation",
+    "structures",
+    "disposition",
+    "claims"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ph-a07-atlas-fallback-provenance.v1"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "task": {
+      "const": "TASK-A07"
+    },
+    "recordedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workflowRunId",
+        "outputArtifactId",
+        "outputArchiveByteSize",
+        "outputArchiveSha256"
+      ],
+      "properties": {
+        "workflowRunId": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "outputArtifactId": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "outputArchiveByteSize": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "outputArchiveSha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "registrationValidation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calibrationFrameCount",
+        "holdoutFrameCount",
+        "holdoutMedianSourcePixels",
+        "holdoutP90SourcePixels",
+        "technicalTriageMedianMaxSourcePixels",
+        "technicalTriageP90MaxSourcePixels",
+        "triagePassed"
+      ],
+      "properties": {
+        "calibrationFrameCount": {
+          "const": 53
+        },
+        "holdoutFrameCount": {
+          "const": 53
+        },
+        "holdoutMedianSourcePixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "holdoutP90SourcePixels": {
+          "type": "number",
+          "minimum": 0
+        },
+        "technicalTriageMedianMaxSourcePixels": {
+          "const": 25
+        },
+        "technicalTriageP90MaxSourcePixels": {
+          "const": 50
+        },
+        "triagePassed": {
+          "const": false
+        }
+      }
+    },
+    "structures": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "draftLabel",
+          "anatomicalId",
+          "inCropFraction",
+          "medianSubcutaneousDiskFraction",
+          "medianMuscleTendonDiskFraction",
+          "medianSkinDepthSourcePixels",
+          "candidateForHumanOverlayReview"
+        ],
+        "properties": {
+          "draftLabel": {
+            "enum": [
+              "radial_artery",
+              "ulnar_artery",
+              "cephalic_vein",
+              "basilic_vein"
+            ]
+          },
+          "anatomicalId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "inCropFraction": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "medianSubcutaneousDiskFraction": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "medianMuscleTendonDiskFraction": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "medianSkinDepthSourcePixels": {
+            "type": "number",
+            "minimum": 0
+          },
+          "candidateForHumanOverlayReview": {
+            "const": false
+          }
+        }
+      }
+    },
+    "disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reason",
+        "a07SemanticMappingChanged",
+        "a10MedicalMasterReadinessChanged"
+      ],
+      "properties": {
+        "status": {
+          "const": "rejected-gross-registration-mismatch"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "a07SemanticMappingChanged": {
+          "const": false
+        },
+        "a10MedicalMasterReadinessChanged": {
+          "const": false
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "atlasGeometryPromoted",
+        "sourceImageSupportEstablished",
+        "humanAnatomicalReview",
+        "procedureSpecificReview",
+        "medicalValidation",
+        "patientSpaceGeometry",
+        "superficialTargetVeinSelected",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "atlasGeometryPromoted": {
+          "const": false
+        },
+        "sourceImageSupportEstablished": {
+          "const": false
+        },
+        "humanAnatomicalReview": {
+          "const": false
+        },
+        "procedureSpecificReview": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "patientSpaceGeometry": {
+          "const": false
+        },
+        "superficialTargetVeinSelected": {
+          "const": false
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}
