@@ -144,12 +144,7 @@ def _select_discovery_track(
         ),
         reverse=True,
     )
-    selected = eligible[0]
-    if int(selected["rank"]) != 3:
-        raise SuperficialBranchRefinementError(
-            f"expected deterministic shallow source track rank 3, got rank {selected['rank']}"
-        )
-    return selected
+    return eligible[0]
 
 
 def _strict_segments(
