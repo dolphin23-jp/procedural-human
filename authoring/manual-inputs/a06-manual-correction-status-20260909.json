@@ -19,6 +19,12 @@
         "uri": "drive://1RqfSfjMtmssxnm0CJRYqgoIUeHi8rEfq/a06-support-aware-radius-ulna-v0.zip",
         "digest": "sha256:407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b",
         "supportStatus": "partial-support-v0-candidate; avf1567a.png through avf1685c.png; outside interval unknown"
+      },
+      {
+        "labels": ["ulnar_artery"],
+        "uri": "drive://1QR2LIlFP0OSTq4FodVGkr-o6Dpw50Krw/a06-source-evidence-vessel-candidates-v0.zip",
+        "digest": "sha256:94134f3d5547597365181596511d440e21ac768b6df7a1eb8a16ea1666b72f5b",
+        "supportStatus": "intermittent-v0-candidate; 157 source-supported mask frames within avf1624a.png through avf1685a.png; gaps remain unknown and human anatomical correction/review is pending"
       }
     ]
   },
@@ -67,21 +73,21 @@
     {
       "draftLabel": "radial_artery",
       "status": "blocked-source-evidence",
-      "reason": "A05 vascular feasibility is not-established; no vessel mask exists to manually correct.",
+      "reason": "Atlas-guided source-image diagnostic track failed vessel-confidence thresholds; no radial artery mask is accepted for manual correction.",
       "outputUri": null,
       "outputDigest": null
     },
     {
       "draftLabel": "ulnar_artery",
-      "status": "blocked-source-evidence",
-      "reason": "A05 vascular feasibility is not-established; no vessel mask exists to manually correct.",
+      "status": "pending-human-edit",
+      "reason": "Source-image-supported intermittent V0 candidate track is available on 157 frames spanning avf1624a.png through avf1685a.png; gaps and complete extent remain unknown and human anatomical correction/review is pending.",
       "outputUri": null,
       "outputDigest": null
     },
     {
       "draftLabel": "superficial_target_vein",
       "status": "blocked-source-evidence",
-      "reason": "A05 vascular feasibility is not-established and named superficial vein identity is unresolved.",
+      "reason": "Cephalic and basilic atlas priors are not sufficiently supported by VHP source-image tissue, so the named superficial target vein identity remains unresolved.",
       "outputUri": null,
       "outputDigest": null
     }

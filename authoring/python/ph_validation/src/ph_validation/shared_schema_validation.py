@@ -34,6 +34,11 @@ VALIDATION_TARGETS = (
         "authoring/outputs/a06-support-aware-radius-ulna-provenance-20260909.json",
     ),
     (
+        "a06-vessel-candidate-provenance",
+        "schemas/assets/a06-vessel-candidate-provenance.v1.schema.json",
+        "authoring/outputs/a06-source-evidence-vessel-provenance-20260909.json",
+    ),
+    (
         "semantic-structure-mapping",
         "schemas/assets/semantic-structure-mapping.v1.schema.json",
         "authoring/semantic/a07-semantic-structure-mapping-20260909.json",

@@ -81,8 +81,8 @@
       "type": "artery",
       "laterality": "left",
       "region": "left-distal-forearm-wrist",
-      "mappingStatus": "semantic-id-reserved-no-representation",
-      "representationAvailable": false,
+      "mappingStatus": "mapped-candidate-representation",
+      "representationAvailable": true,
       "validationLevel": "V0"
     }
   ],

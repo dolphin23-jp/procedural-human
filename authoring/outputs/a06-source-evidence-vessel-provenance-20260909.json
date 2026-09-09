@@ -1,0 +1,106 @@
+{
+  "schema": "ph-a06-vessel-candidate-provenance.v1",
+  "schemaVersion": "1",
+  "task": "TASK-A06",
+  "recordedAt": "2026-09-09",
+  "sourceEvidence": {
+    "a05SourceFrameCount": 451,
+    "a05SourceFilenameShaAggregate": "0c330a99eedf1a446ca6502b4a7bde12e9893e96dc75f65348cb16f32d701f48",
+    "boneCandidatePackage": {
+      "artifactId": 10088808577,
+      "archiveByteSize": 664033,
+      "archiveSha256": "407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b"
+    },
+    "atlasReferencePackage": {
+      "artifactId": 10081007930,
+      "archiveByteSize": 196995,
+      "archiveSha256": "9b1c58de04f78e533e2d339f4ad6d3d93dc32d9f74c5d14d6c816b3cab2aa625"
+    }
+  },
+  "execution": {
+    "workflowRunId": 34319066668,
+    "outputArtifactId": 10091172378,
+    "outputArchiveByteSize": 114263,
+    "outputArchiveSha256": "94134f3d5547597365181596511d440e21ac768b6df7a1eb8a16ea1666b72f5b",
+    "persistentStorage": {
+      "provider": "Google Drive",
+      "folderId": "1TGQpd5aSfmuiKE3QVIQEUIoyd9lQpHAa",
+      "fileId": "1QR2LIlFP0OSTq4FodVGkr-o6Dpw50Krw",
+      "filename": "a06-source-evidence-vessel-candidates-v0.zip",
+      "readBackByteSizeVerified": true,
+      "readBackSha256Verified": true
+    }
+  },
+  "registration": {
+    "method": "slice-local radius-ulna pair atlas prior with source-image support optimization",
+    "proximalAtlasZ": 0.95,
+    "distalAtlasZ": 0.885,
+    "orientation": 1,
+    "searchRadiusSourcePixels": 40,
+    "atlasGeometryUsedAsSubjectGeometry": false
+  },
+  "arteries": [
+    {
+      "draftLabel": "radial_artery",
+      "anatomicalId": "structure.radial_artery.left",
+      "classification": "not-established",
+      "maskFrameCount": 0,
+      "track": {
+        "nodeCount": 88,
+        "spanFrameCount": 111,
+        "coverageFraction": 0.7927927927927928,
+        "firstGlobalFrameIndex": 157,
+        "lastGlobalFrameIndex": 267,
+        "firstSourceFilename": "avf1619b.png",
+        "lastSourceFilename": "avf1656a.png",
+        "medianCircularity": 0.3292445893941579,
+        "medianContrast": 11.86819076538086,
+        "meanJumpSourcePixels": 2.882643141672147
+      }
+    },
+    {
+      "draftLabel": "ulnar_artery",
+      "anatomicalId": "structure.ulnar_artery.left",
+      "classification": "intermittent-candidate",
+      "maskFrameCount": 157,
+      "track": {
+        "nodeCount": 157,
+        "spanFrameCount": 184,
+        "coverageFraction": 0.8532608695652174,
+        "firstGlobalFrameIndex": 171,
+        "lastGlobalFrameIndex": 354,
+        "firstSourceFilename": "avf1624a.png",
+        "lastSourceFilename": "avf1685a.png",
+        "medianCircularity": 1.0060994424693535,
+        "medianContrast": 53.89358901977539,
+        "meanJumpSourcePixels": 2.2548352940385996
+      }
+    }
+  ],
+  "namedSuperficialVeinPriors": [
+    {
+      "draftLabel": "cephalic_vein",
+      "anatomicalId": "structure.cephalic_vein.left",
+      "classification": "not-established",
+      "meanTissueSupport": 0.00005352459455119628,
+      "medianTissueSupport": 0
+    },
+    {
+      "draftLabel": "basilic_vein",
+      "anatomicalId": "structure.basilic_vein.left",
+      "classification": "not-established",
+      "meanTissueSupport": 0.33206563642205833,
+      "medianTissueSupport": 0
+    }
+  ],
+  "claims": {
+    "humanEdited": false,
+    "anatomicallyReviewed": false,
+    "medicalValidation": false,
+    "completeVesselExtent": false,
+    "vesselCenterlineEstablished": false,
+    "superficialTargetVeinIdentityEstablished": false,
+    "patientSpaceGeometry": false,
+    "automaticPromotionAllowed": false
+  }
+}
