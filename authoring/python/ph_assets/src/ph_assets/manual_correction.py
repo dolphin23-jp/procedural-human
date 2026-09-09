@@ -40,13 +40,22 @@ def _require_nonempty_string(value: object, field: str) -> str:
 
 def _parse_iso_datetime(value: object, field: str) -> datetime:
     text = _require_nonempty_string(value, field)
+    if "T" not in text:
+        raise ManualCorrectionValidationError(
+            f"{field} must include an ISO-8601 time"
+        )
     normalized = text[:-1] + "+00:00" if text.endswith("Z") else text
     try:
-        return datetime.fromisoformat(normalized)
+        parsed = datetime.fromisoformat(normalized)
     except ValueError as exc:
         raise ManualCorrectionValidationError(
             f"{field} must be an ISO-8601 datetime"
         ) from exc
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise ManualCorrectionValidationError(
+            f"{field} must include an explicit timezone"
+        )
+    return parsed
 
 
 def _sha256_file(path: Path) -> str:
