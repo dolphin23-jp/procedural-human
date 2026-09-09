@@ -242,6 +242,33 @@ class TaskA06ManualCorrectionTests(unittest.TestCase):
                     },
                 )
 
+    def test_completion_time_requires_timezone(self) -> None:
+        skin_payload = b"skin"
+        subcutaneous_payload = b"subcutaneous"
+        record = _record(skin_payload, subcutaneous_payload)
+        manual = record["manualCorrection"]
+        assert isinstance(manual, dict)
+        manual["completedAt"] = "2026-09-10T00:30:00"
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            skin = root / "skin.zip"
+            subcutaneous = root / "subcutaneous.zip"
+            skin.write_bytes(skin_payload)
+            subcutaneous.write_bytes(subcutaneous_payload)
+
+            with self.assertRaisesRegex(
+                ManualCorrectionValidationError,
+                "must include an explicit timezone",
+            ):
+                validate_manual_correction_record(
+                    record,
+                    output_files={
+                        "skin": skin,
+                        "subcutaneous_soft_tissue": subcutaneous,
+                    },
+                )
+
 
 if __name__ == "__main__":
     unittest.main()
