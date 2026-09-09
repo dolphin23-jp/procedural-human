@@ -7,7 +7,7 @@
   "blockers": [
     "TASK-A06 human manual anatomical correction is incomplete",
     "TASK-A07 contains unresolved anatomical identities",
-    "TASK-A08 required vessel centerlines are unavailable",
+    "TASK-A08 required vessel centerlines remain unavailable for structure.radial_artery.left and the unresolved superficial target vein; a bounded V0 ulnar artery centerline candidate exists",
     "TASK-A09 boundary/lumen representations are unavailable",
     "required semantic identities lack candidate representations: structure.radial_artery.left"
   ],
