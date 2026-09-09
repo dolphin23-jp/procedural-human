@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/a06-radial-bounded-segment-diagnostic.yml
       - authoring/source-acquisition/a06_diagnose_radial_bounded_segments.py
+      - authoring/source-acquisition/a06_diagnose_radial_expanded_prior.py
   workflow_dispatch:
 
 permissions:
@@ -75,6 +76,14 @@ jobs:
       - name: Diagnose radial artery bounded source-supported segments
         run: |
           python authoring/source-acquisition/a06_diagnose_radial_bounded_segments.py             --bone-report build/bones/a06-multimodality-bone-candidate-report.v0.json             --atlas-root build/zref             --cryo-root build/a05-source             --output-root build/radial-diagnostic
+
+      - name: Compare expanded radial artery search radii
+        run: |
+          python authoring/source-acquisition/a06_diagnose_radial_expanded_prior.py \
+            --bone-report build/bones/a06-multimodality-bone-candidate-report.v0.json \
+            --atlas-root build/zref \
+            --cryo-root build/a05-source \
+            --output-root build/radial-diagnostic
 
       - id: upload
         uses: actions/upload-artifact@v4
