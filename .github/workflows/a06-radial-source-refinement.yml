@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/a06-radial-source-refinement.yml
       - authoring/source-acquisition/a06_refine_radial_source_diagnostic.py
+      - authoring/source-acquisition/a06_refine_radial_with_ulnar_anchor.py
       - authoring/source-acquisition/a06_detect_vessel_candidates.py
   workflow_dispatch:
 
@@ -97,6 +98,20 @@ jobs:
           done
           test "$(find build/a05-source -maxdepth 1 -name 'avf*.png' | wc -l)" = "451"
 
+      - name: Download verified bounded ulnar artery source evidence
+        run: |
+          mkdir -p build/ulnar
+          curl --fail --location --silent --show-error \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/10092590748/zip" \
+            -o build/ulnar.zip
+          test "$(wc -c < build/ulnar.zip)" = "80834"
+          test "$(sha256sum build/ulnar.zip | awk '{print $1}')" = "9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75"
+          unzip -q build/ulnar.zip -d build/ulnar
+          test -f build/ulnar/a06-ulnar-continuous-segment-report.v0.json
+
       - name: Run radial artery source refinement diagnostic
         run: |
           python authoring/source-acquisition/a06_refine_radial_source_diagnostic.py \
@@ -130,6 +145,48 @@ jobs:
                   "trackMetrics": row["trackMetrics"],
                   "strictSegments": row["strictSegments"][:3],
               } for row in report["tiers"]],
+              "disposition": report["disposition"],
+          }, indent=2))
+          PY
+
+      - name: Run ulnar-anchored radial artery diagnostic
+        run: |
+          python authoring/source-acquisition/a06_refine_radial_with_ulnar_anchor.py \
+            --bone-report build/bones/a06-multimodality-bone-candidate-report.v0.json \
+            --atlas-root build/zref \
+            --cryo-root build/a05-source \
+            --ulnar-report build/ulnar/a06-ulnar-continuous-segment-report.v0.json \
+            --output-root build/radial
+
+      - name: Validate fail-closed ulnar-anchored radial diagnostic
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("build/radial/a06-radial-ulnar-anchor-diagnostic.v0.json").read_text()
+          )
+          assert report["task"] == "TASK-A06"
+          assert report["anatomicalId"] == "structure.radial_artery.left"
+          assert report["registration"]["ulnarAnchorFrameCount"] == 106
+          assert report["registration"]["atlasGeometryUsedAsSubjectGeometry"] is False
+          assert len(report["tiers"]) == 4
+          assert report["disposition"]["radialArteryRepresentationEstablished"] is False
+          assert report["disposition"]["maskGenerationAllowed"] is False
+          assert report["claims"]["medicalValidation"] is False
+          assert report["claims"]["patientSpaceGeometry"] is False
+          assert report["promotionDiagnostic"]["automaticPromotionAllowed"] is False
+          print(json.dumps({
+              "registration": report["registration"],
+              "tiers": [{
+                  "tier": row["tier"],
+                  "framesWithCandidate": row["framesWithCandidate"],
+                  "candidateCount": row["candidateCount"],
+                  "trackMetrics": row["trackMetrics"],
+                  "strictSegments": row["strictSegments"][:3],
+              } for row in report["tiers"]],
+              "promotionDiagnostic": report["promotionDiagnostic"],
               "disposition": report["disposition"],
           }, indent=2))
           PY
