@@ -178,7 +178,39 @@
       "maxItems": 2,
       "items": {
         "$ref": "#/$defs/target"
-      }
+      },
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "targetKey": {
+                "const": "radial_artery"
+              }
+            },
+            "required": [
+              "targetKey"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "targetKey": {
+                "const": "superficial_target_vein"
+              }
+            },
+            "required": [
+              "targetKey"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
     },
     "claims": {
       "type": "object",
