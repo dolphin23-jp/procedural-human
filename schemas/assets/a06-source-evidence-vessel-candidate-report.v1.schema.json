@@ -36,7 +36,11 @@
     "status": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["validationLevel", "reviewStatus", "candidateOnly"],
+      "required": [
+        "validationLevel",
+        "reviewStatus",
+        "candidateOnly"
+      ],
       "properties": {
         "validationLevel": {
           "const": "V0"
@@ -52,7 +56,11 @@
     "coordinateSpace": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "patientSpaceClaim", "ctRegistrationEstablished"],
+      "required": [
+        "kind",
+        "patientSpaceClaim",
+        "ctRegistrationEstablished"
+      ],
       "properties": {
         "kind": {
           "const": "source-image-stack"
@@ -89,7 +97,10 @@
           "type": "number"
         },
         "orientation": {
-          "enum": [1, -1]
+          "enum": [
+            1,
+            -1
+          ]
         },
         "searchRadiusSourcePixels": {
           "type": "integer",
@@ -155,7 +166,11 @@
     "superficialTargetVein": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["classification", "anatomicalId", "reason"],
+      "required": [
+        "classification",
+        "anatomicalId",
+        "reason"
+      ],
       "properties": {
         "classification": {
           "const": "not-established"
@@ -216,7 +231,10 @@
     "software": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["numpyVersion", "opencvVersion"],
+      "required": [
+        "numpyVersion",
+        "opencvVersion"
+      ],
       "properties": {
         "numpyVersion": {
           "type": "string",
@@ -389,7 +407,10 @@
         "centroidSourcePixels": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["x", "y"],
+          "required": [
+            "x",
+            "y"
+          ],
           "properties": {
             "x": {
               "type": "number"
@@ -439,7 +460,10 @@
       ],
       "properties": {
         "draftLabel": {
-          "enum": ["radial_artery", "ulnar_artery"]
+          "enum": [
+            "radial_artery",
+            "ulnar_artery"
+          ]
         },
         "anatomicalId": {
           "enum": [
@@ -448,7 +472,10 @@
           ]
         },
         "classification": {
-          "enum": ["not-established", "intermittent-candidate"]
+          "enum": [
+            "not-established",
+            "intermittent-candidate"
+          ]
         },
         "candidateTrackStatus": {
           "enum": [
@@ -488,14 +515,18 @@
                 "const": "not-established"
               }
             },
-            "required": ["classification"]
+            "required": [
+              "classification"
+            ]
           },
           "then": {
             "properties": {
               "maskFrameCount": {
+                "type": "integer",
                 "const": 0
               },
               "maskFiles": {
+                "type": "array",
                 "maxItems": 0
               },
               "candidateTrackStatus": {
@@ -511,14 +542,18 @@
                 "const": "intermittent-candidate"
               }
             },
-            "required": ["classification"]
+            "required": [
+              "classification"
+            ]
           },
           "then": {
             "properties": {
               "maskFrameCount": {
+                "type": "integer",
                 "minimum": 1
               },
               "maskFiles": {
+                "type": "array",
                 "minItems": 1
               },
               "candidateTrackStatus": {
@@ -542,7 +577,10 @@
       ],
       "properties": {
         "draftLabel": {
-          "enum": ["cephalic_vein", "basilic_vein"]
+          "enum": [
+            "cephalic_vein",
+            "basilic_vein"
+          ]
         },
         "anatomicalId": {
           "enum": [
