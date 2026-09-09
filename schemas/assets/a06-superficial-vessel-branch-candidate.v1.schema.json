@@ -5,9 +5,19 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "schema","schemaVersion","task","recordedAt","draftLabel","classification",
-    "coordinateSpace","selection","continuousSegment","maskFrameCount","maskFiles",
-    "identityDisposition","claims"
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "draftLabel",
+    "classification",
+    "coordinateSpace",
+    "selection",
+    "continuousSegment",
+    "maskFrameCount",
+    "maskFiles",
+    "identityDisposition",
+    "claims"
   ],
   "properties": {
     "schema": { "const": "ph-a06-superficial-vessel-branch-candidate.v1" },
@@ -15,11 +25,13 @@
     "task": { "const": "TASK-A06" },
     "recordedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
     "draftLabel": { "const": "superficial_vessel_branch_candidate_1" },
-    "classification": { "const": "continuous-superficial-vessel-branch-candidate" },
+    "classification": {
+      "const": "continuous-superficial-vessel-branch-candidate"
+    },
     "coordinateSpace": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind","patientSpaceClaim"],
+      "required": ["kind", "patientSpaceClaim"],
       "properties": {
         "kind": { "const": "source-image-stack" },
         "patientSpaceClaim": { "const": false }
@@ -29,24 +41,55 @@
     "continuousSegment": {
       "type": "object",
       "required": [
-        "frameCount","firstGlobalFrameIndex","lastGlobalFrameIndex",
-        "firstSourceFilename","lastSourceFilename","directDiscoveryNodeCount",
-        "sourceRecoveredGapFrameCount","coverageFraction","meanJumpSourcePixels",
-        "maxJumpSourcePixels","medianAreaPixels","medianCircularity",
-        "p25Circularity","medianContrast","p25Contrast","minimumContrast",
-        "medianSkinDepthPixels","p25SkinDepthPixels","p75SkinDepthPixels",
+        "frameCount",
+        "firstGlobalFrameIndex",
+        "lastGlobalFrameIndex",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "directDiscoveryNodeCount",
+        "sourceRecoveredGapFrameCount",
+        "coverageFraction",
+        "meanJumpSourcePixels",
+        "maxJumpSourcePixels",
+        "medianAreaPixels",
+        "medianCircularity",
+        "p25Circularity",
+        "medianContrast",
+        "p25Contrast",
+        "minimumContrast",
+        "medianSkinDepthPixels",
+        "p25SkinDepthPixels",
+        "p75SkinDepthPixels",
         "maxSkinDepthPixels"
       ],
       "properties": {
         "frameCount": { "type": "integer", "minimum": 60 },
-        "firstGlobalFrameIndex": { "type": "integer", "minimum": 0, "maximum": 450 },
-        "lastGlobalFrameIndex": { "type": "integer", "minimum": 0, "maximum": 450 },
-        "firstSourceFilename": { "type": "string", "pattern": "^avf\\d{4}[abc]\\.png$" },
-        "lastSourceFilename": { "type": "string", "pattern": "^avf\\d{4}[abc]\\.png$" },
+        "firstGlobalFrameIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 450
+        },
+        "lastGlobalFrameIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 450
+        },
+        "firstSourceFilename": {
+          "type": "string",
+          "pattern": "^avf\\d{4}[abc]\\.png$"
+        },
+        "lastSourceFilename": {
+          "type": "string",
+          "pattern": "^avf\\d{4}[abc]\\.png$"
+        },
         "directDiscoveryNodeCount": { "type": "integer", "minimum": 1 },
         "sourceRecoveredGapFrameCount": { "type": "integer", "minimum": 0 },
         "coverageFraction": { "const": 1 },
-        "meanJumpSourcePixels": { "type": "number", "minimum": 0, "maximum": 2.5 },
+        "meanJumpSourcePixels": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2.5
+        },
         "maxJumpSourcePixels": { "type": "number", "minimum": 0, "maximum": 5 },
         "medianAreaPixels": { "type": "number", "minimum": 1 },
         "medianCircularity": { "type": "number", "minimum": 0.4 },
@@ -54,7 +97,11 @@
         "medianContrast": { "type": "number", "minimum": 30 },
         "p25Contrast": { "type": "number", "minimum": 20 },
         "minimumContrast": { "type": "number", "minimum": 20 },
-        "medianSkinDepthPixels": { "type": "number", "minimum": 3, "maximum": 15 },
+        "medianSkinDepthPixels": {
+          "type": "number",
+          "minimum": 3,
+          "maximum": 15
+        },
         "p25SkinDepthPixels": { "type": "number", "minimum": 3 },
         "p75SkinDepthPixels": { "type": "number", "minimum": 3 },
         "maxSkinDepthPixels": { "type": "number", "minimum": 3, "maximum": 25 }
@@ -70,8 +117,12 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "anatomicalId","vesselClass","venousIdentityEstablished",
-        "namedVeinIdentityEstablished","proceduralTargetBindingAllowed","reason"
+        "anatomicalId",
+        "vesselClass",
+        "venousIdentityEstablished",
+        "namedVeinIdentityEstablished",
+        "proceduralTargetBindingAllowed",
+        "reason"
       ],
       "properties": {
         "anatomicalId": { "type": "null" },
@@ -86,9 +137,14 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "humanEdited","anatomicallyReviewed","medicalValidation",
-        "venousIdentityEstablished","namedVeinIdentityEstablished",
-        "completeVesselExtent","patientSpaceGeometry","automaticPromotionAllowed"
+        "humanEdited",
+        "anatomicallyReviewed",
+        "medicalValidation",
+        "venousIdentityEstablished",
+        "namedVeinIdentityEstablished",
+        "completeVesselExtent",
+        "patientSpaceGeometry",
+        "automaticPromotionAllowed"
       ],
       "properties": {
         "humanEdited": { "const": false },
@@ -106,9 +162,17 @@
     "maskFile": {
       "type": "object",
       "required": [
-        "globalFrameIndex","sourceFilename","evidenceKind","centroidSourcePixels",
-        "areaPixels","circularity","contrast","skinDepthPixels","meanRgb",
-        "maskPath","maskSha256"
+        "globalFrameIndex",
+        "sourceFilename",
+        "evidenceKind",
+        "centroidSourcePixels",
+        "areaPixels",
+        "circularity",
+        "contrast",
+        "skinDepthPixels",
+        "meanRgb",
+        "maskPath",
+        "maskSha256"
       ]
     }
   }
