@@ -5,8 +5,16 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "schema","schemaVersion","task","recordedAt","source","execution",
-    "support","identityCorroboration","structures","claims"
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "source",
+    "execution",
+    "support",
+    "identityCorroboration",
+    "structures",
+    "claims"
   ],
   "properties": {
     "schema": { "const": "ph-a06-bone-candidate-provenance.v1" },
@@ -19,8 +27,12 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "firstGlobalFrameIndex","lastGlobalFrameIndex","firstSourceFilename",
-        "lastSourceFilename","supportedFrameCount","outsideSupportDisposition"
+        "firstGlobalFrameIndex",
+        "lastGlobalFrameIndex",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "supportedFrameCount",
+        "outsideSupportDisposition"
       ],
       "properties": {
         "firstGlobalFrameIndex": { "const": 0 },
@@ -35,16 +47,23 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "directMeanResidualPixels","directMedianResidualPixels",
-        "swappedMeanResidualPixels","swappedMedianResidualPixels",
-        "directToSwappedMeanRatio","directAssignmentClearlyPreferred"
+        "directMeanResidualPixels",
+        "directMedianResidualPixels",
+        "swappedMeanResidualPixels",
+        "swappedMedianResidualPixels",
+        "directToSwappedMeanRatio",
+        "directAssignmentClearlyPreferred"
       ],
       "properties": {
         "directMeanResidualPixels": { "type": "number", "minimum": 0 },
         "directMedianResidualPixels": { "type": "number", "minimum": 0 },
         "swappedMeanResidualPixels": { "type": "number", "minimum": 0 },
         "swappedMedianResidualPixels": { "type": "number", "minimum": 0 },
-        "directToSwappedMeanRatio": { "type": "number", "minimum": 0, "maximum": 0.35 },
+        "directToSwappedMeanRatio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.35
+        },
         "directAssignmentClearlyPreferred": { "const": true }
       }
     },
@@ -55,8 +74,12 @@
       "items": {
         "type": "object",
         "required": [
-          "draftLabel","semanticId","representationStatus","supportedFrameCount",
-          "minCandidatePixelsPerSupportedFrame","maxCandidatePixelsPerSupportedFrame",
+          "draftLabel",
+          "semanticId",
+          "representationStatus",
+          "supportedFrameCount",
+          "minCandidatePixelsPerSupportedFrame",
+          "maxCandidatePixelsPerSupportedFrame",
           "meanCandidatePixelsPerSupportedFrame"
         ]
       }
@@ -65,8 +88,12 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "humanEdited","anatomicallyReviewed","medicalValidation",
-        "completeStructureExtent","patientSpaceGeometry","ctRegistrationEstablished",
+        "humanEdited",
+        "anatomicallyReviewed",
+        "medicalValidation",
+        "completeStructureExtent",
+        "patientSpaceGeometry",
+        "ctRegistrationEstablished",
         "automaticPromotionAllowed"
       ],
       "properties": {

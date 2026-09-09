@@ -32,11 +32,7 @@
     "coordinateSpace": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "kind",
-        "patientSpaceClaim",
-        "ctRegistrationEstablished"
-      ],
+      "required": ["kind", "patientSpaceClaim", "ctRegistrationEstablished"],
       "properties": {
         "kind": {
           "const": "source-image-stack"
@@ -81,12 +77,7 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "labels",
-              "uri",
-              "digest",
-              "supportStatus"
-            ],
+            "required": ["labels", "uri", "digest", "supportStatus"],
             "properties": {
               "labels": {
                 "type": "array",
@@ -117,36 +108,19 @@
     "manualCorrection": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "status",
-        "editorReference",
-        "tool",
-        "completedAt"
-      ],
+      "required": ["status", "editorReference", "tool", "completedAt"],
       "properties": {
         "status": {
-          "enum": [
-            "pending-human-edit",
-            "human-correction-recorded"
-          ]
+          "enum": ["pending-human-edit", "human-correction-recorded"]
         },
         "editorReference": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": ["string", "null"]
         },
         "tool": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": ["string", "null"]
         },
         "completedAt": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": ["string", "null"]
         }
       },
       "allOf": [
@@ -200,22 +174,13 @@
             ]
           },
           "reason": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": ["string", "null"]
           },
           "outputUri": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": ["string", "null"]
           },
           "outputDigest": {
-            "type": [
-              "string",
-              "null"
-            ],
+            "type": ["string", "null"],
             "pattern": "^sha256:[0-9a-f]{64}$"
           }
         },
@@ -224,10 +189,7 @@
             "if": {
               "properties": {
                 "status": {
-                  "enum": [
-                    "edited",
-                    "reviewed-no-change"
-                  ]
+                  "enum": ["edited", "reviewed-no-change"]
                 }
               }
             },

@@ -15,10 +15,7 @@
     "candidateOutputDigest": "sha256:6a9f302ab5a1efd5d5d9c60e3c29aeee6b2082f3e04df2bcbe880e886b8b3ef4",
     "supplementalCandidateOutputs": [
       {
-        "labels": [
-          "radius",
-          "ulna"
-        ],
+        "labels": ["radius", "ulna"],
         "uri": "drive://1RqfSfjMtmssxnm0CJRYqgoIUeHi8rEfq/a06-support-aware-radius-ulna-v0.zip",
         "digest": "sha256:407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b",
         "supportStatus": "partial-support-v0-candidate; avf1567a.png through avf1685c.png; outside interval unknown"
