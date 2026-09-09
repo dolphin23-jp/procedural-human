@@ -10,10 +10,7 @@
   },
   "inputs": {
     "sourceFrameCount": 451,
-    "sourceFilenameRange": [
-      "avf1567a.png",
-      "avf1717a.png"
-    ],
+    "sourceFilenameRange": ["avf1567a.png", "avf1717a.png"],
     "a05CandidateArtifact": {
       "artifactId": 10078955143,
       "archiveByteSize": 6943149,
@@ -113,11 +110,7 @@
         }
       },
       "expandedAtlasPrior": {
-        "searchRadiiSourcePixels": [
-          60,
-          80,
-          100
-        ],
+        "searchRadiiSourcePixels": [60, 80, 100],
         "searchRadiiWithAcceptedSegment": [],
         "reproducibleAcceptedPairCount": 0,
         "bestSpanFramesByRadius": {
