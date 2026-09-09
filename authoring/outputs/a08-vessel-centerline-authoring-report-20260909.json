@@ -20,10 +20,10 @@
     {
       "draftLabel": "ulnar_artery",
       "anatomicalId": "structure.ulnar_artery.left",
-      "feasibilityClassification": "not-established",
+      "feasibilityClassification": "intermittent-candidate",
       "centerlineStatus": "blocked",
       "centerlineUri": null,
-      "reason": "source feasibility is not-established, not continuous-candidate; TASK-A06 human manual anatomical correction is not complete"
+      "reason": "source feasibility is intermittent-candidate, not continuous-candidate; TASK-A06 human manual anatomical correction is not complete"
     },
     {
       "draftLabel": "superficial_target_vein",
