@@ -19,6 +19,8 @@ SEARCH_DEPTH_MAX = 75.0
 COMPONENT_AREA_MIN = 5
 COMPONENT_AREA_MAX = 320
 CROP_BORDER_MARGIN = 20.0
+SCORE_TARGET_SKIN_DEPTH = 12.0
+SCORE_DEPTH_SCALE = 12.0
 BASE_JUMP_PER_FRAME = 5.0
 JUMP_BUFFER = 2.0
 
@@ -88,7 +90,7 @@ def _local_ring_contrast(
 def _candidate_score(candidate: Candidate) -> float:
     area_target = 45.0
     area_penalty = abs(log((candidate.area + 1) / area_target))
-    depth_penalty = abs(candidate.skin_depth - 28.0) / 28.0
+    depth_penalty = abs(candidate.skin_depth - SCORE_TARGET_SKIN_DEPTH) / SCORE_DEPTH_SCALE
     chroma = max(
         candidate.mean_r,
         candidate.mean_g,
@@ -407,12 +409,12 @@ def _track_summary(
 
     strong = (
         summary["spanFrameCount"] >= 90
-        and summary["coverageFraction"] >= 0.75
+        and summary["coverageFraction"] >= 0.85
         and summary["medianCircularity"] >= 0.35
-        and summary["medianContrast"] >= 15.0
+        and summary["medianContrast"] >= 25.0
         and summary["meanJumpSourcePixels"] <= 3.5
         and summary["maxGap"] <= 3
-        and 4.0 <= summary["medianSkinDepthPixels"] <= 65.0
+        and 4.0 <= summary["medianSkinDepthPixels"] <= 20.0
     )
     summary["discoveryClassification"] = (
         "continuous-superficial-vessel-track-candidate"
@@ -510,6 +512,8 @@ def main() -> None:
             "maxTrackGapFrames": MAX_TRACK_GAP,
             "maxCandidatesPerFrame": MAX_CANDIDATES_PER_FRAME,
             "minimumCropBorderDistancePixels": CROP_BORDER_MARGIN,
+            "scoreTargetSkinDepthPixels": SCORE_TARGET_SKIN_DEPTH,
+            "scoreDepthScalePixels": SCORE_DEPTH_SCALE,
             "atlasPriorUsed": False,
             "namedVeinIdentityUsed": False,
         },
