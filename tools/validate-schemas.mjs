@@ -95,6 +95,11 @@ const authoringContracts = [
     'authoring/outputs/a08-a09-ulnar-topology-provenance-20260909.json',
   ],
   [
+    'a07-atlas-fallback-provenance',
+    'schemas/assets/a07-atlas-fallback-provenance.v1.schema.json',
+    'authoring/outputs/a07-atlas-fallback-provenance-20260910.json',
+  ],
+  [
     'semantic-structure-mapping',
     'schemas/assets/semantic-structure-mapping.v1.schema.json',
     'authoring/semantic/a07-semantic-structure-mapping-20260909.json',

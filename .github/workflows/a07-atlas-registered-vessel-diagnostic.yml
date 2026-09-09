@@ -1,0 +1,161 @@
+name: A07 atlas-registered vessel fallback diagnostic
+
+on:
+  push:
+    branches:
+      - task-a07-atlas-fallback-vessels
+    paths:
+      - authoring/source-acquisition/a07_atlas_registered_vessel_diagnostic.py
+      - .github/workflows/a07-atlas-registered-vessel-diagnostic.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deterministic analysis dependencies
+        run: |
+          python -m pip install --disable-pip-version-check \
+            numpy==2.2.6 \
+            opencv-python-headless==4.12.0.88 \
+            Pillow==11.3.0
+
+      - name: Download and verify radius-ulna candidate package
+        run: |
+          mkdir -p build/bones
+          curl --fail --location --silent --show-error \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/10088808577/zip" \
+            -o build/bones.zip
+          test "$(wc -c < build/bones.zip)" = "664033"
+          test "$(sha256sum build/bones.zip | awk '{print $1}')" = "407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b"
+          unzip -q build/bones.zip -d build/bones
+          test -f build/bones/a06-multimodality-bone-candidate-report.v0.json
+
+      - name: Download and verify Z-Anatomy reference package
+        run: |
+          mkdir -p build/zref
+          curl --fail --location --silent --show-error \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/10081007930/zip" \
+            -o build/zref.zip
+          test "$(wc -c < build/zref.zip)" = "196995"
+          test "$(sha256sum build/zref.zip | awk '{print $1}')" = "9b1c58de04f78e533e2d339f4ad6d3d93dc32d9f74c5d14d6c816b3cab2aa625"
+          unzip -q build/zref.zip -d build/zref
+          for f in radius ulna radial_artery ulnar_artery cephalic_vein basilic_vein; do
+            test -s "build/zref/$f.ply"
+          done
+
+      - name: Download and verify reviewed A05 tissue candidates
+        run: |
+          mkdir -p build/a05
+          curl --fail --location --silent --show-error \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/10078955143/zip" \
+            -o build/a05.zip
+          test "$(wc -c < build/a05.zip)" = "6943149"
+          test "$(sha256sum build/a05.zip | awk '{print $1}')" = "6a9f302ab5a1efd5d5d9c60e3c29aeee6b2082f3e04df2bcbe880e886b8b3ef4"
+          unzip -q build/a05.zip -d build/a05
+          test "$(find build/a05/masks/skin -name '*.pgm' | wc -l)" = "451"
+          test "$(find build/a05/masks/subcutaneous_soft_tissue -name '*.pgm' | wc -l)" = "451"
+          test "$(find build/a05/masks/major_muscle_tendon_region -name '*.pgm' | wc -l)" = "451"
+
+      - name: Download and verify human-reviewed bounded ulnar artery package
+        run: |
+          mkdir -p build/ulnar
+          curl --fail --location --silent --show-error \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/10092590748/zip" \
+            -o build/ulnar.zip
+          test "$(wc -c < build/ulnar.zip)" = "80834"
+          test "$(sha256sum build/ulnar.zip | awk '{print $1}')" = "9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75"
+          unzip -q build/ulnar.zip -d build/ulnar
+          test -f build/ulnar/a06-ulnar-continuous-segment-report.v0.json
+
+      - name: Run holdout-validated atlas fallback diagnostic
+        run: |
+          python authoring/source-acquisition/a07_atlas_registered_vessel_diagnostic.py \
+            --bone-report build/bones/a06-multimodality-bone-candidate-report.v0.json \
+            --atlas-root build/zref \
+            --a05-root build/a05 \
+            --ulnar-report build/ulnar/a06-ulnar-continuous-segment-report.v0.json \
+            --output-root build/a07-atlas-fallback
+
+      - name: Validate fail-closed diagnostic invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path(
+                  "build/a07-atlas-fallback/"
+                  "a07-atlas-registered-vessel-diagnostic.v0.json"
+              ).read_text()
+          )
+          assert report["schema"] == "ph-a07-atlas-registered-vessel-diagnostic.v1"
+          assert report["coordinateSpace"]["kind"] == "source-image-stack"
+          assert report["coordinateSpace"]["patientSpaceClaim"] is False
+          assert report["atlasSource"]["sourceClass"] == "atlas-derived"
+          assert report["atlasSource"]["atlasGeometryUsedAsAcquiredCadaverGeometry"] is False
+          assert report["registration"]["candidateSearchCount"] == 24
+          validation = report["registration"]["registrationValidation"]
+          assert validation["calibrationFrameRange"]["frameCount"] == 53
+          assert validation["holdoutFrameRange"]["frameCount"] == 53
+          assert len(report["structures"]) == 4
+          assert all(
+              row["sourceImageSupportEstablished"] is False
+              for row in report["structures"]
+          )
+          assert report["disposition"]["atlasFallbackRepresentationPromoted"] is False
+          assert report["disposition"]["a07SemanticMappingChanged"] is False
+          assert report["disposition"]["a10MedicalMasterReadinessChanged"] is False
+          assert report["claims"]["sourceImageSupportEstablished"] is False
+          assert report["claims"]["humanAnatomicalReview"] is False
+          assert report["claims"]["procedureSpecificReview"] is False
+          assert report["claims"]["medicalValidation"] is False
+          assert report["claims"]["patientSpaceGeometry"] is False
+          assert report["claims"]["superficialTargetVeinSelected"] is False
+          assert report["claims"]["automaticPromotionAllowed"] is False
+
+          print(json.dumps({
+              "registration": report["registration"],
+              "structures": report["structures"],
+              "disposition": report["disposition"],
+          }, indent=2))
+          PY
+
+      - id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: a07-atlas-registered-vessel-fallback-diagnostic-v0
+          path: build/a07-atlas-fallback/
+          compression-level: 9
+          retention-days: 30
+
+      - name: Record artifact identity
+        run: |
+          echo "artifact-id=${{ steps.upload.outputs.artifact-id }}"
+          echo "artifact-digest=${{ steps.upload.outputs.artifact-digest }}"
