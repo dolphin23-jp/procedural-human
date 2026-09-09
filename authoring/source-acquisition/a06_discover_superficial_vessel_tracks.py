@@ -18,6 +18,7 @@ SEARCH_DEPTH_MIN = 3.0
 SEARCH_DEPTH_MAX = 75.0
 COMPONENT_AREA_MIN = 5
 COMPONENT_AREA_MAX = 320
+CROP_BORDER_MARGIN = 20.0
 BASE_JUMP_PER_FRAME = 5.0
 JUMP_BUFFER = 2.0
 
@@ -40,6 +41,7 @@ class Candidate:
     mean_g: float
     mean_b: float
     threshold: float
+    crop_border_distance: float
     score: float
 
 
@@ -194,6 +196,16 @@ def _extract_candidates(
         if not (0 <= xi < 550 and 0 <= yi < 750):
             continue
         depth = float(skin_distance[yi, xi])
+        border_distance = float(
+            min(
+                cx,
+                (image.shape[1] - 1) - cx,
+                cy,
+                (image.shape[0] - 1) - cy,
+            )
+        )
+        if border_distance < CROP_BORDER_MARGIN:
+            continue
 
         pixels = values[component]
         mean_rgb = pixels.mean(axis=0)
@@ -214,6 +226,7 @@ def _extract_candidates(
             mean_g=mean_g,
             mean_b=mean_b,
             threshold=threshold,
+            crop_border_distance=border_distance,
             score=0.0,
         )
         candidate.score = _candidate_score(candidate)
@@ -352,6 +365,12 @@ def _track_summary(
         "medianSkinDepthPixels": float(
             np.median([node.skin_depth for node in nodes])
         ),
+        "medianCropBorderDistancePixels": float(
+            np.median([node.crop_border_distance for node in nodes])
+        ),
+        "p25CropBorderDistancePixels": float(
+            np.quantile([node.crop_border_distance for node in nodes], 0.25)
+        ),
         "p25SkinDepthPixels": float(
             np.quantile([node.skin_depth for node in nodes], 0.25)
         ),
@@ -379,6 +398,7 @@ def _track_summary(
                     "b": node.mean_b,
                 },
                 "localDarkThreshold": node.threshold,
+                "cropBorderDistancePixels": node.crop_border_distance,
                 "nodeScore": node.score,
             }
             for node in nodes
@@ -489,6 +509,7 @@ def main() -> None:
             ],
             "maxTrackGapFrames": MAX_TRACK_GAP,
             "maxCandidatesPerFrame": MAX_CANDIDATES_PER_FRAME,
+            "minimumCropBorderDistancePixels": CROP_BORDER_MARGIN,
             "atlasPriorUsed": False,
             "namedVeinIdentityUsed": False,
         },
@@ -555,6 +576,7 @@ def main() -> None:
                             "medianCircularity",
                             "medianContrast",
                             "medianSkinDepthPixels",
+                            "medianCropBorderDistancePixels",
                         )
                     }
                     for track in tracks
