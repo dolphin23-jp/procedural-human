@@ -10,7 +10,7 @@
     "TASK-A08 required vessel centerlines remain unavailable for structure.radial_artery.left and the unresolved superficial target vein; a bounded lumen-centered V0 ulnar artery centerline candidate exists",
     "TASK-A09 required boundary/lumen representations remain unavailable for structure.radial_artery.left and the unresolved superficial target vein; a bounded V0 ulnar artery lumen/outside/boundary candidate exists",
     "required semantic identities lack candidate representations: structure.radial_artery.left",
-    "fresh A06 source diagnostics failed closed for radial artery and superficial target vein; automatic atlas-based or role-based substitution is prohibited"
+    "fresh A06 source diagnostics failed closed for radial artery and superficial target vein, including expanded-prior and atlas-center-free/source-first searches; automatic atlas-based or role-based substitution is prohibited"
   ],
   "claims": {
     "medicalMasterCreated": false,
