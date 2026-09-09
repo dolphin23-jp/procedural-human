@@ -90,6 +90,17 @@ def _record(
             "editorReference": "editor:test",
             "tool": "3D Slicer test fixture",
             "completedAt": "2026-09-10T00:30:00+09:00",
+            "reviewEvidence": {
+                "sessionSchema": "ph-a06-human-review-session.v1",
+                "receiptPath": (
+                    "authoring/manual-inputs/"
+                    "a06-human-review-receipt-20260910.json"
+                ),
+                "sourceSessionUri": "drive://example/review.json",
+                "sourceSessionDigest": "sha256:" + "4" * 64,
+                "assetRevision": "sha256:" + "5" * 64,
+                "sessionStatus": "complete-no-flags",
+            },
         },
         "structures": structures,
         "claims": {
@@ -253,6 +264,33 @@ class TaskA06ManualCorrectionTests(unittest.TestCase):
         source = record["source"]
         assert isinstance(source, dict)
         del source["sourceFilenameShaAggregate"]
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            skin = root / "skin.zip"
+            subcutaneous = root / "subcutaneous.zip"
+            skin.write_bytes(skin_payload)
+            subcutaneous.write_bytes(subcutaneous_payload)
+
+            with self.assertRaisesRegex(
+                ManualCorrectionValidationError,
+                "violates manual-edit-provenance.v1",
+            ):
+                validate_manual_correction_record(
+                    record,
+                    output_files={
+                        "skin": skin,
+                        "subcutaneous_soft_tissue": subcutaneous,
+                    },
+                )
+
+    def test_completed_record_requires_review_evidence(self) -> None:
+        skin_payload = b"skin"
+        subcutaneous_payload = b"subcutaneous"
+        record = _record(skin_payload, subcutaneous_payload)
+        manual = record["manualCorrection"]
+        assert isinstance(manual, dict)
+        del manual["reviewEvidence"]
 
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

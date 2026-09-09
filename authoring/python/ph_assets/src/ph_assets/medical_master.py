@@ -31,13 +31,36 @@ def evaluate_medical_master_readiness(
     if unresolved:
         blockers.append("TASK-A07 contains unresolved anatomical identities")
 
-    if not (
+    centerline_rows = centerline_report.get("structures", [])
+    unavailable_centerlines = [
+        row.get("anatomicalId") or row.get("draftLabel")
+        for row in centerline_rows
+        if isinstance(row, Mapping) and row.get("centerlineStatus") != "generated"
+    ]
+    if unavailable_centerlines:
+        blockers.append(
+            "TASK-A08 required vessel centerlines are unavailable: "
+            + ", ".join(str(item) for item in unavailable_centerlines)
+        )
+    elif not (
         isinstance(centerline_report.get("claims"), Mapping)
         and centerline_report["claims"].get("centerlinesCreated") is True
     ):
         blockers.append("TASK-A08 required vessel centerlines are unavailable")
 
-    if not (
+    boundary_rows = boundary_lumen_report.get("structures", [])
+    unavailable_boundaries = [
+        row.get("anatomicalId") or row.get("draftLabel")
+        for row in boundary_rows
+        if isinstance(row, Mapping)
+        and row.get("representationStatus") != "generated"
+    ]
+    if unavailable_boundaries:
+        blockers.append(
+            "TASK-A09 boundary/lumen representations are unavailable: "
+            + ", ".join(str(item) for item in unavailable_boundaries)
+        )
+    elif not (
         isinstance(boundary_lumen_report.get("claims"), Mapping)
         and boundary_lumen_report["claims"].get(
             "boundaryLumenRepresentationsCreated"

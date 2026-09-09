@@ -85,5 +85,57 @@ class TaskA10Tests(unittest.TestCase):
             require_medical_master_ready(readiness)
 
 
+    def test_reviewed_a06_still_fails_closed_for_missing_vessels(self) -> None:
+        import json
+
+        repo_root = Path(__file__).resolve().parents[4]
+        manual = json.loads(
+            (
+                repo_root
+                / "authoring/manual-inputs/"
+                "a06-manual-correction-status-20260910.json"
+            ).read_text()
+        )
+        semantic = json.loads(
+            (
+                repo_root
+                / "authoring/semantic/"
+                "a07-semantic-structure-mapping-20260909.json"
+            ).read_text()
+        )
+        centerlines = json.loads(
+            (
+                repo_root
+                / "authoring/outputs/"
+                "a08-vessel-centerline-authoring-report-20260910.json"
+            ).read_text()
+        )
+        boundaries = json.loads(
+            (
+                repo_root
+                / "authoring/outputs/"
+                "a09-boundary-lumen-authoring-report-20260910.json"
+            ).read_text()
+        )
+
+        readiness = evaluate_medical_master_readiness(
+            recorded_at="2026-09-10",
+            manual_correction_record=manual,
+            semantic_mapping_record=semantic,
+            centerline_report=centerlines,
+            boundary_lumen_report=boundaries,
+        )
+
+        self.assertEqual(readiness["status"], "blocked")
+        joined = "\n".join(readiness["blockers"])
+        self.assertNotIn(
+            "TASK-A06 human manual anatomical correction is incomplete",
+            joined,
+        )
+        self.assertIn("radial_artery", joined)
+        self.assertIn("superficial_target_vein", joined)
+        self.assertFalse(readiness["claims"]["medicalMasterCreated"])
+
+
 if __name__ == "__main__":
     unittest.main()

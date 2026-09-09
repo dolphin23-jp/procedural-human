@@ -121,6 +121,42 @@
         },
         "completedAt": {
           "type": ["string", "null"]
+        },
+        "reviewEvidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sessionSchema",
+            "receiptPath",
+            "sourceSessionUri",
+            "sourceSessionDigest",
+            "assetRevision",
+            "sessionStatus"
+          ],
+          "properties": {
+            "sessionSchema": {
+              "const": "ph-a06-human-review-session.v1"
+            },
+            "receiptPath": {
+              "type": "string",
+              "pattern": "^authoring/manual-inputs/a06-human-review-receipt-[0-9]{8}\\.json$"
+            },
+            "sourceSessionUri": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sourceSessionDigest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "assetRevision": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "sessionStatus": {
+              "enum": ["complete-no-flags", "complete-with-flags"]
+            }
+          }
         }
       },
       "allOf": [
@@ -141,8 +177,16 @@
               "completedAt": {
                 "type": "string",
                 "minLength": 1
+              },
+              "tool": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reviewEvidence": {
+                "type": "object"
               }
-            }
+            },
+            "required": ["reviewEvidence"]
           }
         }
       ]

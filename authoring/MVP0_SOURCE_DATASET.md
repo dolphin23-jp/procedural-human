@@ -72,6 +72,19 @@ No raw or derived large medical binaries will be committed to the main Git repos
 
 Before any public redistribution of derived runtime assets, the project must re-check the then-current NLM terms and record that review.
 
+## 4.1 2026-09-10 public review distribution terms re-check
+
+Before enabling the temporary browser-based TASK-A06 human-review surface, the current NLM Visible Human Project terms were re-checked on 2026-09-10.
+
+For the public review surface, the project must:
+
+- display the phrase **"Courtesy of the U.S. National Library of Medicine"** clearly;
+- not imply that NLM endorses Procedural Human;
+- state that the redistributed review package is derived from the project's recorded 2026 source snapshot and may not reflect the most current or accurate NLM data;
+- keep the review package explicitly separate from Medical Master, runtime medical anatomy, Patient Space, and medical validation claims.
+
+The review surface is an authoring aid for the selected bounded source stack and V0 masks. It does not change the dataset's source class, validation level, or licensing provenance.
+
 ## 5. Intended MVP 0 use
 
 The selected source will be used to define a reproducible **left distal forearm/wrist ROI** and to create a Medical Master through the authoring pipeline.

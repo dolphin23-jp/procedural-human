@@ -5,10 +5,12 @@ on:
     branches:
       - main
       - task-048-053-runtime-interaction
+      - task-a06-ipad-human-review
   workflow_dispatch:
 
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
@@ -19,6 +21,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
 
@@ -35,6 +39,136 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build:contracts
       - run: pnpm --filter @procedural-human/web build
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - id: a06-review
+        name: Build transient TASK-A06 human-review data
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+          root=build/a06-review
+          mkdir -p "$root/source-zips" "$root/source" "$root/a05" "$root/bones" "$root/ulnar"
+
+          python - <<'PY' > "$root/source-artifacts.tsv"
+          import json
+          from pathlib import Path
+
+          record = json.loads(
+              Path(
+                  "authoring/source-archives/a05-real-source-verification-20260909.json"
+              ).read_text()
+          )
+          chunks = record["temporaryTransport"]["chunks"]
+          assert len(chunks) == 10
+          for row in chunks:
+              print(
+                  row["index"],
+                  row["artifactId"],
+                  row["byteSize"],
+                  row["sha256"],
+                  sep="\t",
+              )
+          PY
+
+          while IFS=$'\t' read -r index artifact_id byte_size digest; do
+            archive="$root/source-zips/chunk-$index.zip"
+            curl --fail --location --silent --show-error \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id/zip" \
+              -o "$archive"
+            test "$(wc -c < "$archive")" = "$byte_size"
+            test "$(sha256sum "$archive" | awk '{print $1}')" = "$digest"
+            unzip -q -o "$archive" -d "$root/source"
+          done < "$root/source-artifacts.tsv"
+
+          python - <<'PY' > "$root/candidate-artifacts.tsv"
+          import json
+          from pathlib import Path
+
+          a05 = json.loads(
+              Path(
+                  "authoring/outputs/a05-real-v0-output-provenance-20260909.json"
+              ).read_text()
+          )["temporaryOutputArtifact"]
+          bones = json.loads(
+              Path(
+                  "authoring/outputs/a06-support-aware-radius-ulna-provenance-20260909.json"
+              ).read_text()
+          )["execution"]
+          ulnar = json.loads(
+              Path(
+                  "authoring/outputs/a06-a08-ulnar-continuous-provenance-20260909.json"
+              ).read_text()
+          )["execution"]
+
+          rows = (
+              (
+                  "a05",
+                  a05["artifactId"],
+                  a05["byteSize"],
+                  a05["digest"].removeprefix("sha256:"),
+              ),
+              (
+                  "bones",
+                  bones["outputArtifactId"],
+                  bones["outputArchiveByteSize"],
+                  bones["outputArchiveSha256"],
+              ),
+              (
+                  "ulnar",
+                  ulnar["outputArtifactId"],
+                  ulnar["outputArchiveByteSize"],
+                  ulnar["outputArchiveSha256"],
+              ),
+          )
+          for row in rows:
+              print(*row, sep="\t")
+          PY
+
+          while IFS=$'\t' read -r name artifact_id byte_size digest; do
+            archive="$root/$name.zip"
+            curl --fail --location --silent --show-error \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id/zip" \
+              -o "$archive"
+            test "$(wc -c < "$archive")" = "$byte_size"
+            test "$(sha256sum "$archive" | awk '{print $1}')" = "$digest"
+            unzip -q "$archive" -d "$root/$name"
+          done < "$root/candidate-artifacts.tsv"
+
+          test "$(find "$root/source" -maxdepth 1 -name 'avf*.png' | wc -l)" = "451"
+
+          python authoring/review/a06_build_review_assets.py \
+            --source-root "$root/source" \
+            --a05-root "$root/a05" \
+            --bones-root "$root/bones" \
+            --ulnar-root "$root/ulnar" \
+            --source-verification authoring/source-archives/a05-real-source-verification-20260909.json \
+            --manual-status authoring/manual-inputs/a06-manual-correction-status-20260910.json \
+            --output-root apps/web/dist/a06-review-data
+
+      - name: Record unavailable TASK-A06 review data without blocking preview
+        if: steps.a06-review.outcome == 'failure'
+        run: |
+          mkdir -p apps/web/dist/a06-review-data
+          cat > apps/web/dist/a06-review-data/unavailable.json <<'JSON'
+          {
+            "schema": "ph-a06-ipad-review-unavailable.v1",
+            "task": "TASK-A06",
+            "available": false,
+            "reason": "Transient source/candidate review assets could not be materialized from the recorded external artifact references. The normal 3D preview is unaffected.",
+            "medicalValidation": false
+          }
+          JSON
 
       - uses: actions/configure-pages@v5
 

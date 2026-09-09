@@ -1,0 +1,92 @@
+{
+  "schema": "ph-a06-human-review-receipt.v1",
+  "schemaVersion": "1",
+  "task": "TASK-A06",
+  "recordedAt": "2026-09-10",
+  "sourceSession": {
+    "schema": "ph-a06-human-review-session.v1",
+    "assetRevision": "sha256:8ab5c0ec345f5307da6932d468a16a0fe825eb74fc461c6cef45d54eaa72ef30",
+    "reviewerReference": "N.P",
+    "reviewTool": "Procedural Human A06 iPad Review",
+    "reviewToolVersion": "1",
+    "startedAt": "2026-09-09T21:59:55.911Z",
+    "exportedAt": "2026-09-09T22:04:50.394Z",
+    "sessionStatus": "complete-no-flags",
+    "persistentStorage": {
+      "provider": "Google Drive",
+      "folderId": "1p4Xx_NBxkMqs9Mfd1m51vJ9udCCb-D82",
+      "fileId": "15kHqXOree3lM2TAxRHlEm8pMf5sUNHO5",
+      "filename": "a06-human-review-2026-09-09.json",
+      "uri": "drive://15kHqXOree3lM2TAxRHlEm8pMf5sUNHO5/a06-human-review-2026-09-09.json",
+      "byteSize": 215158,
+      "digest": "sha256:b27d91db3714446d231aa27fca16cc620753b5cc96e0157d56e90a1afed9a8d4",
+      "uploadAccepted": true,
+      "metadataReadBackByteSizeVerified": true,
+      "sha256ReadBackVerified": true
+    }
+  },
+  "source": {
+    "frameCount": 451,
+    "firstSourceFilename": "avf1567a.png",
+    "lastSourceFilename": "avf1717a.png",
+    "cropFilenameShaAggregate": "sha256:f6e46638ecb84a16dd20cc604931874ec36815091d050b31843392b7d73c7171"
+  },
+  "structures": [
+    {
+      "draftLabel": "skin",
+      "supportedFrameCount": 451,
+      "reviewedFrameCount": 451,
+      "acceptedFrameCount": 451,
+      "flaggedFrameCount": 0,
+      "complete": true
+    },
+    {
+      "draftLabel": "subcutaneous_soft_tissue",
+      "supportedFrameCount": 451,
+      "reviewedFrameCount": 451,
+      "acceptedFrameCount": 451,
+      "flaggedFrameCount": 0,
+      "complete": true
+    },
+    {
+      "draftLabel": "major_muscle_tendon_region",
+      "supportedFrameCount": 451,
+      "reviewedFrameCount": 451,
+      "acceptedFrameCount": 451,
+      "flaggedFrameCount": 0,
+      "complete": true
+    },
+    {
+      "draftLabel": "radius",
+      "supportedFrameCount": 357,
+      "reviewedFrameCount": 357,
+      "acceptedFrameCount": 357,
+      "flaggedFrameCount": 0,
+      "complete": true
+    },
+    {
+      "draftLabel": "ulna",
+      "supportedFrameCount": 357,
+      "reviewedFrameCount": 357,
+      "acceptedFrameCount": 357,
+      "flaggedFrameCount": 0,
+      "complete": true
+    },
+    {
+      "draftLabel": "ulnar_artery",
+      "supportedFrameCount": 106,
+      "reviewedFrameCount": 106,
+      "acceptedFrameCount": 106,
+      "flaggedFrameCount": 0,
+      "complete": true
+    }
+  ],
+  "claims": {
+    "humanReviewInputRecorded": true,
+    "humanEdited": false,
+    "anatomicallyReviewed": false,
+    "medicalValidation": false,
+    "patientSpaceGeometry": false,
+    "automaticPromotionAllowed": false
+  }
+}

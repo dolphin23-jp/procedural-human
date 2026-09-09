@@ -42,7 +42,17 @@ const authoringContracts = [
   [
     'manual-edit-provenance',
     'schemas/assets/manual-edit-provenance.v1.schema.json',
-    'authoring/manual-inputs/a06-manual-correction-status-20260909.json',
+    'authoring/manual-inputs/a06-manual-correction-status-20260910.json',
+  ],
+  [
+    'a06-human-review-session',
+    'schemas/assets/a06-human-review-session.v1.schema.json',
+    null,
+  ],
+  [
+    'a06-human-review-receipt',
+    'schemas/assets/a06-human-review-receipt.v1.schema.json',
+    'authoring/manual-inputs/a06-human-review-receipt-20260910.json',
   ],
   [
     'a06-bone-candidate-provenance',
@@ -92,17 +102,17 @@ const authoringContracts = [
   [
     'vessel-centerline-authoring-report',
     'schemas/assets/vessel-centerline-authoring-report.v1.schema.json',
-    'authoring/outputs/a08-vessel-centerline-authoring-report-20260909.json',
+    'authoring/outputs/a08-vessel-centerline-authoring-report-20260910.json',
   ],
   [
     'boundary-lumen-authoring-report',
     'schemas/assets/boundary-lumen-authoring-report.v1.schema.json',
-    'authoring/outputs/a09-boundary-lumen-authoring-report-20260909.json',
+    'authoring/outputs/a09-boundary-lumen-authoring-report-20260910.json',
   ],
   [
     'medical-master-readiness',
     'schemas/assets/medical-master-readiness.v1.schema.json',
-    'authoring/outputs/a10-medical-master-readiness-20260909.json',
+    'authoring/outputs/a10-medical-master-readiness-20260910.json',
   ],
 ];
 
