@@ -208,9 +208,7 @@
                   ]
                 }
               },
-              "required": [
-                "draftLabel"
-              ]
+              "required": ["draftLabel"]
             },
             "then": {
               "properties": {
@@ -230,15 +228,10 @@
             "if": {
               "properties": {
                 "draftLabel": {
-                  "enum": [
-                    "radius",
-                    "ulna"
-                  ]
+                  "enum": ["radius", "ulna"]
                 }
               },
-              "required": [
-                "draftLabel"
-              ]
+              "required": ["draftLabel"]
             },
             "then": {
               "properties": {
@@ -261,9 +254,7 @@
                   "const": "ulnar_artery"
                 }
               },
-              "required": [
-                "draftLabel"
-              ]
+              "required": ["draftLabel"]
             },
             "then": {
               "properties": {
@@ -289,9 +280,7 @@
                 "const": "skin"
               }
             },
-            "required": [
-              "draftLabel"
-            ]
+            "required": ["draftLabel"]
           },
           "minContains": 1,
           "maxContains": 1
@@ -303,9 +292,7 @@
                 "const": "subcutaneous_soft_tissue"
               }
             },
-            "required": [
-              "draftLabel"
-            ]
+            "required": ["draftLabel"]
           },
           "minContains": 1,
           "maxContains": 1
@@ -317,9 +304,7 @@
                 "const": "major_muscle_tendon_region"
               }
             },
-            "required": [
-              "draftLabel"
-            ]
+            "required": ["draftLabel"]
           },
           "minContains": 1,
           "maxContains": 1
@@ -331,9 +316,7 @@
                 "const": "radius"
               }
             },
-            "required": [
-              "draftLabel"
-            ]
+            "required": ["draftLabel"]
           },
           "minContains": 1,
           "maxContains": 1
@@ -345,9 +328,7 @@
                 "const": "ulna"
               }
             },
-            "required": [
-              "draftLabel"
-            ]
+            "required": ["draftLabel"]
           },
           "minContains": 1,
           "maxContains": 1
@@ -359,9 +340,7 @@
                 "const": "ulnar_artery"
               }
             },
-            "required": [
-              "draftLabel"
-            ]
+            "required": ["draftLabel"]
           },
           "minContains": 1,
           "maxContains": 1
