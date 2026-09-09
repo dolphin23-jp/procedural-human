@@ -1,4 +1,5 @@
 name: A06 consolidation format helper
+# rerun on latest A06 consolidation head
 
 on:
   push:
