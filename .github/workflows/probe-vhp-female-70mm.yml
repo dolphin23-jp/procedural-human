@@ -1,0 +1,155 @@
+name: A06 VHP female 70mm forearm probe
+
+on:
+  push:
+    branches:
+      - task-a06-vhp-female-70mm-probe
+    paths:
+      - .github/workflows/probe-vhp-female-70mm.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install image dependencies
+        run: |
+          python -m pip install --disable-pip-version-check \
+            numpy==2.2.6 \
+            opencv-python-headless==4.12.0.88 \
+            Pillow==11.3.0
+
+      - name: Download matched A-slices and 70mm scans
+        run: |
+          set -euo pipefail
+          mkdir -p build/fullcolor build/70mm-2k build/70mm-4k
+          indices=(1567 1619 1646 1656 1681)
+          for idx in "${indices[@]}"; do
+            curl --fail --location --silent --show-error \
+              "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/PNG_format/fullcolor/avf${idx}a.png" \
+              -o "build/fullcolor/avf${idx}a.png"
+            curl --fail --location --silent --show-error \
+              "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/70mm/2K_PNG-Images/${idx}.png" \
+              -o "build/70mm-2k/${idx}.png"
+            curl --fail --location --silent --show-error \
+              "https://data.lhncbc.nlm.nih.gov/public/Visible-Human/Female-Images/70mm/4K_Tiff-Images/${idx}.tif" \
+              -o "build/70mm-4k/${idx}.tif"
+            sha256sum \
+              "build/fullcolor/avf${idx}a.png" \
+              "build/70mm-2k/${idx}.png" \
+              "build/70mm-4k/${idx}.tif"
+          done
+
+      - name: Register 70mm scans to standard fullcolor
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import cv2
+          import numpy as np
+          from PIL import Image, ImageDraw
+
+          indices=[1567,1619,1646,1656,1681]
+          out=Path("build/analysis")
+          out.mkdir(parents=True,exist_ok=True)
+          rows=[]
+
+          def gray(path):
+              return cv2.imread(str(path),cv2.IMREAD_GRAYSCALE)
+
+          for idx in indices:
+              standard=gray(Path(f"build/fullcolor/avf{idx}a.png"))
+              film2=gray(Path(f"build/70mm-2k/{idx}.png"))
+              film4=gray(Path(f"build/70mm-4k/{idx}.tif"))
+              if standard is None or film2 is None or film4 is None:
+                  raise RuntimeError(f"failed image read at {idx}")
+
+              # Estimate a robust homography after scaling both images to <=1400px width.
+              def scaled(im,maxw=1400):
+                  scale=min(1.0,maxw/im.shape[1])
+                  return cv2.resize(im,None,fx=scale,fy=scale,interpolation=cv2.INTER_AREA),scale
+
+              s_small, ss=scaled(standard)
+              f_small, fs=scaled(film2)
+              orb=cv2.ORB_create(nfeatures=12000,fastThreshold=10)
+              kp1,des1=orb.detectAndCompute(f_small,None)
+              kp2,des2=orb.detectAndCompute(s_small,None)
+              if des1 is None or des2 is None:
+                  raise RuntimeError(f"ORB descriptors unavailable at {idx}")
+              matcher=cv2.BFMatcher(cv2.NORM_HAMMING)
+              knn=matcher.knnMatch(des1,des2,k=2)
+              good=[m for m,n in knn if m.distance < 0.72*n.distance]
+              if len(good)<20:
+                  raise RuntimeError(f"insufficient matches at {idx}: {len(good)}")
+              src=np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1,1,2)
+              dst=np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1,1,2)
+              Hs,inliers=cv2.findHomography(src,dst,cv2.RANSAC,4.0)
+              if Hs is None:
+                  raise RuntimeError(f"homography failed at {idx}")
+
+              # Convert homography from scaled coordinates to native coordinates.
+              S_src=np.diag([fs,fs,1.0])
+              S_dst=np.diag([ss,ss,1.0])
+              H=np.linalg.inv(S_dst) @ Hs @ S_src
+              inlier_count=int(inliers.sum()) if inliers is not None else 0
+              inlier_fraction=inlier_count/len(good)
+
+              warped=cv2.warpPerspective(
+                  cv2.imread(f"build/70mm-2k/{idx}.png"),
+                  H,
+                  (standard.shape[1],standard.shape[0]),
+              )
+              std_color=cv2.imread(f"build/fullcolor/avf{idx}a.png")
+              overlay=cv2.addWeighted(std_color,0.5,warped,0.5,0)
+              cv2.imwrite(str(out/f"{idx}-overlay.png"),overlay)
+
+              rows.append({
+                  "index":idx,
+                  "standardShape":list(standard.shape),
+                  "film2kShape":list(film2.shape),
+                  "film4kShape":list(film4.shape),
+                  "goodMatches":len(good),
+                  "inliers":inlier_count,
+                  "inlierFraction":inlier_fraction,
+                  "homography2kToStandard":H.tolist(),
+              })
+
+          (out/"registration.json").write_text(json.dumps(rows,indent=2)+"\n")
+
+          # Compact montage: standard / 2K film / registered overlay.
+          thumb_w,thumb_h=320,220
+          sheet=Image.new("RGB",(thumb_w*3,thumb_h*len(indices)),(255,255,255))
+          draw=ImageDraw.Draw(sheet)
+          for r,idx in enumerate(indices):
+              paths=[
+                  Path(f"build/fullcolor/avf{idx}a.png"),
+                  Path(f"build/70mm-2k/{idx}.png"),
+                  out/f"{idx}-overlay.png",
+              ]
+              for c,path in enumerate(paths):
+                  image=Image.open(path).convert("RGB")
+                  image.thumbnail((thumb_w,thumb_h-20))
+                  x=c*thumb_w+(thumb_w-image.width)//2
+                  y=r*thumb_h+(thumb_h-20-image.height)//2
+                  sheet.paste(image,(x,y))
+              draw.text((5,r*thumb_h+3),str(idx),fill=(255,255,0))
+          sheet.save(out/"70mm-registration-montage.jpg",quality=90)
+
+          print(json.dumps(rows,indent=2))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a06-vhp-female-70mm-forearm-probe
+          path: build/analysis/
+          compression-level: 6
+          retention-days: 30
