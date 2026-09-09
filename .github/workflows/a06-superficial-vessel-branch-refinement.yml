@@ -34,9 +34,9 @@ jobs:
       - name: Download verified discovery report
         run: |
           mkdir -p build/discovery
-          curl --fail --location --silent --show-error             -H "Accept: application/vnd.github+json"             -H "Authorization: Bearer $GH_TOKEN"             -H "X-GitHub-Api-Version: 2022-11-28"             "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/10106905106/zip"             -o build/discovery.zip
-          test "$(wc -c < build/discovery.zip)" = "56723"
-          test "$(sha256sum build/discovery.zip | awk '{print $1}')" = "ed97493f5720d364886d57aefccd8ef4e311a4f7d70481ab81c6c89e70dcd5cb"
+          curl --fail --location --silent --show-error             -H "Accept: application/vnd.github+json"             -H "Authorization: Bearer $GH_TOKEN"             -H "X-GitHub-Api-Version: 2022-11-28"             "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/10107566520/zip"             -o build/discovery.zip
+          test "$(wc -c < build/discovery.zip)" = "56518"
+          test "$(sha256sum build/discovery.zip | awk '{print $1}')" = "07c8ea9dfefc2fa67e1e6c4e78ab22d65dad94d939f8aae3cfda698d1c4f4abc"
           unzip -q build/discovery.zip -d build/discovery
           test -f build/discovery/a06-superficial-vessel-source-discovery.v0.json
 
