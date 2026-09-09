@@ -1,0 +1,67 @@
+{
+  "schema": "ph-a08-a09-ulnar-topology-provenance.v1",
+  "schemaVersion": "1",
+  "tasks": [
+    "TASK-A08",
+    "TASK-A09"
+  ],
+  "recordedAt": "2026-09-09",
+  "sourceEvidence": {
+    "continuousSegmentArtifactId": 10092590748,
+    "continuousSegmentArchiveByteSize": 80834,
+    "continuousSegmentArchiveSha256": "9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75"
+  },
+  "execution": {
+    "workflowRunId": 34326476865,
+    "outputArtifactId": 10093960946,
+    "outputArchiveByteSize": 150204,
+    "outputArchiveSha256": "19c67a9031948e3b7169e62e500b43939a39193178d60582c5949b01ac8a3d70",
+    "persistentStorage": {
+      "provider": "Google Drive",
+      "folderId": "1nPP92BIgjC9PaRqKhsxwoBshIj2qWljM",
+      "fileId": "10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ",
+      "filename": "a09-ulnar-boundary-lumen-v0.zip",
+      "readBackByteSizeVerified": true,
+      "readBackSha256Verified": true
+    }
+  },
+  "correctedCenterline": {
+    "status": "generated-v0-candidate",
+    "pointCount": 106,
+    "uri": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#a08-ulnar-lumen-centered-source-stack-centerline-v0.json",
+    "inputCenterlineOutsideLumenFrameCount": 1,
+    "inputCenterlineOutsideLumenFrames": [
+      333
+    ],
+    "maxInputToCorrectedCenterlineDistancePixels": 6.366932184638628,
+    "maxCorrectedCenterlineJumpPixels": 3.605551275463989,
+    "meanCorrectedCenterlineJumpPixels": 1.1168323202481427
+  },
+  "boundaryLumen": {
+    "status": "generated-v0-candidate",
+    "firstSourceFilename": "avf1646a.png",
+    "lastSourceFilename": "avf1681a.png",
+    "frameCount": 106,
+    "singleConnectedLumenComponentEveryFrame": true,
+    "closedOuterBoundaryEveryFrame": true,
+    "correctedCenterlinePointInsideLumenEveryFrame": true,
+    "medianLumenAreaPixels": 51.5,
+    "minLumenAreaPixels": 6,
+    "maxLumenAreaPixels": 301,
+    "medianEquivalentLumenRadiusPixels": 4.0487742380819585,
+    "medianBoundaryPerimeterPixels": 25.606601536273956,
+    "outsideRegionUri": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#outside=source-crop-complement-of-lumen",
+    "wallBoundaryUri": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#boundary/ulnar_artery",
+    "lumenRegionUri": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#lumen/ulnar_artery"
+  },
+  "claims": {
+    "humanEdited": false,
+    "anatomicallyReviewed": false,
+    "medicalValidation": false,
+    "completeVesselExtent": false,
+    "anatomicalWallThickness": false,
+    "patientSpaceGeometry": false,
+    "runtimeRepresentation": false,
+    "automaticPromotionAllowed": false
+  }
+}
