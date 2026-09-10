@@ -126,9 +126,11 @@ TASK-A03/A04 and later registration work must preserve and verify source spatial
 
 The 0.33 mm cryosection sampling does not imply 0.33 mm anatomical accuracy for every structure. Segmentation uncertainty, freezing effects, partial-volume effects, manual edits, and source interpretation must be reflected in the accuracy profile.
 
-### Left-side ROI still needs exact definition
+### ROI status after TASK-A04/A05
 
-TASK-A01 selects the dataset, not the final crop. TASK-A04 must record the exact left distal forearm/wrist patient-space extent and source slice range reproducibly.
+At TASK-A01 time, the exact left-side crop had not yet been defined. The repository now contains a reproducible bounded source-space acquisition for the distal left forearm/wrist (`avf1567a.png` through `avf1717a.png`, 451 frames, with a recorded pixel crop and provenance).
+
+This is **not yet a Patient Space ROI**. The current ROI record explicitly keeps `patientSpaceExtent: null` pending an explicitly aligned source series with measured patient-space geometry. Filename-derived source position and the cryosection crop must not be promoted into a Patient Space or CT-registration claim.
 
 ## 7. Secondary reference datasets
 
@@ -145,7 +147,7 @@ It is not selected as the primary MVP 0 source at TASK-A01 because its published
 This decision authorizes source acquisition/recording work in TASK-A02 and ingest tooling in TASK-A03. It does not authorize medical validation, runtime release, or fabricated completion of structures not supported by the source.
 
 
-## 7.1 2026-09-10 cross-subject atlas fallback diagnostic
+## 8.1 2026-09-10 cross-subject atlas fallback diagnostic
 
 A bounded Z-Anatomy/BodyParts3D vessel fallback was tested after the same-subject VHP source-first radial-artery and superficial-vein searches failed closed. The atlas remained explicitly `atlas-derived`; it was not treated as acquired VHP geometry.
 
@@ -154,3 +156,23 @@ The registration used the VHP radius/ulna candidates, then calibrated a constant
 The mapped cephalic and basilic trajectories also had zero median overlap with the reviewed A05 subcutaneous candidate, while the mapped radial-artery trajectory strongly overlapped the major muscle/tendon candidate. These findings make direct cross-subject atlas substitution unsuitable for the current Medical Master strategy.
 
 Decision: **REJECT direct registered-atlas vessel substitution for this VHP individual.** The diagnostic is retained as negative evidence. TASK-A07 and TASK-A10 remain unchanged, and no human anatomical-review, procedure-specific-review, Patient Space, or medical-validation claim is created. A materially different source strategy is required for the missing radial artery and superficial target vein.
+
+
+## 8.2 2026-09-10 whole-body source-foundation decision
+
+The original TASK-A01 decision selected Visible Human Female for a **left distal forearm/wrist MVP 0 Medical Master**. That MVP deliverable scope remains unchanged.
+
+The project now distinguishes:
+
+- **source-evidence scope**: may include the usable whole-body Visible Human Female source and same-subject supporting modalities;
+- **Medical Master / validation / runtime scope for MVP 0**: remains the left distal forearm/wrist.
+
+Reason: the bounded distal ROI proved insufficient to establish some small-vessel identities with defensible confidence. In particular, the radial artery and superficial target vein remain fail-closed after local source-first diagnostics, and the cross-subject atlas fallback was rejected.
+
+The preferred next strategy is therefore to preserve/index the whole same-subject source and establish identity through observed continuity from stronger anatomical anchors where possible. For the arterial tree, this includes tracing from the brachial artery and observed bifurcation into radial/ulnar branches and then into the distal forearm. Superficial venous identity should likewise use wider same-subject continuity/course evidence rather than local position alone.
+
+This decision does **not** promote the whole-body source to a whole-body Medical Master and does not authorize whole-body segmentation or validation.
+
+Large source bytes remain outside Git according to `DATA_POLICY.md`. Git records manifests, hashes, source metadata, provenance, review/validation records, and small fixtures/tooling.
+
+The implementation sequence for this support work is defined by the M8S / TASK-AS01 through TASK-AS07 lane in `TASKS.md`.
