@@ -30,9 +30,15 @@ The application must run in a supported desktop browser and real iPad Safari.
 
 ## 3. Target region
 
-Primary region: left distal forearm and wrist.
+Primary MVP 0 runtime, Medical Master, validation, and acceptance region: left distal forearm and wrist.
 
 Exact crop may be adjusted according to source-data quality.
+
+The **source-evidence extent is allowed to be larger than the MVP 0 deliverable extent**. Authoring may ingest, hash, index, and inspect same-subject source data outside the target region, including a usable whole-body source archive, when this is needed to establish anatomical continuity/identity or to create a reusable source foundation.
+
+This does not authorize whole-body segmentation, whole-body Medical Master creation, whole-body validation, or whole-body runtime packaging for MVP 0.
+
+For example, a distal radial-artery identity may be supported by tracing the same subject from a defensible proximal arterial anchor and observed branch continuity into the distal forearm. Cross-subject atlas geometry may guide inspection or validation but must not be silently substituted as patient/cadaver-specific geometry.
 
 ## 4. Required anatomy
 
