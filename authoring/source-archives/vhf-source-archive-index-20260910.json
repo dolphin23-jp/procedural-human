@@ -1,0 +1,681 @@
+{
+  "chunks": [
+    {
+      "byteSize": 201896268,
+      "filename": "vhf-source-0000.zip",
+      "frameCount": 64,
+      "index": 0,
+      "manifestSha256": "8a54e4ba73186c0acc5387ce368b42ce4b0eb47a03a202323a651ddf2ae7e17c",
+      "sha256": "5ed9472ab0b619a1d6c41409f44911545dc9460af0d0e3876ac08eb467d5834c"
+    },
+    {
+      "byteSize": 199800214,
+      "filename": "vhf-source-0001.zip",
+      "frameCount": 64,
+      "index": 1,
+      "manifestSha256": "be9d71b99761a44978ac628e253dc6cd703b60bc92275858513a05c9e5044358",
+      "sha256": "4ad845a28294d0a97447ae21445d8986710e77de2b1602f5cd42352047cdaf0b"
+    },
+    {
+      "byteSize": 200700462,
+      "filename": "vhf-source-0002.zip",
+      "frameCount": 64,
+      "index": 2,
+      "manifestSha256": "00f2d1ddd4915455c92cc310fb5bc6b96c50a886686175ef1017fe2ab76f47b0",
+      "sha256": "909c63714b2680dd6e814a2e624bbb228b6dc78a83e3505a3435f0cd20dfe85e"
+    },
+    {
+      "byteSize": 201481268,
+      "filename": "vhf-source-0003.zip",
+      "frameCount": 64,
+      "index": 3,
+      "manifestSha256": "0cffcc772a3845eaaa1c24ff69ec9ea3e1b24ca68be1bb416b14d52f460dfcc6",
+      "sha256": "5c7b183a6c399f57304c951f8ea13a67a70b7cb08d82cb9c29ab66d4757e8f17"
+    },
+    {
+      "byteSize": 202071579,
+      "filename": "vhf-source-0004.zip",
+      "frameCount": 64,
+      "index": 4,
+      "manifestSha256": "b5521764994aa31b87d36fea6d594850fa44f1eb7093c9000dde736ee7c0c7fa",
+      "sha256": "7e3e9c175b74ce871dd9d69761a14a4596e77b120718d6bf64676e47c3436e7a"
+    },
+    {
+      "byteSize": 201918867,
+      "filename": "vhf-source-0005.zip",
+      "frameCount": 64,
+      "index": 5,
+      "manifestSha256": "2cf9f15ec3c3cc6f2cda023e12d773c304f693bfaa6a921bcd6122a124a9c298",
+      "sha256": "8385613390a5f3b3123a2206bc84a48c64cd216c0cbf2364f80511814cc5c8a1"
+    },
+    {
+      "byteSize": 203096532,
+      "filename": "vhf-source-0006.zip",
+      "frameCount": 64,
+      "index": 6,
+      "manifestSha256": "3cce2c0bab0061bbaec36a035a07950d1b67ea343963a39b8b22785a1aeea330",
+      "sha256": "0dacaf32d76babc3757e27669bbd4489e895640fd2ef589b00afca53f690e80c"
+    },
+    {
+      "byteSize": 203584081,
+      "filename": "vhf-source-0007.zip",
+      "frameCount": 64,
+      "index": 7,
+      "manifestSha256": "9e623b7d0be40a8553cd4a9907aed92bf1986e5d9878abbc409d5eb4208ae553",
+      "sha256": "e53c9d0a4c555ac93d83e641299043438addf07f37d98a5313dfcd72fa1acc35"
+    },
+    {
+      "byteSize": 202463556,
+      "filename": "vhf-source-0008.zip",
+      "frameCount": 64,
+      "index": 8,
+      "manifestSha256": "2871a15b5becae922de8cb6141aacae574369c06f72d0a74e382a19e0b6d9b03",
+      "sha256": "43e7d3a87cac4dea024b6d818eded05e1b05d034b5090c0167a594640637fb69"
+    },
+    {
+      "byteSize": 199940911,
+      "filename": "vhf-source-0009.zip",
+      "frameCount": 64,
+      "index": 9,
+      "manifestSha256": "37d45741ac7493d7193be58fedbc99cc4ea0505b1270749a013e7d08e49b54ad",
+      "sha256": "95633d622c8d0007bcd0f880fa7140795d5039cd04b53044687291be599b1437"
+    },
+    {
+      "byteSize": 203925677,
+      "filename": "vhf-source-0010.zip",
+      "frameCount": 64,
+      "index": 10,
+      "manifestSha256": "d6cc227541c4f9fb30bbd7f7a553b7f8cc9681284fadc040babd0136a152a1d7",
+      "sha256": "833bd0509bd03310085150277a1de39366af048150254e160a4c9539f640e40c"
+    },
+    {
+      "byteSize": 206936731,
+      "filename": "vhf-source-0011.zip",
+      "frameCount": 64,
+      "index": 11,
+      "manifestSha256": "e4e19b48193aefeaed4f73d3bd7abb26141e80c40ba643ad2a5b06edf140e4bd",
+      "sha256": "0fd0a5469650a137ec23922a99c85488e4b4f992cbe180723b6f2da03246ad00"
+    },
+    {
+      "byteSize": 212236266,
+      "filename": "vhf-source-0012.zip",
+      "frameCount": 64,
+      "index": 12,
+      "manifestSha256": "0651dc9a73caac61c144a42fbf20bfc2e4584e0f365ae935aeb7eddddd46b0d2",
+      "sha256": "96a90d90ab000920f1a5d076801b548bfa475187fcca9c19c222fcf8415985a5"
+    },
+    {
+      "byteSize": 216649819,
+      "filename": "vhf-source-0013.zip",
+      "frameCount": 64,
+      "index": 13,
+      "manifestSha256": "f9dc8ae76c875b209b08d27ac7dd85775b6cdfa4650a77be9f75612431a44941",
+      "sha256": "d4cedea9783fd7e0d29f808046eee75f0ad9a70c92b628e3cd07b999920fcf2d"
+    },
+    {
+      "byteSize": 218294826,
+      "filename": "vhf-source-0014.zip",
+      "frameCount": 64,
+      "index": 14,
+      "manifestSha256": "b3ceccb06ed392c29db2ba6b0ab7cce577fecf04a8e7ae01f06c605ad659cb05",
+      "sha256": "f9f8c15228739d1185961ed4f520c5d3af9e370aab9c029ee5074a0148611dad"
+    },
+    {
+      "byteSize": 218544445,
+      "filename": "vhf-source-0015.zip",
+      "frameCount": 64,
+      "index": 15,
+      "manifestSha256": "b488a32e754a59115d31b2b1ee6da8a2e521d866863ee39c81955c3eda7b02a6",
+      "sha256": "57a90b768e5d71518f2451d06c5c3acf19e4d3386f3916d5eede9b5c227d4f31"
+    },
+    {
+      "byteSize": 216493361,
+      "filename": "vhf-source-0016.zip",
+      "frameCount": 64,
+      "index": 16,
+      "manifestSha256": "220935337e9feee98e341d0409e191d41cf2440c0bd8dc7643839aa3bbc91372",
+      "sha256": "9004332dfc2ffed07d222138dc404c9370e06045eb2a48e0ce1fc23a8d3e5661"
+    },
+    {
+      "byteSize": 216701934,
+      "filename": "vhf-source-0017.zip",
+      "frameCount": 64,
+      "index": 17,
+      "manifestSha256": "1f8b4e92372df5141904a853b1415b16d38f224084de1caa9ef66c86bac0c3bb",
+      "sha256": "30406709c127b319b9c5d71eddb38d4e0f870f68b4646a27327d5701c6131231"
+    },
+    {
+      "byteSize": 219853722,
+      "filename": "vhf-source-0018.zip",
+      "frameCount": 64,
+      "index": 18,
+      "manifestSha256": "b4864906a4e611eaba438b8f892cafec562577efb52da00750a7e2f5670bebdb",
+      "sha256": "29c34a301975f7badb4d8f09a19f2396be9eb97174f71671e3d1d8849b7d45f3"
+    },
+    {
+      "byteSize": 220877860,
+      "filename": "vhf-source-0019.zip",
+      "frameCount": 64,
+      "index": 19,
+      "manifestSha256": "08eb6bf5f5e5a061a18552efcdd9cb2062bf561d540b99fe6f207c5decdb3aaf",
+      "sha256": "863bb5c4fb553ddc0189a44a570afb3b1315b62b1a53dfc792c6ecf7ff8af68a"
+    },
+    {
+      "byteSize": 221322096,
+      "filename": "vhf-source-0020.zip",
+      "frameCount": 64,
+      "index": 20,
+      "manifestSha256": "9b1b5c8b6f36cd3189e7b1f70626503e667384a3bd660cb145671800fdebcbec",
+      "sha256": "3939bca9878fbab3cf6a87a827c64cc44648b60991dc40ff126e7d25f302f776"
+    },
+    {
+      "byteSize": 218891699,
+      "filename": "vhf-source-0021.zip",
+      "frameCount": 64,
+      "index": 21,
+      "manifestSha256": "2df1c88737131aee19add86ef806ad11cc577bcc92338496e9510b784a3d9157",
+      "sha256": "469c1c90e023aca006a6e43615a8c1a3d53033b8d06813f8cc654538e11aebc3"
+    },
+    {
+      "byteSize": 219310630,
+      "filename": "vhf-source-0022.zip",
+      "frameCount": 64,
+      "index": 22,
+      "manifestSha256": "4fde0cef70cb7af47d43c140ab73179109bd495de20e53c20585c0360fb8bff1",
+      "sha256": "e3dea720386cfa95d43f6abad5a9e3eb4f9407c166a692e22f5e7b62647db777"
+    },
+    {
+      "byteSize": 149639305,
+      "filename": "vhf-source-0023.zip",
+      "frameCount": 64,
+      "index": 23,
+      "manifestSha256": "726902e03d10fadc7bb2bcf019c8943938a19d6bddaba6dcd98f72a3d44bfe25",
+      "sha256": "fd809307e21b4ed614b6012f75e2295970026a181d443c58a852ae83a291be87"
+    },
+    {
+      "byteSize": 214939727,
+      "filename": "vhf-source-0024.zip",
+      "frameCount": 64,
+      "index": 24,
+      "manifestSha256": "e3b18e14a9abbbffaaea120ba7aedd53df8bd66b80d6d85cdc0209424805cca5",
+      "sha256": "85550c926d97e19190527e14ef174e9ff5415383460bff1ae785f9f08e6fb735"
+    },
+    {
+      "byteSize": 214881047,
+      "filename": "vhf-source-0025.zip",
+      "frameCount": 64,
+      "index": 25,
+      "manifestSha256": "65808d4dc6e42d70e49d8a551f495506e8a0464b1a5021ff639ff81b9b1ce2e4",
+      "sha256": "2b7cf2a225fe8d0f2229fc0171a7b9fdafe8d996bf4dd5981551e6baae724f10"
+    },
+    {
+      "byteSize": 217364327,
+      "filename": "vhf-source-0026.zip",
+      "frameCount": 64,
+      "index": 26,
+      "manifestSha256": "7b76a8de3336d090a6b502c80a53d3c5112a406bd864640a43f814bb68852175",
+      "sha256": "f62ca1d58b1b680b3e4821e991a816f1803838c124b592c692c18fa7b977298f"
+    },
+    {
+      "byteSize": 217190111,
+      "filename": "vhf-source-0027.zip",
+      "frameCount": 64,
+      "index": 27,
+      "manifestSha256": "2d4aceca402c638f1d6a86be9a81862e114cdb852e77f51653f745a232372315",
+      "sha256": "99f9eed56bac460dd121a50719d11de1665ca13ddbb6b112c924d15902d7dc2f"
+    },
+    {
+      "byteSize": 217499090,
+      "filename": "vhf-source-0028.zip",
+      "frameCount": 64,
+      "index": 28,
+      "manifestSha256": "98bb7d5b06474eb98e913f4a7bf1e418825513a87b50ab1f66bc6a715406d26d",
+      "sha256": "cdb966080b9677a48e31262490a25e038299741263d89eb40830dd2284d5bb8b"
+    },
+    {
+      "byteSize": 217921862,
+      "filename": "vhf-source-0029.zip",
+      "frameCount": 64,
+      "index": 29,
+      "manifestSha256": "a09ca0ea694d52c708108fbe7cec195738d5b5577d6eeac420a1bccc04ddabef",
+      "sha256": "d67b4efda24fe23fedbe51ac54f4bcc04c7abf570d1172faf8eaef76e33b9287"
+    },
+    {
+      "byteSize": 216256153,
+      "filename": "vhf-source-0030.zip",
+      "frameCount": 64,
+      "index": 30,
+      "manifestSha256": "e26d3461e554490ef953924d8aa33a1a41b8749a7ee18a2c3d4b3177926a139e",
+      "sha256": "a4ae02441e55ca39e95bb8f36314a59a19d3706e664b225f1fdb15e8781d40f0"
+    },
+    {
+      "byteSize": 214210886,
+      "filename": "vhf-source-0031.zip",
+      "frameCount": 64,
+      "index": 31,
+      "manifestSha256": "cd5f6757029caa3821313240681b335a28587f4ab9532c033fcb82c0f0939965",
+      "sha256": "25d2648d6115c20b1f4af13f4934a0abafb8b7dfc267c5dd510e71b30d1f7818"
+    },
+    {
+      "byteSize": 213321133,
+      "filename": "vhf-source-0032.zip",
+      "frameCount": 64,
+      "index": 32,
+      "manifestSha256": "a4bba3b04a60969955aa0ea035ffcd1c7be3c8f2d6db10f9a9c15360d1e031b8",
+      "sha256": "68d82c4d747884e8eac2442463c651c94702c3f7852de118f18013f38f72caaf"
+    },
+    {
+      "byteSize": 214424095,
+      "filename": "vhf-source-0033.zip",
+      "frameCount": 64,
+      "index": 33,
+      "manifestSha256": "1d6cae80a1d6b2b7b0b11662abcecc2b65543e4b2bfed87d40a1b2fa41c1fc2f",
+      "sha256": "3e6f842bc0ba929024c3718eb47f5b6134141d5fdf24d01d8b17e4de49e59475"
+    },
+    {
+      "byteSize": 217000081,
+      "filename": "vhf-source-0034.zip",
+      "frameCount": 64,
+      "index": 34,
+      "manifestSha256": "b1f55d26e06b33186fe329af2784d3765f080ddb43211fee081f0910e5589adf",
+      "sha256": "419be8ab5270cb431bc77fb56f9dfc944bd1d34e15a1105aacac8927e404dbfd"
+    },
+    {
+      "byteSize": 218042569,
+      "filename": "vhf-source-0035.zip",
+      "frameCount": 64,
+      "index": 35,
+      "manifestSha256": "4daca2c79aa2fca75b88c17f6a8c17a53b999809bb9b0a3485a4f41e5cd22375",
+      "sha256": "150d47f4f69d6949d2762e2ef111a5ad2a4196d6332fa19e6b050582b8761c32"
+    },
+    {
+      "byteSize": 217291645,
+      "filename": "vhf-source-0036.zip",
+      "frameCount": 64,
+      "index": 36,
+      "manifestSha256": "3b0640c06cc7dc00c3a65bc29b2c688288b01c913481e1f5278ab6d0a2725216",
+      "sha256": "ff20dbca3ad8a03af5c4416cc53699658f23bf2ff9ba6146a23189be6ebfdfa3"
+    },
+    {
+      "byteSize": 215112106,
+      "filename": "vhf-source-0037.zip",
+      "frameCount": 64,
+      "index": 37,
+      "manifestSha256": "fda480302b8e706c655c69b37cc43af0fb559654fe4182ea5efae9b62613098e",
+      "sha256": "df0ba13d356f1f3ed43cd10466d3d3e307cc683032b25c3e2d8513c07a2bb01b"
+    },
+    {
+      "byteSize": 211393635,
+      "filename": "vhf-source-0038.zip",
+      "frameCount": 64,
+      "index": 38,
+      "manifestSha256": "9fb631d3bc474fdea95f7ac505302ba0dfde6788832f9b3652212cf083fa7126",
+      "sha256": "d643583d0a25e10eb647d7b9bd6801eaf35acdb6d83d5af021af7c551df2c426"
+    },
+    {
+      "byteSize": 211264262,
+      "filename": "vhf-source-0039.zip",
+      "frameCount": 64,
+      "index": 39,
+      "manifestSha256": "37ef6daefa0fe26c18dfc89ebbe414ad82c47a4eeb4bd2a75dc8e66db9eeac39",
+      "sha256": "0cca76745636d2f6b77b784a99986b782cc79719227abbf4fec6bdfb85423fa8"
+    },
+    {
+      "byteSize": 206421822,
+      "filename": "vhf-source-0040.zip",
+      "frameCount": 64,
+      "index": 40,
+      "manifestSha256": "9f1a23214a441278087706f824ae0fc2f68abd32f5af54e97e1bf0bd4691f7a8",
+      "sha256": "dade0fec79faeda354be9e718e0d96c15783aae824325810273191d11501dbf6"
+    },
+    {
+      "byteSize": 205537552,
+      "filename": "vhf-source-0041.zip",
+      "frameCount": 64,
+      "index": 41,
+      "manifestSha256": "ce2109d76b58ef619b33b75ce7e8492f09eaec5d386704e64fdf7189357b29e6",
+      "sha256": "e57a24c816af6497ed46a92e4677ce8530791648a0b9b62c3a88819fb50554ee"
+    },
+    {
+      "byteSize": 205351027,
+      "filename": "vhf-source-0042.zip",
+      "frameCount": 64,
+      "index": 42,
+      "manifestSha256": "293579c663571193d0ec0b07cbb6aaa8fd2ab83a465237e64d4d9df9526ee0f6",
+      "sha256": "f74283d72feb0ed840a52b019d1fb2f62ff3654a05746be96db6c632cb117c9f"
+    },
+    {
+      "byteSize": 205171815,
+      "filename": "vhf-source-0043.zip",
+      "frameCount": 64,
+      "index": 43,
+      "manifestSha256": "0da5d806c1282816f311b4077c508c6ae814776120ea689b125a137ade0e3ef8",
+      "sha256": "0030bb7efc0a16b0e1544c14acc046abdde642b192be300278c38279e48f3b2c"
+    },
+    {
+      "byteSize": 201628279,
+      "filename": "vhf-source-0044.zip",
+      "frameCount": 64,
+      "index": 44,
+      "manifestSha256": "d4d5da1b478cb42f448f2d07dd6a22dcddaa3176b950c139d410a660c55b5523",
+      "sha256": "9afdc9fc53bee93c79e03c2dbe3e1a589df231d4e1ca30f7c0319ad95cd7e43e"
+    },
+    {
+      "byteSize": 195265059,
+      "filename": "vhf-source-0045.zip",
+      "frameCount": 64,
+      "index": 45,
+      "manifestSha256": "bc0fae9bcb72a51d75d2987a3f8ec86c197978572d64b614ec53bf6938d6f428",
+      "sha256": "14e30d6ec9aa02af0e94076503750c7ecbbbcc2640b627589189b7f2f5152f94"
+    },
+    {
+      "byteSize": 200983633,
+      "filename": "vhf-source-0046.zip",
+      "frameCount": 64,
+      "index": 46,
+      "manifestSha256": "4539a69834f5319af6e4505cad1e6219262bc4cfa6aee40fe3f967ecf833754a",
+      "sha256": "2dd4180753605413cf9cf7c9180d6290b8a0b0588eeac32baabe7cf0721bf835"
+    },
+    {
+      "byteSize": 201502923,
+      "filename": "vhf-source-0047.zip",
+      "frameCount": 64,
+      "index": 47,
+      "manifestSha256": "d5ef3b913b319f9ae94ae5912af2a4bd39a21faa48d7a1e57a6101dbcf8378a3",
+      "sha256": "f57fc03bbf72c797847d7b80d3e67c01e67a409bd80b643cf934865524581ad1"
+    },
+    {
+      "byteSize": 201113988,
+      "filename": "vhf-source-0048.zip",
+      "frameCount": 64,
+      "index": 48,
+      "manifestSha256": "811ff294e1c2fa4c770b1db00826516bb745dbd4e0f6deaac2f58d5daeae1e2e",
+      "sha256": "376131341f5dd81c36c5f79960959fe1b8a0ffaf88dcda9910f3cb0539ab7247"
+    },
+    {
+      "byteSize": 201277007,
+      "filename": "vhf-source-0049.zip",
+      "frameCount": 64,
+      "index": 49,
+      "manifestSha256": "08a621162bfb10ca1afa4e1b6d0f171513365cc2d37628897f1b45e6be29b08b",
+      "sha256": "e2ab7972c31df626f32e92d56fe5dbade5a9c114ccf66a69532cb3511f518700"
+    },
+    {
+      "byteSize": 198213923,
+      "filename": "vhf-source-0050.zip",
+      "frameCount": 64,
+      "index": 50,
+      "manifestSha256": "19d923b393da0d11a7b7d7912b1bad4aaddbb935c342d43511778dac4832988c",
+      "sha256": "77af9dde8212a471848e51827149bf13d49b652b11c41409b89662b7d5e8e709"
+    },
+    {
+      "byteSize": 192149250,
+      "filename": "vhf-source-0051.zip",
+      "frameCount": 64,
+      "index": 51,
+      "manifestSha256": "56f3289450a4c57ec7f389b7d355a8f619fae8355fdcaae7e13d5cb96df0884d",
+      "sha256": "1c1bec70e8a9b099a7ce684b8d2dd91b5821b729412fcffeaa1d178a39264d6b"
+    },
+    {
+      "byteSize": 197182780,
+      "filename": "vhf-source-0052.zip",
+      "frameCount": 64,
+      "index": 52,
+      "manifestSha256": "ca5d9d8ba609abfda5e8ae7549c31e6e6ddaf5cf6af01b40047b9e9e95ffa317",
+      "sha256": "496e331811a4d76316cbe16bbaba19b6940af27877e4310bb074f4e73fb1e541"
+    },
+    {
+      "byteSize": 197271586,
+      "filename": "vhf-source-0053.zip",
+      "frameCount": 64,
+      "index": 53,
+      "manifestSha256": "0c30fe22e5b0bd1d02a4f7bca7a00b9227cb80d5bc65b5157924af141ec04bde",
+      "sha256": "50b4a83c8cddbde82685f06aaa9042ad9e61becc615fd1d6e7fd4e6c109acf31"
+    },
+    {
+      "byteSize": 196557944,
+      "filename": "vhf-source-0054.zip",
+      "frameCount": 64,
+      "index": 54,
+      "manifestSha256": "f2873144b196b45630f5f013cc4ccf14cb8a72c56f55dcd50d4f3e8b6fd53726",
+      "sha256": "9d9c11b0b5a526111e0670dc50de15db968d4c6d0cae0da6c912cab89741c42f"
+    },
+    {
+      "byteSize": 197346202,
+      "filename": "vhf-source-0055.zip",
+      "frameCount": 64,
+      "index": 55,
+      "manifestSha256": "1435f4f7deb007cc31ed60b649f6bb8923883bcd44050131cc22784e1b98bc19",
+      "sha256": "29ba6eca8a4178221999ddd42d76d453ff4ffd2eaa060d8e37de339982a87a56"
+    },
+    {
+      "byteSize": 198039233,
+      "filename": "vhf-source-0056.zip",
+      "frameCount": 64,
+      "index": 56,
+      "manifestSha256": "1a92e3f99458264bc0ad9fc0d7fb305d9ec34c087c155677179982e70a985988",
+      "sha256": "d9b99ea32d0b61b16503efc54bc24e78dc16011107e4da57c670ef73a68bc82b"
+    },
+    {
+      "byteSize": 195614013,
+      "filename": "vhf-source-0057.zip",
+      "frameCount": 64,
+      "index": 57,
+      "manifestSha256": "c5ad8267cb0ffe342e57b607826ad77acafe737994b51c12e79c9911adf5af71",
+      "sha256": "85a2a58bbf75562ed81819ee1ead2ad5bf36074f632b1549bd62ddcff88abfd2"
+    },
+    {
+      "byteSize": 193851789,
+      "filename": "vhf-source-0058.zip",
+      "frameCount": 64,
+      "index": 58,
+      "manifestSha256": "93697724615f8a4390f6612575d3607089d1803842fc87e1fbf72c77ad43f55b",
+      "sha256": "1fe40bf52da6bec81ecb15d2bb8c2753f60896f4c6d5a986644543c5ccbbd96e"
+    },
+    {
+      "byteSize": 194619745,
+      "filename": "vhf-source-0059.zip",
+      "frameCount": 64,
+      "index": 59,
+      "manifestSha256": "cb701f94b10815a451bd4fbcba2921cd3fd11f6b31ce62aac20ab1459d96e052",
+      "sha256": "f58ccddad47f2b6c7fe0ad8a83f4f86cf757711dadcdaff6c2bc997ac8f23c13"
+    },
+    {
+      "byteSize": 194856112,
+      "filename": "vhf-source-0060.zip",
+      "frameCount": 64,
+      "index": 60,
+      "manifestSha256": "f6db514dae8622be4a719e031cd76bf719c4a70b0c631edc50fb31edbe5e0a8c",
+      "sha256": "9899a07e2b39b095c91030be91a714f073778c58c536dcf7cef58bfd536483f7"
+    },
+    {
+      "byteSize": 196992699,
+      "filename": "vhf-source-0061.zip",
+      "frameCount": 64,
+      "index": 61,
+      "manifestSha256": "c3df12b22eaa20fb67fbfa6eb63629ed87ac1f8b823529b0ab5f77a248cb044f",
+      "sha256": "91d2a8271ab0dfde30fe231dd69b4a2e99bee2501a9bcb2e2d83c6cb3d8550f3"
+    },
+    {
+      "byteSize": 186885933,
+      "filename": "vhf-source-0062.zip",
+      "frameCount": 64,
+      "index": 62,
+      "manifestSha256": "838837f20ede7c20175523185e03df64d9508d9aa77de430543dad52207fe40f",
+      "sha256": "8ea51ee14778e27ca3e78579b47be395daafdada02113a01a4c60e6d7ef0a38f"
+    },
+    {
+      "byteSize": 189875095,
+      "filename": "vhf-source-0063.zip",
+      "frameCount": 64,
+      "index": 63,
+      "manifestSha256": "62e6aeb9d99fad93742f28b372b4998fec3131e434114fbbc0bf5dd9badd4f0d",
+      "sha256": "b9a5be365b3ec62f8ccd7c75ac676345cfe531a0b5743a22cf054ff3c3aeecca"
+    },
+    {
+      "byteSize": 190141523,
+      "filename": "vhf-source-0064.zip",
+      "frameCount": 64,
+      "index": 64,
+      "manifestSha256": "0ea98017e2575f05ac5c0f8fcd016ff182d934496e98b9cf28b4abe70dff0a7c",
+      "sha256": "b140ff644ac1764dbd46d25d384c4fac4ef38924ae1838a40592a939a4bafac3"
+    },
+    {
+      "byteSize": 190027068,
+      "filename": "vhf-source-0065.zip",
+      "frameCount": 64,
+      "index": 65,
+      "manifestSha256": "71d200d3179d215e5a73e01a1636b31adc43af2c1a41ad30e650c93752604802",
+      "sha256": "176e71b9bf549156290398a21abd5678f33f631990993153d43cb81721ac5332"
+    },
+    {
+      "byteSize": 195580116,
+      "filename": "vhf-source-0066.zip",
+      "frameCount": 64,
+      "index": 66,
+      "manifestSha256": "e7294217a561c098f57c4b83ad3230233f441c11d5904cd3103ee8808c9b6030",
+      "sha256": "8d298e04c199397425b00af7e23a949dd52a4e794812b797aac6f92dd2dfddc4"
+    },
+    {
+      "byteSize": 194245236,
+      "filename": "vhf-source-0067.zip",
+      "frameCount": 64,
+      "index": 67,
+      "manifestSha256": "eaf785537d89ec74064abfaeacd3ed953dc8bec5af7842340cbf036d00b7b283",
+      "sha256": "e51cc65259e8b56a3f84785d80c060fda525c8bdf9b8aad3426d9115f2dc2773"
+    },
+    {
+      "byteSize": 193379710,
+      "filename": "vhf-source-0068.zip",
+      "frameCount": 64,
+      "index": 68,
+      "manifestSha256": "4366b99574dc937462674fd48f090278dfe77e41df5f9b36815a4baff71b5e42",
+      "sha256": "e4a879a799ee13f0b21605577a5adba3b0112cd9726faf6356ade23dcb65d168"
+    },
+    {
+      "byteSize": 195178176,
+      "filename": "vhf-source-0069.zip",
+      "frameCount": 64,
+      "index": 69,
+      "manifestSha256": "d10416d473ab39abdee4ad5cc33f5228f5f09a5ed8d2073217a24bf5d1809323",
+      "sha256": "4fd1cdf18cf6396f53ba4656313c82bce2cf4d30b64456a36385aff824a50217"
+    },
+    {
+      "byteSize": 195600799,
+      "filename": "vhf-source-0070.zip",
+      "frameCount": 64,
+      "index": 70,
+      "manifestSha256": "2a7a205197f1710340cb909b28fdef5080a7c76aa1163d58de906f9312cc82ec",
+      "sha256": "e2df80c83b003493a7fbc70678fe4c87362e80023fbaf02ff68fae380427edbb"
+    },
+    {
+      "byteSize": 193544709,
+      "filename": "vhf-source-0071.zip",
+      "frameCount": 64,
+      "index": 71,
+      "manifestSha256": "bb6102635f92737e2439d08ae4ed61ac8b891631a35acc87731cbd30e1c35597",
+      "sha256": "d2668574f5e22700ef44d5a5de7c3a94e4e8d94570bfdcb10b578afdb7830b66"
+    },
+    {
+      "byteSize": 192423152,
+      "filename": "vhf-source-0072.zip",
+      "frameCount": 64,
+      "index": 72,
+      "manifestSha256": "af941bc8e59a05acd56a22138e26e77cfd2977af99d5018eef2fb6f6e84785c7",
+      "sha256": "439fd3072cb920ebf836389e0c246f2d30cd426ae46ad17986a48fcb757e8e73"
+    },
+    {
+      "byteSize": 191880506,
+      "filename": "vhf-source-0073.zip",
+      "frameCount": 64,
+      "index": 73,
+      "manifestSha256": "6f2e7b2344e8eb1674741a39c8230d3f80170c3d118cff369614995ca90f33e6",
+      "sha256": "1d526a68680abde39a636b0e594a750217669404d16a5777e7d60f94a9314bc3"
+    },
+    {
+      "byteSize": 192561646,
+      "filename": "vhf-source-0074.zip",
+      "frameCount": 64,
+      "index": 74,
+      "manifestSha256": "8523ac0dd2de7007766fd5c71210d34237668585763a689a494d907c007bc21e",
+      "sha256": "decfeefdaec16f9b523392da4d5fc3e6e33c9b3280c4da947924b3cce16ce985"
+    },
+    {
+      "byteSize": 192589905,
+      "filename": "vhf-source-0075.zip",
+      "frameCount": 64,
+      "index": 75,
+      "manifestSha256": "dfcbee03033e669d9efa00271765e652e45a03ed22a52fdbea17e0a72c639593",
+      "sha256": "7f8d8c69f23cf6ac37d47616fd3f3c7fc5fc5f8ffb83c18fda807c4c954509cb"
+    },
+    {
+      "byteSize": 191574872,
+      "filename": "vhf-source-0076.zip",
+      "frameCount": 64,
+      "index": 76,
+      "manifestSha256": "680dd97e8fe0462be5542ee0b1b65cc976828c2c7172aa4477adb81cc7c24a5c",
+      "sha256": "23ed1958d863f505a44c8aafd6e32ed74634dd0f8260afbfea54beef9efb6993"
+    },
+    {
+      "byteSize": 191336030,
+      "filename": "vhf-source-0077.zip",
+      "frameCount": 64,
+      "index": 77,
+      "manifestSha256": "c21a0c43b11b7716996d38bdf4dc5f8ebfa3bbc15da6ce120a0cb5e51891deb8",
+      "sha256": "122d3bf8a6ccc6b703d53998951eb4a42398e09803237f642fb194fc6e991706"
+    },
+    {
+      "byteSize": 190350933,
+      "filename": "vhf-source-0078.zip",
+      "frameCount": 64,
+      "index": 78,
+      "manifestSha256": "ca84e50bd080fe4546fa8ed883c754e4f9de1a55282c99d6aff449eede0dcc37",
+      "sha256": "51a9d7b4f765e8f5ac4c11d36d0cf6040ce7cb285288480c2a99c1ccf76394f8"
+    },
+    {
+      "byteSize": 191060496,
+      "filename": "vhf-source-0079.zip",
+      "frameCount": 64,
+      "index": 79,
+      "manifestSha256": "8dae860de3ec99b2590217b197d21c069f5190cf5288ffe0ecdaa4ce719000a2",
+      "sha256": "443b97fa031a526397c62f61e43a32791da35baca8fb0be5a5284901bd621a31"
+    },
+    {
+      "byteSize": 190485729,
+      "filename": "vhf-source-0080.zip",
+      "frameCount": 64,
+      "index": 80,
+      "manifestSha256": "595ea704d2d0797d4b5443eb0bf7f177ac7547d880b5d1659555851b29fdf806",
+      "sha256": "28a50017af89250ca111dabd5ffbe5f6391ca09da55e21e854768162dc43a9f9"
+    },
+    {
+      "byteSize": 5919118,
+      "filename": "vhf-source-0081.zip",
+      "frameCount": 2,
+      "index": 81,
+      "manifestSha256": "be72949dff1a1a0d5c01fca55be9cdde0f13e7c5e6e20d5d2402f70b52c433c2",
+      "sha256": "9a720fed6c2c430cdec53fb8a60e376896be995d77354a3c096b4b928b964d8d"
+    }
+  ],
+  "claims": {
+    "medicalMaster": false,
+    "medicalValidation": false,
+    "patientSpace": false,
+    "registeredCT": false,
+    "runtimeAsset": false
+  },
+  "complete": true,
+  "coordinateSpace": "source-image-stack",
+  "expectedFrameCount": 5186,
+  "expectedUsableFrameCount": 5184,
+  "inventorySha256": "268a6896b333cf9f1c77d7cf4f97bc838088666385c4a6cec0d36da1129a85d5",
+  "kind": "vhf-source-archive-index",
+  "missingChunkIndices": [],
+  "schemaVersion": "1",
+  "unavailableSourceIndices": [
+    3297,
+    3298
+  ],
+  "verifiedFrameCount": 5186,
+  "verifiedUsableFrameCount": 5184
+}
