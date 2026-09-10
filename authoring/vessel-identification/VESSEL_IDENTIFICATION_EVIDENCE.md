@@ -161,6 +161,14 @@ TASK-V06 evaluates these six structure/class gates without relaxing the fixed TA
 
 Cephalic/basilic or other named identity requires additional topology/course evidence appropriate to that name and must not be inferred merely because a vessel is superficial or radial/ulnar in a local field.
 
+## Multimodal review policy
+
+TASK-V07 provides an iPad/browser review surface at `?m8v-review=1`. It synchronizes same-subject cryosection viewing with the same nominal CT index where CT is available, overlays V04 direct source observations only in cryosection source coordinates, and displays V03 landmark evidence plus the V05/V06 gate state and provenance.
+
+The review surface is evidence presentation, not evidence promotion. The CT panel is explicitly limited to the bounded bone-landmark scaffold where supported; nominal index synchronization outside that extent is not called registration. Candidate overlays are not transformed into CT coordinates. Provider image loading is a viewing convenience; the committed inventory, hashes, track graph, and evidence records remain the reproducible evidence chain. Image loading failure must remain visible and must not substitute another image silently.
+
+TASK-V07 being complete therefore establishes that the evidence can be inspected coherently. It does not establish that a human has accepted continuity, vessel class, named identity, or a procedure role. Those review decisions must be captured as explicit evidence before they can satisfy later promotion gates.
+
 ## Machine-readable evidence
 
 M8V records should reference immutable or content-addressed evidence wherever available. Evidence records must expose unsupported claims explicitly and must remain valid when the correct answer is `unresolved`.
@@ -203,6 +211,8 @@ Provide synchronized review of cryosection, CT (and MRI only where useful), cand
 
 Create the durable machine-readable evidence ledger linking each medically meaningful claim to supporting, conflicting, missing, algorithm-derived, and human-review evidence.
 
+Human anatomical adjudication entered through the V07 review path must be represented as explicit evidence receipts and must not be inferred merely from use of the review UI. Human review may satisfy a review gate only for the claims actually reviewed; it does not by itself confer V3 medical validation or a procedure role.
+
 ### TASK-V09 — Identity promotion evaluator
 
 Implement fail-closed promotion rules for radial-artery identity, subject-scoped superficial-vein structure, and named superficial-vein identity. No single scalar confidence may substitute for required criteria.
@@ -219,7 +229,8 @@ Feed only passed claims/representations back into A06/A07/A08/A09 and reevaluate
 - TASK-V04: complete — see `authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json`; the source-index 3D graph preserves all direct observations, explicit gaps, and competing tracks without promoting radial or superficial-vein identity.
 - TASK-V05: complete — see `authoring/outputs/m8v-v05-radial-artery-identity-evidence-20260911.json`; all eight anonymous arterial candidates remain competing, the six required promotion gates do not all pass, no candidate is selected, and the radial identity decision is `blocked-unresolved`.
 - TASK-V06: complete — see `authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json`; the longest direct superficial track spans 10 frames, no direct track reaches the 90-frame procedure-relevant threshold, no vein class or reviewed single-structure continuity is established, and the decision is `blocked-unresolved`.
-- TASK-V07: next.
-- TASK-V08 through TASK-V10: not started.
+- TASK-V07: complete — see `authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json`; the browser/iPad review route `?m8v-review=1` synchronizes review evidence and exposes V04 tracks, V03 landmarks, V05/V06 gates, CT support state, and provenance without conferring identity or validation.
+- TASK-V08: next.
+- TASK-V09 through TASK-V10: not started.
 
 No M8V task currently claims radial-artery identity, observed or named superficial-vein identity, procedure role, medical validation, Patient Space, or Medical Master promotion.
