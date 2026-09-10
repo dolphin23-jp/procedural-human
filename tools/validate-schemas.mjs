@@ -54,6 +54,11 @@ const authoringContracts = [
     'schemas/assets/m8v-candidate-vessel-track-graph.v1.schema.json',
     'authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json',
   ],
+  [
+    'm8v-radial-artery-identity-evidence',
+    'schemas/assets/m8v-radial-artery-identity-evidence.v1.schema.json',
+    'authoring/outputs/m8v-v05-radial-artery-identity-evidence-20260911.json',
+  ],
   ['vhf-source-chunk', 'schemas/assets/vhf-source-chunk.v1.schema.json', null],
   [
     'vhf-source-archive-index',
