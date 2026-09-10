@@ -1,0 +1,39 @@
+name: AS05 format source navigator once
+
+on:
+  push:
+    branches:
+      - task-as05-source-navigation
+    paths:
+      - '.github/workflows/as05-format-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: task-as05-source-navigation
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Format AS05 navigator
+        run: pnpm exec prettier --write apps/web/src/AS05SourceNavigator.tsx
+      - name: Commit formatting
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add apps/web/src/AS05SourceNavigator.tsx
+          if ! git diff --cached --quiet; then
+            git commit -m 'TASK-AS05: format source navigator'
+            git push origin HEAD:task-as05-source-navigation
+          fi
