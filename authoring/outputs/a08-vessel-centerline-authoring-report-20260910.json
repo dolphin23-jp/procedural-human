@@ -15,7 +15,7 @@
       "feasibilityClassification": "not-established",
       "centerlineStatus": "blocked",
       "centerlineUri": null,
-      "reason": "Source feasibility remains not-established after TASK-A06 human review. No radial artery mask was accepted because multiple independent source-image diagnostics failed fixed bounded continuity gates; no centerline is fabricated."
+      "reason": "TASK-AS06 strengthened the same-subject evidence by extending the reviewed ulnar anchor through the proximal radius/ulna transition and testing eight anonymous arterial tracks, but zero met the fixed branch-topology promotion gate. Radial/brachial/bifurcation identity remains unresolved, so no radial centerline is fabricated."
     },
     {
       "draftLabel": "ulnar_artery",
@@ -23,7 +23,7 @@
       "feasibilityClassification": "continuous-candidate",
       "centerlineStatus": "generated",
       "centerlineUri": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#a08-ulnar-lumen-centered-source-stack-centerline-v0.json",
-      "reason": "The bounded 106-frame source-stack continuous candidate from avf1646a.png through avf1681a.png was accepted unchanged by TASK-A06 human source-mask review. Its lumen-centered V0 centerline remains source-space only and does not claim complete vessel extent, Patient Space geometry, TASK-A12 anatomical review, or medical validation."
+      "reason": "The bounded 106-frame source-stack continuous candidate from avf1646a.png through avf1681a.png was accepted unchanged by TASK-A06 human source-mask review. TASK-AS06 does not invalidate this representation; it strengthens proximal same-subject continuity evidence while still making no complete-vessel-extent, Patient Space, TASK-A12 anatomical-review, or medical-validation claim."
     },
     {
       "draftLabel": "superficial_target_vein",
@@ -31,7 +31,7 @@
       "feasibilityClassification": "not-established",
       "centerlineStatus": "blocked",
       "centerlineUri": null,
-      "reason": "Source feasibility remains not-established after TASK-A06 human review; no accepted superficial target vein mask exists and named cephalic/basilic identity remains unresolved, so no centerline is fabricated."
+      "reason": "TASK-AS06 tested eight anonymous superficial tracks over a wider same-subject extent, but zero met the fixed continuity gate. No accepted target-vein mask or named cephalic/basilic identity exists, so no superficial target centerline is fabricated."
     }
   ],
   "claims": {
