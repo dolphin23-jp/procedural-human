@@ -359,9 +359,129 @@ Play, pause, restart.
 
 Gate H: full fixture end-to-end flow.
 
+# M8S — Whole-Body Source Foundation Support Lane
+
+This is an authoring-support lane. It may run in parallel with the numbered runtime milestones and may be used before TASK-A10 when broader same-subject source evidence is required.
+
+It expands **source-evidence coverage**, not MVP 0 runtime/validation/acceptance scope.
+
+It does not authorize whole-body segmentation, whole-body Medical Master creation, whole-body medical validation, or post-MVP physiology/physics.
+
+## TASK-AS01 — Full-body source inventory and terms checkpoint
+Inventory the usable Visible Human Female whole-body source material and same-subject supporting modalities needed for future authoring.
+
+Record:
+- source identifiers and availability
+- file/frame organization
+- source metadata needed for reproducibility
+- current access/redistribution terms
+- expected storage size and chunking plan
+- known gaps
+
+Done: the intended whole-body source foundation is bounded and legally/technically understood before bulk acquisition.
+
+## TASK-AS02 — Immutable whole-body source archive
+Acquire the usable whole-body anatomical source into external persistent storage.
+
+Requirements:
+- no large medical binaries in Git
+- immutable source bytes
+- deterministic chunking or equivalent bounded transport
+- content hashes
+- no silent conversion presented as source
+- resumable/reconstructable acquisition
+
+Done: the whole-body source can be reconstructed and independently integrity-checked from recorded manifests/hashes.
+
+## TASK-AS03 — Global source manifest and frame index
+Create a machine-readable whole-body source manifest/index.
+
+Record at minimum:
+- source filenames/identifiers
+- ordering
+- per-file or per-chunk integrity links
+- documented source dimensions/spacing where supportable
+- region/navigation metadata
+- provenance and retrieval snapshot
+
+Do not claim Patient Space merely because a global source index exists.
+
+Done: any source frame can be addressed reproducibly without scanning the archive manually.
+
+## TASK-AS04 — Reproducible region extraction
+Provide authoring tooling that materializes bounded source regions from the full-body archive without changing source identity.
+
+Requirements:
+- deterministic region/frame selection
+- derived-output provenance back to the global manifest
+- no duplicate hidden source-of-truth archive
+- existing distal-forearm A05/A06 outputs remain referentially valid
+
+Done: distal forearm, proximal forearm, antecubital fossa, upper arm, and future regions can be materialized reproducibly from the same source foundation.
+
+## TASK-AS05 — Whole-body source navigation / inspection surface
+Provide a practical authoring inspection path for navigating the indexed source across regions.
+
+This may be a browser/iPad-friendly review surface or equivalent authoring tool.
+
+Requirements:
+- source/reference viewing only unless an explicit derived overlay is selected
+- region/frame jump and sequential navigation
+- source identity/provenance visible
+- no implication of segmentation or validation merely from viewing
+
+Done: an author can inspect continuity across long anatomical extents without repeated one-off downloads.
+
+## TASK-AS06 — Same-subject upper-extremity vascular continuity tracing
+Use the full-body source foundation to establish vascular identity from defensible same-subject anchors.
+
+Priority arterial path:
+- brachial artery
+- observed bifurcation
+- radial artery branch
+- ulnar artery branch
+- continuity into the current distal forearm ROI
+
+Priority superficial venous work:
+- identify and trace source-supported superficial venous tracks across a wider same-subject extent
+- use characteristic course/connections where visible
+- do not force cephalic/basilic identity from local position alone
+
+Record:
+- observed segments
+- branch/continuity evidence
+- gaps/ambiguity
+- source frames
+- algorithm/manual review provenance
+- confidence/validation state
+
+Cross-subject atlas/literature may guide inspection but may not substitute geometry or identity when same-subject evidence is absent.
+
+Done: radial-artery and superficial-vein identity evidence is either defensibly established or remains explicitly unresolved with a stronger documented basis.
+
+## TASK-AS07 — Feed continuity evidence back into M8A
+Update the affected A06/A07 evidence state and rerun downstream readiness without discarding valid existing work.
+
+Where support is established:
+- materialize/update candidate segmentation as needed
+- record human review appropriate to the new evidence
+- update semantic mapping
+- regenerate/review A08 centerlines
+- regenerate/review A09 boundary/lumen representations
+- reevaluate A10 readiness
+
+Where support remains inadequate:
+- preserve fail-closed state
+- do not use procedure role as anatomical identity
+- do not promote cross-subject atlas geometry
+
+Gate S: reusable whole-body source foundation exists and the missing MVP vascular identities have been re-evaluated using same-subject continuity evidence.
+
 # M8A — Medical Asset Authoring Lane
 
 May begin after relevant schemas exist.
+
+Source-evidence scope may exceed the final MVP 0 runtime region according to M8S and MVP0.md. Medical Master promotion remains regional and explicit.
 
 ## TASK-A01 — Select MVP 0 source dataset
 Document dataset, license, modalities, resolution, and known limitations for distal left forearm/wrist.
