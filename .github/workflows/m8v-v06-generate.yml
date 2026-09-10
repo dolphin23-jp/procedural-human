@@ -1,0 +1,99 @@
+name: M8V V06 superficial network evidence generator
+
+on:
+  push:
+    branches:
+      - m8v-vessel-identification-evidence
+    paths:
+      - .github/workflows/m8v-v06-generate.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: m8v-vessel-identification-evidence
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run TASK-V06 unit tests
+        run: python authoring/source-acquisition/tests/test_m8v_superficial_venous_network.py
+
+      - name: Build superficial venous network evidence record
+        run: |
+          python authoring/source-acquisition/m8v_evaluate_superficial_venous_network.py \
+            --track-graph authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json \
+            --landmarks authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json \
+            --continuity authoring/outputs/as06-same-subject-continuity-provenance-20260910.json \
+            --recorded-at 2026-09-11 \
+            --output authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json
+
+      - name: Format TASK-V06 JSON
+        run: |
+          pnpm exec prettier --write \
+            schemas/assets/m8v-superficial-venous-network-evidence.v1.schema.json \
+            authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json
+
+      - name: Validate TASK-V06 schema and fail-closed invariants
+        run: |
+          python -m pip install --disable-pip-version-check jsonschema==4.25.1
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          record = json.loads(Path('authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json').read_text())
+          schema = json.loads(Path('schemas/assets/m8v-superficial-venous-network-evidence.v1.schema.json').read_text())
+          Draft202012Validator.check_schema(schema)
+          Draft202012Validator(schema).validate(record)
+          summary = record['networkSummary']
+          assert summary['anonymousTrackCount'] == 8
+          assert summary['directProcedureRelevantTrackCount'] == 0
+          assert summary['directContinuousCandidateCount'] == 0
+          assert summary['maxDirectSpanFrames'] < 90
+          assert summary['veinClassSupportedTrackCount'] == 0
+          assert record['decision']['state'] == 'blocked-unresolved'
+          assert record['decision']['candidateSelected'] is None
+          assert record['decision']['observedSuperficialVeinStructureEstablished'] is False
+          assert record['decision']['namedSuperficialVeinIdentityEstablished'] is False
+          assert record['claims']['automaticPromotionAllowed'] is False
+          statuses = {g['id']: g['status'] for g in record['promotionGateEvaluations']}
+          assert statuses == {
+              'direct-observation-over-procedure-relevant-extent': 'fail',
+              'single-structure-continuity': 'fail',
+              'superficial-subcutaneous-relationship': 'insufficient',
+              'vein-class-evidence': 'fail',
+              'competing-track-conflict-review': 'fail',
+              'explicit-human-anatomical-review': 'fail',
+          }
+          print(json.dumps({'networkSummary': summary, 'statuses': statuses}, indent=2))
+          PY
+
+      - name: Commit deterministic TASK-V06 output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            schemas/assets/m8v-superficial-venous-network-evidence.v1.schema.json \
+            authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json
+          git commit -m "TASK-V06: record superficial venous network evidence"
+          git push origin HEAD:m8v-vessel-identification-evidence
