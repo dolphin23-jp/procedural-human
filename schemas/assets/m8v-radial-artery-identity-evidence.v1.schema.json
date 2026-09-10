@@ -27,7 +27,12 @@
     "sourceEvidence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["registrationScaffold", "landmarkGraph", "trackGraph", "sameSubjectContinuity"],
+      "required": [
+        "registrationScaffold",
+        "landmarkGraph",
+        "trackGraph",
+        "sameSubjectContinuity"
+      ],
       "properties": {
         "registrationScaffold": { "$ref": "#/$defs/sourceRef" },
         "landmarkGraph": { "$ref": "#/$defs/sourceRef" },
