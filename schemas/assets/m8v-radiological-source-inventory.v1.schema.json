@@ -118,7 +118,9 @@
       "properties": {
         "nextTask": { "const": "TASK-V02" },
         "ctPriority": { "const": "primary-same-subject-registration-support" },
-        "mriPriority": { "const": "secondary-use-if-information-gain-justifies" },
+        "mriPriority": {
+          "const": "secondary-use-if-information-gain-justifies"
+        },
         "reason": { "type": "string", "minLength": 1 }
       }
     },

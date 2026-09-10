@@ -27,15 +27,24 @@
     "sourceEvidence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["boneCandidateReport", "boneProvenance", "sameCadaverCt", "persistedA06Output"],
+      "required": [
+        "boneCandidateReport",
+        "boneProvenance",
+        "sameCadaverCt",
+        "persistedA06Output"
+      ],
       "properties": {
         "boneCandidateReport": {
           "type": "object",
           "additionalProperties": false,
           "required": ["schema", "sourceClass", "validationLevel"],
           "properties": {
-            "schema": { "const": "ph-a06-multimodality-bone-candidate-report.v1" },
-            "sourceClass": { "const": "same-subject-cadaver-derived-plus-radiological" },
+            "schema": {
+              "const": "ph-a06-multimodality-bone-candidate-report.v1"
+            },
+            "sourceClass": {
+              "const": "same-subject-cadaver-derived-plus-radiological"
+            },
             "validationLevel": { "const": "V0" }
           }
         },
@@ -51,7 +60,13 @@
         "sameCadaverCt": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["archiveSha256", "archiveByteSize", "persistentProvider", "persistentFileId", "readBackVerified"],
+          "required": [
+            "archiveSha256",
+            "archiveByteSize",
+            "persistentProvider",
+            "persistentFileId",
+            "readBackVerified"
+          ],
           "properties": {
             "archiveSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
             "archiveByteSize": { "type": "integer", "minimum": 1 },
@@ -63,7 +78,13 @@
         "persistedA06Output": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["archiveSha256", "archiveByteSize", "persistentProvider", "persistentFileId", "readBackVerified"],
+          "required": [
+            "archiveSha256",
+            "archiveByteSize",
+            "persistentProvider",
+            "persistentFileId",
+            "readBackVerified"
+          ],
           "properties": {
             "archiveSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
             "archiveByteSize": { "type": "integer", "minimum": 1 },
@@ -77,7 +98,11 @@
     "landmarkPolicy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["landmarks", "vesselLandmarksUsed", "selfConfirmingVesselEvidenceAllowed"],
+      "required": [
+        "landmarks",
+        "vesselLandmarksUsed",
+        "selfConfirmingVesselEvidenceAllowed"
+      ],
       "properties": {
         "landmarks": {
           "type": "array",
@@ -112,7 +137,9 @@
         "lastSourceFilename": { "type": "string", "minLength": 1 },
         "supportedCryosectionFrameCount": { "type": "integer", "minimum": 1 },
         "fitLandmarkObservationCount": { "type": "integer", "minimum": 6 },
-        "outsideSupportDisposition": { "const": "unknown-not-registered-by-this-scaffold" }
+        "outsideSupportDisposition": {
+          "const": "unknown-not-registered-by-this-scaffold"
+        }
       }
     },
     "transform": {
@@ -162,10 +189,18 @@
     "decision": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["registrationState", "identityCorrespondence", "usableFor", "notUsableFor", "nextTask"],
+      "required": [
+        "registrationState",
+        "identityCorrespondence",
+        "usableFor",
+        "notUsableFor",
+        "nextTask"
+      ],
       "properties": {
         "registrationState": { "const": "bounded-bone-landmark-scaffold" },
-        "identityCorrespondence": { "const": "direct-radius-ulna-correspondence-supported" },
+        "identityCorrespondence": {
+          "const": "direct-radius-ulna-correspondence-supported"
+        },
         "usableFor": {
           "type": "array",
           "minItems": 2,

@@ -30,10 +30,7 @@
     }
   },
   "landmarkPolicy": {
-    "landmarks": [
-      "structure.radius.left",
-      "structure.ulna.left"
-    ],
+    "landmarks": ["structure.radius.left", "structure.ulna.left"],
     "vesselLandmarksUsed": false,
     "selfConfirmingVesselEvidenceAllowed": false
   },
@@ -51,18 +48,9 @@
     "from": "ct-source-pixels",
     "to": "cryosection-crop-source-pixels",
     "matrix3x2": [
-      [
-        2.3626060481389204,
-        -0.3943986586518798
-      ],
-      [
-        0.45744947263417846,
-        -2.724185530712329
-      ],
-      [
-        -957.098255571535,
-        1151.8269357956563
-      ]
+      [2.3626060481389204, -0.3943986586518798],
+      [0.45744947263417846, -2.724185530712329],
+      [-957.098255571535, 1151.8269357956563]
     ],
     "patientSpaceTransform": false
   },
