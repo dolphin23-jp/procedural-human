@@ -155,6 +155,8 @@ Promotion of a subject-scoped observed superficial vein does not require cephali
 
 Procedure-role binding to `venous_access_target` is a later, separate procedure-suitability decision.
 
+TASK-V06 evaluates these six structure/class gates without relaxing the fixed TASK-AS06 superficial-search criteria. The eight direct anonymous tracks remain short: the longest spans 10 frames, none reaches the inherited 90-frame procedure-relevant extent, and none satisfies the full direct-continuity gate. Seven of eight tracks are shallow by the inherited source-image depth window, but this is not upgraded into a reviewed subcutaneous-plane relationship. No track has vein-specific class evidence, the eight-track competitor set remains unresolved, and no identity-level human review exists. No inter-track continuation hypothesis met the inherited gap/jump constraints. The six gate result is fail / fail / insufficient / fail / fail / fail. Therefore no subject-scoped superficial vein structure, named superficial vein, or procedure role is promoted.
+
 ### Named superficial vein identity
 
 Cephalic/basilic or other named identity requires additional topology/course evidence appropriate to that name and must not be inferred merely because a vessel is superficial or radial/ulnar in a local field.
@@ -216,7 +218,8 @@ Feed only passed claims/representations back into A06/A07/A08/A09 and reevaluate
 - TASK-V03: complete — see `authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json`; radius/ulna have bounded same-subject support, generic A05 tissue regions remain V0 candidate priors, and the radial/ulnar styloid, brachioradialis, flexor carpi radialis, and pronator quadratus remain explicitly unresolved.
 - TASK-V04: complete — see `authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json`; the source-index 3D graph preserves all direct observations, explicit gaps, and competing tracks without promoting radial or superficial-vein identity.
 - TASK-V05: complete — see `authoring/outputs/m8v-v05-radial-artery-identity-evidence-20260911.json`; all eight anonymous arterial candidates remain competing, the six required promotion gates do not all pass, no candidate is selected, and the radial identity decision is `blocked-unresolved`.
-- TASK-V06: next.
-- TASK-V07 through TASK-V10: not started.
+- TASK-V06: complete — see `authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json`; the longest direct superficial track spans 10 frames, no direct track reaches the 90-frame procedure-relevant threshold, no vein class or reviewed single-structure continuity is established, and the decision is `blocked-unresolved`.
+- TASK-V07: next.
+- TASK-V08 through TASK-V10: not started.
 
-No M8V task currently claims radial-artery identity, named superficial-vein identity, medical validation, Patient Space, or Medical Master promotion.
+No M8V task currently claims radial-artery identity, observed or named superficial-vein identity, procedure role, medical validation, Patient Space, or Medical Master promotion.
