@@ -1,0 +1,82 @@
+name: M8V V07 record generator
+
+on:
+  push:
+    branches:
+      - m8v-vessel-identification-evidence
+    paths:
+      - .github/workflows/m8v-v07-generate.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: m8v-vessel-identification-evidence
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run TASK-V07 unit tests
+        run: python authoring/source-acquisition/tests/test_m8v_review_surface.py
+
+      - name: Build TASK-V07 record
+        run: |
+          python authoring/review/m8v_build_review_surface.py \
+            --inventory authoring/source-archives/vhf-whole-body-inventory-20260910.json \
+            --registration authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json \
+            --landmarks authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json \
+            --tracks authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json \
+            --radial authoring/outputs/m8v-v05-radial-artery-identity-evidence-20260911.json \
+            --superficial authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json \
+            --recorded-at 2026-09-11 \
+            --record-output authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json \
+            --web-output build/m8v-review-manifest.json
+
+      - name: Format and validate TASK-V07 record
+        run: |
+          pnpm exec prettier --write authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json
+          python -m pip install --disable-pip-version-check jsonschema==4.25.1
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          record = json.loads(Path('authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json').read_text())
+          schema = json.loads(Path('schemas/assets/m8v-multimodal-review-surface.v1.schema.json').read_text())
+          Draft202012Validator.check_schema(schema)
+          Draft202012Validator(schema).validate(record)
+          assert record['status'] == 'complete'
+          assert record['trackCoverage']['totalTrackCount'] == 17
+          assert record['trackCoverage']['directObservationCount'] == 900
+          assert record['claims']['multimodalReviewSurfaceEstablished'] is True
+          assert record['claims']['humanAnatomicalReviewCompleted'] is False
+          assert record['claims']['radialArteryIdentityEstablished'] is False
+          assert record['claims']['observedSuperficialVeinStructureEstablished'] is False
+          assert record['claims']['automaticPromotionAllowed'] is False
+          PY
+
+      - name: Commit deterministic TASK-V07 record
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json
+          git commit -m "TASK-V07: record multimodal review surface"
+          git push origin HEAD:m8v-vessel-identification-evidence
