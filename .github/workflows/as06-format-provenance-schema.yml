@@ -1,0 +1,46 @@
+name: AS06 format provenance schema
+
+on:
+  push:
+    branches:
+      - task-as06-same-subject-continuity
+    paths:
+      - '.github/workflows/as06-format-provenance-schema.yml'
+      - 'schemas/assets/as06-same-subject-continuity-provenance.v1.schema.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Apply repository Prettier configuration
+        run: |
+          pnpm exec prettier --write schemas/assets/as06-same-subject-continuity-provenance.v1.schema.json
+
+      - name: Commit formatting when required
+        run: |
+          if git diff --quiet; then
+            echo "Schema is already formatted."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add schemas/assets/as06-same-subject-continuity-provenance.v1.schema.json
+          git commit -m "TASK-AS06: apply Prettier to continuity provenance schema"
+          git push origin HEAD:task-as06-same-subject-continuity
