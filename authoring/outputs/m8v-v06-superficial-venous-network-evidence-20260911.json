@@ -1,0 +1,245 @@
+{
+  "claims": {
+    "automaticPromotionAllowed": false,
+    "medicalValidation": false,
+    "namedSuperficialVeinIdentityEstablished": false,
+    "observedSuperficialVeinStructureEstablished": false,
+    "patientSpaceGeometry": false,
+    "physical3DGeometry": false,
+    "procedureRoleEstablished": false,
+    "sameSubjectSuperficialNetworkEvidenceAssessed": true,
+    "superficialVeinClassEstablished": false
+  },
+  "continuationHypotheses": [],
+  "continuityPolicy": {
+    "hypothesesCountAsDirectObservation": false,
+    "jumpSlackPixels": 3.0,
+    "maxFrameDelta": 4,
+    "maxJumpPerFramePixels": 7.0,
+    "origin": "TASK-AS06-fixed-superficial-search-criteria",
+    "procedureRelevantMinimumSpanFrames": 90
+  },
+  "decision": {
+    "blockingGateIds": [
+      "direct-observation-over-procedure-relevant-extent",
+      "single-structure-continuity",
+      "superficial-subcutaneous-relationship",
+      "vein-class-evidence",
+      "competing-track-conflict-review",
+      "explicit-human-anatomical-review"
+    ],
+    "candidateSelected": null,
+    "namedSuperficialVeinIdentityEstablished": false,
+    "nextTask": "TASK-V07",
+    "observedSuperficialVeinStructureEstablished": false,
+    "state": "blocked-unresolved"
+  },
+  "networkSummary": {
+    "anonymousTrackCount": 8,
+    "competitorResolutionStatus": "unresolved",
+    "directContinuousCandidateCount": 0,
+    "directProcedureRelevantTrackCount": 0,
+    "hypothesisLinkCount": 0,
+    "maxDirectSpanFrames": 10,
+    "superficialDepthSupportedTrackCount": 7,
+    "veinClassSupportedTrackCount": 0
+  },
+  "promotionGateEvaluations": [
+    {
+      "evidence": [
+        "The longest direct superficial track spans 10 frames.",
+        "0 track(s) meet the inherited 90-frame minimum extent."
+      ],
+      "id": "direct-observation-over-procedure-relevant-extent",
+      "reason": "No direct superficial track reaches the predeclared AS06 procedure-relevant extent; derived link hypotheses cannot fill that gap.",
+      "requirement": "Direct same-subject vessel observations must cover a procedure-relevant extent.",
+      "status": "fail"
+    },
+    {
+      "evidence": [
+        "0 track(s) meet the unchanged AS06 direct continuity criteria.",
+        "0 inter-track continuation hypothesis link(s) were found, but they are explicitly non-observational."
+      ],
+      "id": "single-structure-continuity",
+      "reason": "The observed tracks remain fragmented; hypothesis links are inspection cues only and are not counted as source continuity.",
+      "requirement": "Continuity must establish one observed superficial structure rather than isolated blobs or derived links.",
+      "status": "fail"
+    },
+    {
+      "evidence": [
+        "7 of 8 tracks have median source-derived boundary depth within the inherited 4-30 pixel superficial window.",
+        "TASK-V03 tissue-region evidence remains V0/unvalidated and does not establish a reviewed subcutaneous anatomical relationship."
+      ],
+      "id": "superficial-subcutaneous-relationship",
+      "reason": "Shallow source-image depth is useful supporting evidence, but it is not yet equivalent to an anatomically reviewed subcutaneous-plane relationship.",
+      "requirement": "The structure must have a defensible source-supported superficial/subcutaneous relationship.",
+      "status": "insufficient"
+    },
+    {
+      "evidence": [
+        "0 of 8 tracks currently carry vein-specific class support.",
+        "TASK-V04 intentionally labels the superficial tracks as superficial-vessel-like-unknown."
+      ],
+      "id": "vein-class-evidence",
+      "reason": "Static superficial vessel-like appearance and shallow depth do not by themselves distinguish a vein from another vascular or nonvascular lumen-like structure.",
+      "requirement": "The observed structure must have defensible vessel-class evidence as a vein.",
+      "status": "fail"
+    },
+    {
+      "evidence": [
+        "The superficial competitor set contains 8 anonymous tracks.",
+        "Its resolution status is unresolved."
+      ],
+      "id": "competing-track-conflict-review",
+      "reason": "No single observed superficial structure can be promoted while the candidate set remains explicitly unresolved.",
+      "requirement": "Competing tracks and conflicts must be resolved for the proposed observed structure.",
+      "status": "fail"
+    },
+    {
+      "evidence": [
+        "TASK-V04 tracks remain unreviewed as complete tracks.",
+        "No TASK-V06 human review receipt is present in the current inputs."
+      ],
+      "id": "explicit-human-anatomical-review",
+      "reason": "Algorithmic source evidence can prioritize review but cannot substitute for the required anatomy-level human review.",
+      "requirement": "The observed structure, vessel class, and superficial relationship require explicit human anatomical review.",
+      "status": "fail"
+    }
+  ],
+  "recordedAt": "2026-09-11",
+  "schema": "ph-m8v-superficial-venous-network-evidence.v1",
+  "schemaVersion": "1",
+  "sourceEvidence": {
+    "landmarkGraph": {
+      "path": "authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json",
+      "schema": "ph-m8v-upper-extremity-landmark-graph.v1",
+      "sha256": "67b4c1aca511e3e2ea301fc55f9ef4aa92ff48ce9a97310764f563d27ef61a00"
+    },
+    "sameSubjectContinuity": {
+      "path": "authoring/outputs/as06-same-subject-continuity-provenance-20260910.json",
+      "schema": "ph-as06-same-subject-continuity-provenance.v1",
+      "sha256": "16d560b7b21c8b7f1542e243df0451a9929e2f4395f3132d49f919d51ce44062"
+    },
+    "trackGraph": {
+      "path": "authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json",
+      "schema": "ph-m8v-candidate-vessel-track-graph.v1",
+      "sha256": "02f37cc34e0e02de1c68d7c2aa57d05ff48efe366e9531a0495de428c22c2f8c"
+    }
+  },
+  "status": "complete",
+  "task": "TASK-V06",
+  "trackAudit": [
+    {
+      "coverageFraction": 0.6666666666666666,
+      "directProcedureRelevantExtent": false,
+      "maxMissingFrameCount": 3,
+      "medianDepthPixels": 6.344574928283691,
+      "meetsDirectContinuityCriteria": false,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 6,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "sourceClassification": "anonymous-superficial-diagnostic-track",
+      "spanFrameCount": 9,
+      "trackId": "vhf.m8v.superficial-anonymous.01",
+      "vesselClassStatus": "superficial-vessel-like-unknown"
+    },
+    {
+      "coverageFraction": 0.5,
+      "directProcedureRelevantExtent": false,
+      "maxMissingFrameCount": 3,
+      "medianDepthPixels": 5.196899890899658,
+      "meetsDirectContinuityCriteria": false,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 5,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "sourceClassification": "anonymous-superficial-diagnostic-track",
+      "spanFrameCount": 10,
+      "trackId": "vhf.m8v.superficial-anonymous.02",
+      "vesselClassStatus": "superficial-vessel-like-unknown"
+    },
+    {
+      "coverageFraction": 1.0,
+      "directProcedureRelevantExtent": false,
+      "maxMissingFrameCount": 0,
+      "medianDepthPixels": 6.393799781799316,
+      "meetsDirectContinuityCriteria": false,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 3,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "sourceClassification": "anonymous-superficial-diagnostic-track",
+      "spanFrameCount": 3,
+      "trackId": "vhf.m8v.superficial-anonymous.03",
+      "vesselClassStatus": "superficial-vessel-like-unknown"
+    },
+    {
+      "coverageFraction": 0.8,
+      "directProcedureRelevantExtent": false,
+      "maxMissingFrameCount": 1,
+      "medianDepthPixels": 6.849999904632568,
+      "meetsDirectContinuityCriteria": false,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 4,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "sourceClassification": "anonymous-superficial-diagnostic-track",
+      "spanFrameCount": 5,
+      "trackId": "vhf.m8v.superficial-anonymous.04",
+      "vesselClassStatus": "superficial-vessel-like-unknown"
+    },
+    {
+      "coverageFraction": 0.5714285714285714,
+      "directProcedureRelevantExtent": false,
+      "maxMissingFrameCount": 2,
+      "medianDepthPixels": 6.0953497886657715,
+      "meetsDirectContinuityCriteria": false,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 4,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "sourceClassification": "anonymous-superficial-diagnostic-track",
+      "spanFrameCount": 7,
+      "trackId": "vhf.m8v.superficial-anonymous.05",
+      "vesselClassStatus": "superficial-vessel-like-unknown"
+    },
+    {
+      "coverageFraction": 0.75,
+      "directProcedureRelevantExtent": false,
+      "maxMissingFrameCount": 1,
+      "medianDepthPixels": 5.0,
+      "meetsDirectContinuityCriteria": false,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 3,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "sourceClassification": "anonymous-superficial-diagnostic-track",
+      "spanFrameCount": 4,
+      "trackId": "vhf.m8v.superficial-anonymous.06",
+      "vesselClassStatus": "superficial-vessel-like-unknown"
+    },
+    {
+      "coverageFraction": 1.0,
+      "directProcedureRelevantExtent": false,
+      "maxMissingFrameCount": 0,
+      "medianDepthPixels": 5.446124792098999,
+      "meetsDirectContinuityCriteria": false,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 2,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "sourceClassification": "anonymous-superficial-diagnostic-track",
+      "spanFrameCount": 2,
+      "trackId": "vhf.m8v.superficial-anonymous.07",
+      "vesselClassStatus": "superficial-vessel-like-unknown"
+    },
+    {
+      "coverageFraction": 1.0,
+      "directProcedureRelevantExtent": false,
+      "maxMissingFrameCount": 0,
+      "medianDepthPixels": 3.296899914741516,
+      "meetsDirectContinuityCriteria": false,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 2,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "sourceClassification": "anonymous-superficial-diagnostic-track",
+      "spanFrameCount": 2,
+      "trackId": "vhf.m8v.superficial-anonymous.08",
+      "vesselClassStatus": "superficial-vessel-like-unknown"
+    }
+  ]
+}

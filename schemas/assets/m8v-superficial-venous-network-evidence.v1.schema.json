@@ -80,11 +80,17 @@
       ],
       "properties": {
         "anonymousTrackCount": { "type": "integer", "minimum": 1 },
-        "directProcedureRelevantTrackCount": { "type": "integer", "minimum": 0 },
+        "directProcedureRelevantTrackCount": {
+          "type": "integer",
+          "minimum": 0
+        },
         "directContinuousCandidateCount": { "type": "integer", "minimum": 0 },
         "hypothesisLinkCount": { "type": "integer", "minimum": 0 },
         "maxDirectSpanFrames": { "type": "integer", "minimum": 2 },
-        "superficialDepthSupportedTrackCount": { "type": "integer", "minimum": 0 },
+        "superficialDepthSupportedTrackCount": {
+          "type": "integer",
+          "minimum": 0
+        },
         "veinClassSupportedTrackCount": { "type": "integer", "minimum": 0 },
         "competitorResolutionStatus": { "type": "string", "minLength": 1 }
       }
@@ -107,7 +113,9 @@
         "blockingGateIds"
       ],
       "properties": {
-        "state": { "enum": ["promotable-observed-structure", "blocked-unresolved"] },
+        "state": {
+          "enum": ["promotable-observed-structure", "blocked-unresolved"]
+        },
         "observedSuperficialVeinStructureEstablished": { "type": "boolean" },
         "namedSuperficialVeinIdentityEstablished": { "const": false },
         "candidateSelected": { "type": ["string", "null"] },
