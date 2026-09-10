@@ -1,4 +1,4 @@
-name: AS06 same-subject proximal continuity reconnaissance
+name: AS06 same-subject upper-extremity continuity
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/as06-same-subject-continuity.yml'
       - 'authoring/source-acquisition/as06_upper_extremity_recon.py'
+      - 'authoring/source-acquisition/as06_branch_superficial_recon.py'
       - 'authoring/source-archives/vhf-whole-body-inventory-20260910.json'
       - 'authoring/source-archives/vhf-source-archive-index-20260910.json'
       - 'authoring/source-archives/vhf-source-storage-20260910.json'
@@ -24,7 +25,7 @@ jobs:
     timeout-minutes: 90
     env:
       GH_TOKEN: ${{ github.token }}
-      FIRST_SOURCE: avf1300a.png
+      FIRST_SOURCE: avf1490a.png
       LAST_SOURCE: avf1646a.png
 
     steps:
@@ -126,7 +127,7 @@ jobs:
             --last "$LAST_SOURCE" \
             --output build/as06/as06-upper-extremity-continuity-recon.v0.json
 
-      - name: Validate fail-closed reconnaissance claims
+      - name: Validate fail-closed proximal continuity claims
         run: |
           python - <<'PY'
           import json
@@ -137,10 +138,14 @@ jobs:
           assert report["task"] == "TASK-AS06"
           assert report["coordinateSpace"]["kind"] == "source-image-stack"
           assert report["coordinateSpace"]["patientSpaceClaim"] is False
-          assert report["source"]["firstSourceFilename"] == "avf1300a.png"
+          assert report["source"]["firstSourceFilename"] == "avf1490a.png"
           assert report["source"]["lastSourceFilename"] == "avf1646a.png"
           assert report["anchorLineage"]["anatomicalId"] == "structure.ulnar_artery.left"
           assert report["anchorLineage"]["anchorFrameCount"] == 106
+          assert report["boneContinuity"]["earliestSupportedSourceFilename"] == "avf1546a.png"
+          assert report["ulnarBridgeSearch"]["reachedBoneTransitionTarget"] is True
+          assert report["ulnarBridgeSearch"]["sameSubjectContinuitySupportedToBoneTransition"] is True
+          assert report["nextSearchReadiness"]["bifurcationSearchAuthorized"] is True
           assert report["claims"]["radialArteryIdentityEstablished"] is False
           assert report["claims"]["namedSuperficialVeinIdentityEstablished"] is False
           assert report["claims"]["automaticPromotionAllowed"] is False
@@ -156,12 +161,14 @@ jobs:
                       "minimumObservedSeparationPixels",
                   )
               },
-              "ulnarArteryRetrogradeContinuity": {
-                  k: report["ulnarArteryRetrogradeContinuity"][k]
+              "ulnarBridgeSearch": {
+                  k: report["ulnarBridgeSearch"][k]
                   for k in (
-                      "earliestContinuouslyTrackedSourceFilename",
-                      "stopReason",
-                      "firstFrameAfterContinuityFailure",
+                      "bridgeStartSourceFilename",
+                      "targetBoneTransitionSourceFilename",
+                      "lastObservedSourceFilename",
+                      "reachedBoneTransitionTarget",
+                      "sameSubjectContinuitySupportedToBoneTransition",
                       "metrics",
                   )
               },
@@ -169,10 +176,56 @@ jobs:
           },indent=2))
           PY
 
+      - name: Run anonymous branch-topology and superficial-vessel search
+        run: |
+          python authoring/source-acquisition/as06_branch_superficial_recon.py \
+            --inventory authoring/source-archives/vhf-whole-body-inventory-20260910.json \
+            --archive-index authoring/source-archives/vhf-source-archive-index-20260910.json \
+            --archive-root build/source-archive \
+            --phase1 build/as06/as06-upper-extremity-continuity-recon.v0.json \
+            --output build/as06/as06-branch-superficial-recon.v0.json
+
+      - name: Validate fail-closed branch and superficial search claims
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report=json.loads(Path("build/as06/as06-branch-superficial-recon.v0.json").read_text())
+          assert report["schema"] == "ph-as06-branch-superficial-recon.v1"
+          assert report["task"] == "TASK-AS06"
+          assert report["coordinateSpace"]["kind"] == "source-image-stack"
+          assert report["coordinateSpace"]["patientSpaceClaim"] is False
+          assert report["arterialBranchTopologySearch"]["knownUlnarContinuityUsedAsAnchor"] is True
+          assert report["arterialBranchTopologySearch"]["crossSubjectAtlasUsed"] is False
+          assert report["arterialBranchTopologySearch"]["disposition"]["radialArteryIdentityEstablished"] is False
+          assert report["superficialVenousSearch"]["namedVeinAtlasUsed"] is False
+          assert report["superficialVenousSearch"]["procedureRoleUsedAsIdentity"] is False
+          assert report["superficialVenousSearch"]["disposition"]["namedVeinIdentityEstablished"] is False
+          assert report["taskDisposition"]["feedForwardToAS07Allowed"] is True
+          assert report["taskDisposition"]["automaticMedicalMasterPromotionAllowed"] is False
+          assert report["claims"]["automaticPromotionAllowed"] is False
+          print(json.dumps({
+              "arterialBranchTopologySearch": {
+                  "anonymousTrackCount": report["arterialBranchTopologySearch"]["anonymousTrackCount"],
+                  "topologyCandidateCount": report["arterialBranchTopologySearch"]["topologyCandidateCount"],
+                  "tracks": report["arterialBranchTopologySearch"]["tracks"][:5],
+                  "disposition": report["arterialBranchTopologySearch"]["disposition"],
+              },
+              "superficialVenousSearch": {
+                  "anonymousTrackCount": report["superficialVenousSearch"]["anonymousTrackCount"],
+                  "continuousAnonymousCandidateCount": report["superficialVenousSearch"]["continuousAnonymousCandidateCount"],
+                  "tracks": report["superficialVenousSearch"]["tracks"][:5],
+                  "disposition": report["superficialVenousSearch"]["disposition"],
+              },
+              "taskDisposition": report["taskDisposition"],
+          },indent=2))
+          PY
+
       - id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: as06-upper-extremity-continuity-recon-v0
+          name: as06-same-subject-continuity-v0
           path: build/as06/
           compression-level: 9
           retention-days: 30
