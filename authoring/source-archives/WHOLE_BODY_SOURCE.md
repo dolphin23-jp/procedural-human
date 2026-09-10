@@ -2,9 +2,12 @@
 
 ## TASK-AS01 checkpoint — 2026-09-10
 
-The selected source is **5,186 unique provider PNG cryosections**, from
+The provider listing exposes **5,186 unique cryosection identifiers**, from
 `avf1001a.png` to `avf2730b.png`, totaling **16,452,622,136 listed source bytes**
-(16.45 GB / 15.32 GiB). This is one subject, `source.nlm.vhp-female`.
+(16.45 GB / 15.32 GiB). Of those identifiers, **5,184 are non-empty PNG images**.
+`avf2100a.png` and `avf2100b.png` are provider-listed 0-byte objects and are
+therefore explicit unavailable source entries, not usable images. This is one
+subject, `source.nlm.vhp-female`.
 
 The immutable inventory is
 `vhf-whole-body-inventory-20260910.json`. It binds observed listing snapshots,
@@ -18,8 +21,11 @@ folder alternatives, and the deterministic 64-frame / 82-chunk plan.
   overlap is retained as alternative-location metadata, not a claim of byte
   equivalence. Selection prioritizes abdomen to preserve all A05 source URLs.
 - The NLM overview describes 5,189 sections. Both the current PNG lists and the
-  historical `Fullcolor/fullbody` INDEX enumerate 5,186. The interior gaps are
-  `avf2328c.png`, `avf2329a.png`, `avf2329b.png`. Nothing fills those gaps.
+  historical `Fullcolor/fullbody` INDEX enumerate 5,186 identifiers. The
+  absent interior filenames are `avf2328c.png`, `avf2329a.png`,
+  `avf2329b.png`. In addition, `avf2100a.png` and `avf2100b.png` are
+  listed with byte size 0 and have no alternate PNG location. Nothing fills or
+  interpolates any of these five source gaps.
 - The last observed frame is `avf2730b.png`; no `avf2730c.png` is invented.
 - Provider filenames are an ordered source index, not Patient Space.
 - 2048 × 1216 pixels and nominal 0.33 mm spacing are provider documentation;
@@ -76,7 +82,11 @@ there is no `--clobber` or silent upstream replacement. A changed upstream
 source requires a new reviewed inventory/tag, not editing this snapshot.
 
 Finalization requires exactly all 82 chunk receipts from one inventory hash,
-correct frame counts and matching release asset identities/sizes. It produces
+correct source-object counts and matching release asset identities/sizes. The
+two 0-byte provider objects are archived byte-exactly with 0 × 0 geometry and
+are recorded in `unavailableSourceIndices`; archive completeness never turns
+them into images. The index separately records 5,184 expected/verified usable
+frames. It produces
 `vhf-source-archive-index-20260910.json` and `vhf-source-storage-20260910.json`,
 retains them as release assets, and commits metadata to the work branch.
 **Until finalization succeeds, AS02 is incomplete**, even if some assets exist.
@@ -116,7 +126,9 @@ and other selections use this same mechanism; their anatomical boundaries
 must be observed, not inferred from folder labels.
 
 Extraction validates each required chunk and file before writing, refuses an
-existing output directory, retains source identity, and records output hashes,
+existing output directory, and fails before writing if the requested range
+contains a provider-listed 0-byte unavailable object. For usable frames it
+retains source identity and records output hashes,
 parent inventory/index/chunk/source hashes, and crop parameters. No-crop copies
 are byte-identical. Crops are explicit derived PNGs, never a new source archive.
 Existing A05/A06 records are unchanged. New evidence does not promote any

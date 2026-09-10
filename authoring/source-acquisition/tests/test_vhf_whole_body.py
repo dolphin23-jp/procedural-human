@@ -3,6 +3,8 @@ import sys
 import tempfile
 import unittest
 import json
+import io
+from unittest.mock import patch
 from zipfile import ZipFile
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import vhf_whole_body as v
@@ -78,6 +80,32 @@ class WholeBodyTests(unittest.TestCase):
         self.assertEqual(len(wrist),451)
         self.assertTrue(all(f['source']['path'].startswith('PNG_format/abdomen/') for f in wrist))
         self.assertEqual(len(inv['chunks']),82)
+        zero=[f for f in inv['frames'] if f['source']['listedByteSize']==0]
+        self.assertEqual([f['filename'] for f in zero],['avf2100a.png','avf2100b.png'])
+        self.assertEqual([f['index'] for f in zero],[3297,3298])
+
+    def test_zero_byte_provider_objects_are_not_images(self):
+        inv_path=v.ROOT/'authoring/source-archives/vhf-whole-body-inventory-20260910.json'
+        inv=json.loads(inv_path.read_text())
+        frame=next(f for f in inv['frames'] if f['filename']=='avf2100a.png')
+        class EmptyResponse(io.BytesIO):
+            def __init__(self):
+                super().__init__(b''); self.headers={}
+        out=self.p/'zero-source'
+        with patch.object(v,'urlopen',return_value=EmptyResponse()):
+            r=v.download_frame(frame,out)
+        self.assertEqual(out.read_bytes(),b'')
+        self.assertEqual((r['byteSize'],r['widthPixels'],r['heightPixels']),(0,0,0))
+        self.assertEqual(r['sha256'],v.digest(b''))
+
+        index=dict(schemaVersion='1',kind='vhf-source-archive-index',inventorySha256=v.file_hash(inv_path),
+            coordinateSpace='source-image-stack',claims=dict(v.CLAIMS),expectedFrameCount=inv['frameCount'],verifiedFrameCount=0,
+            expectedUsableFrameCount=inv['frameCount']-2,verifiedUsableFrameCount=0,unavailableSourceIndices=[3297,3298],
+            complete=False,chunks=[],missingChunkIndices=list(range(len(inv['chunks']))))
+        index_path=self.p/'zero-index.json'; v.write_json(index_path,index)
+        with self.assertRaisesRegex(ValueError,'unavailable zero-byte'):
+            v.extract(inv_path,index_path,self.p,self.p/'zero-region',3297,3298)
+        self.assertFalse((self.p/'zero-region').exists())
 
     def test_range_and_crop_fail_before_writing(self):
         index=self.p/'archive.json'; v.write_json(index,v.archive_index(self.inv_path,self.p))

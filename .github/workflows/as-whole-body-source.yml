@@ -6,7 +6,10 @@ on:
     paths:
       - '.github/workflows/as-whole-body-source.yml'
       - 'authoring/source-acquisition/vhf_whole_body.py'
+      - 'authoring/source-acquisition/vhf_release_shard.py'
       - 'authoring/source-archives/vhf-whole-body-inventory-20260910.json'
+      - 'schemas/assets/vhf-source-*.schema.json'
+      - 'schemas/assets/vhf-whole-body-inventory.v1.schema.json'
   workflow_dispatch:
 
 permissions:

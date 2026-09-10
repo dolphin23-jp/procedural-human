@@ -80,9 +80,13 @@ def finalize():
         c=receipt['chunk'];a=assets[c['filename']]
         if c['frameCount']!=plan['frameCount'] or c['byteSize']!=a['size'] or str(a['id'])!=receipt['storage']['assetId']:
             raise ValueError('release metadata mismatch')
+    unavailable=[f['index'] for f in inv['frames'] if f['source']['listedByteSize']==0]
+    expected_usable=sum(f['source']['listedByteSize']>0 for f in inv['frames'])
     index=dict(schemaVersion='1',kind='vhf-source-archive-index',inventorySha256=ih,
         coordinateSpace='source-image-stack',claims=dict(CLAIMS),expectedFrameCount=inv['frameCount'],
-        verifiedFrameCount=sum(x['chunk']['frameCount'] for x in receipts),complete=True,
+        verifiedFrameCount=sum(x['chunk']['frameCount'] for x in receipts),
+        expectedUsableFrameCount=expected_usable,verifiedUsableFrameCount=expected_usable,
+        unavailableSourceIndices=unavailable,complete=True,
         chunks=[x['chunk'] for x in receipts],missingChunkIndices=[])
     if index['verifiedFrameCount']!=inv['frameCount']: raise ValueError('frame coverage mismatch')
     out=Path('authoring/source-archives/vhf-source-archive-index-20260910.json');write_json(out,index)

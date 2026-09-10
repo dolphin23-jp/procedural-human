@@ -198,12 +198,16 @@ def download_frame(frame, output):
                 data=response.read(src['listedByteSize']+1)
                 headers=response.headers
             if len(data)!=src['listedByteSize']: raise ValueError('source changed size: '+src['path'])
-            with Image.open(io.BytesIO(data)) as im:
-                if im.format!='PNG' or im.size!=(2048,1216): raise ValueError('unexpected PNG source geometry')
-                im.verify()
+            if src['listedByteSize']==0:
+                width=height=0
+            else:
+                with Image.open(io.BytesIO(data)) as im:
+                    if im.format!='PNG' or im.size!=(2048,1216): raise ValueError('unexpected PNG source geometry')
+                    im.verify()
+                width,height=2048,1216
             output.write_bytes(data)
             return dict(index=frame['index'],filename=frame['filename'],sourcePath=src['path'],sourceUrl=src['url'],
-                sha256=digest(data),byteSize=len(data),widthPixels=2048,heightPixels=1216,
+                sha256=digest(data),byteSize=len(data),widthPixels=width,heightPixels=height,
                 retrievedAt=datetime.now(timezone.utc).isoformat(),lastModified=headers.get('Last-Modified'),etag=headers.get('ETag'))
         except (OSError,ValueError) as e:
             if attempt==len(retry_delays): raise RuntimeError('acquisition failed: '+src['path']) from e
@@ -222,6 +226,8 @@ def verify_chunk(path, inv, inventory_hash, chunk_index):
         if sorted(z.namelist())!=sorted(expected): raise ValueError('unexpected, duplicate or missing ZIP members')
         for f,r in zip(planned,m['frames']):
             if (r['index'],r['filename'],r['sourcePath'],r['sourceUrl'],r['byteSize']) != (f['index'],f['filename'],f['source']['path'],f['source']['url'],f['source']['listedByteSize']): raise ValueError('frame lineage mismatch')
+            expected_geometry=(0,0) if f['source']['listedByteSize']==0 else (2048,1216)
+            if (r['widthPixels'],r['heightPixels'])!=expected_geometry: raise ValueError('source geometry/status mismatch')
             data=z.read(r['sourcePath'])
             if len(data)!=r['byteSize'] or digest(data)!=r['sha256']: raise ValueError('source integrity failure: '+r['sourcePath'])
     return m,digest(manifest_bytes)
@@ -258,16 +264,22 @@ def acquire(inv_path, output, first=0, last=None, workers=4):
 
 def archive_index(inv_path, directory):
     inv_path=Path(inv_path); inv=json.loads(inv_path.read_text()); check_inventory(inv); ih=file_hash(inv_path)
-    chunks=[]; missing=[]
+    chunks=[]; missing=[]; verified_chunk_indices=set()
+    unavailable=[f['index'] for f in inv['frames'] if f['source']['listedByteSize']==0]
     for c in inv['chunks']:
         path=Path(directory)/f'vhf-source-{c["index"]:04d}.zip'
         if not path.exists(): missing.append(c['index']); continue
         m,mh=verify_chunk(path,inv,ih,c['index'])
         chunks.append(dict(index=c['index'],filename=path.name,sha256=file_hash(path),byteSize=path.stat().st_size,
             frameCount=len(m['frames']),manifestSha256=mh))
+        verified_chunk_indices.add(c['index'])
+    expected_usable=sum(f['source']['listedByteSize']>0 for f in inv['frames'])
+    verified_usable=sum(f['source']['listedByteSize']>0 and f['chunkIndex'] in verified_chunk_indices for f in inv['frames'])
     return validate(dict(schemaVersion='1',kind='vhf-source-archive-index',inventorySha256=ih,
         coordinateSpace='source-image-stack',claims=dict(CLAIMS),expectedFrameCount=inv['frameCount'],
-        verifiedFrameCount=sum(c['frameCount'] for c in chunks),complete=not missing,chunks=chunks,missingChunkIndices=missing))
+        verifiedFrameCount=sum(c['frameCount'] for c in chunks),expectedUsableFrameCount=expected_usable,
+        verifiedUsableFrameCount=verified_usable,unavailableSourceIndices=unavailable,
+        complete=not missing,chunks=chunks,missingChunkIndices=missing))
 
 
 def extract(inv_path, index_path, directory, output, first, last, crop=None):
@@ -281,6 +293,8 @@ def extract(inv_path, index_path, directory, output, first, last, crop=None):
     output=Path(output)
     if output.exists(): raise ValueError('output must not exist; source never overwritten')
     selected=inv['frames'][first:last+1]
+    unavailable=[f['filename'] for f in selected if f['source']['listedByteSize']==0]
+    if unavailable: raise ValueError('selection includes unavailable zero-byte provider object(s): '+', '.join(unavailable))
     # Verify every required chunk before emitting any derived output.
     chunks={c['index']:c for c in idx['chunks']}; verified={}
     for ci in sorted({f['chunkIndex'] for f in selected}):

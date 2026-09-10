@@ -103,6 +103,22 @@
         "type": "integer",
         "minimum": 0
       }
+    },
+    "expectedUsableFrameCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "verifiedUsableFrameCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unavailableSourceIndices": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "uniqueItems": true
     }
   },
   "required": [
@@ -113,6 +129,9 @@
     "claims",
     "expectedFrameCount",
     "verifiedFrameCount",
+    "unavailableSourceIndices",
+    "verifiedUsableFrameCount",
+    "expectedUsableFrameCount",
     "complete",
     "chunks",
     "missingChunkIndices"
