@@ -1,0 +1,362 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.local/schemas/assets/m8v-candidate-vessel-track-graph/v1",
+  "title": "M8V candidate vessel source-index track graph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "status",
+    "coordinateSpace",
+    "sourceEvidence",
+    "landmarkGraph",
+    "tracks",
+    "competitorSets",
+    "branchMergeCandidates",
+    "gapSummary",
+    "decision",
+    "claims"
+  ],
+  "properties": {
+    "schema": { "const": "ph-m8v-candidate-vessel-track-graph.v1" },
+    "schemaVersion": { "const": "1" },
+    "task": { "const": "TASK-V04" },
+    "recordedAt": { "type": "string", "format": "date" },
+    "status": { "const": "complete" },
+    "coordinateSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "patientSpaceClaim",
+        "physicalXyClaim",
+        "physicalZClaim",
+        "axisSemantics"
+      ],
+      "properties": {
+        "kind": { "const": "source-image-stack-index-3d" },
+        "patientSpaceClaim": { "const": false },
+        "physicalXyClaim": { "const": false },
+        "physicalZClaim": { "const": false },
+        "axisSemantics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "y", "z"],
+          "properties": {
+            "x": { "const": "full-image-pixels" },
+            "y": { "const": "full-image-pixels" },
+            "z": { "const": "whole-body-frame-index-discrete" }
+          }
+        }
+      }
+    },
+    "sourceEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["as06Artifact", "phase1Report", "phase2Report"],
+      "properties": {
+        "as06Artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["artifactId", "archiveSha256", "expiredAtBuildTime"],
+          "properties": {
+            "artifactId": { "type": "integer", "minimum": 1 },
+            "archiveSha256": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            "expiredAtBuildTime": { "const": false }
+          }
+        },
+        "phase1Report": { "$ref": "#/$defs/reportEvidence" },
+        "phase2Report": { "$ref": "#/$defs/reportEvidence" }
+      }
+    },
+    "landmarkGraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "schema", "usableForTaskV04"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "schema": { "const": "ph-m8v-upper-extremity-landmark-graph.v1" },
+        "usableForTaskV04": { "const": true }
+      }
+    },
+    "tracks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/track" }
+    },
+    "competitorSets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/competitorSet" }
+    },
+    "branchMergeCandidates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/branchMergeCandidate" }
+    },
+    "gapSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trackCount",
+        "observationCount",
+        "linkCount",
+        "explicitGapLinkCount",
+        "maxMissingFrameCount"
+      ],
+      "properties": {
+        "trackCount": { "type": "integer", "minimum": 1 },
+        "observationCount": { "type": "integer", "minimum": 1 },
+        "linkCount": { "type": "integer", "minimum": 0 },
+        "explicitGapLinkCount": { "type": "integer", "minimum": 0 },
+        "maxMissingFrameCount": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "graphState",
+        "taskV05InputAvailable",
+        "taskV06InputAvailable",
+        "radialIdentityStillRequiresEvaluation",
+        "superficialVeinStillRequiresEvaluation",
+        "nextTask"
+      ],
+      "properties": {
+        "graphState": { "const": "source-index-track-graph-established" },
+        "taskV05InputAvailable": { "const": true },
+        "taskV06InputAvailable": { "const": true },
+        "radialIdentityStillRequiresEvaluation": { "const": true },
+        "superficialVeinStillRequiresEvaluation": { "const": true },
+        "nextTask": { "const": "TASK-V05" }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceIndex3DTrackGraphEstablished",
+        "physical3DGeometry",
+        "patientSpaceGeometry",
+        "radialArteryIdentityEstablished",
+        "brachialArteryIdentityEstablished",
+        "bifurcationIdentityEstablished",
+        "superficialVeinClassEstablished",
+        "namedSuperficialVeinIdentityEstablished",
+        "procedureRoleEstablished",
+        "medicalValidation",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "sourceIndex3DTrackGraphEstablished": { "const": true },
+        "physical3DGeometry": { "const": false },
+        "patientSpaceGeometry": { "const": false },
+        "radialArteryIdentityEstablished": { "const": false },
+        "brachialArteryIdentityEstablished": { "const": false },
+        "bifurcationIdentityEstablished": { "const": false },
+        "superficialVeinClassEstablished": { "const": false },
+        "namedSuperficialVeinIdentityEstablished": { "const": false },
+        "procedureRoleEstablished": { "const": false },
+        "medicalValidation": { "const": false },
+        "automaticPromotionAllowed": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "reportEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filename", "sha256", "schema"],
+      "properties": {
+        "filename": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "schema": { "type": "string", "minLength": 1 }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "wholeBodyFrameIndex",
+        "xFullImagePixels",
+        "yFullImagePixels",
+        "directSourceObservation"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "wholeBodyFrameIndex": { "type": "integer", "minimum": 0 },
+        "sourceFilename": { "type": "string", "minLength": 1 },
+        "xFullImagePixels": { "type": "number" },
+        "yFullImagePixels": { "type": "number" },
+        "areaPixels": { "type": "integer", "minimum": 1 },
+        "circularity": { "type": "number", "minimum": 0 },
+        "contrast": { "type": "number" },
+        "depthPixels": { "type": ["number", "null"], "minimum": 0 },
+        "evidenceKind": { "type": "string", "minLength": 1 },
+        "directSourceObservation": { "const": true }
+      }
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "fromObservationId",
+        "toObservationId",
+        "kind",
+        "frameDelta",
+        "missingFrameCount",
+        "interpolatedObservationCount"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "fromObservationId": { "type": "string", "minLength": 1 },
+        "toObservationId": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["direct-continuation", "explicit-gap"] },
+        "frameDelta": { "type": "integer", "minimum": 1 },
+        "missingFrameCount": { "type": "integer", "minimum": 0 },
+        "interpolatedObservationCount": { "const": 0 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "direct-continuation" } } },
+          "then": {
+            "properties": {
+              "frameDelta": { "const": 1 },
+              "missingFrameCount": { "const": 0 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "explicit-gap" } } },
+          "then": {
+            "properties": { "missingFrameCount": { "minimum": 1 } }
+          }
+        }
+      ]
+    },
+    "trackIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "anchorAnatomicalId",
+        "namedIdentityStatus",
+        "namedIdentityAppliesToEntireTrack",
+        "vesselClassStatus"
+      ],
+      "properties": {
+        "anchorAnatomicalId": { "type": ["string", "null"] },
+        "namedIdentityStatus": {
+          "enum": [
+            "reviewed-anchor-linked-continuity",
+            "anonymous-unresolved"
+          ]
+        },
+        "namedIdentityAppliesToEntireTrack": { "const": false },
+        "vesselClassStatus": {
+          "enum": [
+            "anchor-linked-arterial-candidate",
+            "vessel-like-unknown",
+            "superficial-vessel-like-unknown"
+          ]
+        }
+      }
+    },
+    "track": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "trackClass",
+        "searchContext",
+        "sourceClassification",
+        "identity",
+        "reviewStatus",
+        "ordering",
+        "observationCount",
+        "spanFrameCount",
+        "coverageFraction",
+        "minWholeBodyFrameIndex",
+        "maxWholeBodyFrameIndex",
+        "gapLinkCount",
+        "maxMissingFrameCount",
+        "observations",
+        "links"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "trackClass": {
+          "enum": [
+            "ulnar-anchor-linked-continuity",
+            "anonymous-branch-search",
+            "anonymous-superficial-search"
+          ]
+        },
+        "searchContext": { "type": "string", "minLength": 1 },
+        "sourceClassification": { "type": "string", "minLength": 1 },
+        "identity": { "$ref": "#/$defs/trackIdentity" },
+        "reviewStatus": { "const": "unreviewed-as-complete-track" },
+        "ordering": { "enum": ["increasing-frame-index", "decreasing-frame-index"] },
+        "observationCount": { "type": "integer", "minimum": 2 },
+        "spanFrameCount": { "type": "integer", "minimum": 2 },
+        "coverageFraction": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "minWholeBodyFrameIndex": { "type": "integer", "minimum": 0 },
+        "maxWholeBodyFrameIndex": { "type": "integer", "minimum": 0 },
+        "gapLinkCount": { "type": "integer", "minimum": 0 },
+        "maxMissingFrameCount": { "type": "integer", "minimum": 0 },
+        "observations": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/observation" }
+        },
+        "links": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/link" }
+        }
+      }
+    },
+    "competitorSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "competingClaim", "trackIds", "resolutionStatus"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "competingClaim": { "type": "string", "minLength": 1 },
+        "trackIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "resolutionStatus": { "const": "unresolved" }
+      }
+    },
+    "branchMergeCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "anchorTrackId",
+        "candidateTrackId",
+        "status",
+        "identityImplicationAllowed"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["branch-candidate", "merge-candidate"] },
+        "anchorTrackId": { "type": "string", "minLength": 1 },
+        "candidateTrackId": { "type": "string", "minLength": 1 },
+        "status": { "const": "candidate-unreviewed" },
+        "identityImplicationAllowed": { "const": false }
+      }
+    }
+  }
+}
