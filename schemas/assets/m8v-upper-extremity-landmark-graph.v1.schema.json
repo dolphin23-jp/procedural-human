@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/m8v-upper-extremity-landmark-graph/v1",
+  "title": "M8V Upper-Extremity Landmark Graph v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schemaVersion", "task", "recordedAt", "status", "coordinateSpace", "sources", "nodes", "relations", "unresolvedRequiredLandmarks", "decision", "claims"],
+  "properties": {
+    "schema": { "const": "ph-m8v-upper-extremity-landmark-graph.v1" },
+    "schemaVersion": { "const": "1" },
+    "task": { "const": "TASK-V03" },
+    "recordedAt": { "type": "string", "minLength": 1 },
+    "status": { "const": "complete" },
+    "coordinateSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "patientSpaceClaim"],
+      "properties": {
+        "kind": { "const": "source-image-stack-with-bounded-ct-scaffold" },
+        "patientSpaceClaim": { "const": false }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "role", "validationLevel"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "role": { "enum": ["bone-registration-scaffold", "nonvascular-candidate-provenance"] },
+          "validationLevel": { "const": "V0" }
+        }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "kind", "evidenceStatus", "sourceClass", "validationLevel", "reviewStatus", "support", "vesselIdentificationUse"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["observed-bone-landmark", "algorithm-derived-region-candidate", "unresolved-named-landmark"] },
+          "evidenceStatus": { "enum": ["supported-bounded", "candidate-only", "unresolved"] },
+          "sourceClass": { "enum": ["same-subject-cadaver-plus-radiological", "same-subject-algorithm-derived", "none-established"] },
+          "validationLevel": { "const": "V0" },
+          "reviewStatus": { "const": "unreviewed" },
+          "support": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["frameCount", "extentDisposition"],
+            "properties": {
+              "frameCount": { "type": "integer", "minimum": 0 },
+              "extentDisposition": { "enum": ["bounded-observed-support", "candidate-present-all-bounded-frames", "unknown"] }
+            }
+          },
+          "vesselIdentificationUse": { "enum": ["same-subject-landmark-constraint", "candidate-search-compartment-prior", "not-usable-until-observed"] }
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "type", "to", "evidenceStatus", "use"],
+        "properties": {
+          "from": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["paired-with", "bounds-candidate-compartment", "contrasts-with-candidate-region"] },
+          "to": { "type": "string", "minLength": 1 },
+          "evidenceStatus": { "enum": ["supported-bounded", "candidate-only"] },
+          "use": { "enum": ["registration-orientation-constraint", "superficiality-search-prior", "deep-soft-tissue-search-prior"] }
+        }
+      }
+    },
+    "unresolvedRequiredLandmarks": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["graphState", "usableForTaskV04", "namedMuscleLandmarksEstablished", "nextTask"],
+      "properties": {
+        "graphState": { "const": "bounded-mixed-evidence-landmark-graph" },
+        "usableForTaskV04": { "const": true },
+        "namedMuscleLandmarksEstablished": { "const": false },
+        "nextTask": { "const": "TASK-V04" }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["patientSpaceGeometry", "namedMuscleIdentityEstablished", "radialArteryIdentityEstablished", "superficialVeinIdentityEstablished", "medicalValidation", "automaticPromotionAllowed"],
+      "properties": {
+        "patientSpaceGeometry": { "const": false },
+        "namedMuscleIdentityEstablished": { "const": false },
+        "radialArteryIdentityEstablished": { "const": false },
+        "superficialVeinIdentityEstablished": { "const": false },
+        "medicalValidation": { "const": false },
+        "automaticPromotionAllowed": { "const": false }
+      }
+    }
+  }
+}
