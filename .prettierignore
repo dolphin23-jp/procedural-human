@@ -4,3 +4,9 @@ dist/
 .venv/
 pnpm-lock.yaml
 uv.lock
+
+# Immutable source-snapshot integrity records. Their exact bytes are externally
+# SHA-256 linked to the durable source release; do not rewrite them for style.
+authoring/source-archives/vhf-whole-body-inventory-20260910.json
+authoring/source-archives/vhf-source-archive-index-20260910.json
+authoring/source-archives/vhf-source-storage-20260910.json

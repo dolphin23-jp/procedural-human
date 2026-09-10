@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/vhf-source-storage/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "kind": {
+      "const": "vhf-source-storage"
+    },
+    "inventorySha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "archiveIndexSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "releaseUrl": {
+      "type": "string",
+      "minLength": 1
+    },
+    "releaseId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "releaseTag": {
+      "type": "string",
+      "minLength": 1
+    },
+    "isDraft": {
+      "const": true
+    },
+    "sourceCommit": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "workflowRunUrl": {
+      "type": "string",
+      "minLength": 1
+    },
+    "receipts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schemaVersion": {
+            "const": "1"
+          },
+          "kind": {
+            "const": "vhf-source-release-receipt"
+          },
+          "inventorySha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "chunk": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "index": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "filename": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "byteSize": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "frameCount": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "manifestSha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "index",
+              "filename",
+              "sha256",
+              "byteSize",
+              "frameCount",
+              "manifestSha256"
+            ]
+          },
+          "storage": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "assetId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "minLength": 1
+              },
+              "verifiedAt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "method": {
+                "const": "downloaded-from-draft-release-and-verified-every-source-sha256"
+              }
+            },
+            "required": ["assetId", "url", "verifiedAt", "method"]
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "kind",
+          "inventorySha256",
+          "chunk",
+          "storage"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "kind",
+    "inventorySha256",
+    "archiveIndexSha256",
+    "releaseUrl",
+    "releaseId",
+    "releaseTag",
+    "isDraft",
+    "sourceCommit",
+    "workflowRunUrl",
+    "receipts"
+  ]
+}

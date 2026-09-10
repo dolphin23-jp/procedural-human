@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/vhf-source-chunk/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "kind": {
+      "const": "vhf-source-chunk"
+    },
+    "inventorySha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "chunkIndex": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "coordinateSpace": {
+      "const": "source-image-stack"
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "patientSpace": {
+          "const": false
+        },
+        "registeredCT": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "medicalMaster": {
+          "const": false
+        },
+        "runtimeAsset": {
+          "const": false
+        }
+      },
+      "required": [
+        "patientSpace",
+        "registeredCT",
+        "medicalValidation",
+        "medicalMaster",
+        "runtimeAsset"
+      ]
+    },
+    "attribution": {
+      "type": "string",
+      "minLength": 1
+    },
+    "frames": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "filename": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourcePath": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "byteSize": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "widthPixels": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "heightPixels": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "retrievedAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lastModified": {
+            "type": ["string", "null"]
+          },
+          "etag": {
+            "type": ["string", "null"]
+          }
+        },
+        "required": [
+          "index",
+          "filename",
+          "sourcePath",
+          "sourceUrl",
+          "sha256",
+          "byteSize",
+          "widthPixels",
+          "heightPixels",
+          "retrievedAt",
+          "lastModified",
+          "etag"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "kind",
+    "inventorySha256",
+    "chunkIndex",
+    "coordinateSpace",
+    "claims",
+    "attribution",
+    "frames"
+  ]
+}

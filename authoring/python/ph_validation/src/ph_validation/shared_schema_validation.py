@@ -8,6 +8,7 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[5]
 
 VALIDATION_TARGETS = (
+    ("vhf-whole-body-inventory", "schemas/assets/vhf-whole-body-inventory.v1.schema.json", "authoring/source-archives/vhf-whole-body-inventory-20260910.json"),
     (
         "procedure-definition",
         "schemas/procedures/procedure-definition.v1.schema.json",

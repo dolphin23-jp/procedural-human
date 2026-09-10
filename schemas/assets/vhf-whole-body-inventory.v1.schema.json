@@ -1,0 +1,344 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/vhf-whole-body-inventory/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "kind": {
+      "const": "vhf-whole-body-inventory"
+    },
+    "sourceArchiveId": {
+      "const": "source.nlm.vhp-female"
+    },
+    "snapshotAt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "coordinateSpace": {
+      "const": "source-image-stack"
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "patientSpace": {
+          "const": false
+        },
+        "registeredCT": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "medicalMaster": {
+          "const": false
+        },
+        "runtimeAsset": {
+          "const": false
+        }
+      },
+      "required": [
+        "patientSpace",
+        "registeredCT",
+        "medicalValidation",
+        "medicalMaster",
+        "runtimeAsset"
+      ]
+    },
+    "terms": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "attribution": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publicDomainEvidenceUrl": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "url",
+        "attribution",
+        "publicDomainEvidenceUrl",
+        "conditions",
+        "scope"
+      ]
+    },
+    "documentedGeometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "widthPixels": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "heightPixels": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "nominalSpacingMm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limitation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "widthPixels",
+        "heightPixels",
+        "nominalSpacingMm",
+        "evidence",
+        "limitation"
+      ]
+    },
+    "selectionPolicy": {
+      "type": "string",
+      "minLength": 1
+    },
+    "frameCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "listedByteSize": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "chunkFrameLimit": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "frames": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "filename": {
+            "type": "string",
+            "pattern": "^avf[0-9]{4}[abc]\\.png$"
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "minLength": 1
+              },
+              "listedByteSize": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "listedModified": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": ["path", "url", "listedByteSize", "listedModified"]
+          },
+          "alternateLocations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "url": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "listedByteSize": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "listedModified": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": ["path", "url", "listedByteSize", "listedModified"]
+            }
+          },
+          "navigationRegions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "chunkIndex": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "index",
+          "filename",
+          "source",
+          "alternateLocations",
+          "navigationRegions",
+          "chunkIndex"
+        ]
+      }
+    },
+    "chunks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "firstFrame": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "lastFrame": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "frameCount": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "listedByteSize": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "index",
+          "firstFrame",
+          "lastFrame",
+          "frameCount",
+          "listedByteSize"
+        ]
+      }
+    },
+    "missingWithinBounds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "supportingModalities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "listedByteSize": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["path", "fileCount", "listedByteSize", "status"]
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "filename": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1
+          },
+          "byteSize": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": ["filename", "url", "byteSize", "sha256"]
+      }
+    },
+    "knownGaps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "kind",
+    "sourceArchiveId",
+    "snapshotAt",
+    "coordinateSpace",
+    "claims",
+    "terms",
+    "documentedGeometry",
+    "selectionPolicy",
+    "frameCount",
+    "listedByteSize",
+    "chunkFrameLimit",
+    "frames",
+    "chunks",
+    "missingWithinBounds",
+    "supportingModalities",
+    "evidence",
+    "knownGaps"
+  ]
+}

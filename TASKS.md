@@ -368,6 +368,7 @@ It expands **source-evidence coverage**, not MVP 0 runtime/validation/acceptance
 It does not authorize whole-body segmentation, whole-body Medical Master creation, whole-body medical validation, or post-MVP physiology/physics.
 
 ## TASK-AS01 — Full-body source inventory and terms checkpoint
+Status: complete — see `authoring/source-archives/WHOLE_BODY_SOURCE.md` and the 2026-09-10 inventory.
 Inventory the usable Visible Human Female whole-body source material and same-subject supporting modalities needed for future authoring.
 
 Record:
@@ -381,6 +382,7 @@ Record:
 Done: the intended whole-body source foundation is bounded and legally/technically understood before bulk acquisition.
 
 ## TASK-AS02 — Immutable whole-body source archive
+Status: complete — 82/82 source chunks are persisted and independently read back; the archive index records 5,184 usable PNGs and the two provider-listed 0-byte objects as unavailable source entries.
 Acquire the usable whole-body anatomical source into external persistent storage.
 
 Requirements:
@@ -394,6 +396,7 @@ Requirements:
 Done: the whole-body source can be reconstructed and independently integrity-checked from recorded manifests/hashes.
 
 ## TASK-AS03 — Global source manifest and frame index
+Status: complete — the inventory, verified archive index, and storage receipts are committed for the 2026-09-10 source snapshot.
 Create a machine-readable whole-body source manifest/index.
 
 Record at minimum:
@@ -409,6 +412,7 @@ Do not claim Patient Space merely because a global source index exists.
 Done: any source frame can be addressed reproducibly without scanning the archive manually.
 
 ## TASK-AS04 — Reproducible region extraction
+Status: complete — deterministic indexed extraction is implemented and tested; any selection containing a provider-listed unavailable 0-byte source object fails closed before output is written.
 Provide authoring tooling that materializes bounded source regions from the full-body archive without changing source identity.
 
 Requirements:

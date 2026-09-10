@@ -20,6 +20,32 @@ const contracts = [
 
 const authoringContracts = [
   [
+    'vhf-source-release-receipt',
+    'schemas/assets/vhf-source-release-receipt.v1.schema.json',
+    null,
+  ],
+  [
+    'vhf-source-storage',
+    'schemas/assets/vhf-source-storage.v1.schema.json',
+    null,
+  ],
+  [
+    'vhf-whole-body-inventory',
+    'schemas/assets/vhf-whole-body-inventory.v1.schema.json',
+    'authoring/source-archives/vhf-whole-body-inventory-20260910.json',
+  ],
+  ['vhf-source-chunk', 'schemas/assets/vhf-source-chunk.v1.schema.json', null],
+  [
+    'vhf-source-archive-index',
+    'schemas/assets/vhf-source-archive-index.v1.schema.json',
+    null,
+  ],
+  [
+    'vhf-source-region',
+    'schemas/assets/vhf-source-region.v1.schema.json',
+    null,
+  ],
+  [
     'source-archive-record',
     'schemas/assets/source-archive-record.v1.schema.json',
     'authoring/source-archives/visible-human-female.json',
