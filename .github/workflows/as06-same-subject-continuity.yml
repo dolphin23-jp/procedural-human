@@ -9,6 +9,7 @@ on:
       - 'authoring/source-acquisition/as06_upper_extremity_recon.py'
       - 'authoring/source-archives/vhf-whole-body-inventory-20260910.json'
       - 'authoring/source-archives/vhf-source-archive-index-20260910.json'
+      - 'authoring/source-archives/vhf-source-storage-20260910.json'
   workflow_dispatch:
 
 permissions:
@@ -21,9 +22,9 @@ jobs:
     timeout-minutes: 90
     env:
       GH_TOKEN: ${{ github.token }}
-      SOURCE_TAG: source-vhf-png-20260910
       FIRST_SOURCE: avf1300a.png
       LAST_SOURCE: avf1646a.png
+
     steps:
       - uses: actions/checkout@v4
 
@@ -41,7 +42,7 @@ jobs:
       - name: Resolve required verified source chunks
         run: |
           mkdir -p build/source-archive
-          python - <<'PY' > build/required-chunks.tsv
+          python - <<'PY' > build/required-chunks.txt
           import json
           import os
           from pathlib import Path
@@ -57,98 +58,26 @@ jobs:
               raise SystemExit("unexpected source storage inventory snapshot")
           for chunk in needed:
               row=receipts[chunk]
-              print(
+              print("|".join([
                   row["chunk"]["filename"],
                   row["storage"]["url"],
-                  row["chunk"]["byteSize"],
+                  str(row["chunk"]["byteSize"]),
                   row["chunk"]["sha256"],
-                  sep="\t",
-              )
+              ]))
           PY
-          echo "required chunks: $(wc -l < build/required-chunks.tsv)"
-          cut -f1 build/required-chunks.tsv
+          echo "required chunks: $(wc -l < build/required-chunks.txt)"
+          cut -d '|' -f1 build/required-chunks.txt
 
       - name: Download immutable source chunks from recorded storage receipts
         run: |
-          while IFS=
-      - name: Download reviewed bounded ulnar artery anchor
-        run: |
-          mkdir -p build/ulnar-anchor
-          curl --fail --location --silent --show-error \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/10092590748/zip" \
-            -o build/ulnar-anchor.zip
-          test "$(wc -c < build/ulnar-anchor.zip)" = "80834"
-          test "$(sha256sum build/ulnar-anchor.zip | awk '{print $1}')" = "9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75"
-          unzip -q build/ulnar-anchor.zip -d build/ulnar-anchor
-          test -f build/ulnar-anchor/a06-ulnar-continuous-segment-report.v0.json
-
-      - name: Run same-subject proximal continuity reconnaissance
-        run: |
-          python authoring/source-acquisition/as06_upper_extremity_recon.py \
-            --inventory authoring/source-archives/vhf-whole-body-inventory-20260910.json \
-            --archive-index authoring/source-archives/vhf-source-archive-index-20260910.json \
-            --archive-root build/source-archive \
-            --ulnar-report build/ulnar-anchor/a06-ulnar-continuous-segment-report.v0.json \
-            --first "$FIRST_SOURCE" \
-            --last "$LAST_SOURCE" \
-            --output build/as06/as06-upper-extremity-continuity-recon.v0.json
-
-      - name: Validate fail-closed reconnaissance claims
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          report=json.loads(Path("build/as06/as06-upper-extremity-continuity-recon.v0.json").read_text())
-          assert report["schema"] == "ph-as06-upper-extremity-continuity-recon.v1"
-          assert report["task"] == "TASK-AS06"
-          assert report["coordinateSpace"]["kind"] == "source-image-stack"
-          assert report["coordinateSpace"]["patientSpaceClaim"] is False
-          assert report["source"]["firstSourceFilename"] == "avf1300a.png"
-          assert report["source"]["lastSourceFilename"] == "avf1646a.png"
-          assert report["anchorLineage"]["anatomicalId"] == "structure.ulnar_artery.left"
-          assert report["anchorLineage"]["anchorFrameCount"] == 106
-          assert report["claims"]["radialArteryIdentityEstablished"] is False
-          assert report["claims"]["namedSuperficialVeinIdentityEstablished"] is False
-          assert report["claims"]["automaticPromotionAllowed"] is False
-          assert len(report["source"]["verifiedChunkIndices"]) >= 1
-          print(json.dumps({
-              "boneContinuity": report["boneContinuity"],
-              "ulnarArteryRetrogradeContinuity": {
-                  k: report["ulnarArteryRetrogradeContinuity"][k]
-                  for k in (
-                      "earliestContinuouslyTrackedSourceFilename",
-                      "stopReason",
-                      "firstFrameAfterContinuityFailure",
-                      "metrics",
-                  )
-              },
-              "nextSearchReadiness": report["nextSearchReadiness"],
-          },indent=2))
-          PY
-
-      - id: upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: as06-upper-extremity-continuity-recon-v0
-          path: build/as06/
-          compression-level: 9
-          retention-days: 30
-
-      - name: Record artifact identity
-        run: |
-          echo "artifact-id=${{ steps.upload.outputs.artifact-id }}"
-          echo "artifact-digest=${{ steps.upload.outputs.artifact-digest }}"
-\t' read -r asset url byte_size digest; do
+          while IFS='|' read -r asset url byte_size digest; do
             target="build/source-archive/$asset"
             curl --fail --location --silent --show-error \
               -H "Authorization: Bearer $GH_TOKEN" \
               "$url" -o "$target"
             test "$(wc -c < "$target")" = "$byte_size"
             test "$(sha256sum "$target" | awk '{print $1}')" = "$digest"
-          done < build/required-chunks.tsv
+          done < build/required-chunks.txt
 
       - name: Download reviewed bounded ulnar artery anchor
         run: |
@@ -180,6 +109,7 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
+
           report=json.loads(Path("build/as06/as06-upper-extremity-continuity-recon.v0.json").read_text())
           assert report["schema"] == "ph-as06-upper-extremity-continuity-recon.v1"
           assert report["task"] == "TASK-AS06"
@@ -194,7 +124,16 @@ jobs:
           assert report["claims"]["automaticPromotionAllowed"] is False
           assert len(report["source"]["verifiedChunkIndices"]) >= 1
           print(json.dumps({
-              "boneContinuity": report["boneContinuity"],
+              "boneContinuity": {
+                  k: report["boneContinuity"][k]
+                  for k in (
+                      "earliestSupportedSourceFilename",
+                      "supportedASliceCount",
+                      "stopReason",
+                      "firstUnsupportedOrAmbiguousSourceFilename",
+                      "minimumObservedSeparationPixels",
+                  )
+              },
               "ulnarArteryRetrogradeContinuity": {
                   k: report["ulnarArteryRetrogradeContinuity"][k]
                   for k in (
