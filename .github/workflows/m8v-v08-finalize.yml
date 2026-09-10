@@ -1,0 +1,199 @@
+name: M8V V08 finalizer
+
+on:
+  push:
+    branches:
+      - m8v-vessel-identification-evidence
+    paths:
+      - .github/workflows/m8v-v08-finalize.yml
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: m8v-vessel-identification-evidence
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pnpm install --frozen-lockfile
+      - run: python -m pip install --disable-pip-version-check jsonschema==4.25.1
+
+      - name: Harden TASK-V08 receipt semantics
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('authoring/review/m8v_build_evidence_ledger.py')
+          text = path.read_text()
+
+          marker = '\n\n\ndef load(path: Path) -> dict:\n'
+          assert marker in text
+          constants = '''\n\nRADIAL_CLAIM_IDS = set(RADIAL_GATE_IDS.values())\nSUPERFICIAL_TARGET_CLAIM_IDS = set(SUPERFICIAL_GATE_IDS.values()) | {\n    "superficial.structure.observed",\n    "superficial.identity.named-topology",\n    "superficial.identity.named",\n}\nCLAIM_KIND_BY_ID = {\n    "radial.gate.same-subject-anchor": "radial-artery-identity",\n    "radial.gate.continuity": "track-continuity",\n    "radial.gate.branch-topology": "branch-topology",\n    "radial.gate.landmark-relationships": "landmark-relationship",\n    "radial.gate.competitor-resolution": "competitor-resolution",\n    "radial.gate.human-review": "radial-artery-identity",\n    "superficial.gate.direct-extent": "track-continuity",\n    "superficial.gate.continuity": "track-continuity",\n    "superficial.gate.subcutaneous-relationship": "landmark-relationship",\n    "superficial.gate.vein-class": "vessel-class",\n    "superficial.gate.competitor-resolution": "competitor-resolution",\n    "superficial.gate.human-review": "superficial-vein-structure",\n    "superficial.structure.observed": "superficial-vein-structure",\n    "superficial.identity.named-topology": "branch-topology",\n    "superficial.identity.named": "named-superficial-vein-identity",\n}\n'''
+          if 'CLAIM_KIND_BY_ID' not in text:
+              text = text.replace(marker, constants + marker, 1)
+
+          start = text.index('def verify_review_session(')
+          end = text.index('\n\ndef apply_human_reviews', start)
+          verify = '''def verify_review_session(\n    session_path: Path, v07_path: Path, v07: dict, track: dict\n) -> dict:\n    session = load(session_path)\n    if session.get("schema") != "ph-m8v-human-adjudication-session.v1":\n        raise ValueError("unexpected human adjudication session schema")\n    if session.get("task") != "TASK-V08":\n        raise ValueError("unexpected human adjudication task")\n    expected_surface_hash = file_hash(v07_path)\n    review_surface = session.get("reviewSurface", {})\n    if review_surface.get("path") != portable_path(v07_path):\n        raise ValueError("human review references a different TASK-V07 path")\n    if review_surface.get("sha256") != expected_surface_hash:\n        raise ValueError("stale human review: TASK-V07 hash mismatch")\n\n    expected_snapshot = {\n        (row["path"], row["schema"], row["sha256"]) for row in v07["inputEvidence"]\n    }\n    actual_snapshot = {\n        (row["path"], row["schema"], row["sha256"])\n        for row in session.get("evidenceSnapshot", [])\n    }\n    if actual_snapshot != expected_snapshot:\n        raise ValueError("stale human review: evidence snapshot mismatch")\n\n    competitor_sets = {row["id"]: set(row["trackIds"]) for row in track["competitorSets"]}\n    radial_targets = competitor_sets.get("vhf.m8v.competitors.branch-identity")\n    superficial_targets = competitor_sets.get("vhf.m8v.competitors.superficial-structure")\n    if not radial_targets or not superficial_targets:\n        raise ValueError("TASK-V04 competitor sets are missing or empty")\n    if radial_targets & superficial_targets:\n        raise ValueError("TASK-V04 radial and superficial competitor sets overlap")\n\n    first_frame = v07["frameCoverage"]["firstWholeBodyFrameIndex"]\n    last_frame = v07["frameCoverage"]["lastWholeBodyFrameIndex"]\n    per_domain_targets: dict[str, set[str]] = {"radial": set(), "superficial": set()}\n    for decision in session.get("decisions", []):\n        claim_id = decision.get("claimId")\n        if claim_id not in CLAIM_KIND_BY_ID:\n            raise ValueError(f"unknown human adjudication claim: {claim_id}")\n        if decision.get("kind") != CLAIM_KIND_BY_ID[claim_id]:\n            raise ValueError(f"human adjudication kind mismatch for claim: {claim_id}")\n\n        target_id = decision.get("targetId")\n        if claim_id in RADIAL_CLAIM_IDS:\n            if target_id not in radial_targets:\n                raise ValueError(f"radial claim references non-radial competitor track: {target_id}")\n            per_domain_targets["radial"].add(target_id)\n        elif claim_id in SUPERFICIAL_TARGET_CLAIM_IDS:\n            if target_id not in superficial_targets:\n                raise ValueError(\n                    f"superficial claim references non-superficial competitor track: {target_id}"\n                )\n            per_domain_targets["superficial"].add(target_id)\n\n        frames = decision.get("evidenceFrameIndices", [])\n        if decision.get("verdict") == "accepted" and not frames:\n            raise ValueError("accepted human adjudication requires at least one evidence frame")\n        if any(frame < first_frame or frame > last_frame for frame in frames):\n            raise ValueError("human adjudication references a frame outside TASK-V07 coverage")\n\n    for domain, targets in per_domain_targets.items():\n        if len(targets) > 1:\n            raise ValueError(f"human adjudication mixes multiple {domain} target tracks")\n    return session\n'''
+          text = text[:start] + verify + text[end:]
+
+          start = text.index('def apply_human_reviews(')
+          end = text.index('\n\ndef build_ledger', start)
+          apply = '''def apply_human_reviews(claims: list[dict], sessions: list[tuple[Path, dict]]) -> None:\n    by_claim = {claim["id"]: claim for claim in claims}\n    seen: dict[str, tuple[str, str]] = {}\n    for _, session in sessions:\n        for decision in session["decisions"]:\n            claim_id = decision["claimId"]\n            verdict = decision["verdict"]\n            target_id = decision["targetId"]\n            current = (verdict, target_id)\n            previous = seen.get(claim_id)\n            claim = by_claim[claim_id]\n            if previous is not None and previous != current:\n                claim["humanReviewStatus"] = "unresolved"\n                claim["humanReviewTargetId"] = None\n                claim["state"] = "conflicting"\n                claim["validationLevel"] = "V2"\n                claim["conflictingEvidence"].append(\n                    {\n                        "source": "TASK-V08 human adjudication",\n                        "description": "Human adjudication sessions contain conflicting verdicts or target tracks for this claim.",\n                    }\n                )\n                continue\n\n            seen[claim_id] = current\n            claim["humanReviewStatus"] = verdict\n            claim["humanReviewTargetId"] = target_id\n            description = decision.get("note") or f"Human anatomical adjudication verdict: {verdict}."\n            description += f" Target track: {target_id}. Evidence frames: " + ", ".join(\n                str(frame) for frame in decision.get("evidenceFrameIndices", [])\n            )\n            if verdict == "accepted":\n                claim["state"] = "supported"\n                claim["supportingEvidence"].append(\n                    {"source": "TASK-V08 human adjudication", "description": description}\n                )\n                claim["missingEvidence"] = []\n                claim["validationLevel"] = "V2"\n            elif verdict == "rejected":\n                claim["state"] = "conflicting"\n                claim["conflictingEvidence"].append(\n                    {"source": "TASK-V08 human adjudication", "description": description}\n                )\n                claim["validationLevel"] = "V2"\n            else:\n                claim["state"] = "unresolved"\n                claim["conflictingEvidence"].append(\n                    {"source": "TASK-V08 human adjudication", "description": description}\n                )\n                claim["validationLevel"] = "V2"\n'''
+          text = text[:start] + apply + text[end:]
+
+          old = '''    verified_sessions: list[tuple[Path, dict]] = []\n    for review_path in review_paths or []:\n        verified_sessions.append((review_path, verify_review_session(review_path, v07_path, v07)))\n    apply_human_reviews(claims, verified_sessions)\n\n    by_id = {claim["id"]: claim for claim in claims}\n    radial_required = list(RADIAL_GATE_IDS.values())\n    superficial_required = list(SUPERFICIAL_GATE_IDS.values())\n    radial_ready = all(by_id[claim_id]["state"] == "supported" for claim_id in radial_required)\n    superficial_ready = all(\n        by_id[claim_id]["state"] == "supported" for claim_id in superficial_required\n    )\n'''
+          new = '''    for claim in claims:\n        claim.setdefault("humanReviewTargetId", None)\n\n    verified_sessions: list[tuple[Path, dict]] = []\n    for review_path in review_paths or []:\n        verified_sessions.append(\n            (review_path, verify_review_session(review_path, v07_path, v07, track))\n        )\n    apply_human_reviews(claims, verified_sessions)\n\n    by_id = {claim["id"]: claim for claim in claims}\n    radial_required = list(RADIAL_GATE_IDS.values())\n    superficial_required = list(SUPERFICIAL_GATE_IDS.values())\n\n    def accepted_shared_target(claim_ids: list[str]) -> str | None:\n        if not all(\n            by_id[claim_id]["state"] == "supported"\n            and by_id[claim_id]["humanReviewStatus"] == "accepted"\n            for claim_id in claim_ids\n        ):\n            return None\n        targets = {by_id[claim_id]["humanReviewTargetId"] for claim_id in claim_ids}\n        if len(targets) != 1 or None in targets:\n            return None\n        return next(iter(targets))\n\n    radial_target = accepted_shared_target(radial_required)\n    superficial_target = accepted_shared_target(superficial_required)\n    radial_ready = radial_target is not None\n    superficial_ready = superficial_target is not None\n'''
+          assert old in text
+          text = text.replace(old, new, 1)
+
+          old = '''    if superficial_ready:\n        structure_claim["state"] = "supported"\n        structure_claim["missingEvidence"] = []\n        structure_claim["supportingEvidence"].append(\n'''
+          new = '''    if superficial_ready:\n        structure_claim["state"] = "supported"\n        structure_claim["humanReviewTargetId"] = superficial_target\n        structure_claim["missingEvidence"] = []\n        structure_claim["supportingEvidence"].append(\n'''
+          assert old in text
+          text = text.replace(old, new, 1)
+
+          old = '''    named_topology = by_id["superficial.identity.named-topology"]["state"] == "supported"\n    named_identity_review = (\n        by_id["superficial.identity.named"]["humanReviewStatus"] == "accepted"\n    )\n    named_ready = superficial_ready and named_topology and named_identity_review\n'''
+          new = '''    named_topology_claim = by_id["superficial.identity.named-topology"]\n    named_identity_claim = by_id["superficial.identity.named"]\n    named_topology = (\n        named_topology_claim["state"] == "supported"\n        and named_topology_claim["humanReviewStatus"] == "accepted"\n        and named_topology_claim["humanReviewTargetId"] == superficial_target\n    )\n    named_identity_review = (\n        named_identity_claim["humanReviewStatus"] == "accepted"\n        and named_identity_claim["humanReviewTargetId"] == superficial_target\n    )\n    named_ready = superficial_ready and named_topology and named_identity_review\n'''
+          assert old in text
+          text = text.replace(old, new, 1)
+          path.write_text(text)
+
+          schema_path = Path('schemas/assets/m8v-evidence-ledger.v1.schema.json')
+          schema = schema_path.read_text()
+          required_anchor = '        "humanReviewStatus",\n        "validationLevel",\n'
+          assert required_anchor in schema
+          schema = schema.replace(\n              required_anchor,\n              '        "humanReviewStatus",\n        "humanReviewTargetId",\n        "validationLevel",\n',\n              1,\n          )
+          property_anchor = '        "humanReviewStatus": { "enum": ["not-reviewed", "accepted", "rejected", "unresolved"] },\n        "validationLevel":'
+          assert property_anchor in schema
+          schema = schema.replace(\n              property_anchor,\n              '        "humanReviewStatus": { "enum": ["not-reviewed", "accepted", "rejected", "unresolved"] },\n        "humanReviewTargetId": { "type": ["string", "null"], "minLength": 1 },\n        "validationLevel":',\n              1,\n          )
+          schema_path.write_text(schema)
+          PY
+
+      - name: Extend TASK-V08 tests
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('authoring/source-acquisition/tests/test_m8v_evidence_ledger.py')
+          text = path.read_text()
+          text = text.replace(\n              '"targetId": "structure.radial_artery.left",',\n              '"targetId": "vhf.m8v.branch-anonymous.01",',\n          )
+          anchor = '''    def test_accepted_review_requires_evidence_frame(self) -> None:\n        session = valid_session()\n        session["decisions"][0]["evidenceFrameIndices"] = []\n        with tempfile.TemporaryDirectory() as temp:\n            path = Path(temp) / "review.json"\n            path.write_text(json.dumps(session))\n            with self.assertRaisesRegex(ValueError, "requires at least one evidence frame"):\n                build([path])\n'''
+          assert anchor in text
+          extra = anchor + '''\n    def test_unknown_claim_is_rejected(self) -> None:\n        session = valid_session("radial.unknown")\n        with tempfile.TemporaryDirectory() as temp:\n            path = Path(temp) / "review.json"\n            path.write_text(json.dumps(session))\n            with self.assertRaisesRegex(ValueError, "unknown human adjudication claim"):\n                build([path])\n\n    def test_radial_claim_cannot_target_superficial_track(self) -> None:\n        session = valid_session()\n        session["decisions"][0]["targetId"] = "vhf.m8v.superficial-anonymous.01"\n        with tempfile.TemporaryDirectory() as temp:\n            path = Path(temp) / "review.json"\n            path.write_text(json.dumps(session))\n            with self.assertRaisesRegex(ValueError, "non-radial competitor track"):\n                build([path])\n\n    def test_review_frame_outside_v07_coverage_is_rejected(self) -> None:\n        session = valid_session()\n        session["decisions"][0]["evidenceFrameIndices"] = [999999]\n        with tempfile.TemporaryDirectory() as temp:\n            path = Path(temp) / "review.json"\n            path.write_text(json.dumps(session))\n            with self.assertRaisesRegex(ValueError, "outside TASK-V07 coverage"):\n                build([path])\n'''
+          text = text.replace(anchor, extra, 1)
+          path.write_text(text)
+          PY
+
+      - name: Build initial fail-closed TASK-V08 ledger
+        run: |
+          python authoring/review/m8v_build_evidence_ledger.py \
+            --radial authoring/outputs/m8v-v05-radial-artery-identity-evidence-20260911.json \
+            --superficial authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json \
+            --review-surface authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json \
+            --tracks authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json \
+            --landmarks authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json \
+            --recorded-at 2026-09-11 \
+            --output authoring/outputs/m8v-v08-evidence-ledger-20260911.json
+
+      - name: Wire TASK-V08 into validation and Pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          validator_path = Path('tools/validate-schemas.mjs')
+          text = validator_path.read_text()
+          anchor = '''  [\n    'm8v-multimodal-review-surface',\n    'schemas/assets/m8v-multimodal-review-surface.v1.schema.json',\n    'authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json',\n  ],\n'''
+          assert anchor in text
+          addition = anchor + '''  [\n    'm8v-human-adjudication-session',\n    'schemas/assets/m8v-human-adjudication-session.v1.schema.json',\n    null,\n  ],\n  [\n    'm8v-evidence-ledger',\n    'schemas/assets/m8v-evidence-ledger.v1.schema.json',\n    'authoring/outputs/m8v-v08-evidence-ledger-20260911.json',\n  ],\n'''
+          if "'m8v-evidence-ledger'" not in text:
+              text = text.replace(anchor, addition, 1)
+          validator_path.write_text(text)
+
+          pages_path = Path('.github/workflows/pages.yml')
+          text = pages_path.read_text()
+          anchor = '''      - id: a06-review\n        name: Build transient TASK-A06 human-review data\n'''
+          assert anchor in text
+          addition = '''      - name: Publish TASK-V08 fail-closed evidence ledger\n        run: |\n          test -f authoring/outputs/m8v-v08-evidence-ledger-20260911.json\n          mkdir -p apps/web/dist/m8v-review-data\n          cp authoring/outputs/m8v-v08-evidence-ledger-20260911.json \\\n            apps/web/dist/m8v-review-data/evidence-ledger.json\n\n'''
+          if 'Publish TASK-V08 fail-closed evidence ledger' not in text:
+              text = text.replace(anchor, addition + anchor, 1)
+          pages_path.write_text(text)
+          PY
+
+      - name: Format TASK-V08 web and contracts
+        run: |
+          pnpm exec prettier --write \
+            apps/web/src/M8VAdjudication.tsx \
+            schemas/assets/m8v-human-adjudication-session.v1.schema.json \
+            schemas/assets/m8v-evidence-ledger.v1.schema.json \
+            authoring/outputs/m8v-v08-evidence-ledger-20260911.json \
+            tools/validate-schemas.mjs \
+            .github/workflows/pages.yml
+
+      - name: Verify TASK-V08
+        run: |
+          python authoring/source-acquisition/tests/test_m8v_evidence_ledger.py
+          pnpm schema:validate
+          pnpm --filter @procedural-human/web typecheck
+          pnpm --filter @procedural-human/web build
+          pnpm exec prettier --check \
+            apps/web/src/M8VAdjudication.tsx \
+            schemas/assets/m8v-human-adjudication-session.v1.schema.json \
+            schemas/assets/m8v-evidence-ledger.v1.schema.json \
+            authoring/outputs/m8v-v08-evidence-ledger-20260911.json \
+            tools/validate-schemas.mjs \
+            .github/workflows/pages.yml
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          record = json.loads(Path('authoring/outputs/m8v-v08-evidence-ledger-20260911.json').read_text())
+          assert len(record['claims']) == 15
+          assert all(claim['humanReviewStatus'] == 'not-reviewed' for claim in record['claims'])
+          assert all(claim['humanReviewTargetId'] is None for claim in record['claims'])
+          assert record['humanReviewSessions'] == []
+          assert record['decision'] == {
+              'ledgerState': 'blocked-unresolved',
+              'humanAdjudicationEvidencePresent': False,
+              'radialPromotionReady': False,
+              'superficialStructurePromotionReady': False,
+              'namedSuperficialPromotionReady': False,
+              'nextTask': 'TASK-V09',
+          }
+          assert record['assertions'] == {
+              'medicalValidation': False,
+              'patientSpaceGeometry': False,
+              'procedureRoleEstablished': False,
+              'automaticPromotionAllowed': False,
+          }
+          PY
+
+      - name: Commit TASK-V08 finalization
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            authoring/review/m8v_build_evidence_ledger.py \
+            authoring/source-acquisition/tests/test_m8v_evidence_ledger.py \
+            apps/web/src/M8VAdjudication.tsx \
+            schemas/assets/m8v-human-adjudication-session.v1.schema.json \
+            schemas/assets/m8v-evidence-ledger.v1.schema.json \
+            authoring/outputs/m8v-v08-evidence-ledger-20260911.json \
+            tools/validate-schemas.mjs \
+            .github/workflows/pages.yml
+          git commit -m "TASK-V08: finalize fail-closed evidence ledger"
+          git push origin HEAD:m8v-vessel-identification-evidence
