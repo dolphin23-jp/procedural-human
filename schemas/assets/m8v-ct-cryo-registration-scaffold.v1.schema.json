@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/m8v-ct-cryo-registration-scaffold/v1",
+  "title": "M8V CT-Cryosection Registration Scaffold v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "status",
+    "sourceEvidence",
+    "landmarkPolicy",
+    "support",
+    "transform",
+    "residualEvidence",
+    "decision",
+    "claims"
+  ],
+  "properties": {
+    "schema": { "const": "ph-m8v-ct-cryo-registration-scaffold.v1" },
+    "schemaVersion": { "const": "1" },
+    "task": { "const": "TASK-V02" },
+    "recordedAt": { "type": "string", "minLength": 1 },
+    "status": { "const": "complete" },
+    "sourceEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["boneCandidateReport", "boneProvenance", "sameCadaverCt", "persistedA06Output"],
+      "properties": {
+        "boneCandidateReport": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["schema", "sourceClass", "validationLevel"],
+          "properties": {
+            "schema": { "const": "ph-a06-multimodality-bone-candidate-report.v1" },
+            "sourceClass": { "const": "same-subject-cadaver-derived-plus-radiological" },
+            "validationLevel": { "const": "V0" }
+          }
+        },
+        "boneProvenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "gitBlobSha"],
+          "properties": {
+            "path": { "type": "string", "minLength": 1 },
+            "gitBlobSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+          }
+        },
+        "sameCadaverCt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["archiveSha256", "archiveByteSize", "persistentProvider", "persistentFileId", "readBackVerified"],
+          "properties": {
+            "archiveSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "archiveByteSize": { "type": "integer", "minimum": 1 },
+            "persistentProvider": { "const": "Google Drive" },
+            "persistentFileId": { "type": "string", "minLength": 1 },
+            "readBackVerified": { "const": true }
+          }
+        },
+        "persistedA06Output": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["archiveSha256", "archiveByteSize", "persistentProvider", "persistentFileId", "readBackVerified"],
+          "properties": {
+            "archiveSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "archiveByteSize": { "type": "integer", "minimum": 1 },
+            "persistentProvider": { "const": "Google Drive" },
+            "persistentFileId": { "type": "string", "minLength": 1 },
+            "readBackVerified": { "const": true }
+          }
+        }
+      }
+    },
+    "landmarkPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["landmarks", "vesselLandmarksUsed", "selfConfirmingVesselEvidenceAllowed"],
+      "properties": {
+        "landmarks": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "structure.radius.left" },
+            { "const": "structure.ulna.left" }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "vesselLandmarksUsed": { "const": false },
+        "selfConfirmingVesselEvidenceAllowed": { "const": false }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nominalIndexStart",
+        "nominalIndexStop",
+        "firstSourceFilename",
+        "lastSourceFilename",
+        "supportedCryosectionFrameCount",
+        "fitLandmarkObservationCount",
+        "outsideSupportDisposition"
+      ],
+      "properties": {
+        "nominalIndexStart": { "type": "integer" },
+        "nominalIndexStop": { "type": "integer" },
+        "firstSourceFilename": { "type": "string", "minLength": 1 },
+        "lastSourceFilename": { "type": "string", "minLength": 1 },
+        "supportedCryosectionFrameCount": { "type": "integer", "minimum": 1 },
+        "fitLandmarkObservationCount": { "type": "integer", "minimum": 6 },
+        "outsideSupportDisposition": { "const": "unknown-not-registered-by-this-scaffold" }
+      }
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "from", "to", "matrix3x2", "patientSpaceTransform"],
+      "properties": {
+        "model": { "const": "least-squares-affine-2d" },
+        "from": { "const": "ct-source-pixels" },
+        "to": { "const": "cryosection-crop-source-pixels" },
+        "matrix3x2": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": { "type": "number" }
+          }
+        },
+        "patientSpaceTransform": { "const": false }
+      }
+    },
+    "residualEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directMeanPixels",
+        "directMedianPixels",
+        "swappedMeanPixels",
+        "swappedMedianPixels",
+        "directToSwappedMeanRatio",
+        "predeclaredPreferenceThreshold",
+        "directAssignmentClearlyPreferred"
+      ],
+      "properties": {
+        "directMeanPixels": { "type": "number", "minimum": 0 },
+        "directMedianPixels": { "type": "number", "minimum": 0 },
+        "swappedMeanPixels": { "type": "number", "exclusiveMinimum": 0 },
+        "swappedMedianPixels": { "type": "number", "minimum": 0 },
+        "directToSwappedMeanRatio": { "type": "number", "minimum": 0 },
+        "predeclaredPreferenceThreshold": { "const": 0.35 },
+        "directAssignmentClearlyPreferred": { "const": true }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registrationState", "identityCorrespondence", "usableFor", "notUsableFor", "nextTask"],
+      "properties": {
+        "registrationState": { "const": "bounded-bone-landmark-scaffold" },
+        "identityCorrespondence": { "const": "direct-radius-ulna-correspondence-supported" },
+        "usableFor": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "enum": [
+              "landmark-constrained-same-subject-inspection",
+              "candidate-vessel-evidence-support",
+              "registration-method-development"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "notUsableFor": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "enum": [
+              "patient-space",
+              "vessel-identity-by-itself",
+              "medical-validation",
+              "automatic-medical-master-promotion",
+              "whole-body-registration-claim"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "nextTask": { "const": "TASK-V03" }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sameSubject",
+        "boneOnlyRegistrationLandmarks",
+        "boundedRegistrationScaffoldEstablished",
+        "ctCryosectionMedicalRegistrationEstablished",
+        "patientSpaceGeometry",
+        "radialArteryIdentityEstablished",
+        "superficialVeinIdentityEstablished",
+        "medicalValidation",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "sameSubject": { "const": true },
+        "boneOnlyRegistrationLandmarks": { "const": true },
+        "boundedRegistrationScaffoldEstablished": { "const": true },
+        "ctCryosectionMedicalRegistrationEstablished": { "const": false },
+        "patientSpaceGeometry": { "const": false },
+        "radialArteryIdentityEstablished": { "const": false },
+        "superficialVeinIdentityEstablished": { "const": false },
+        "medicalValidation": { "const": false },
+        "automaticPromotionAllowed": { "const": false }
+      }
+    }
+  }
+}
