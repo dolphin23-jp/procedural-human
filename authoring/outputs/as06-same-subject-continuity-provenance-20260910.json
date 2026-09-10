@@ -1,0 +1,262 @@
+{
+  "schema": "ph-as06-same-subject-continuity-provenance.v1",
+  "schemaVersion": "1",
+  "task": "TASK-AS06",
+  "recordedAt": "2026-09-10",
+  "coordinateSpace": {
+    "kind": "source-image-stack",
+    "patientSpaceClaim": false
+  },
+  "source": {
+    "inventorySha256": "sha256:268a6896b333cf9f1c77d7cf4f97bc838088666385c4a6cec0d36da1129a85d5",
+    "firstSourceFilename": "avf1490a.png",
+    "lastSourceFilename": "avf1646a.png",
+    "verifiedChunkIndices": [22, 23, 24, 25, 26, 27, 28, 29, 30]
+  },
+  "execution": {
+    "workflowRunId": 34452645467,
+    "sourceCommitSha": "dc8b5cd3b9241ab82df69c93b69a6fcaf84afadf",
+    "artifactId": 10142345368,
+    "artifactName": "as06-same-subject-continuity-v0",
+    "artifactArchiveByteSize": 46312,
+    "artifactArchiveSha256": "sha256:e3cf86361d4d6f4077f42366989c01406e500653366bd96db93fd5a3a8be2e38",
+    "phaseReports": [
+      "as06-upper-extremity-continuity-recon.v0.json",
+      "as06-branch-superficial-recon.v0.json"
+    ]
+  },
+  "reviewedUlnarAnchor": {
+    "anatomicalId": "structure.ulnar_artery.left",
+    "anchorArtifactId": 10092590748,
+    "anchorArchiveByteSize": 80834,
+    "anchorArchiveSha256": "sha256:9eadd9a355ebee59eb5dbe59fa0540a227291951f80a9190d4c5f5a5981a7d75",
+    "anchorFrameCount": 106
+  },
+  "phase1": {
+    "boneContinuity": {
+      "earliestSupportedSourceFilename": "avf1546a.png",
+      "supportedASliceCount": 22,
+      "stopReason": "radius-ulna-components-converged-or-ambiguous",
+      "firstUnsupportedOrAmbiguousSourceFilename": "avf1545a.png",
+      "minimumObservedSeparationPixels": 37.952087258046454
+    },
+    "ulnarBridgeSearch": {
+      "bridgeStartSourceFilename": "avf1605b.png",
+      "targetBoneTransitionSourceFilename": "avf1546a.png",
+      "lastObservedSourceFilename": "avf1497c.png",
+      "reachedBoneTransitionTarget": true,
+      "sameSubjectContinuitySupportedToBoneTransition": true,
+      "observedNodeCount": 313,
+      "spanFromBridgeStartFrameCount": 324,
+      "coverageFractionExcludingBridgeStart": 0.9690402476780186,
+      "maxObservedGapFrames": 3,
+      "medianCircularity": 1.1321312304252382,
+      "medianContrast": 31.87612533569336,
+      "meanJumpPerFramePixels": 2.5299839727094606,
+      "maxJumpPerFramePixels": 19.805994886022805
+    },
+    "bifurcationSearchAuthorized": true
+  },
+  "phase2": {
+    "arterialBranchTopologySearch": {
+      "anonymousTrackCount": 8,
+      "topologyCandidateCount": 0,
+      "topTracks": [
+        {
+          "rank": 1,
+          "nodeCount": 89,
+          "spanFrameCount": 114,
+          "coverageFraction": 0.7807017543859649,
+          "maxGapFrames": 4,
+          "meanJumpPerFramePixels": 1.4856876449364833,
+          "medianCircularity": 1.371610920619679,
+          "medianContrast": 30.601585388183594,
+          "firstWholeBodyFrameIndex": 1611,
+          "lastWholeBodyFrameIndex": 1724,
+          "classification": "anonymous-vessel-like-track-only",
+          "distanceToUlnar": {
+            "overlapFrameCount": 89,
+            "minimumPixels": 17.640728687953118,
+            "proximalThirdMedianPixels": 40.2320437827707,
+            "distalThirdMedianPixels": 86.26832842820075
+          }
+        },
+        {
+          "rank": 2,
+          "nodeCount": 65,
+          "spanFrameCount": 85,
+          "coverageFraction": 0.7647058823529411,
+          "maxGapFrames": 4,
+          "meanJumpPerFramePixels": 2.577809457024318,
+          "medianCircularity": 0.6899354778812428,
+          "medianContrast": 16.85784912109375,
+          "firstWholeBodyFrameIndex": 1611,
+          "lastWholeBodyFrameIndex": 1695,
+          "classification": "anonymous-vessel-like-track-only",
+          "distanceToUlnar": {
+            "overlapFrameCount": 65,
+            "minimumPixels": 77.62518762029762,
+            "proximalThirdMedianPixels": 86.88646859900295,
+            "distalThirdMedianPixels": 100.01851958907268
+          }
+        },
+        {
+          "rank": 3,
+          "nodeCount": 75,
+          "spanFrameCount": 105,
+          "coverageFraction": 0.7142857142857143,
+          "maxGapFrames": 4,
+          "meanJumpPerFramePixels": 2.2656107075947562,
+          "medianCircularity": 0.5086392006422336,
+          "medianContrast": 15.331851959228516,
+          "firstWholeBodyFrameIndex": 1612,
+          "lastWholeBodyFrameIndex": 1716,
+          "classification": "anonymous-vessel-like-track-only",
+          "distanceToUlnar": {
+            "overlapFrameCount": 75,
+            "minimumPixels": 37.62398485156924,
+            "proximalThirdMedianPixels": 61.51671066962192,
+            "distalThirdMedianPixels": 94.43469153460863
+          }
+        },
+        {
+          "rank": 4,
+          "nodeCount": 59,
+          "spanFrameCount": 77,
+          "coverageFraction": 0.7662337662337663,
+          "maxGapFrames": 3,
+          "meanJumpPerFramePixels": 2.4043213355445907,
+          "medianCircularity": 0.38147940362462684,
+          "medianContrast": 13.033485412597656,
+          "firstWholeBodyFrameIndex": 1611,
+          "lastWholeBodyFrameIndex": 1687,
+          "classification": "anonymous-vessel-like-track-only",
+          "distanceToUlnar": {
+            "overlapFrameCount": 59,
+            "minimumPixels": 41.095063246242674,
+            "proximalThirdMedianPixels": 53.88027366085976,
+            "distalThirdMedianPixels": 54.16565964816741
+          }
+        },
+        {
+          "rank": 5,
+          "nodeCount": 53,
+          "spanFrameCount": 73,
+          "coverageFraction": 0.726027397260274,
+          "maxGapFrames": 4,
+          "meanJumpPerFramePixels": 2.1018980895956885,
+          "medianCircularity": 0.34936656908709174,
+          "medianContrast": 11.580692291259766,
+          "firstWholeBodyFrameIndex": 1615,
+          "lastWholeBodyFrameIndex": 1687,
+          "classification": "anonymous-vessel-like-track-only",
+          "distanceToUlnar": {
+            "overlapFrameCount": 53,
+            "minimumPixels": 19.339151848370623,
+            "proximalThirdMedianPixels": 50.87288048309243,
+            "distalThirdMedianPixels": 34.90318147810429
+          }
+        }
+      ],
+      "status": "unresolved-after-same-subject-branch-topology-search",
+      "reason": "No anonymous same-subject track met the fixed distinct-distal/proximal-convergence gate; radial/brachial identity remains unresolved."
+    },
+    "superficialVenousSearch": {
+      "anonymousTrackCount": 8,
+      "continuousAnonymousCandidateCount": 0,
+      "topTracks": [
+        {
+          "rank": 1,
+          "nodeCount": 6,
+          "spanFrameCount": 9,
+          "coverageFraction": 0.6666666666666666,
+          "maxGapFrames": 4,
+          "meanJumpPerFramePixels": 2.837186286056486,
+          "medianCircularity": 0.6580483225177243,
+          "medianContrast": 19.93055534362793,
+          "firstWholeBodyFrameIndex": 1766,
+          "lastWholeBodyFrameIndex": 1774,
+          "classification": "anonymous-superficial-diagnostic-track",
+          "medianDepthPixels": 6.344574928283691
+        },
+        {
+          "rank": 2,
+          "nodeCount": 5,
+          "spanFrameCount": 10,
+          "coverageFraction": 0.5,
+          "maxGapFrames": 4,
+          "meanJumpPerFramePixels": 1.9265146186566686,
+          "medianCircularity": 0.6380493753606353,
+          "medianContrast": 20.080482482910156,
+          "firstWholeBodyFrameIndex": 1601,
+          "lastWholeBodyFrameIndex": 1610,
+          "classification": "anonymous-superficial-diagnostic-track",
+          "medianDepthPixels": 5.196899890899658
+        },
+        {
+          "rank": 3,
+          "nodeCount": 3,
+          "spanFrameCount": 3,
+          "coverageFraction": 1.0,
+          "maxGapFrames": 1,
+          "meanJumpPerFramePixels": 1.9570881002603229,
+          "medianCircularity": 0.7480139018846566,
+          "medianContrast": 14.667667388916016,
+          "firstWholeBodyFrameIndex": 1782,
+          "lastWholeBodyFrameIndex": 1784,
+          "classification": "anonymous-superficial-diagnostic-track",
+          "medianDepthPixels": 6.393799781799316
+        },
+        {
+          "rank": 4,
+          "nodeCount": 4,
+          "spanFrameCount": 5,
+          "coverageFraction": 0.8,
+          "maxGapFrames": 2,
+          "meanJumpPerFramePixels": 2.998497503075226,
+          "medianCircularity": 0.4341451739626053,
+          "medianContrast": 12.680950164794922,
+          "firstWholeBodyFrameIndex": 1593,
+          "lastWholeBodyFrameIndex": 1597,
+          "classification": "anonymous-superficial-diagnostic-track",
+          "medianDepthPixels": 6.849999904632568
+        },
+        {
+          "rank": 5,
+          "nodeCount": 4,
+          "spanFrameCount": 7,
+          "coverageFraction": 0.5714285714285714,
+          "maxGapFrames": 3,
+          "meanJumpPerFramePixels": 1.1972799170736057,
+          "medianCircularity": 0.4666479108566534,
+          "medianContrast": 14.148706436157227,
+          "firstWholeBodyFrameIndex": 1761,
+          "lastWholeBodyFrameIndex": 1767,
+          "classification": "anonymous-superficial-diagnostic-track",
+          "medianDepthPixels": 6.0953497886657715
+        }
+      ],
+      "status": "unresolved-after-wider-same-subject-superficial-search",
+      "reason": "The wider proximal same-subject search did not produce a track meeting fixed superficial continuity gates."
+    }
+  },
+  "disposition": {
+    "status": "complete-unresolved-with-stronger-same-subject-evidence",
+    "radialArteryIdentity": "unresolved",
+    "superficialVeinIdentity": "unresolved",
+    "feedForwardToAS07Allowed": true,
+    "automaticMedicalMasterPromotionAllowed": false,
+    "basis": "AS06 includes same-subject proximal bone continuity, extension of the human-reviewed ulnar anchor across the radius/ulna pair-support transition, an anonymous branch-topology search, and a wider anonymous superficial-vessel search. Neither missing named identity met the predeclared promotion gates, so both remain fail-closed."
+  },
+  "claims": {
+    "radialArteryIdentityEstablished": false,
+    "brachialArteryIdentityEstablished": false,
+    "bifurcationIdentityEstablished": false,
+    "namedSuperficialVeinIdentityEstablished": false,
+    "crossSubjectAtlasGeometryPromoted": false,
+    "procedureRoleUsedAsAnatomicalIdentity": false,
+    "medicalValidation": false,
+    "patientSpaceGeometry": false,
+    "automaticPromotionAllowed": false
+  }
+}

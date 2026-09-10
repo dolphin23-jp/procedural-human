@@ -438,6 +438,7 @@ Requirements:
 Done: an author can inspect continuity across long anatomical extents without repeated one-off downloads.
 
 ## TASK-AS06 — Same-subject upper-extremity vascular continuity tracing
+Status: complete — same-subject ulnar continuity reaches the proximal radius/ulna transition, while fixed-gate branch-topology and wider superficial-vessel searches leave radial/brachial/bifurcation and named superficial-vein identities explicitly unresolved; see `authoring/outputs/as06-same-subject-continuity-provenance-20260910.json`. Feed-forward to AS07 is allowed, but automatic Medical Master promotion remains prohibited.
 Use the full-body source foundation to establish vascular identity from defensible same-subject anchors.
 
 Priority arterial path:

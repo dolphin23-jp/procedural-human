@@ -84,7 +84,6 @@ class TaskA10Tests(unittest.TestCase):
         ):
             require_medical_master_ready(readiness)
 
-
     def test_reviewed_a06_still_fails_closed_for_missing_vessels(self) -> None:
         import json
 
@@ -100,7 +99,7 @@ class TaskA10Tests(unittest.TestCase):
             (
                 repo_root
                 / "authoring/semantic/"
-                "a07-semantic-structure-mapping-20260909.json"
+                "a07-semantic-structure-mapping-20260910.json"
             ).read_text()
         )
         centerlines = json.loads(
@@ -117,6 +116,13 @@ class TaskA10Tests(unittest.TestCase):
                 "a09-boundary-lumen-authoring-report-20260910.json"
             ).read_text()
         )
+        as06 = json.loads(
+            (
+                repo_root
+                / "authoring/outputs/"
+                "as06-same-subject-continuity-provenance-20260910.json"
+            ).read_text()
+        )
 
         readiness = evaluate_medical_master_readiness(
             recorded_at="2026-09-10",
@@ -126,6 +132,14 @@ class TaskA10Tests(unittest.TestCase):
             boundary_lumen_report=boundaries,
         )
 
+        self.assertEqual(
+            as06["disposition"]["status"],
+            "complete-unresolved-with-stronger-same-subject-evidence",
+        )
+        self.assertTrue(as06["disposition"]["feedForwardToAS07Allowed"])
+        self.assertFalse(
+            as06["disposition"]["automaticMedicalMasterPromotionAllowed"]
+        )
         self.assertEqual(readiness["status"], "blocked")
         joined = "\n".join(readiness["blockers"])
         self.assertNotIn(
