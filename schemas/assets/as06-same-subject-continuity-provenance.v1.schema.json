@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/as06-same-subject-continuity-provenance/v1",
+  "title": "AS06 Same-Subject Continuity Provenance v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "coordinateSpace",
+    "source",
+    "execution",
+    "reviewedUlnarAnchor",
+    "phase1",
+    "phase2",
+    "disposition",
+    "claims"
+  ],
+  "properties": {
+    "schema": { "const": "ph-as06-same-subject-continuity-provenance.v1" },
+    "schemaVersion": { "const": "1" },
+    "task": { "const": "TASK-AS06" },
+    "recordedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "coordinateSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "patientSpaceClaim"],
+      "properties": {
+        "kind": { "const": "source-image-stack" },
+        "patientSpaceClaim": { "const": false }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inventorySha256", "firstSourceFilename", "lastSourceFilename", "verifiedChunkIndices"],
+      "properties": {
+        "inventorySha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "firstSourceFilename": { "const": "avf1490a.png" },
+        "lastSourceFilename": { "const": "avf1646a.png" },
+        "verifiedChunkIndices": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workflowRunId",
+        "sourceCommitSha",
+        "artifactId",
+        "artifactName",
+        "artifactArchiveByteSize",
+        "artifactArchiveSha256",
+        "phaseReports"
+      ],
+      "properties": {
+        "workflowRunId": { "type": "integer", "minimum": 1 },
+        "sourceCommitSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "artifactId": { "type": "integer", "minimum": 1 },
+        "artifactName": { "type": "string", "minLength": 1 },
+        "artifactArchiveByteSize": { "type": "integer", "minimum": 1 },
+        "artifactArchiveSha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "phaseReports": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "reviewedUlnarAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anatomicalId", "anchorArtifactId", "anchorArchiveByteSize", "anchorArchiveSha256", "anchorFrameCount"],
+      "properties": {
+        "anatomicalId": { "const": "structure.ulnar_artery.left" },
+        "anchorArtifactId": { "type": "integer", "minimum": 1 },
+        "anchorArchiveByteSize": { "type": "integer", "minimum": 1 },
+        "anchorArchiveSha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "anchorFrameCount": { "const": 106 }
+      }
+    },
+    "phase1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["boneContinuity", "ulnarBridgeSearch", "bifurcationSearchAuthorized"],
+      "properties": {
+        "boneContinuity": { "$ref": "#/$defs/boneContinuity" },
+        "ulnarBridgeSearch": { "$ref": "#/$defs/ulnarBridgeSearch" },
+        "bifurcationSearchAuthorized": { "const": true }
+      }
+    },
+    "phase2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arterialBranchTopologySearch", "superficialVenousSearch"],
+      "properties": {
+        "arterialBranchTopologySearch": { "$ref": "#/$defs/arterialSearch" },
+        "superficialVenousSearch": { "$ref": "#/$defs/superficialSearch" }
+      }
+    },
+    "disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "radialArteryIdentity", "superficialVeinIdentity", "feedForwardToAS07Allowed", "automaticMedicalMasterPromotionAllowed", "basis"],
+      "properties": {
+        "status": { "const": "complete-unresolved-with-stronger-same-subject-evidence" },
+        "radialArteryIdentity": { "const": "unresolved" },
+        "superficialVeinIdentity": { "const": "unresolved" },
+        "feedForwardToAS07Allowed": { "const": true },
+        "automaticMedicalMasterPromotionAllowed": { "const": false },
+        "basis": { "type": "string", "minLength": 1 }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "radialArteryIdentityEstablished",
+        "brachialArteryIdentityEstablished",
+        "bifurcationIdentityEstablished",
+        "namedSuperficialVeinIdentityEstablished",
+        "crossSubjectAtlasGeometryPromoted",
+        "procedureRoleUsedAsAnatomicalIdentity",
+        "medicalValidation",
+        "patientSpaceGeometry",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "radialArteryIdentityEstablished": { "const": false },
+        "brachialArteryIdentityEstablished": { "const": false },
+        "bifurcationIdentityEstablished": { "const": false },
+        "namedSuperficialVeinIdentityEstablished": { "const": false },
+        "crossSubjectAtlasGeometryPromoted": { "const": false },
+        "procedureRoleUsedAsAnatomicalIdentity": { "const": false },
+        "medicalValidation": { "const": false },
+        "patientSpaceGeometry": { "const": false },
+        "automaticPromotionAllowed": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "trackSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rank", "nodeCount", "spanFrameCount", "coverageFraction", "maxGapFrames", "meanJumpPerFramePixels", "medianCircularity", "medianContrast", "firstWholeBodyFrameIndex", "lastWholeBodyFrameIndex", "classification"],
+      "properties": {
+        "rank": { "type": "integer", "minimum": 1 },
+        "nodeCount": { "type": "integer", "minimum": 0 },
+        "spanFrameCount": { "type": "integer", "minimum": 0 },
+        "coverageFraction": { "type": "number", "minimum": 0, "maximum": 1 },
+        "maxGapFrames": { "type": "integer", "minimum": 0 },
+        "meanJumpPerFramePixels": { "type": "number", "minimum": 0 },
+        "medianCircularity": { "type": "number", "minimum": 0 },
+        "medianContrast": { "type": "number" },
+        "firstWholeBodyFrameIndex": { "type": "integer", "minimum": 0 },
+        "lastWholeBodyFrameIndex": { "type": "integer", "minimum": 0 },
+        "classification": { "type": "string", "minLength": 1 },
+        "medianDepthPixels": { "type": "number", "minimum": 0 },
+        "distanceToUlnar": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["overlapFrameCount", "minimumPixels", "proximalThirdMedianPixels", "distalThirdMedianPixels"],
+          "properties": {
+            "overlapFrameCount": { "type": "integer", "minimum": 0 },
+            "minimumPixels": { "type": "number", "minimum": 0 },
+            "proximalThirdMedianPixels": { "type": "number", "minimum": 0 },
+            "distalThirdMedianPixels": { "type": "number", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "boneContinuity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["earliestSupportedSourceFilename", "supportedASliceCount", "stopReason", "firstUnsupportedOrAmbiguousSourceFilename", "minimumObservedSeparationPixels"],
+      "properties": {
+        "earliestSupportedSourceFilename": { "type": "string", "minLength": 1 },
+        "supportedASliceCount": { "type": "integer", "minimum": 0 },
+        "stopReason": { "type": "string", "minLength": 1 },
+        "firstUnsupportedOrAmbiguousSourceFilename": { "type": "string", "minLength": 1 },
+        "minimumObservedSeparationPixels": { "type": "number", "minimum": 0 }
+      }
+    },
+    "ulnarBridgeSearch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bridgeStartSourceFilename", "targetBoneTransitionSourceFilename", "lastObservedSourceFilename", "reachedBoneTransitionTarget", "sameSubjectContinuitySupportedToBoneTransition", "observedNodeCount", "spanFromBridgeStartFrameCount", "coverageFractionExcludingBridgeStart", "maxObservedGapFrames", "medianCircularity", "medianContrast", "meanJumpPerFramePixels", "maxJumpPerFramePixels"],
+      "properties": {
+        "bridgeStartSourceFilename": { "type": "string", "minLength": 1 },
+        "targetBoneTransitionSourceFilename": { "type": "string", "minLength": 1 },
+        "lastObservedSourceFilename": { "type": "string", "minLength": 1 },
+        "reachedBoneTransitionTarget": { "const": true },
+        "sameSubjectContinuitySupportedToBoneTransition": { "const": true },
+        "observedNodeCount": { "type": "integer", "minimum": 0 },
+        "spanFromBridgeStartFrameCount": { "type": "integer", "minimum": 0 },
+        "coverageFractionExcludingBridgeStart": { "type": "number", "minimum": 0, "maximum": 1 },
+        "maxObservedGapFrames": { "type": "integer", "minimum": 0 },
+        "medianCircularity": { "type": "number", "minimum": 0 },
+        "medianContrast": { "type": "number" },
+        "meanJumpPerFramePixels": { "type": "number", "minimum": 0 },
+        "maxJumpPerFramePixels": { "type": "number", "minimum": 0 }
+      }
+    },
+    "arterialSearch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anonymousTrackCount", "topologyCandidateCount", "topTracks", "status", "reason"],
+      "properties": {
+        "anonymousTrackCount": { "type": "integer", "minimum": 0 },
+        "topologyCandidateCount": { "const": 0 },
+        "topTracks": { "type": "array", "items": { "$ref": "#/$defs/trackSummary" } },
+        "status": { "const": "unresolved-after-same-subject-branch-topology-search" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "superficialSearch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anonymousTrackCount", "continuousAnonymousCandidateCount", "topTracks", "status", "reason"],
+      "properties": {
+        "anonymousTrackCount": { "type": "integer", "minimum": 0 },
+        "continuousAnonymousCandidateCount": { "const": 0 },
+        "topTracks": { "type": "array", "items": { "$ref": "#/$defs/trackSummary" } },
+        "status": { "const": "unresolved-after-wider-same-subject-superficial-search" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
