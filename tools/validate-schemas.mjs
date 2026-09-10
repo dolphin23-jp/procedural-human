@@ -126,9 +126,14 @@ const authoringContracts = [
     'authoring/outputs/a07-atlas-fallback-provenance-20260910.json',
   ],
   [
+    'as06-same-subject-continuity-provenance',
+    'schemas/assets/as06-same-subject-continuity-provenance.v1.schema.json',
+    'authoring/outputs/as06-same-subject-continuity-provenance-20260910.json',
+  ],
+  [
     'semantic-structure-mapping',
     'schemas/assets/semantic-structure-mapping.v1.schema.json',
-    'authoring/semantic/a07-semantic-structure-mapping-20260909.json',
+    'authoring/semantic/a07-semantic-structure-mapping-20260910.json',
   ],
   [
     'vessel-centerline-authoring-report',
