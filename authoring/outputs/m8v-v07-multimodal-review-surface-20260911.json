@@ -1,0 +1,83 @@
+{
+  "capabilities": {
+    "candidateTrackOverlay": true,
+    "cryosectionDisplay": true,
+    "ctSideBySideDisplay": true,
+    "frameSynchronization": true,
+    "identityPromotionByUi": false,
+    "landmarkEvidencePanel": true,
+    "promotionGatePanel": true,
+    "provenancePanel": true
+  },
+  "claims": {
+    "automaticPromotionAllowed": false,
+    "ctCryosectionMedicalRegistrationEstablished": false,
+    "humanAnatomicalReviewCompleted": false,
+    "medicalValidation": false,
+    "multimodalReviewSurfaceEstablished": true,
+    "namedSuperficialVeinIdentityEstablished": false,
+    "observedSuperficialVeinStructureEstablished": false,
+    "patientSpaceGeometry": false,
+    "radialArteryIdentityEstablished": false
+  },
+  "coordinatePolicy": {
+    "boundedCtRegistrationStart": 1567,
+    "boundedCtRegistrationStop": 1685,
+    "cryosectionSpace": "source-image-pixels-plus-frame-index",
+    "ctSpace": "ct-source-pixels",
+    "patientSpaceClaim": false,
+    "synchronization": "shared-nominal-source-index-for-review-only"
+  },
+  "frameCoverage": {
+    "boundedCtScaffoldFrameCount": 238,
+    "ctProbeLinkedFrameCount": 238,
+    "firstWholeBodyFrameIndex": 1490,
+    "frameCount": 446,
+    "lastWholeBodyFrameIndex": 1935
+  },
+  "inputEvidence": [
+    {
+      "path": "authoring/source-archives/vhf-whole-body-inventory-20260910.json",
+      "schema": "vhf-whole-body-inventory",
+      "sha256": "268a6896b333cf9f1c77d7cf4f97bc838088666385c4a6cec0d36da1129a85d5"
+    },
+    {
+      "path": "authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json",
+      "schema": "ph-m8v-ct-cryo-registration-scaffold.v1",
+      "sha256": "061002161d98cd595a07c85af76ca944e3fb753296f280a9125d14fa8938e79a"
+    },
+    {
+      "path": "authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json",
+      "schema": "ph-m8v-upper-extremity-landmark-graph.v1",
+      "sha256": "67b4c1aca511e3e2ea301fc55f9ef4aa92ff48ce9a97310764f563d27ef61a00"
+    },
+    {
+      "path": "authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json",
+      "schema": "ph-m8v-candidate-vessel-track-graph.v1",
+      "sha256": "02f37cc34e0e02de1c68d7c2aa57d05ff48efe366e9531a0495de428c22c2f8c"
+    },
+    {
+      "path": "authoring/outputs/m8v-v05-radial-artery-identity-evidence-20260911.json",
+      "schema": "ph-m8v-radial-artery-identity-evidence.v1",
+      "sha256": "bafada6ec31a79b3a02f723226cd5b1a414c9cf250e0ae9bd14d2a8209e2e8b0"
+    },
+    {
+      "path": "authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json",
+      "schema": "ph-m8v-superficial-venous-network-evidence.v1",
+      "sha256": "5a65713cd8d3cec20e9e06570b3666fc5101793b511d508146e1a39ad19e94ae"
+    }
+  ],
+  "recordedAt": "2026-09-11",
+  "route": "?m8v-review=1",
+  "schema": "ph-m8v-multimodal-review-surface.v1",
+  "schemaVersion": "1",
+  "status": "complete",
+  "task": "TASK-V07",
+  "trackCoverage": {
+    "anonymousArterialTrackCount": 8,
+    "anonymousSuperficialTrackCount": 8,
+    "directObservationCount": 900,
+    "totalTrackCount": 17,
+    "ulnarAnchorLinkedTrackCount": 1
+  }
+}
