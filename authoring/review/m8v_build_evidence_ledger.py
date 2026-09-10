@@ -13,11 +13,11 @@ from pathlib import Path
 
 
 RADIAL_GATE_IDS = {
-    "same-subject-proximal-or-unique-anchor": "radial.gate.same-subject-anchor",
-    "same-subject-continuity-to-target": "radial.gate.continuity",
+    "unique-same-subject-arterial-anchor": "radial.gate.same-subject-anchor",
+    "bounded-gap-continuity-to-target": "radial.gate.continuity",
     "compatible-branch-topology": "radial.gate.branch-topology",
-    "compatible-source-supported-landmarks": "radial.gate.landmark-relationships",
-    "no-equal-or-better-unresolved-competitor": "radial.gate.competitor-resolution",
+    "compatible-landmark-relationships": "radial.gate.landmark-relationships",
+    "no-equal-or-better-competing-candidate": "radial.gate.competitor-resolution",
     "explicit-human-anatomical-review": "radial.gate.human-review",
 }
 
@@ -96,6 +96,10 @@ def verify_review_session(session_path: Path, v07_path: Path, v07: dict) -> dict
     }
     if actual_snapshot != expected_snapshot:
         raise ValueError("stale human review: evidence snapshot mismatch")
+
+    for decision in session.get("decisions", []):
+        if decision.get("verdict") == "accepted" and not decision.get("evidenceFrameIndices"):
+            raise ValueError("accepted human adjudication requires at least one evidence frame")
     return session
 
 
@@ -109,10 +113,11 @@ def apply_human_reviews(claims: list[dict], sessions: list[tuple[Path, dict]]) -
                 continue
             verdict = decision["verdict"]
             previous = seen.get(claim_id)
+            claim = by_claim[claim_id]
             if previous is not None and previous != verdict:
-                claim = by_claim[claim_id]
                 claim["humanReviewStatus"] = "unresolved"
                 claim["state"] = "conflicting"
+                claim["validationLevel"] = "V2"
                 claim["conflictingEvidence"].append(
                     {
                         "source": "TASK-V08 human adjudication",
@@ -120,27 +125,32 @@ def apply_human_reviews(claims: list[dict], sessions: list[tuple[Path, dict]]) -
                     }
                 )
                 continue
-            seen[claim_id] = verdict
-            claim = by_claim[claim_id]
-            claim["humanReviewStatus"] = verdict
-            claim["supportingEvidence" if verdict == "accepted" else "conflictingEvidence"].append(
-                {
-                    "source": "TASK-V08 human adjudication",
-                    "description": decision.get("note")
-                    or f"Human anatomical adjudication verdict: {verdict}.",
-                }
-            )
 
-            # Human review can satisfy only the explicit human-review gates.
-            if claim_id in {"radial.gate.human-review", "superficial.gate.human-review"}:
-                if verdict == "accepted":
-                    claim["state"] = "supported"
-                    claim["missingEvidence"] = []
-                    claim["validationLevel"] = "V2"
-                elif verdict == "rejected":
-                    claim["state"] = "conflicting"
-                else:
-                    claim["state"] = "unresolved"
+            seen[claim_id] = verdict
+            claim["humanReviewStatus"] = verdict
+            description = decision.get("note") or f"Human anatomical adjudication verdict: {verdict}."
+            description += " Evidence frames: " + ", ".join(
+                str(frame) for frame in decision.get("evidenceFrameIndices", [])
+            )
+            if verdict == "accepted":
+                claim["state"] = "supported"
+                claim["supportingEvidence"].append(
+                    {"source": "TASK-V08 human adjudication", "description": description}
+                )
+                claim["missingEvidence"] = []
+                claim["validationLevel"] = "V2"
+            elif verdict == "rejected":
+                claim["state"] = "conflicting"
+                claim["conflictingEvidence"].append(
+                    {"source": "TASK-V08 human adjudication", "description": description}
+                )
+                claim["validationLevel"] = "V2"
+            else:
+                claim["state"] = "unresolved"
+                claim["conflictingEvidence"].append(
+                    {"source": "TASK-V08 human adjudication", "description": description}
+                )
+                claim["validationLevel"] = "V2"
 
 
 def build_ledger(
@@ -208,15 +218,30 @@ def build_ledger(
                 "promotionEligible": False,
             },
             {
+                "id": "superficial.identity.named-topology",
+                "domain": "named-superficial-vein",
+                "requirement": "Named cephalic/basilic identity requires source-supported course and connection topology appropriate to that name.",
+                "state": "missing",
+                "supportingEvidence": [],
+                "conflictingEvidence": [],
+                "missingEvidence": [
+                    "No source-supported named superficial-vein course or connection topology is established."
+                ],
+                "humanReviewStatus": "not-reviewed",
+                "validationLevel": "V0",
+                "promotionEligible": False,
+            },
+            {
                 "id": "superficial.identity.named",
                 "domain": "named-superficial-vein",
-                "requirement": "Named cephalic/basilic identity requires source-supported named course/topology beyond superficial position.",
+                "requirement": "Named superficial-vein identity requires an established observed structure, compatible named course/topology, and explicit identity-level human review.",
                 "state": "blocked",
                 "supportingEvidence": [],
                 "conflictingEvidence": [],
                 "missingEvidence": [
                     "No subject-scoped superficial vein structure is established.",
-                    "No source-supported named superficial-vein course/topology is established."
+                    "No source-supported named superficial-vein course/topology is established.",
+                    "No named superficial-vein human adjudication is recorded."
                 ],
                 "humanReviewStatus": "not-reviewed",
                 "validationLevel": "V0",
@@ -231,17 +256,41 @@ def build_ledger(
     apply_human_reviews(claims, verified_sessions)
 
     by_id = {claim["id"]: claim for claim in claims}
-    radial_required = [RADIAL_GATE_IDS[key] for key in RADIAL_GATE_IDS]
-    superficial_required = [SUPERFICIAL_GATE_IDS[key] for key in SUPERFICIAL_GATE_IDS]
+    radial_required = list(RADIAL_GATE_IDS.values())
+    superficial_required = list(SUPERFICIAL_GATE_IDS.values())
     radial_ready = all(by_id[claim_id]["state"] == "supported" for claim_id in radial_required)
-    superficial_ready = all(by_id[claim_id]["state"] == "supported" for claim_id in superficial_required)
+    superficial_ready = all(
+        by_id[claim_id]["state"] == "supported" for claim_id in superficial_required
+    )
 
-    by_id["superficial.structure.observed"]["promotionEligible"] = superficial_ready
+    structure_claim = by_id["superficial.structure.observed"]
+    structure_claim["promotionEligible"] = superficial_ready
     if superficial_ready:
-        by_id["superficial.structure.observed"]["state"] = "supported"
-        by_id["superficial.structure.observed"]["missingEvidence"] = []
+        structure_claim["state"] = "supported"
+        structure_claim["missingEvidence"] = []
+        structure_claim["supportingEvidence"].append(
+            {
+                "source": "TASK-V08 aggregate",
+                "description": "All six subject-scoped superficial-vein structure gates are supported independently.",
+            }
+        )
 
-    named_ready = False  # Named topology is not established in V01–V07.
+    named_topology = by_id["superficial.identity.named-topology"]["state"] == "supported"
+    named_identity_review = (
+        by_id["superficial.identity.named"]["humanReviewStatus"] == "accepted"
+    )
+    named_ready = superficial_ready and named_topology and named_identity_review
+    named_claim = by_id["superficial.identity.named"]
+    named_claim["promotionEligible"] = named_ready
+    if named_ready:
+        named_claim["state"] = "supported"
+        named_claim["missingEvidence"] = []
+
+    for claim_id in radial_required:
+        by_id[claim_id]["promotionEligible"] = radial_ready
+    for claim_id in superficial_required:
+        by_id[claim_id]["promotionEligible"] = superficial_ready
+    by_id["superficial.identity.named-topology"]["promotionEligible"] = named_ready
 
     human_refs = [
         {
@@ -253,7 +302,6 @@ def build_ledger(
         for path, session in verified_sessions
     ]
 
-    states = {claim["state"] for claim in claims}
     if radial_ready or superficial_ready or named_ready:
         ledger_state = "promotion-ready"
     elif verified_sessions:
