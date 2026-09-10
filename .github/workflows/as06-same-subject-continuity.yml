@@ -13,7 +13,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  # Draft releases are visible to the workflow token only with push-level
+  # repository access. This workflow never mutates release contents.
+  contents: write
   actions: read
 
 jobs:
