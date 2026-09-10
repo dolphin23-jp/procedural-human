@@ -1,0 +1,44 @@
+name: M8V V08 path normalization fix
+
+on:
+  push:
+    branches:
+      - m8v-vessel-identification-evidence
+    paths:
+      - .github/workflows/m8v-v08-fix-path.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: m8v-vessel-identification-evidence
+      - name: Normalize repository paths
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('authoring/review/m8v_build_evidence_ledger.py')
+          text = path.read_text()
+          text = text.replace(
+              'from pathlib import Path\n\n\nRADIAL_GATE_IDS',
+              'from pathlib import Path\n\n\nROOT = Path(__file__).resolve().parents[2]\n\n\ndef portable_path(path: Path) -> str:\n    value = Path(path)\n    if value.is_absolute():\n        try:\n            return value.resolve().relative_to(ROOT).as_posix()\n        except ValueError:\n            return value.as_posix()\n    return value.as_posix()\n\n\nRADIAL_GATE_IDS',
+          )
+          text = text.replace('"path": Path(path).as_posix(),', '"path": portable_path(path),')
+          text = text.replace(
+              'if review_surface.get("path") != Path(v07_path).as_posix():',
+              'if review_surface.get("path") != portable_path(v07_path):',
+          )
+          text = text.replace('"path": path.as_posix(),', '"path": portable_path(path),')
+          path.write_text(text)
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add authoring/review/m8v_build_evidence_ledger.py
+          git commit -m "TASK-V08: normalize evidence paths for review receipts"
+          git push origin HEAD:m8v-vessel-identification-evidence
