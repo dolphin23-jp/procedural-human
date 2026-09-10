@@ -1,0 +1,209 @@
+{
+  "schema": "ph-m8v-upper-extremity-landmark-graph.v1",
+  "schemaVersion": "1",
+  "task": "TASK-V03",
+  "recordedAt": "2026-09-10",
+  "status": "complete",
+  "coordinateSpace": {
+    "kind": "source-image-stack-with-bounded-ct-scaffold",
+    "patientSpaceClaim": false
+  },
+  "sources": [
+    {
+      "path": "authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json",
+      "role": "bone-registration-scaffold",
+      "validationLevel": "V0"
+    },
+    {
+      "path": "authoring/outputs/a05-real-v0-output-provenance-20260909.json",
+      "role": "nonvascular-candidate-provenance",
+      "validationLevel": "V0"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "structure.radius.left",
+      "label": "left radius",
+      "kind": "observed-bone-landmark",
+      "evidenceStatus": "supported-bounded",
+      "sourceClass": "same-subject-cadaver-plus-radiological",
+      "validationLevel": "V0",
+      "reviewStatus": "unreviewed",
+      "support": {
+        "frameCount": 357,
+        "extentDisposition": "bounded-observed-support"
+      },
+      "vesselIdentificationUse": "same-subject-landmark-constraint"
+    },
+    {
+      "id": "structure.ulna.left",
+      "label": "left ulna",
+      "kind": "observed-bone-landmark",
+      "evidenceStatus": "supported-bounded",
+      "sourceClass": "same-subject-cadaver-plus-radiological",
+      "validationLevel": "V0",
+      "reviewStatus": "unreviewed",
+      "support": {
+        "frameCount": 357,
+        "extentDisposition": "bounded-observed-support"
+      },
+      "vesselIdentificationUse": "same-subject-landmark-constraint"
+    },
+    {
+      "id": "vhf.left.forearm.region.skin.v0",
+      "label": "skin candidate region",
+      "kind": "algorithm-derived-region-candidate",
+      "evidenceStatus": "candidate-only",
+      "sourceClass": "same-subject-algorithm-derived",
+      "validationLevel": "V0",
+      "reviewStatus": "unreviewed",
+      "support": {
+        "frameCount": 451,
+        "extentDisposition": "candidate-present-all-bounded-frames"
+      },
+      "vesselIdentificationUse": "candidate-search-compartment-prior"
+    },
+    {
+      "id": "vhf.left.forearm.region.subcutaneous-soft-tissue.v0",
+      "label": "subcutaneous soft-tissue candidate region",
+      "kind": "algorithm-derived-region-candidate",
+      "evidenceStatus": "candidate-only",
+      "sourceClass": "same-subject-algorithm-derived",
+      "validationLevel": "V0",
+      "reviewStatus": "unreviewed",
+      "support": {
+        "frameCount": 451,
+        "extentDisposition": "candidate-present-all-bounded-frames"
+      },
+      "vesselIdentificationUse": "candidate-search-compartment-prior"
+    },
+    {
+      "id": "vhf.left.forearm.region.major-muscle-tendon.v0",
+      "label": "major muscle/tendon candidate region",
+      "kind": "algorithm-derived-region-candidate",
+      "evidenceStatus": "candidate-only",
+      "sourceClass": "same-subject-algorithm-derived",
+      "validationLevel": "V0",
+      "reviewStatus": "unreviewed",
+      "support": {
+        "frameCount": 451,
+        "extentDisposition": "candidate-present-all-bounded-frames"
+      },
+      "vesselIdentificationUse": "candidate-search-compartment-prior"
+    },
+    {
+      "id": "structure.radial_styloid.left",
+      "label": "left radial styloid region",
+      "kind": "unresolved-named-landmark",
+      "evidenceStatus": "unresolved",
+      "sourceClass": "none-established",
+      "validationLevel": "V0",
+      "reviewStatus": "unreviewed",
+      "support": {
+        "frameCount": 0,
+        "extentDisposition": "unknown"
+      },
+      "vesselIdentificationUse": "not-usable-until-observed"
+    },
+    {
+      "id": "structure.ulnar_styloid.left",
+      "label": "left ulnar styloid region",
+      "kind": "unresolved-named-landmark",
+      "evidenceStatus": "unresolved",
+      "sourceClass": "none-established",
+      "validationLevel": "V0",
+      "reviewStatus": "unreviewed",
+      "support": {
+        "frameCount": 0,
+        "extentDisposition": "unknown"
+      },
+      "vesselIdentificationUse": "not-usable-until-observed"
+    },
+    {
+      "id": "structure.brachioradialis.left",
+      "label": "left brachioradialis",
+      "kind": "unresolved-named-landmark",
+      "evidenceStatus": "unresolved",
+      "sourceClass": "none-established",
+      "validationLevel": "V0",
+      "reviewStatus": "unreviewed",
+      "support": {
+        "frameCount": 0,
+        "extentDisposition": "unknown"
+      },
+      "vesselIdentificationUse": "not-usable-until-observed"
+    },
+    {
+      "id": "structure.flexor_carpi_radialis.left",
+      "label": "left flexor carpi radialis",
+      "kind": "unresolved-named-landmark",
+      "evidenceStatus": "unresolved",
+      "sourceClass": "none-established",
+      "validationLevel": "V0",
+      "reviewStatus": "unreviewed",
+      "support": {
+        "frameCount": 0,
+        "extentDisposition": "unknown"
+      },
+      "vesselIdentificationUse": "not-usable-until-observed"
+    },
+    {
+      "id": "structure.pronator_quadratus.left",
+      "label": "left pronator quadratus",
+      "kind": "unresolved-named-landmark",
+      "evidenceStatus": "unresolved",
+      "sourceClass": "none-established",
+      "validationLevel": "V0",
+      "reviewStatus": "unreviewed",
+      "support": {
+        "frameCount": 0,
+        "extentDisposition": "unknown"
+      },
+      "vesselIdentificationUse": "not-usable-until-observed"
+    }
+  ],
+  "relations": [
+    {
+      "from": "structure.radius.left",
+      "type": "paired-with",
+      "to": "structure.ulna.left",
+      "evidenceStatus": "supported-bounded",
+      "use": "registration-orientation-constraint"
+    },
+    {
+      "from": "vhf.left.forearm.region.skin.v0",
+      "type": "bounds-candidate-compartment",
+      "to": "vhf.left.forearm.region.subcutaneous-soft-tissue.v0",
+      "evidenceStatus": "candidate-only",
+      "use": "superficiality-search-prior"
+    },
+    {
+      "from": "vhf.left.forearm.region.subcutaneous-soft-tissue.v0",
+      "type": "contrasts-with-candidate-region",
+      "to": "vhf.left.forearm.region.major-muscle-tendon.v0",
+      "evidenceStatus": "candidate-only",
+      "use": "deep-soft-tissue-search-prior"
+    }
+  ],
+  "unresolvedRequiredLandmarks": [
+    "structure.radial_styloid.left",
+    "structure.ulnar_styloid.left",
+    "structure.brachioradialis.left",
+    "structure.flexor_carpi_radialis.left",
+    "structure.pronator_quadratus.left"
+  ],
+  "decision": {
+    "graphState": "bounded-mixed-evidence-landmark-graph",
+    "usableForTaskV04": true,
+    "namedMuscleLandmarksEstablished": false,
+    "nextTask": "TASK-V04"
+  },
+  "claims": {
+    "patientSpaceGeometry": false,
+    "namedMuscleIdentityEstablished": false,
+    "radialArteryIdentityEstablished": false,
+    "superficialVeinIdentityEstablished": false,
+    "medicalValidation": false,
+    "automaticPromotionAllowed": false
+  }
+}
