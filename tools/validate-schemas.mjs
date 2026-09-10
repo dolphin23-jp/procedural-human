@@ -49,6 +49,11 @@ const authoringContracts = [
     'schemas/assets/m8v-upper-extremity-landmark-graph.v1.schema.json',
     'authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json',
   ],
+  [
+    'm8v-candidate-vessel-track-graph',
+    'schemas/assets/m8v-candidate-vessel-track-graph.v1.schema.json',
+    'authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json',
+  ],
   ['vhf-source-chunk', 'schemas/assets/vhf-source-chunk.v1.schema.json', null],
   [
     'vhf-source-archive-index',
