@@ -206,7 +206,8 @@ Feed only passed claims/representations back into A06/A07/A08/A09 and reevaluate
 ## Current task state
 
 - TASK-V01: complete — see `authoring/outputs/m8v-v01-radiological-source-inventory-20260910.json`.
-- TASK-V02: next.
-- TASK-V03 through TASK-V10: not started by this lane definition.
+- TASK-V02: complete — see `authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json`; this establishes only a bounded bone-landmark registration scaffold, not Patient Space or medical registration.
+- TASK-V03: next.
+- TASK-V04 through TASK-V10: not started.
 
 No M8V task currently claims radial-artery identity, named superficial-vein identity, medical validation, Patient Space, or Medical Master promotion.
