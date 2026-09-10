@@ -206,7 +206,9 @@ export function AS05SourceNavigator() {
     if (!data) return;
     const target = parseFrameTarget(jumpValue, data.frames);
     if (target === null) {
-      setLoadError('Frame jump must be a valid global index or avf####x filename.');
+      setLoadError(
+        'Frame jump must be a valid global index or avf####x filename.',
+      );
       return;
     }
     setLoadError(null);
@@ -232,12 +234,14 @@ export function AS05SourceNavigator() {
     <main className="as05-source">
       <header className="as05-source__header">
         <div>
-          <p className="as05-source__eyebrow">TASK-AS05 · Authoring source view</p>
+          <p className="as05-source__eyebrow">
+            TASK-AS05 · Authoring source view
+          </p>
           <h1>Visible Human Female whole-body source navigator</h1>
           <p className="as05-source__subhead">
             Same-subject source/reference inspection only. No overlay is active.
-            Viewing a frame does not establish segmentation, anatomical identity,
-            validation, Patient Space, or CT registration.
+            Viewing a frame does not establish segmentation, anatomical
+            identity, validation, Patient Space, or CT registration.
           </p>
         </div>
         <div className="as05-source__header-actions">
@@ -246,19 +250,26 @@ export function AS05SourceNavigator() {
         </div>
       </header>
 
-      <section className="as05-source__legal" aria-label="Source terms and claims">
+      <section
+        className="as05-source__legal"
+        aria-label="Source terms and claims"
+      >
         <strong>{data.terms.attribution}</strong>
         <span>
-          Snapshot {data.generatedFrom.snapshotAt} · source-image-stack coordinates
-          only
+          Snapshot {data.generatedFrom.snapshotAt} · source-image-stack
+          coordinates only
         </span>
         <span>
           {data.counts.usableImageCount.toLocaleString()} usable PNGs /{' '}
-          {data.counts.listedSourceCount.toLocaleString()} listed source identities
+          {data.counts.listedSourceCount.toLocaleString()} listed source
+          identities
         </span>
       </section>
 
-      <section className="as05-source__jump" aria-label="Source navigation controls">
+      <section
+        className="as05-source__jump"
+        aria-label="Source navigation controls"
+      >
         <label>
           Jump to global index or filename
           <div className="as05-source__jump-row">
@@ -320,14 +331,29 @@ export function AS05SourceNavigator() {
         {loadError && <p className="as05-source__error">{loadError}</p>}
       </section>
 
-      <section className="as05-source__navigation" aria-label="Sequential navigation">
-        <button type="button" onClick={() => move(-100)} disabled={frameIndex === 0}>
+      <section
+        className="as05-source__navigation"
+        aria-label="Sequential navigation"
+      >
+        <button
+          type="button"
+          onClick={() => move(-100)}
+          disabled={frameIndex === 0}
+        >
           −100
         </button>
-        <button type="button" onClick={() => move(-10)} disabled={frameIndex === 0}>
+        <button
+          type="button"
+          onClick={() => move(-10)}
+          disabled={frameIndex === 0}
+        >
           −10
         </button>
-        <button type="button" onClick={() => move(-1)} disabled={frameIndex === 0}>
+        <button
+          type="button"
+          onClick={() => move(-1)}
+          disabled={frameIndex === 0}
+        >
           Previous
         </button>
         <input
@@ -344,7 +370,8 @@ export function AS05SourceNavigator() {
           }}
         />
         <output>
-          {frameIndex.toLocaleString()} / {(data.frames.length - 1).toLocaleString()}
+          {frameIndex.toLocaleString()} /{' '}
+          {(data.frames.length - 1).toLocaleString()}
         </output>
         <button
           type="button"
@@ -374,7 +401,9 @@ export function AS05SourceNavigator() {
           <article className="as05-source__image-panel">
             <header>
               <div>
-                <p className="as05-source__eyebrow">Global index {frame.index}</p>
+                <p className="as05-source__eyebrow">
+                  Global index {frame.index}
+                </p>
                 <h2>{frame.filename}</h2>
               </div>
               <span
@@ -384,7 +413,9 @@ export function AS05SourceNavigator() {
                     : 'as05-source__availability as05-source__availability--gap'
                 }
               >
-                {available ? 'Recorded source image' : 'Provider-listed 0-byte gap'}
+                {available
+                  ? 'Recorded source image'
+                  : 'Provider-listed 0-byte gap'}
               </span>
             </header>
             <div
@@ -407,10 +438,12 @@ export function AS05SourceNavigator() {
                 />
               ) : (
                 <div className="as05-source__gap">
-                  <strong>No image bytes exist in the recorded provider listing.</strong>
+                  <strong>
+                    No image bytes exist in the recorded provider listing.
+                  </strong>
                   <p>
-                    This source identity is retained for continuity accounting but
-                    is unavailable for visual interpretation.
+                    This source identity is retained for continuity accounting
+                    but is unavailable for visual interpretation.
                   </p>
                 </div>
               )}
@@ -418,7 +451,10 @@ export function AS05SourceNavigator() {
             {imageError && <p className="as05-source__error">{imageError}</p>}
           </article>
 
-          <aside className="as05-source__metadata" aria-label="Source provenance">
+          <aside
+            className="as05-source__metadata"
+            aria-label="Source provenance"
+          >
             <p className="as05-source__eyebrow">Source identity / provenance</p>
             <dl>
               <dt>Global index</dt>
@@ -472,8 +508,8 @@ export function AS05SourceNavigator() {
       <footer className="as05-source__footer">
         <span>{data.generatedFrom.sourceArchiveId}</span>
         <span>
-          Compact navigator is derived from {data.generatedFrom.inventoryPath}; it
-          is not a second source archive.
+          Compact navigator is derived from {data.generatedFrom.inventoryPath};
+          it is not a second source archive.
         </span>
       </footer>
     </main>
