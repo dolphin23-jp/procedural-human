@@ -47,7 +47,9 @@
       "properties": {
         "cryosectionSpace": { "const": "source-image-pixels-plus-frame-index" },
         "ctSpace": { "const": "ct-source-pixels" },
-        "synchronization": { "const": "shared-nominal-source-index-for-review-only" },
+        "synchronization": {
+          "const": "shared-nominal-source-index-for-review-only"
+        },
         "boundedCtRegistrationStart": { "const": 1567 },
         "boundedCtRegistrationStop": { "const": 1685 },
         "patientSpaceClaim": { "const": false }

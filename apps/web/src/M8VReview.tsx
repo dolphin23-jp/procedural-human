@@ -209,7 +209,10 @@ export function M8VReview() {
       ) {
         return false;
       }
-      if (observation.trackClass === 'anonymous-branch-search' && !showArterial) {
+      if (
+        observation.trackClass === 'anonymous-branch-search' &&
+        !showArterial
+      ) {
         return false;
       }
       if (
@@ -218,15 +221,11 @@ export function M8VReview() {
       ) {
         return false;
       }
-      return selectedTrackId === null || observation.trackId === selectedTrackId;
+      return (
+        selectedTrackId === null || observation.trackId === selectedTrackId
+      );
     });
-  }, [
-    currentFrame,
-    selectedTrackId,
-    showArterial,
-    showSuperficial,
-    showUlnar,
-  ]);
+  }, [currentFrame, selectedTrackId, showArterial, showSuperficial, showUlnar]);
 
   const frameIndexToCursor = useMemo(() => {
     const result = new Map<number, number>();
@@ -249,8 +248,8 @@ export function M8VReview() {
           <h1>M8V review surface unavailable</h1>
           <p>{error}</p>
           <p>
-            This does not change any anatomical claim. The review UI is optional;
-            committed evidence remains fail-closed.
+            This does not change any anatomical claim. The review UI is
+            optional; committed evidence remains fail-closed.
           </p>
         </section>
       </main>
@@ -278,10 +277,10 @@ export function M8VReview() {
           <p className="m8v-eyebrow">TASK-V07 · authoring review only</p>
           <h1>M8V multimodal vessel evidence review</h1>
           <p className="m8v-header-copy">
-            Cryosection and CT are synchronized only by the provider nominal index.
-            Track overlays remain in cryosection source pixels. This surface is not
-            Patient Space, medical registration, medical validation, or an identity
-            promotion mechanism.
+            Cryosection and CT are synchronized only by the provider nominal
+            index. Track overlays remain in cryosection source pixels. This
+            surface is not Patient Space, medical registration, medical
+            validation, or an identity promotion mechanism.
           </p>
         </div>
         <dl className="m8v-header-stats">
@@ -291,7 +290,9 @@ export function M8VReview() {
           </div>
           <div>
             <dt>Direct observations</dt>
-            <dd>{manifest.surfaceRecord.trackCoverage.directObservationCount}</dd>
+            <dd>
+              {manifest.surfaceRecord.trackCoverage.directObservationCount}
+            </dd>
           </div>
           <div>
             <dt>Review frames</dt>
@@ -305,7 +306,9 @@ export function M8VReview() {
           <strong>{currentFrame.sourceFilename}</strong>
           <span>source frame {currentFrame.wholeBodyFrameIndex}</span>
           <span>nominal index {currentFrame.nominalIndex}</span>
-          <span>{currentFrame.observations.length} observation(s) on frame</span>
+          <span>
+            {currentFrame.observations.length} observation(s) on frame
+          </span>
         </div>
         <div className="m8v-slider-row">
           <button
@@ -327,7 +330,9 @@ export function M8VReview() {
             type="button"
             disabled={cursor === manifest.frames.length - 1}
             onClick={() =>
-              setCursor((value) => Math.min(manifest.frames.length - 1, value + 1))
+              setCursor((value) =>
+                Math.min(manifest.frames.length - 1, value + 1),
+              )
             }
           >
             Next
@@ -354,7 +359,9 @@ export function M8VReview() {
             <input
               type="checkbox"
               checked={showSuperficial}
-              onChange={(event) => setShowSuperficial(event.currentTarget.checked)}
+              onChange={(event) =>
+                setShowSuperficial(event.currentTarget.checked)
+              }
             />
             Anonymous superficial
           </label>
@@ -398,7 +405,9 @@ export function M8VReview() {
                 {visibleObservations.map((observation) => {
                   const selected = observation.trackId === selectedTrackId;
                   return (
-                    <g key={`${observation.trackId}-${currentFrame.wholeBodyFrameIndex}`}>
+                    <g
+                      key={`${observation.trackId}-${currentFrame.wholeBodyFrameIndex}`}
+                    >
                       <circle
                         className={`${trackClassName(observation.trackClass)}${selected ? ' m8v-selected-observation' : ''}`}
                         cx={observation.xFullImagePixels}
@@ -439,7 +448,8 @@ export function M8VReview() {
             {currentFrame.ct.available && currentFrame.ct.sourceUrl !== null ? (
               ctError ? (
                 <div className="m8v-image-placeholder">
-                  Live CT image could not be loaded. No substitute image is used.
+                  Live CT image could not be loaded. No substitute image is
+                  used.
                 </div>
               ) : (
                 <img
@@ -450,8 +460,8 @@ export function M8VReview() {
               )
             ) : (
               <div className="m8v-image-placeholder">
-                CT is intentionally unavailable outside the existing bounded probe
-                range in this review surface.
+                CT is intentionally unavailable outside the existing bounded
+                probe range in this review surface.
               </div>
             )}
           </div>
@@ -516,7 +526,10 @@ export function M8VReview() {
       </section>
 
       <section className="m8v-review-grid">
-        <GatePanel title="Radial artery identity" gates={manifest.radialPromotionGates} />
+        <GatePanel
+          title="Radial artery identity"
+          gates={manifest.radialPromotionGates}
+        />
         <GatePanel
           title="Superficial vein structure"
           gates={manifest.superficialPromotionGates}
@@ -532,8 +545,9 @@ export function M8VReview() {
         </div>
         <p>{manifest.imageDelivery.snapshotNotice}</p>
         <p>
-          Cryosection: {manifest.surfaceRecord.coordinatePolicy.cryosectionSpace} ·
-          CT: {manifest.surfaceRecord.coordinatePolicy.ctSpace} · synchronization:{' '}
+          Cryosection:{' '}
+          {manifest.surfaceRecord.coordinatePolicy.cryosectionSpace} · CT:{' '}
+          {manifest.surfaceRecord.coordinatePolicy.ctSpace} · synchronization:{' '}
           {manifest.surfaceRecord.coordinatePolicy.synchronization}.
         </p>
         <div className="m8v-provenance-list">
@@ -546,8 +560,9 @@ export function M8VReview() {
           ))}
         </div>
         <p className="m8v-terms">
-          {manifest.sourceTerms.attribution ?? 'U.S. National Library of Medicine'}.
-          Provider snapshot terms and no-endorsement notice remain applicable.
+          {manifest.sourceTerms.attribution ??
+            'U.S. National Library of Medicine'}
+          . Provider snapshot terms and no-endorsement notice remain applicable.
         </p>
       </section>
     </main>
