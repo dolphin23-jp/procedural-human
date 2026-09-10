@@ -178,10 +178,7 @@
     "phase2": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "arterialBranchTopologySearch",
-        "superficialVenousSearch"
-      ],
+      "required": ["arterialBranchTopologySearch", "superficialVenousSearch"],
       "properties": {
         "arterialBranchTopologySearch": {
           "type": "object"
