@@ -123,6 +123,8 @@ A track representation should be able to record:
 
 Gaps must remain gaps. Interpolation may be produced as an explicit derived hypothesis but cannot be counted as direct observation.
 
+TASK-V04 uses source-index 3D only: x/y are full-image pixels and z is the discrete whole-body frame index. This representation establishes graph continuity bookkeeping, not physical 3D geometry or Patient Space. The committed graph contains 17 tracks, 900 direct observations, 883 links, and 133 explicit-gap links. It preserves one anchor-linked ulnar track, eight competing anonymous arterial branch-search tracks, and eight competing anonymous superficial tracks. No branch/merge candidate met the existing evidence gate, and no radial or superficial-vein identity is promoted by the graph itself.
+
 ## Promotion gates
 
 ### Radial artery named identity
@@ -210,7 +212,8 @@ Feed only passed claims/representations back into A06/A07/A08/A09 and reevaluate
 - TASK-V01: complete — see `authoring/outputs/m8v-v01-radiological-source-inventory-20260910.json`.
 - TASK-V02: complete — see `authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json`; this establishes only a bounded bone-landmark registration scaffold, not Patient Space or medical registration.
 - TASK-V03: complete — see `authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json`; radius/ulna have bounded same-subject support, generic A05 tissue regions remain V0 candidate priors, and the radial/ulnar styloid, brachioradialis, flexor carpi radialis, and pronator quadratus remain explicitly unresolved.
-- TASK-V04: next.
-- TASK-V05 through TASK-V10: not started.
+- TASK-V04: complete — see `authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json`; the source-index 3D graph preserves all direct observations, explicit gaps, and competing tracks without promoting radial or superficial-vein identity.
+- TASK-V05: next.
+- TASK-V06 through TASK-V10: not started.
 
 No M8V task currently claims radial-artery identity, named superficial-vein identity, medical validation, Patient Space, or Medical Master promotion.
