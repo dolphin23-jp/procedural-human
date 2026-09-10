@@ -225,7 +225,9 @@
       },
       "allOf": [
         {
-          "if": { "properties": { "kind": { "const": "direct-continuation" } } },
+          "if": {
+            "properties": { "kind": { "const": "direct-continuation" } }
+          },
           "then": {
             "properties": {
               "frameDelta": { "const": 1 },
@@ -253,10 +255,7 @@
       "properties": {
         "anchorAnatomicalId": { "type": ["string", "null"] },
         "namedIdentityStatus": {
-          "enum": [
-            "reviewed-anchor-linked-continuity",
-            "anonymous-unresolved"
-          ]
+          "enum": ["reviewed-anchor-linked-continuity", "anonymous-unresolved"]
         },
         "namedIdentityAppliesToEntireTrack": { "const": false },
         "vesselClassStatus": {
@@ -302,10 +301,16 @@
         "sourceClassification": { "type": "string", "minLength": 1 },
         "identity": { "$ref": "#/$defs/trackIdentity" },
         "reviewStatus": { "const": "unreviewed-as-complete-track" },
-        "ordering": { "enum": ["increasing-frame-index", "decreasing-frame-index"] },
+        "ordering": {
+          "enum": ["increasing-frame-index", "decreasing-frame-index"]
+        },
         "observationCount": { "type": "integer", "minimum": 2 },
         "spanFrameCount": { "type": "integer", "minimum": 2 },
-        "coverageFraction": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "coverageFraction": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
         "minWholeBodyFrameIndex": { "type": "integer", "minimum": 0 },
         "maxWholeBodyFrameIndex": { "type": "integer", "minimum": 0 },
         "gapLinkCount": { "type": "integer", "minimum": 0 },
