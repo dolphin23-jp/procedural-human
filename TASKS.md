@@ -665,7 +665,8 @@ Repository
 → Events
 → Procedure
 → Replay
-→ Validated Medical Asset
+→ Whole-Body Source Foundation / same-subject identity evidence where required
+→ Validated Regional Medical Asset
 → iPad Acceptance
 
 The medical-asset lane should proceed in parallel once contracts permit.
