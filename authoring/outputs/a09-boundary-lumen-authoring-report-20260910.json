@@ -16,7 +16,7 @@
       "outsideRegion": null,
       "wallBoundary": null,
       "lumenRegion": null,
-      "reason": "No accepted radial artery segmentation/lumen mask exists after TASK-A06 human review; source evidence failed closed, so outside/wall/lumen representation remains blocked."
+      "reason": "TASK-AS06 extended the same-subject reviewed ulnar anchor through the proximal radius/ulna transition and tested eight anonymous arterial tracks, but zero met the fixed branch-topology promotion gate. No accepted radial segmentation/lumen mask exists, so outside/wall/lumen representation remains blocked."
     },
     {
       "draftLabel": "ulnar_artery",
@@ -25,7 +25,7 @@
       "outsideRegion": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#outside=source-crop-complement-of-lumen",
       "wallBoundary": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#boundary/ulnar_artery",
       "lumenRegion": "drive://10DxqbYQbiNUV_JIvqpCxQxLLMwUmJxmQ#lumen/ulnar_artery",
-      "reason": "The bounded 106-frame V0/source-stack ulnar artery lumen candidate accepted unchanged by TASK-A06 human review supports the existing lumen/outside/topological-boundary representation. No anatomical wall-thickness, complete-vessel-extent, Patient Space, TASK-A12 anatomical-review, or medical-validation claim is made."
+      "reason": "The bounded 106-frame V0/source-stack ulnar artery lumen candidate accepted unchanged by TASK-A06 human review remains valid. TASK-AS06 strengthens proximal same-subject continuity evidence without changing this bounded topology representation or creating any anatomical wall-thickness, complete-vessel-extent, Patient Space, TASK-A12 anatomical-review, or medical-validation claim."
     },
     {
       "draftLabel": "superficial_target_vein",
@@ -34,7 +34,7 @@
       "outsideRegion": null,
       "wallBoundary": null,
       "lumenRegion": null,
-      "reason": "No accepted superficial target vein segmentation/lumen mask exists after TASK-A06 human review and named anatomical identity remains unresolved, so outside/wall/lumen representation remains blocked."
+      "reason": "TASK-AS06 tested eight anonymous superficial tracks over a wider same-subject extent, but zero met the fixed continuity gate. No accepted superficial target-vein segmentation/lumen mask or named anatomical identity exists, so outside/wall/lumen representation remains blocked."
     }
   ],
   "claims": {
