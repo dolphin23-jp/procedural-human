@@ -5,11 +5,11 @@
   "recordedAt": "2026-09-10",
   "status": "blocked",
   "blockers": [
-    "TASK-A07 contains unresolved anatomical identities; the superficial venous access target remains intentionally unnamed after source-first discovery",
-    "TASK-A08 required vessel centerlines remain unavailable for structure.radial_artery.left and the unresolved superficial target vein; the bounded ulnar artery centerline candidate was accepted unchanged by TASK-A06 human review",
-    "TASK-A09 required boundary/lumen representations remain unavailable for structure.radial_artery.left and the unresolved superficial target vein; the bounded ulnar artery topology candidate was accepted unchanged by TASK-A06 human review",
+    "TASK-A07 contains unresolved anatomical identities; the same-subject TASK-AS06 superficial-vessel search found no track meeting fixed continuity gates, so the venous_access_target remains intentionally unnamed",
+    "TASK-A08 required vessel centerlines remain unavailable for structure.radial_artery.left and the unresolved superficial target vein; the bounded ulnar artery centerline candidate remains the accepted source-supported representation",
+    "TASK-A09 required boundary/lumen representations remain unavailable for structure.radial_artery.left and the unresolved superficial target vein; the bounded ulnar artery topology candidate remains the accepted source-supported representation",
     "required semantic identities lack candidate representations: structure.radial_artery.left",
-    "source diagnostics failed closed for radial artery and superficial target vein, including expanded-prior and atlas-center-free/source-first searches; automatic atlas-based or role-based substitution remains prohibited"
+    "TASK-AS06 same-subject branch-topology search did not establish radial/brachial/bifurcation identity, and the wider same-subject superficial search did not establish a named target vein; automatic atlas-based or procedure-role substitution remains prohibited"
   ],
   "claims": {
     "medicalMasterCreated": false,
