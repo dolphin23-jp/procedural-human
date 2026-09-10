@@ -290,9 +290,12 @@ def is_tissue(rgb: np.ndarray) -> np.ndarray:
     return (~blue_background) & (~too_dark)
 
 
-def vessel_candidates(image: np.ndarray, prior: np.ndarray) -> list[VesselCandidate]:
+def vessel_candidates(
+    image: np.ndarray,
+    prior: np.ndarray,
+    radius: int = VESSEL_SEARCH_RADIUS,
+) -> list[VesselCandidate]:
     height, width = image.shape[:2]
-    radius = VESSEL_SEARCH_RADIUS
     x, y = map(float, prior)
     x0 = max(0, int(np.floor(x - radius)))
     x1 = min(width, int(np.ceil(x + radius + 1)))
@@ -543,6 +546,250 @@ def track_ulnar_proximally(
     }
 
 
+
+def bridge_ulnar_to_bone_transition(
+    source: SourceArchive,
+    proximal_start: str,
+    distal_track: dict[str, object],
+    target_filename: str,
+) -> dict[str, object]:
+    nodes = distal_track["nodes"]
+    if not isinstance(nodes, list) or len(nodes) < 2:
+        raise ReconError("distal continuity track is too short for bridge search")
+    endpoint = nodes[-1]
+    start_filename = str(endpoint["sourceFilename"])
+    start_index = int(endpoint["wholeBodyFrameIndex"])
+    target_index = source.by_name[target_filename]["index"]
+    proximal_limit = source.by_name[proximal_start]["index"]
+    if not proximal_limit <= target_index < start_index:
+        raise ReconError("bridge search bounds are inconsistent")
+
+    start_point = np.asarray(
+        [float(endpoint["xFullImagePixels"]), float(endpoint["yFullImagePixels"])],
+        dtype=float,
+    )
+    previous = nodes[-2]
+    previous_point = np.asarray(
+        [float(previous["xFullImagePixels"]), float(previous["yFullImagePixels"])],
+        dtype=float,
+    )
+    previous_frame = int(previous["wholeBodyFrameIndex"])
+    frame_delta = max(1, previous_frame - start_index)
+    initial_velocity = (start_point - previous_point) / frame_delta
+    initial_area = int(endpoint.get("areaPixels", 0)) or None
+
+    states: list[dict[str, object]] = [
+        {
+            "point": start_point,
+            "velocity": initial_velocity,
+            "previousArea": initial_area,
+            "score": 0.0,
+            "misses": 0,
+            "observations": [],
+            "lastObservedFrame": start_index,
+        }
+    ]
+    stop_index = start_index
+    beam_width = 14
+    max_misses = 5
+
+    for whole_index in range(start_index - 1, proximal_limit - 1, -1):
+        frame = source.frames[whole_index]
+        if frame["source"]["listedByteSize"] == 0:
+            candidates_for_frame = None
+            image = None
+        else:
+            image = source.read_rgb(frame["filename"])
+            candidates_for_frame = True
+
+        expanded: list[dict[str, object]] = []
+        for state in states:
+            point = np.asarray(state["point"], dtype=float)
+            velocity = np.asarray(state["velocity"], dtype=float)
+            prediction = point + velocity
+            previous_area = state["previousArea"]
+            local_candidates = (
+                vessel_candidates(image, prediction, radius=58)
+                if candidates_for_frame
+                else []
+            )
+            acceptable = [
+                candidate
+                for candidate in local_candidates
+                if candidate.prior_distance <= 48.0
+                and candidate.circularity >= 0.14
+                and candidate.contrast >= 8.0
+                and hypot(candidate.x - point[0], candidate.y - point[1]) <= 20.0
+            ]
+            acceptable.sort(
+                key=lambda item: vessel_score(
+                    item,
+                    int(previous_area) if previous_area is not None else None,
+                ),
+                reverse=True,
+            )
+
+            for candidate in acceptable[:5]:
+                new_point = np.asarray([candidate.x, candidate.y])
+                delta = new_point - point
+                observations = list(state["observations"])
+                observations.append(
+                    {
+                        "sourceFilename": frame["filename"],
+                        "wholeBodyFrameIndex": whole_index,
+                        "xFullImagePixels": candidate.x,
+                        "yFullImagePixels": candidate.y,
+                        "areaPixels": candidate.area,
+                        "circularity": candidate.circularity,
+                        "contrast": candidate.contrast,
+                        "priorDistancePixels": candidate.prior_distance,
+                    }
+                )
+                expanded.append(
+                    {
+                        "point": new_point,
+                        "velocity": velocity * 0.65 + delta * 0.35,
+                        "previousArea": candidate.area,
+                        "score": float(state["score"])
+                        + vessel_score(
+                            candidate,
+                            int(previous_area) if previous_area is not None else None,
+                        )
+                        + 1.0,
+                        "misses": 0,
+                        "observations": observations,
+                        "lastObservedFrame": whole_index,
+                    }
+                )
+
+            misses = int(state["misses"]) + 1
+            if misses <= max_misses:
+                expanded.append(
+                    {
+                        "point": point + velocity,
+                        "velocity": velocity * 0.9,
+                        "previousArea": previous_area,
+                        "score": float(state["score"]) - 2.2 - 0.4 * misses,
+                        "misses": misses,
+                        "observations": list(state["observations"]),
+                        "lastObservedFrame": state["lastObservedFrame"],
+                    }
+                )
+
+        if not expanded:
+            stop_index = whole_index
+            break
+
+        # Preserve distinct hypotheses instead of allowing many near-identical
+        # states to crowd out alternative same-subject paths.
+        expanded.sort(
+            key=lambda state: (
+                int(state["lastObservedFrame"]) <= target_index,
+                len(state["observations"]),
+                float(state["score"]),
+            ),
+            reverse=True,
+        )
+        deduped: list[dict[str, object]] = []
+        occupied: set[tuple[int, int, int]] = set()
+        for state in expanded:
+            point = np.asarray(state["point"])
+            key = (
+                int(round(point[0] / 4.0)),
+                int(round(point[1] / 4.0)),
+                int(state["misses"]),
+            )
+            if key in occupied:
+                continue
+            occupied.add(key)
+            deduped.append(state)
+            if len(deduped) >= beam_width:
+                break
+        states = deduped
+        stop_index = whole_index
+
+    best = max(
+        states,
+        key=lambda state: (
+            int(state["lastObservedFrame"]) <= target_index,
+            -int(state["lastObservedFrame"]),
+            len(state["observations"]),
+            float(state["score"]),
+        ),
+    )
+    observations = list(best["observations"])
+    reached_target = int(best["lastObservedFrame"]) <= target_index
+    if observations:
+        frame_indices = np.asarray(
+            [int(row["wholeBodyFrameIndex"]) for row in observations],
+            dtype=int,
+        )
+        points = np.asarray(
+            [[float(row["xFullImagePixels"]), float(row["yFullImagePixels"])] for row in observations],
+            dtype=float,
+        )
+        gaps = np.abs(np.diff(frame_indices))
+        jumps = np.linalg.norm(np.diff(points, axis=0), axis=1)
+        per_frame_jump = jumps / gaps if len(gaps) else np.asarray([])
+        span = start_index - int(frame_indices[-1]) + 1
+        coverage = len(observations) / max(1, span - 1)
+        max_gap = int(gaps.max()) if len(gaps) else 0
+        metrics = {
+            "observedNodeCount": len(observations),
+            "spanFromBridgeStartFrameCount": span,
+            "coverageFractionExcludingBridgeStart": coverage,
+            "maxObservedGapFrames": max_gap,
+            "medianCircularity": float(np.median([row["circularity"] for row in observations])),
+            "p25Circularity": float(np.quantile([row["circularity"] for row in observations], 0.25)),
+            "medianContrast": float(np.median([row["contrast"] for row in observations])),
+            "p25Contrast": float(np.quantile([row["contrast"] for row in observations], 0.25)),
+            "meanJumpPerFramePixels": float(per_frame_jump.mean()) if len(per_frame_jump) else 0.0,
+            "maxJumpPerFramePixels": float(per_frame_jump.max()) if len(per_frame_jump) else 0.0,
+        }
+    else:
+        metrics = {
+            "observedNodeCount": 0,
+            "spanFromBridgeStartFrameCount": 1,
+            "coverageFractionExcludingBridgeStart": 0.0,
+            "maxObservedGapFrames": 0,
+            "medianCircularity": None,
+            "p25Circularity": None,
+            "medianContrast": None,
+            "p25Contrast": None,
+            "meanJumpPerFramePixels": None,
+            "maxJumpPerFramePixels": None,
+        }
+
+    continuity_supported = bool(
+        reached_target
+        and metrics["coverageFractionExcludingBridgeStart"] >= 0.72
+        and metrics["maxObservedGapFrames"] <= 6
+        and metrics["medianCircularity"] >= 0.45
+        and metrics["medianContrast"] >= 18.0
+        and metrics["meanJumpPerFramePixels"] <= 4.5
+    )
+
+    return {
+        "bridgeStartSourceFilename": start_filename,
+        "targetBoneTransitionSourceFilename": target_filename,
+        "proximalSearchLimitSourceFilename": proximal_start,
+        "lastObservedSourceFilename": (
+            source.frames[int(best["lastObservedFrame"])]["filename"]
+        ),
+        "searchStoppedAtSourceFilename": source.frames[stop_index]["filename"],
+        "reachedBoneTransitionTarget": reached_target,
+        "sameSubjectContinuitySupportedToBoneTransition": continuity_supported,
+        "metrics": metrics,
+        "observations": observations,
+        "claims": {
+            "sameNamedVesselBeyondSourceContinuityClaim": False,
+            "brachialArteryEstablished": False,
+            "bifurcationEstablished": False,
+            "radialArteryEstablished": False,
+            "medicalValidation": False,
+        },
+    }
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--inventory", type=Path, required=True)
@@ -570,10 +817,19 @@ def main() -> None:
         bones = track_forearm_bones(source, nominal_index(args.first))
         ulnar = track_ulnar_proximally(source, anchor_filename, anchor_point, args.first)
 
-        bone_earliest = nominal_index(str(bones["earliestSupportedSourceFilename"]))
+        bone_target = str(bones["earliestSupportedSourceFilename"])
+        bridge = bridge_ulnar_to_bone_transition(
+            source,
+            args.first,
+            ulnar,
+            bone_target,
+        )
+        bone_earliest = nominal_index(bone_target)
         ulnar_earliest = nominal_index(str(ulnar["earliestContinuouslyTrackedSourceFilename"]))
         distance_nominal = abs(ulnar_earliest - bone_earliest)
-        reaches_bone_transition_neighborhood = distance_nominal <= 20
+        reaches_bone_transition_neighborhood = bool(
+            bridge["sameSubjectContinuitySupportedToBoneTransition"]
+        )
 
         report = {
             "schema": "ph-as06-upper-extremity-continuity-recon.v1",
@@ -599,12 +855,18 @@ def main() -> None:
             "anchorLineage": anchor_lineage,
             "boneContinuity": bones,
             "ulnarArteryRetrogradeContinuity": ulnar,
+            "ulnarBridgeSearch": bridge,
             "nextSearchReadiness": {
                 "bonePairEarliestNominalIndex": bone_earliest,
                 "ulnarTrackEarliestNominalIndex": ulnar_earliest,
                 "nominalIndexSeparation": distance_nominal,
                 "ulnarTrackReachesBoneTransitionNeighborhood": reaches_bone_transition_neighborhood,
                 "bifurcationSearchAuthorized": reaches_bone_transition_neighborhood,
+                "bifurcationSearchAuthorizationBasis": (
+                    "beam-search same-subject ulnar continuity reaches the proximal radius/ulna pair-support transition"
+                    if reaches_bone_transition_neighborhood
+                    else "same-subject ulnar continuity remains discontinuous from the proximal radius/ulna pair-support transition"
+                ),
                 "radialIdentityPromotionAuthorized": False,
                 "superficialVeinIdentityPromotionAuthorized": False,
                 "note": (
@@ -654,6 +916,16 @@ def main() -> None:
                             "firstFrameAfterContinuityFailure"
                         ],
                         "metrics": ulnar["metrics"],
+                    },
+                    "ulnarBridgeSearch": {
+                        "bridgeStartSourceFilename": bridge["bridgeStartSourceFilename"],
+                        "targetBoneTransitionSourceFilename": bridge["targetBoneTransitionSourceFilename"],
+                        "lastObservedSourceFilename": bridge["lastObservedSourceFilename"],
+                        "reachedBoneTransitionTarget": bridge["reachedBoneTransitionTarget"],
+                        "sameSubjectContinuitySupportedToBoneTransition": bridge[
+                            "sameSubjectContinuitySupportedToBoneTransition"
+                        ],
+                        "metrics": bridge["metrics"],
                     },
                     "nextSearchReadiness": report["nextSearchReadiness"],
                 },
