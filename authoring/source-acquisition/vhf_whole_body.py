@@ -184,9 +184,17 @@ def check_inventory(inv):
 def download_frame(frame, output):
     from PIL import Image
     src = frame['source']
-    for attempt in range(4):
+    # Provider responses can be transiently incomplete/non-PNG during a multi-GB
+    # acquisition. Retry the exact same authoritative URL only; never substitute
+    # an alternate location whose byte equivalence has not been established.
+    retry_delays = (1, 2, 4, 8, 12, 16, 24)
+    for attempt in range(len(retry_delays) + 1):
         try:
-            with urlopen(Request(src['url'], headers={'User-Agent':'procedural-human-source/1'}), timeout=90) as response:
+            with urlopen(Request(src['url'], headers={
+                'User-Agent':'procedural-human-source/1',
+                'Accept':'image/png,application/octet-stream;q=0.9,*/*;q=0.1',
+                'Cache-Control':'no-cache',
+            }), timeout=90) as response:
                 data=response.read(src['listedByteSize']+1)
                 headers=response.headers
             if len(data)!=src['listedByteSize']: raise ValueError('source changed size: '+src['path'])
@@ -198,8 +206,8 @@ def download_frame(frame, output):
                 sha256=digest(data),byteSize=len(data),widthPixels=2048,heightPixels=1216,
                 retrievedAt=datetime.now(timezone.utc).isoformat(),lastModified=headers.get('Last-Modified'),etag=headers.get('ETag'))
         except (OSError,ValueError) as e:
-            if attempt==3: raise RuntimeError('acquisition failed: '+src['path']) from e
-            time.sleep(attempt+1)
+            if attempt==len(retry_delays): raise RuntimeError('acquisition failed: '+src['path']) from e
+            time.sleep(retry_delays[attempt])
 
 
 def verify_chunk(path, inv, inventory_hash, chunk_index):
