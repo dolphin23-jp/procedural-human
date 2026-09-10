@@ -29,6 +29,8 @@ MVP 0 is deliberately small. It targets the left distal forearm/wrist and proves
 
 MVP 0 is not yet a complete AVF or CVC simulator.
 
+The current authoring strategy may ingest and index same-subject source data beyond the distal forearm, including the usable whole-body source dataset, when broader source context is needed to establish anatomical identity or continuity. This does **not** expand the MVP 0 runtime or acceptance region beyond the left distal forearm/wrist.
+
 ## Authoritative documents
 
 The project specifications are, in order of authority:
@@ -41,6 +43,12 @@ The project specifications are, in order of authority:
 6. TASKS.md
 
 Implementation tasks must not silently violate higher-level specifications.
+
+## Project direction
+
+`ROADMAP.md` records the current implementation snapshot, the 2026-09-10 whole-body source-foundation decision, the immediate authoring plan, and the staged path from MVP 0 toward the long-term whole-body anatomy/physiology/procedure platform.
+
+`ROADMAP.md` is directional and does not override the authoritative documents above.
 
 ## Planned runtime / authoring split
 
@@ -62,4 +70,12 @@ Authoring and preprocessing:
 
 ## Status
 
-Architecture and MVP 0 planning are established. Implementation starts with the repository foundation and contracts defined in TASKS.md.
+Snapshot: 2026-09-10, `main@71812a0a5779d358a748f9c41bc0a02a9bc99145`.
+
+- M0-M5 are implemented through TASK-064.
+- M6 is implemented through TASK-072; TASK-073 is the next numbered mainline interaction task.
+- M7 Events/Procedure/Replay has not yet begun.
+- M8A real-data authoring has progressed through A06 human review and A07 semantic mapping.
+- A08/A09 have a bounded ulnar-artery centerline/lumen-boundary candidate.
+- Radial-artery and superficial-target-vein evidence remain fail-closed, so A10 Medical Master v0 remains blocked.
+- The next authoring strategy is to establish a reusable whole-body same-subject source foundation and trace missing vascular identity by continuity before resuming A10 promotion.
