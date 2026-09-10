@@ -650,6 +650,7 @@ Gate E after TASK-053: real iPad rendering/input works early.
 Gate F after TASK-064: image/3D coordinate integrity.  
 Gate G after TASK-077: generic needle traverses fixture anatomy.  
 Gate H after TASK-094: fixture end-to-end procedure/replay.  
+Gate S after TASK-AS07: reusable whole-body source foundation exists and missing MVP vascular identities have been re-evaluated from same-subject continuity evidence. Gate S does not imply a whole-body Medical Master.  
 Gate I after TASK-A18: medically grounded runtime asset.  
 Gate J after TASK-112: MVP 0 complete.
 
