@@ -140,6 +140,8 @@ Promotion to `structure.radial_artery.left` requires all of the following at the
 
 CT/MRI or atlas position alone is insufficient.
 
+TASK-V05 applies these six gates independently to the committed same-subject evidence rather than selecting the highest-scoring candidate. All eight anonymous arterial branch-search tracks remain in the competitor set. The current gate result is fail / insufficient / fail / insufficient / fail / fail in the order above. No candidate is selected, radial/brachial/bifurcation identity remains unresolved, and automatic promotion is prohibited. This is a completed bounded evaluation with a blocked-unresolved result, not a failed task execution.
+
 ### Superficial target vein structure
 
 Promotion of a subject-scoped observed superficial vein does not require cephalic/basilic naming. It requires:
@@ -213,7 +215,8 @@ Feed only passed claims/representations back into A06/A07/A08/A09 and reevaluate
 - TASK-V02: complete — see `authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json`; this establishes only a bounded bone-landmark registration scaffold, not Patient Space or medical registration.
 - TASK-V03: complete — see `authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json`; radius/ulna have bounded same-subject support, generic A05 tissue regions remain V0 candidate priors, and the radial/ulnar styloid, brachioradialis, flexor carpi radialis, and pronator quadratus remain explicitly unresolved.
 - TASK-V04: complete — see `authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json`; the source-index 3D graph preserves all direct observations, explicit gaps, and competing tracks without promoting radial or superficial-vein identity.
-- TASK-V05: next.
-- TASK-V06 through TASK-V10: not started.
+- TASK-V05: complete — see `authoring/outputs/m8v-v05-radial-artery-identity-evidence-20260911.json`; all eight anonymous arterial candidates remain competing, the six required promotion gates do not all pass, no candidate is selected, and the radial identity decision is `blocked-unresolved`.
+- TASK-V06: next.
+- TASK-V07 through TASK-V10: not started.
 
 No M8V task currently claims radial-artery identity, named superficial-vein identity, medical validation, Patient Space, or Medical Master promotion.
