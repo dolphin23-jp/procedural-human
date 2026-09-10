@@ -126,9 +126,11 @@ TASK-A03/A04 and later registration work must preserve and verify source spatial
 
 The 0.33 mm cryosection sampling does not imply 0.33 mm anatomical accuracy for every structure. Segmentation uncertainty, freezing effects, partial-volume effects, manual edits, and source interpretation must be reflected in the accuracy profile.
 
-### Left-side ROI still needs exact definition
+### ROI status after TASK-A04/A05
 
-TASK-A01 selects the dataset, not the final crop. TASK-A04 must record the exact left distal forearm/wrist patient-space extent and source slice range reproducibly.
+At TASK-A01 time, the exact left-side crop had not yet been defined. The repository now contains a reproducible bounded source-space acquisition for the distal left forearm/wrist (`avf1567a.png` through `avf1717a.png`, 451 frames, with a recorded pixel crop and provenance).
+
+This is **not yet a Patient Space ROI**. The current ROI record explicitly keeps `patientSpaceExtent: null` pending an explicitly aligned source series with measured patient-space geometry. Filename-derived source position and the cryosection crop must not be promoted into a Patient Space or CT-registration claim.
 
 ## 7. Secondary reference datasets
 
