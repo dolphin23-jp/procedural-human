@@ -12,6 +12,19 @@ import json
 from pathlib import Path
 
 
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def portable_path(path: Path) -> str:
+    value = Path(path)
+    if value.is_absolute():
+        try:
+            return value.resolve().relative_to(ROOT).as_posix()
+        except ValueError:
+            return value.as_posix()
+    return value.as_posix()
+
+
 RADIAL_GATE_IDS = {
     "unique-same-subject-arterial-anchor": "radial.gate.same-subject-anchor",
     "bounded-gap-continuity-to-target": "radial.gate.continuity",
@@ -42,7 +55,7 @@ def file_hash(path: Path) -> str:
 def evidence_ref(path: Path, role: str) -> dict:
     value = load(path)
     return {
-        "path": Path(path).as_posix(),
+        "path": portable_path(path),
         "schema": value["schema"],
         "sha256": file_hash(path),
         "role": role,
@@ -81,7 +94,7 @@ def verify_review_session(session_path: Path, v07_path: Path, v07: dict) -> dict
         raise ValueError("unexpected human adjudication task")
     expected_surface_hash = file_hash(v07_path)
     review_surface = session.get("reviewSurface", {})
-    if review_surface.get("path") != Path(v07_path).as_posix():
+    if review_surface.get("path") != portable_path(v07_path):
         raise ValueError("human review references a different TASK-V07 path")
     if review_surface.get("sha256") != expected_surface_hash:
         raise ValueError("stale human review: TASK-V07 hash mismatch")
@@ -294,7 +307,7 @@ def build_ledger(
 
     human_refs = [
         {
-            "path": path.as_posix(),
+            "path": portable_path(path),
             "sha256": file_hash(path),
             "reviewerReference": session["reviewerReference"],
             "decisionCount": len(session["decisions"]),
