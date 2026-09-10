@@ -145,7 +145,7 @@ It is not selected as the primary MVP 0 source at TASK-A01 because its published
 This decision authorizes source acquisition/recording work in TASK-A02 and ingest tooling in TASK-A03. It does not authorize medical validation, runtime release, or fabricated completion of structures not supported by the source.
 
 
-## 7.1 2026-09-10 cross-subject atlas fallback diagnostic
+## 8.1 2026-09-10 cross-subject atlas fallback diagnostic
 
 A bounded Z-Anatomy/BodyParts3D vessel fallback was tested after the same-subject VHP source-first radial-artery and superficial-vein searches failed closed. The atlas remained explicitly `atlas-derived`; it was not treated as acquired VHP geometry.
 
@@ -156,7 +156,7 @@ The mapped cephalic and basilic trajectories also had zero median overlap with t
 Decision: **REJECT direct registered-atlas vessel substitution for this VHP individual.** The diagnostic is retained as negative evidence. TASK-A07 and TASK-A10 remain unchanged, and no human anatomical-review, procedure-specific-review, Patient Space, or medical-validation claim is created. A materially different source strategy is required for the missing radial artery and superficial target vein.
 
 
-## 8.1 2026-09-10 whole-body source-foundation decision
+## 8.2 2026-09-10 whole-body source-foundation decision
 
 The original TASK-A01 decision selected Visible Human Female for a **left distal forearm/wrist MVP 0 Medical Master**. That MVP deliverable scope remains unchanged.
 
