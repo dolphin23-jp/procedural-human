@@ -34,6 +34,11 @@ const authoringContracts = [
     'schemas/assets/vhf-whole-body-inventory.v1.schema.json',
     'authoring/source-archives/vhf-whole-body-inventory-20260910.json',
   ],
+  [
+    'm8v-radiological-source-inventory',
+    'schemas/assets/m8v-radiological-source-inventory.v1.schema.json',
+    'authoring/outputs/m8v-v01-radiological-source-inventory-20260910.json',
+  ],
   ['vhf-source-chunk', 'schemas/assets/vhf-source-chunk.v1.schema.json', null],
   [
     'vhf-source-archive-index',
