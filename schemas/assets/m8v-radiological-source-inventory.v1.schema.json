@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/m8v-radiological-source-inventory/v1",
+  "title": "M8V Radiological Source Inventory v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "status",
+    "sourceArchiveId",
+    "subjectId",
+    "inventoryEvidence",
+    "providerDocumentation",
+    "preferredCollections",
+    "existingBoundedCtProbe",
+    "disposition",
+    "claims"
+  ],
+  "properties": {
+    "schema": { "const": "ph-m8v-radiological-source-inventory.v1" },
+    "schemaVersion": { "const": "1" },
+    "task": { "const": "TASK-V01" },
+    "recordedAt": { "type": "string", "minLength": 1 },
+    "status": { "const": "complete" },
+    "sourceArchiveId": { "const": "source.nlm.vhp-female" },
+    "subjectId": { "const": "VHP-F" },
+    "inventoryEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "snapshotDate"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "snapshotDate": { "type": "string", "minLength": 1 }
+      }
+    },
+    "providerDocumentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["datasetUrl", "gettingDataUrl", "documentedRelationship"],
+      "properties": {
+        "datasetUrl": { "type": "string", "minLength": 1 },
+        "gettingDataUrl": { "type": "string", "minLength": 1 },
+        "documentedRelationship": { "type": "string", "minLength": 1 }
+      }
+    },
+    "preferredCollections": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "path",
+          "listedObjectCount",
+          "listedByteSize",
+          "inventoryStatus",
+          "acquisitionStatus",
+          "registrationStatus",
+          "patientSpaceClaim"
+        ],
+        "properties": {
+          "role": {
+            "enum": ["ct-images", "ct-headers", "mri-images", "mri-headers"]
+          },
+          "path": { "type": "string", "minLength": 1 },
+          "listedObjectCount": { "type": "integer", "minimum": 1 },
+          "listedByteSize": { "type": "integer", "minimum": 1 },
+          "inventoryStatus": { "const": "inventoried" },
+          "acquisitionStatus": { "const": "not-persisted-by-m8v" },
+          "registrationStatus": { "const": "not-established" },
+          "patientSpaceClaim": { "const": false }
+        }
+      }
+    },
+    "existingBoundedCtProbe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workflowPath",
+        "status",
+        "nominalIndexStart",
+        "nominalIndexStop",
+        "expectedCtImageCount",
+        "imageDimensions",
+        "persistence",
+        "registrationStatus",
+        "patientSpaceClaim"
+      ],
+      "properties": {
+        "workflowPath": { "type": "string", "minLength": 1 },
+        "status": { "const": "implemented-reference-probe" },
+        "nominalIndexStart": { "type": "integer" },
+        "nominalIndexStop": { "type": "integer" },
+        "expectedCtImageCount": { "type": "integer", "minimum": 1 },
+        "imageDimensions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height"],
+          "properties": {
+            "width": { "const": 512 },
+            "height": { "const": 512 }
+          }
+        },
+        "persistence": { "const": "github-actions-artifact-ephemeral" },
+        "registrationStatus": { "const": "not-established" },
+        "patientSpaceClaim": { "const": false }
+      }
+    },
+    "disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nextTask", "ctPriority", "mriPriority", "reason"],
+      "properties": {
+        "nextTask": { "const": "TASK-V02" },
+        "ctPriority": { "const": "primary-same-subject-registration-support" },
+        "mriPriority": { "const": "secondary-use-if-information-gain-justifies" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sameSubjectRadiologicalSourcesInventoried",
+        "persistentRadiologicalArchiveComplete",
+        "ctCryosectionRegistrationEstablished",
+        "mriCryosectionRegistrationEstablished",
+        "radialArteryIdentityEstablished",
+        "superficialVeinIdentityEstablished",
+        "medicalValidation",
+        "patientSpaceGeometry",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "sameSubjectRadiologicalSourcesInventoried": { "const": true },
+        "persistentRadiologicalArchiveComplete": { "const": false },
+        "ctCryosectionRegistrationEstablished": { "const": false },
+        "mriCryosectionRegistrationEstablished": { "const": false },
+        "radialArteryIdentityEstablished": { "const": false },
+        "superficialVeinIdentityEstablished": { "const": false },
+        "medicalValidation": { "const": false },
+        "patientSpaceGeometry": { "const": false },
+        "automaticPromotionAllowed": { "const": false }
+      }
+    }
+  }
+}
