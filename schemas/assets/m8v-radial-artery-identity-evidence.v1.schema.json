@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://procedural-human.local/schemas/assets/m8v-radial-artery-identity-evidence/v1",
+  "$comment": "recordedAt uses an explicit YYYY-MM-DD pattern because the repository Ajv strict validator does not install format plugins.",
   "title": "M8V radial artery identity evidence",
   "type": "object",
   "additionalProperties": false,
