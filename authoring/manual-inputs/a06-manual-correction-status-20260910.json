@@ -87,7 +87,7 @@
     {
       "draftLabel": "radial_artery",
       "status": "blocked-source-evidence",
-      "reason": "Multiple reproducible source-image diagnostics are recorded in authoring/outputs/a06-vessel-source-diagnostic-provenance-20260909.json. Radius-ulna atlas prior, expanded 60/80/100 px priors, a verified-ulnar-anchor correction, and an atlas-center-free bone-constrained source-first search all failed fixed bounded continuity gates; no radial artery mask is accepted for manual correction.",
+      "reason": "The original TASK-A06 review had no accepted radial artery mask. TASK-AS06 subsequently extended the same-subject reviewed ulnar anchor through the proximal radius/ulna transition and ran a fixed-gate anonymous branch-topology search; eight anonymous vessel-like tracks were retained but zero met the topology promotion gate. Radial/brachial/bifurcation identity therefore remains unresolved and no radial mask is added. This AS06 evidence was not part of the earlier A06 human mask review; see authoring/outputs/as06-same-subject-continuity-provenance-20260910.json.",
       "outputUri": null,
       "outputDigest": null
     },
@@ -101,7 +101,7 @@
     {
       "draftLabel": "superficial_target_vein",
       "status": "blocked-source-evidence",
-      "reason": "Two independent source-first superficial vessel diagnostic families, both without named-vein atlas binding, found vessel-like tracks but none met fixed shallow/continuous/local-stability gates. Cephalic/basilic identity remains unresolved and no superficial target vein mask is accepted for manual correction; see authoring/outputs/a06-vessel-source-diagnostic-provenance-20260909.json.",
+      "reason": "The original TASK-A06 review had no accepted superficial target vein mask. TASK-AS06 subsequently ran a wider same-subject anonymous superficial-vessel search without named-vein atlas binding; eight anonymous tracks were retained but zero met the fixed continuity gate. Cephalic/basilic identity remains unresolved and no target-vein mask is added. This AS06 evidence was not part of the earlier A06 human mask review; see authoring/outputs/as06-same-subject-continuity-provenance-20260910.json.",
       "outputUri": null,
       "outputDigest": null
     }

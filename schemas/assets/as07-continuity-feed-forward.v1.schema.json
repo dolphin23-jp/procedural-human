@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/as07-continuity-feed-forward/v1",
+  "title": "AS07 Continuity Feed-Forward v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "sourceEvidence",
+    "updates",
+    "gateS",
+    "claims"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ph-as07-continuity-feed-forward.v1"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "task": {
+      "const": "TASK-AS07"
+    },
+    "recordedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "sourceEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "as06ProvenancePath",
+        "as06Disposition",
+        "radialArteryIdentity",
+        "superficialVeinIdentity"
+      ],
+      "properties": {
+        "as06ProvenancePath": {
+          "const": "authoring/outputs/as06-same-subject-continuity-provenance-20260910.json"
+        },
+        "as06Disposition": {
+          "const": "complete-unresolved-with-stronger-same-subject-evidence"
+        },
+        "radialArteryIdentity": {
+          "const": "unresolved"
+        },
+        "superficialVeinIdentity": {
+          "const": "unresolved"
+        }
+      }
+    },
+    "updates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["a06", "a07", "a08", "a09", "a10"],
+      "properties": {
+        "a06": {
+          "$ref": "#/$defs/a06Update"
+        },
+        "a07": {
+          "$ref": "#/$defs/a07Update"
+        },
+        "a08": {
+          "$ref": "#/$defs/a08Update"
+        },
+        "a09": {
+          "$ref": "#/$defs/a09Update"
+        },
+        "a10": {
+          "$ref": "#/$defs/a10Update"
+        }
+      }
+    },
+    "gateS": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reusableWholeBodySourceFoundationConfirmed",
+        "missingMvpVascularIdentitiesReevaluatedFromSameSubjectEvidence",
+        "wholeBodyMedicalMasterImplied"
+      ],
+      "properties": {
+        "status": {
+          "const": "complete"
+        },
+        "reusableWholeBodySourceFoundationConfirmed": {
+          "const": true
+        },
+        "missingMvpVascularIdentitiesReevaluatedFromSameSubjectEvidence": {
+          "const": true
+        },
+        "wholeBodyMedicalMasterImplied": {
+          "const": false
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "newHumanReviewPerformed",
+        "radialArteryIdentityEstablished",
+        "namedSuperficialVeinIdentityEstablished",
+        "crossSubjectAtlasGeometryPromoted",
+        "procedureRoleUsedAsAnatomicalIdentity",
+        "patientSpaceGeometry",
+        "medicalValidation",
+        "medicalMasterCreated",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "newHumanReviewPerformed": {
+          "const": false
+        },
+        "radialArteryIdentityEstablished": {
+          "const": false
+        },
+        "namedSuperficialVeinIdentityEstablished": {
+          "const": false
+        },
+        "crossSubjectAtlasGeometryPromoted": {
+          "const": false
+        },
+        "procedureRoleUsedAsAnatomicalIdentity": {
+          "const": false
+        },
+        "patientSpaceGeometry": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "medicalMasterCreated": {
+          "const": false
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "a06Update": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "radialArteryStatus",
+        "ulnarArteryStatus",
+        "superficialTargetVeinStatus",
+        "newHumanReviewPerformed"
+      ],
+      "properties": {
+        "path": {
+          "const": "authoring/manual-inputs/a06-manual-correction-status-20260910.json"
+        },
+        "radialArteryStatus": {
+          "const": "blocked-source-evidence"
+        },
+        "ulnarArteryStatus": {
+          "const": "reviewed-no-change"
+        },
+        "superficialTargetVeinStatus": {
+          "const": "blocked-source-evidence"
+        },
+        "newHumanReviewPerformed": {
+          "const": false
+        }
+      }
+    },
+    "a07Update": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "radialArteryMappingStatus",
+        "radialRepresentationAvailable",
+        "superficialTargetAnatomicalId",
+        "procedureRoleUsedAsIdentity"
+      ],
+      "properties": {
+        "path": {
+          "const": "authoring/semantic/a07-semantic-structure-mapping-20260910.json"
+        },
+        "radialArteryMappingStatus": {
+          "const": "semantic-id-reserved-no-representation"
+        },
+        "radialRepresentationAvailable": {
+          "const": false
+        },
+        "superficialTargetAnatomicalId": {
+          "type": "null"
+        },
+        "procedureRoleUsedAsIdentity": {
+          "const": false
+        }
+      }
+    },
+    "a08Update": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "radialArteryCenterlineStatus",
+        "ulnarArteryCenterlineStatus",
+        "superficialTargetCenterlineStatus"
+      ],
+      "properties": {
+        "path": {
+          "const": "authoring/outputs/a08-vessel-centerline-authoring-report-20260910.json"
+        },
+        "radialArteryCenterlineStatus": {
+          "const": "blocked"
+        },
+        "ulnarArteryCenterlineStatus": {
+          "const": "generated"
+        },
+        "superficialTargetCenterlineStatus": {
+          "const": "blocked"
+        }
+      }
+    },
+    "a09Update": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "radialArteryRepresentationStatus",
+        "ulnarArteryRepresentationStatus",
+        "superficialTargetRepresentationStatus"
+      ],
+      "properties": {
+        "path": {
+          "const": "authoring/outputs/a09-boundary-lumen-authoring-report-20260910.json"
+        },
+        "radialArteryRepresentationStatus": {
+          "const": "blocked"
+        },
+        "ulnarArteryRepresentationStatus": {
+          "const": "generated"
+        },
+        "superficialTargetRepresentationStatus": {
+          "const": "blocked"
+        }
+      }
+    },
+    "a10Update": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "status", "automaticPromotionAllowed"],
+      "properties": {
+        "path": {
+          "const": "authoring/outputs/a10-medical-master-readiness-20260910.json"
+        },
+        "status": {
+          "const": "blocked"
+        },
+        "automaticPromotionAllowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}
