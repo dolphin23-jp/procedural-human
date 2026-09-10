@@ -1,0 +1,71 @@
+name: AS07 finalize feed-forward records
+
+on:
+  push:
+    branches:
+      - task-as07-feed-continuity-evidence
+    paths:
+      - '.github/workflows/as07-finalize-records.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Register AS07 schema record and mark Gate S complete
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          validator = Path('tools/validate-schemas.mjs')
+          text = validator.read_text()
+          needle = """  [\n    'as06-same-subject-continuity-provenance',\n    'schemas/assets/as06-same-subject-continuity-provenance.v1.schema.json',\n    'authoring/outputs/as06-same-subject-continuity-provenance-20260910.json',\n  ],\n"""
+          addition = needle + """  [\n    'as07-continuity-feed-forward',\n    'schemas/assets/as07-continuity-feed-forward.v1.schema.json',\n    'authoring/outputs/as07-continuity-feed-forward-20260910.json',\n  ],\n"""
+          if "'as07-continuity-feed-forward'" not in text:
+              if needle not in text:
+                  raise SystemExit('AS06 validator anchor not found')
+              text = text.replace(needle, addition, 1)
+              validator.write_text(text)
+
+          tasks = Path('TASKS.md')
+          text = tasks.read_text()
+          heading = '## TASK-AS07 — Feed continuity evidence back into M8A\n'
+          status = (
+              'Status: complete — TASK-AS06 same-subject continuity evidence has been fed forward through A06/A07/A08/A09 and A10 readiness without discarding the valid bounded ulnar-artery work; radial artery and named superficial-vein identity remain fail-closed unresolved, A10 remains blocked, and no new human review or Medical Master promotion is claimed. See `authoring/outputs/as07-continuity-feed-forward-20260910.json`.\n'
+          )
+          if heading + status not in text:
+              if heading not in text:
+                  raise SystemExit('TASK-AS07 heading not found')
+              text = text.replace(heading, heading + status, 1)
+
+          gate = 'Gate S: reusable whole-body source foundation exists and the missing MVP vascular identities have been re-evaluated using same-subject continuity evidence.'
+          gate_done = 'Gate S: complete — reusable whole-body source foundation exists and the missing MVP vascular identities have been re-evaluated using same-subject continuity evidence; this does not imply a whole-body Medical Master.'
+          if gate_done not in text:
+              if gate not in text:
+                  raise SystemExit('Gate S task-section anchor not found')
+              text = text.replace(gate, gate_done, 1)
+
+          critical = 'Gate S after TASK-AS07: reusable whole-body source foundation exists and missing MVP vascular identities have been re-evaluated from same-subject continuity evidence. Gate S does not imply a whole-body Medical Master.'
+          critical_done = 'Gate S (complete) after TASK-AS07: reusable whole-body source foundation exists and missing MVP vascular identities have been re-evaluated from same-subject continuity evidence. Gate S does not imply a whole-body Medical Master.'
+          if critical_done not in text and critical in text:
+              text = text.replace(critical, critical_done, 1)
+
+          tasks.write_text(text)
+          PY
+
+      - name: Commit finalization
+        run: |
+          if git diff --quiet; then
+            echo "No changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add TASKS.md tools/validate-schemas.mjs
+          git commit -m "TASK-AS07: register feed-forward record and close Gate S"
+          git push origin HEAD:task-as07-feed-continuity-evidence
