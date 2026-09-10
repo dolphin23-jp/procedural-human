@@ -369,9 +369,14 @@ export function App() {
             <p className="viewer__eyebrow">M4 · 3D Runtime</p>
             <h1 id="app-title">Synthetic anatomy fixture</h1>
           </div>
-          <p className="viewer__notice">
-            Development fixture · not medical anatomy
-          </p>
+          <div className="viewer__header-actions">
+            <a className="viewer__source-link" href="?as05-source=1">
+              AS05 whole-body source
+            </a>
+            <p className="viewer__notice">
+              Development fixture · not medical anatomy
+            </p>
+          </div>
         </header>
         <div className="viewer__viewport">
           <canvas ref={canvasRef} aria-label="3D synthetic anatomy fixture" />

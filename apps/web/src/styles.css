@@ -438,3 +438,28 @@ h1,
   margin-top: 6px;
   color: #a9bbd1;
 }
+
+.viewer__header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.viewer__source-link {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 10px;
+  border: 1px solid #45657a;
+  border-radius: 9px;
+  color: #dbe5f2;
+  background: #101b28;
+  font-size: 0.72rem;
+  text-decoration: none;
+}
+@media (max-width: 600px) {
+  .viewer__header-actions {
+    justify-content: flex-start;
+  }
+}

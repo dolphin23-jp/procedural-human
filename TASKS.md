@@ -424,6 +424,7 @@ Requirements:
 Done: distal forearm, proximal forearm, antecubital fossa, upper arm, and future regions can be materialized reproducibly from the same source foundation.
 
 ## TASK-AS05 — Whole-body source navigation / inspection surface
+Status: complete — iPad/browser source navigator added at `?as05-source=1`, using a transient compact index derived from the committed whole-body inventory and the exact recorded provider source URLs.
 Provide a practical authoring inspection path for navigating the indexed source across regions.
 
 This may be a browser/iPad-friendly review surface or equivalent authoring tool.
