@@ -39,6 +39,16 @@ const authoringContracts = [
     'schemas/assets/m8v-radiological-source-inventory.v1.schema.json',
     'authoring/outputs/m8v-v01-radiological-source-inventory-20260910.json',
   ],
+  [
+    'm8v-ct-cryo-registration-scaffold',
+    'schemas/assets/m8v-ct-cryo-registration-scaffold.v1.schema.json',
+    'authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json',
+  ],
+  [
+    'm8v-upper-extremity-landmark-graph',
+    'schemas/assets/m8v-upper-extremity-landmark-graph.v1.schema.json',
+    'authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json',
+  ],
   ['vhf-source-chunk', 'schemas/assets/vhf-source-chunk.v1.schema.json', null],
   [
     'vhf-source-archive-index',
