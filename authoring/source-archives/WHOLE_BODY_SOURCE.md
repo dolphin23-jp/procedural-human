@@ -136,3 +136,43 @@ segmentation, vessel identity or Medical Master.
 
 AS05 navigation and AS06/AS07 vascular tracing remain separate tasks. None of
 this source work unblocks A10 by itself or closes Gate S.
+
+
+## TASK-AS05 browser source navigation
+
+TASK-AS05 provides a source/reference-only inspection surface in the existing
+GitHub Pages authoring preview:
+
+`?as05-source=1`
+
+The page uses a compact transient navigation index generated at deploy time by
+`authoring/review/as05_build_navigation_index.py`. The committed
+`vhf-whole-body-inventory-20260910.json` remains authoritative; the compact
+JSON is not a second archive and contains no image bytes.
+
+The navigator supports:
+
+- direct jump by global frame index or provider filename
+- provider-partition jump
+- sequential ±1 / ±10 / ±100 navigation and a full-stack slider
+- keyboard left/right and Page Up/Page Down navigation
+- the recorded A05 distal-forearm start as a convenience jump
+- fit-to-view or native 2048 × 1216 inspection
+- visible source path, source URL, global index, listed byte size, provider
+  partition metadata, inventory SHA-256 and source snapshot
+- explicit handling of the two provider-listed 0-byte objects without fallback
+  substitution
+
+Images are loaded from the exact recorded NLM provider URLs. If a provider URL
+fails, the UI reports that failure and does not silently switch to an alternate
+location. No segmentation overlay is enabled in AS05. Viewing a frame does not
+establish anatomical identity, medical validation, Patient Space, CT
+registration, Medical Master status or runtime-asset status.
+
+The deployed index is reproducible with:
+
+```sh
+python authoring/review/as05_build_navigation_index.py \
+  --inventory authoring/source-archives/vhf-whole-body-inventory-20260910.json \
+  --output apps/web/dist/as05-source-index.json
+```

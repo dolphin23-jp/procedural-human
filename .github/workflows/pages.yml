@@ -6,6 +6,7 @@ on:
       - main
       - task-048-053-runtime-interaction
       - task-a06-ipad-human-review
+      - task-as05-source-navigation
   workflow_dispatch:
 
 permissions:
@@ -43,6 +44,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Build TASK-AS05 whole-body source navigation index
+        run: |
+          python authoring/review/as05_build_navigation_index.py \
+            --inventory authoring/source-archives/vhf-whole-body-inventory-20260910.json \
+            --output apps/web/dist/as05-source-index.json
 
       - id: a06-review
         name: Build transient TASK-A06 human-review data
