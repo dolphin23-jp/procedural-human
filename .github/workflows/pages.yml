@@ -7,6 +7,7 @@ on:
       - task-048-053-runtime-interaction
       - task-a06-ipad-human-review
       - task-as05-source-navigation
+      - m8v-vessel-identification-evidence
   workflow_dispatch:
 
 permissions:
@@ -50,6 +51,18 @@ jobs:
           python authoring/review/as05_build_navigation_index.py \
             --inventory authoring/source-archives/vhf-whole-body-inventory-20260910.json \
             --output apps/web/dist/as05-source-index.json
+
+      - name: Build TASK-V07 multimodal review manifest
+        run: |
+          python authoring/review/m8v_build_review_surface.py \
+            --inventory authoring/source-archives/vhf-whole-body-inventory-20260910.json \
+            --registration authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json \
+            --landmarks authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json \
+            --tracks authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json \
+            --radial authoring/outputs/m8v-v05-radial-artery-identity-evidence-20260911.json \
+            --superficial authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json \
+            --recorded-at 2026-09-11 \
+            --web-output apps/web/dist/m8v-review-data/manifest.json
 
       - id: a06-review
         name: Build transient TASK-A06 human-review data
