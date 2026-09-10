@@ -1,0 +1,95 @@
+name: AS whole-body immutable source archive
+
+on:
+  push:
+    branches: [task-as01-whole-body-source-foundation]
+    paths:
+      - '.github/workflows/as-whole-body-source.yml'
+      - 'authoring/source-acquisition/vhf_whole_body.py'
+      - 'authoring/source-archives/vhf-whole-body-inventory-20260910.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vhf-whole-body-source-20260910
+  cancel-in-progress: false
+
+env:
+  SOURCE_TAG: source-vhf-png-20260910
+  INVENTORY: authoring/source-archives/vhf-whole-body-inventory-20260910.json
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create durable draft source release
+        shell: bash
+        run: |
+          cat > "$RUNNER_TEMP/source-notice.md" <<'NOTICE'
+          Immutable Visible Human Female provider PNG source snapshot.
+          Courtesy of the U.S. National Library of Medicine
+          This snapshot may not reflect the most current or accurate NLM data.
+          No NLM endorsement is implied. NLM gives no accuracy or fitness warranty.
+          Terms: https://www.nlm.nih.gov/databases/download/terms_and_conditions.html
+          Source image coordinates only. Not a Medical Master, registered CT, or medically validated runtime asset.
+          Completion is governed by the inventory and verified archive index, not the presence of this draft release.
+          NOTICE
+          if ! gh release view "$SOURCE_TAG" > /dev/null 2>&1; then
+            gh release create "$SOURCE_TAG" --draft --target "$GITHUB_SHA" --title 'Visible Human Female immutable PNG source — 2026-09-10' --notes-file "$RUNNER_TEMP/source-notice.md"
+          fi
+          test "$(gh release view "$SOURCE_TAG" --json isDraft --jq .isDraft)" = true
+
+  acquire:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install jsonschema==4.25.1 pillow==11.3.0
+      - name: Acquire, persist and independently read back each chunk
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: python authoring/source-acquisition/vhf_release_shard.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vhf-verified-receipts-${{ matrix.shard }}
+          path: verified-receipts/*.json
+          retention-days: 14
+
+  finalize:
+    needs: acquire
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install jsonschema==4.25.1
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: vhf-verified-receipts-*
+          path: verified-receipts
+          merge-multiple: true
+      - name: Finalize verified global source index
+        run: python authoring/source-acquisition/vhf_release_shard.py --finalize
+      - name: Commit source integrity records only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add authoring/source-archives/vhf-source-archive-index-20260910.json authoring/source-archives/vhf-source-storage-20260910.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'TASK-AS02/AS03: record verified persistent whole-body source archive'
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi

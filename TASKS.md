@@ -368,6 +368,7 @@ It expands **source-evidence coverage**, not MVP 0 runtime/validation/acceptance
 It does not authorize whole-body segmentation, whole-body Medical Master creation, whole-body medical validation, or post-MVP physiology/physics.
 
 ## TASK-AS01 — Full-body source inventory and terms checkpoint
+Status: complete — see `authoring/source-archives/WHOLE_BODY_SOURCE.md` and the 2026-09-10 inventory.
 Inventory the usable Visible Human Female whole-body source material and same-subject supporting modalities needed for future authoring.
 
 Record:

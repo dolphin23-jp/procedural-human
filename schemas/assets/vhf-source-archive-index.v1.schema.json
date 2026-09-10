@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.dev/schemas/assets/vhf-source-archive-index/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "kind": {
+      "const": "vhf-source-archive-index"
+    },
+    "inventorySha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "coordinateSpace": {
+      "const": "source-image-stack"
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "patientSpace": {
+          "const": false
+        },
+        "registeredCT": {
+          "const": false
+        },
+        "medicalValidation": {
+          "const": false
+        },
+        "medicalMaster": {
+          "const": false
+        },
+        "runtimeAsset": {
+          "const": false
+        }
+      },
+      "required": [
+        "patientSpace",
+        "registeredCT",
+        "medicalValidation",
+        "medicalMaster",
+        "runtimeAsset"
+      ]
+    },
+    "expectedFrameCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "verifiedFrameCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "complete": {
+      "type": "boolean"
+    },
+    "chunks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "filename": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "byteSize": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "frameCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "manifestSha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "index",
+          "filename",
+          "sha256",
+          "byteSize",
+          "frameCount",
+          "manifestSha256"
+        ]
+      }
+    },
+    "missingChunkIndices": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "kind",
+    "inventorySha256",
+    "coordinateSpace",
+    "claims",
+    "expectedFrameCount",
+    "verifiedFrameCount",
+    "complete",
+    "chunks",
+    "missingChunkIndices"
+  ]
+}
