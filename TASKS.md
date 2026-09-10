@@ -466,6 +466,7 @@ Cross-subject atlas/literature may guide inspection but may not substitute geome
 Done: radial-artery and superficial-vein identity evidence is either defensibly established or remains explicitly unresolved with a stronger documented basis.
 
 ## TASK-AS07 — Feed continuity evidence back into M8A
+Status: complete — TASK-AS06 same-subject continuity evidence has been fed forward through A06/A07/A08/A09 and A10 readiness without discarding the valid bounded ulnar-artery work; radial artery and named superficial-vein identity remain fail-closed unresolved, A10 remains blocked, and no new human review or Medical Master promotion is claimed. See `authoring/outputs/as07-continuity-feed-forward-20260910.json`.
 Update the affected A06/A07 evidence state and rerun downstream readiness without discarding valid existing work.
 
 Where support is established:
@@ -481,7 +482,7 @@ Where support remains inadequate:
 - do not use procedure role as anatomical identity
 - do not promote cross-subject atlas geometry
 
-Gate S: reusable whole-body source foundation exists and the missing MVP vascular identities have been re-evaluated using same-subject continuity evidence.
+Gate S: complete — reusable whole-body source foundation exists and the missing MVP vascular identities have been re-evaluated using same-subject continuity evidence; this does not imply a whole-body Medical Master.
 
 # M8A — Medical Asset Authoring Lane
 
@@ -656,7 +657,7 @@ Gate E after TASK-053: real iPad rendering/input works early.
 Gate F after TASK-064: image/3D coordinate integrity.  
 Gate G after TASK-077: generic needle traverses fixture anatomy.  
 Gate H after TASK-094: fixture end-to-end procedure/replay.  
-Gate S after TASK-AS07: reusable whole-body source foundation exists and missing MVP vascular identities have been re-evaluated from same-subject continuity evidence. Gate S does not imply a whole-body Medical Master.  
+Gate S (complete) after TASK-AS07: reusable whole-body source foundation exists and missing MVP vascular identities have been re-evaluated from same-subject continuity evidence. Gate S does not imply a whole-body Medical Master.  
 Gate I after TASK-A18: medically grounded runtime asset.  
 Gate J after TASK-112: MVP 0 complete.
 

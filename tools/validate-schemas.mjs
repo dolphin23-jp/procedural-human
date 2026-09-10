@@ -131,6 +131,11 @@ const authoringContracts = [
     'authoring/outputs/as06-same-subject-continuity-provenance-20260910.json',
   ],
   [
+    'as07-continuity-feed-forward',
+    'schemas/assets/as07-continuity-feed-forward.v1.schema.json',
+    'authoring/outputs/as07-continuity-feed-forward-20260910.json',
+  ],
+  [
     'semantic-structure-mapping',
     'schemas/assets/semantic-structure-mapping.v1.schema.json',
     'authoring/semantic/a07-semantic-structure-mapping-20260910.json',
