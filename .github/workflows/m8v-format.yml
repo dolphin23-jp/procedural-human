@@ -1,0 +1,54 @@
+name: M8V branch formatter
+
+on:
+  push:
+    branches:
+      - m8v-vessel-identification-evidence
+    paths:
+      - .github/workflows/m8v-format.yml
+      - authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json
+      - schemas/assets/m8v-radiological-source-inventory.v1.schema.json
+      - schemas/assets/m8v-ct-cryo-registration-scaffold.v1.schema.json
+      - schemas/assets/m8v-upper-extremity-landmark-graph.v1.schema.json
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: m8v-vessel-identification-evidence
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Format M8V JSON files with repository Prettier
+        run: |
+          pnpm exec prettier --write \
+            authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json \
+            schemas/assets/m8v-radiological-source-inventory.v1.schema.json \
+            schemas/assets/m8v-ct-cryo-registration-scaffold.v1.schema.json \
+            schemas/assets/m8v-upper-extremity-landmark-graph.v1.schema.json
+      - name: Commit formatting if needed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json \
+            schemas/assets/m8v-radiological-source-inventory.v1.schema.json \
+            schemas/assets/m8v-ct-cryo-registration-scaffold.v1.schema.json \
+            schemas/assets/m8v-upper-extremity-landmark-graph.v1.schema.json
+          if git diff --cached --quiet; then
+            echo "No formatting changes needed"
+            exit 0
+          fi
+          git commit -m "chore: format M8V JSON records"
+          git push origin HEAD:m8v-vessel-identification-evidence
