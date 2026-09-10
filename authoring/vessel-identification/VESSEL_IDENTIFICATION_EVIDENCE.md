@@ -103,6 +103,8 @@ Upper-extremity landmark evidence may include source-supported relationships to:
 
 Landmarks are evidence constraints, not a license to draw textbook anatomy into the subject.
 
+TASK-V03 deliberately records evidence at different strengths rather than pretending all landmarks are equally established. The bounded radius/ulna support can constrain later candidate searches. The A05 skin, subcutaneous-soft-tissue, and major-muscle/tendon outputs remain V0 algorithm-derived candidate regions. Named styloid and muscle landmarks remain explicitly unresolved until direct same-subject observation supports them.
+
 ## Vessel track graph
 
 M8V treats vascular identification as a graph/evidence problem rather than independent per-slice classification.
@@ -207,7 +209,8 @@ Feed only passed claims/representations back into A06/A07/A08/A09 and reevaluate
 
 - TASK-V01: complete — see `authoring/outputs/m8v-v01-radiological-source-inventory-20260910.json`.
 - TASK-V02: complete — see `authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json`; this establishes only a bounded bone-landmark registration scaffold, not Patient Space or medical registration.
-- TASK-V03: next.
-- TASK-V04 through TASK-V10: not started.
+- TASK-V03: complete — see `authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json`; radius/ulna have bounded same-subject support, generic A05 tissue regions remain V0 candidate priors, and the radial/ulnar styloid, brachioradialis, flexor carpi radialis, and pronator quadratus remain explicitly unresolved.
+- TASK-V04: next.
+- TASK-V05 through TASK-V10: not started.
 
 No M8V task currently claims radial-artery identity, named superficial-vein identity, medical validation, Patient Space, or Medical Master promotion.
