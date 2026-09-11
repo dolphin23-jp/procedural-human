@@ -66,9 +66,9 @@ def valid_session(claim_id: str = "radial.gate.human-review") -> dict:
             {
                 "claimId": claim_id,
                 "kind": "radial-artery-identity",
-                "targetId": "structure.radial_artery.left",
+                "targetId": "vhf.m8v.branch-anonymous.01",
                 "verdict": "accepted",
-                "evidenceFrameIndices": [3000],
+                "evidenceFrameIndices": [1800],
                 "note": "Test-only explicit claim adjudication.",
             }
         ],
@@ -140,6 +140,50 @@ class EvidenceLedgerTests(unittest.TestCase):
             path = Path(temp) / "review.json"
             path.write_text(json.dumps(session))
             with self.assertRaisesRegex(ValueError, "requires at least one evidence frame"):
+                build([path])
+
+    def test_unknown_claim_is_rejected(self) -> None:
+        session = valid_session("radial.unknown")
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "review.json"
+            path.write_text(json.dumps(session))
+            with self.assertRaisesRegex(ValueError, "unknown human adjudication claim"):
+                build([path])
+
+    def test_kind_mismatch_is_rejected(self) -> None:
+        session = valid_session()
+        session["decisions"][0]["kind"] = "vessel-class"
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "review.json"
+            path.write_text(json.dumps(session))
+            with self.assertRaisesRegex(ValueError, "kind mismatch"):
+                build([path])
+
+    def test_radial_claim_cannot_target_superficial_track(self) -> None:
+        session = valid_session()
+        session["decisions"][0]["targetId"] = "vhf.m8v.superficial-anonymous.01"
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "review.json"
+            path.write_text(json.dumps(session))
+            with self.assertRaisesRegex(ValueError, "non-radial competitor track"):
+                build([path])
+
+    def test_review_frame_outside_v07_coverage_is_rejected(self) -> None:
+        session = valid_session()
+        session["decisions"][0]["evidenceFrameIndices"] = [999999]
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "review.json"
+            path.write_text(json.dumps(session))
+            with self.assertRaisesRegex(ValueError, "outside TASK-V07 coverage"):
+                build([path])
+
+    def test_duplicate_claim_in_one_session_is_rejected(self) -> None:
+        session = valid_session()
+        session["decisions"].append(dict(session["decisions"][0]))
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "review.json"
+            path.write_text(json.dumps(session))
+            with self.assertRaisesRegex(ValueError, "duplicate human adjudication claim"):
                 build([path])
 
 

@@ -69,6 +69,16 @@ const authoringContracts = [
     'schemas/assets/m8v-multimodal-review-surface.v1.schema.json',
     'authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json',
   ],
+  [
+    'm8v-human-adjudication-session',
+    'schemas/assets/m8v-human-adjudication-session.v1.schema.json',
+    null,
+  ],
+  [
+    'm8v-evidence-ledger',
+    'schemas/assets/m8v-evidence-ledger.v1.schema.json',
+    'authoring/outputs/m8v-v08-evidence-ledger-20260911.json',
+  ],
   ['vhf-source-chunk', 'schemas/assets/vhf-source-chunk.v1.schema.json', null],
   [
     'vhf-source-archive-index',

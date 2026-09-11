@@ -43,6 +43,31 @@ SUPERFICIAL_GATE_IDS = {
     "explicit-human-anatomical-review": "superficial.gate.human-review",
 }
 
+RADIAL_CLAIM_IDS = set(RADIAL_GATE_IDS.values())
+SUPERFICIAL_TARGET_CLAIM_IDS = set(SUPERFICIAL_GATE_IDS.values()) | {
+    "superficial.structure.observed",
+    "superficial.identity.named-topology",
+    "superficial.identity.named",
+}
+CLAIM_KIND_BY_ID = {
+    "radial.gate.same-subject-anchor": "radial-artery-identity",
+    "radial.gate.continuity": "track-continuity",
+    "radial.gate.branch-topology": "branch-topology",
+    "radial.gate.landmark-relationships": "landmark-relationship",
+    "radial.gate.competitor-resolution": "competitor-resolution",
+    "radial.gate.human-review": "radial-artery-identity",
+    "superficial.gate.direct-extent": "track-continuity",
+    "superficial.gate.continuity": "track-continuity",
+    "superficial.gate.subcutaneous-relationship": "landmark-relationship",
+    "superficial.gate.vein-class": "vessel-class",
+    "superficial.gate.competitor-resolution": "competitor-resolution",
+    "superficial.gate.human-review": "superficial-vein-structure",
+    "superficial.structure.observed": "superficial-vein-structure",
+    "superficial.identity.named-topology": "branch-topology",
+    "superficial.identity.named": "named-superficial-vein-identity",
+}
+
+
 
 def load(path: Path) -> dict:
     return json.loads(Path(path).read_text())
@@ -86,7 +111,9 @@ def claim_from_gate(domain: str, claim_id: str, gate: dict, source: str) -> dict
     }
 
 
-def verify_review_session(session_path: Path, v07_path: Path, v07: dict) -> dict:
+def verify_review_session(
+    session_path: Path, v07_path: Path, v07: dict, track: dict
+) -> dict:
     session = load(session_path)
     if session.get("schema") != "ph-m8v-human-adjudication-session.v1":
         raise ValueError("unexpected human adjudication session schema")
@@ -100,49 +127,90 @@ def verify_review_session(session_path: Path, v07_path: Path, v07: dict) -> dict
         raise ValueError("stale human review: TASK-V07 hash mismatch")
 
     expected_snapshot = {
-        (row["path"], row["schema"], row["sha256"])
-        for row in v07["inputEvidence"]
+        (row["path"], row["schema"], row["sha256"]) for row in v07["inputEvidence"]
     }
+    actual_rows = session.get("evidenceSnapshot", [])
     actual_snapshot = {
-        (row["path"], row["schema"], row["sha256"])
-        for row in session.get("evidenceSnapshot", [])
+        (row["path"], row["schema"], row["sha256"]) for row in actual_rows
     }
-    if actual_snapshot != expected_snapshot:
+    if actual_snapshot != expected_snapshot or len(actual_rows) != len(v07["inputEvidence"]):
         raise ValueError("stale human review: evidence snapshot mismatch")
 
+    competitor_sets = {row["id"]: set(row["trackIds"]) for row in track["competitorSets"]}
+    radial_targets = competitor_sets.get("vhf.m8v.competitors.branch-identity")
+    superficial_targets = competitor_sets.get("vhf.m8v.competitors.superficial-structure")
+    if not radial_targets or not superficial_targets:
+        raise ValueError("TASK-V04 competitor sets are missing or empty")
+    if radial_targets & superficial_targets:
+        raise ValueError("TASK-V04 radial and superficial competitor sets overlap")
+
+    first_frame = v07["frameCoverage"]["firstWholeBodyFrameIndex"]
+    last_frame = v07["frameCoverage"]["lastWholeBodyFrameIndex"]
+    per_domain_targets: dict[str, set[str]] = {"radial": set(), "superficial": set()}
+    seen_claims: set[str] = set()
     for decision in session.get("decisions", []):
-        if decision.get("verdict") == "accepted" and not decision.get("evidenceFrameIndices"):
+        claim_id = decision.get("claimId")
+        if claim_id not in CLAIM_KIND_BY_ID:
+            raise ValueError(f"unknown human adjudication claim: {claim_id}")
+        if claim_id in seen_claims:
+            raise ValueError(f"duplicate human adjudication claim in one session: {claim_id}")
+        seen_claims.add(claim_id)
+        if decision.get("kind") != CLAIM_KIND_BY_ID[claim_id]:
+            raise ValueError(f"human adjudication kind mismatch for claim: {claim_id}")
+
+        target_id = decision.get("targetId")
+        if claim_id in RADIAL_CLAIM_IDS:
+            if target_id not in radial_targets:
+                raise ValueError(f"radial claim references non-radial competitor track: {target_id}")
+            per_domain_targets["radial"].add(target_id)
+        elif claim_id in SUPERFICIAL_TARGET_CLAIM_IDS:
+            if target_id not in superficial_targets:
+                raise ValueError(
+                    f"superficial claim references non-superficial competitor track: {target_id}"
+                )
+            per_domain_targets["superficial"].add(target_id)
+
+        frames = decision.get("evidenceFrameIndices", [])
+        if decision.get("verdict") == "accepted" and not frames:
             raise ValueError("accepted human adjudication requires at least one evidence frame")
+        if any(frame < first_frame or frame > last_frame for frame in frames):
+            raise ValueError("human adjudication references a frame outside TASK-V07 coverage")
+
+    for domain, targets in per_domain_targets.items():
+        if len(targets) > 1:
+            raise ValueError(f"human adjudication mixes multiple {domain} target tracks")
     return session
 
 
 def apply_human_reviews(claims: list[dict], sessions: list[tuple[Path, dict]]) -> None:
     by_claim = {claim["id"]: claim for claim in claims}
-    seen: dict[str, str] = {}
+    seen: dict[str, tuple[str, str]] = {}
     for _, session in sessions:
         for decision in session["decisions"]:
             claim_id = decision["claimId"]
-            if claim_id not in by_claim:
-                continue
             verdict = decision["verdict"]
+            target_id = decision["targetId"]
+            current = (verdict, target_id)
             previous = seen.get(claim_id)
             claim = by_claim[claim_id]
-            if previous is not None and previous != verdict:
+            if previous is not None and previous != current:
                 claim["humanReviewStatus"] = "unresolved"
+                claim["humanReviewTargetId"] = None
                 claim["state"] = "conflicting"
                 claim["validationLevel"] = "V2"
                 claim["conflictingEvidence"].append(
                     {
                         "source": "TASK-V08 human adjudication",
-                        "description": "Human adjudication sessions contain conflicting verdicts for this claim.",
+                        "description": "Human adjudication sessions contain conflicting verdicts or target tracks for this claim.",
                     }
                 )
                 continue
 
-            seen[claim_id] = verdict
+            seen[claim_id] = current
             claim["humanReviewStatus"] = verdict
+            claim["humanReviewTargetId"] = target_id
             description = decision.get("note") or f"Human anatomical adjudication verdict: {verdict}."
-            description += " Evidence frames: " + ", ".join(
+            description += f" Target track: {target_id}. Evidence frames: " + ", ".join(
                 str(frame) for frame in decision.get("evidenceFrameIndices", [])
             )
             if verdict == "accepted":
@@ -263,23 +331,42 @@ def build_ledger(
         ]
     )
 
+    for claim in claims:
+        claim.setdefault("humanReviewTargetId", None)
+
     verified_sessions: list[tuple[Path, dict]] = []
     for review_path in review_paths or []:
-        verified_sessions.append((review_path, verify_review_session(review_path, v07_path, v07)))
+        verified_sessions.append(
+            (review_path, verify_review_session(review_path, v07_path, v07, track))
+        )
     apply_human_reviews(claims, verified_sessions)
 
     by_id = {claim["id"]: claim for claim in claims}
     radial_required = list(RADIAL_GATE_IDS.values())
     superficial_required = list(SUPERFICIAL_GATE_IDS.values())
-    radial_ready = all(by_id[claim_id]["state"] == "supported" for claim_id in radial_required)
-    superficial_ready = all(
-        by_id[claim_id]["state"] == "supported" for claim_id in superficial_required
-    )
+
+    def accepted_shared_target(claim_ids: list[str]) -> str | None:
+        if not all(
+            by_id[claim_id]["state"] == "supported"
+            and by_id[claim_id]["humanReviewStatus"] == "accepted"
+            for claim_id in claim_ids
+        ):
+            return None
+        targets = {by_id[claim_id]["humanReviewTargetId"] for claim_id in claim_ids}
+        if len(targets) != 1 or None in targets:
+            return None
+        return next(iter(targets))
+
+    radial_target = accepted_shared_target(radial_required)
+    superficial_target = accepted_shared_target(superficial_required)
+    radial_ready = radial_target is not None
+    superficial_ready = superficial_target is not None
 
     structure_claim = by_id["superficial.structure.observed"]
     structure_claim["promotionEligible"] = superficial_ready
     if superficial_ready:
         structure_claim["state"] = "supported"
+        structure_claim["humanReviewTargetId"] = superficial_target
         structure_claim["missingEvidence"] = []
         structure_claim["supportingEvidence"].append(
             {
@@ -288,9 +375,16 @@ def build_ledger(
             }
         )
 
-    named_topology = by_id["superficial.identity.named-topology"]["state"] == "supported"
+    named_topology_claim = by_id["superficial.identity.named-topology"]
+    named_identity_claim = by_id["superficial.identity.named"]
+    named_topology = (
+        named_topology_claim["state"] == "supported"
+        and named_topology_claim["humanReviewStatus"] == "accepted"
+        and named_topology_claim["humanReviewTargetId"] == superficial_target
+    )
     named_identity_review = (
-        by_id["superficial.identity.named"]["humanReviewStatus"] == "accepted"
+        named_identity_claim["humanReviewStatus"] == "accepted"
+        and named_identity_claim["humanReviewTargetId"] == superficial_target
     )
     named_ready = superficial_ready and named_topology and named_identity_review
     named_claim = by_id["superficial.identity.named"]

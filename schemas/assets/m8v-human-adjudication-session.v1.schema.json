@@ -39,7 +39,9 @@
       "additionalProperties": false,
       "required": ["path", "schema", "sha256"],
       "properties": {
-        "path": { "const": "authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json" },
+        "path": {
+          "const": "authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json"
+        },
         "schema": { "const": "ph-m8v-multimodal-review-surface.v1" },
         "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
       }
@@ -85,7 +87,13 @@
     "decision": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["claimId", "kind", "targetId", "verdict", "evidenceFrameIndices"],
+      "required": [
+        "claimId",
+        "kind",
+        "targetId",
+        "verdict",
+        "evidenceFrameIndices"
+      ],
       "properties": {
         "claimId": { "type": "string", "minLength": 1 },
         "kind": {

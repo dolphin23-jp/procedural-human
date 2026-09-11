@@ -122,7 +122,8 @@ function targetForClaim(
 
 function imageClass(trackClass: TrackClass): string {
   if (trackClass === 'anonymous-branch-search') return 'm8v-adj-marker-radial';
-  if (trackClass === 'anonymous-superficial-search') return 'm8v-adj-marker-superficial';
+  if (trackClass === 'anonymous-superficial-search')
+    return 'm8v-adj-marker-superficial';
   return 'm8v-adj-marker-ulnar';
 }
 
@@ -145,7 +146,9 @@ export function M8VAdjudication() {
     const base = import.meta.env.BASE_URL;
     void Promise.all([
       fetch(`${base}m8v-review-data/manifest.json`, { cache: 'no-store' }),
-      fetch(`${base}m8v-review-data/evidence-ledger.json`, { cache: 'no-store' }),
+      fetch(`${base}m8v-review-data/evidence-ledger.json`, {
+        cache: 'no-store',
+      }),
     ])
       .then(async ([manifestResponse, ledgerResponse]) => {
         if (!manifestResponse.ok) {
@@ -187,8 +190,11 @@ export function M8VAdjudication() {
         const surface = loadedLedger.sourceEvidence.find(
           (source) => source.role === 'multimodal-review-surface',
         );
-        if (!surface) throw new Error('ledger lacks TASK-V07 evidence reference');
-        const saved = window.localStorage.getItem(sessionStorageKey(surface.sha256));
+        if (!surface)
+          throw new Error('ledger lacks TASK-V07 evidence reference');
+        const saved = window.localStorage.getItem(
+          sessionStorageKey(surface.sha256),
+        );
         if (saved) {
           const parsed = JSON.parse(saved) as {
             reviewerReference?: string;
@@ -280,7 +286,9 @@ export function M8VAdjudication() {
   }, [manifest]);
 
   const jumpToTrack = (trackId: string) => {
-    const track = manifest?.tracks.find((candidate) => candidate.id === trackId);
+    const track = manifest?.tracks.find(
+      (candidate) => candidate.id === trackId,
+    );
     if (!track) return;
     const next = frameCursorByIndex.get(track.minWholeBodyFrameIndex);
     if (next !== undefined) setCursor(next);
@@ -343,11 +351,13 @@ export function M8VAdjudication() {
       setExportError('Record at least one claim decision before export.');
       return;
     }
-    const acceptedWithoutFrames = reviewedClaims.find(
-      (claim) =>
-        decisions[claim.id].verdict === 'accepted' &&
-        decisions[claim.id].evidenceFrameIndices.length === 0,
-    );
+    const acceptedWithoutFrames = reviewedClaims.find((claim) => {
+      const decision = decisions[claim.id];
+      return (
+        decision?.verdict === 'accepted' &&
+        decision.evidenceFrameIndices.length === 0
+      );
+    });
     if (acceptedWithoutFrames) {
       setExportError(
         `Accepted claim ${acceptedWithoutFrames.id} needs at least one evidence frame.`,
@@ -379,6 +389,12 @@ export function M8VAdjudication() {
       evidenceSnapshot: manifest.surfaceRecord.inputEvidence,
       decisions: reviewedClaims.map((claim) => {
         const decision = decisions[claim.id];
+        const kind = CLAIM_KIND[claim.id];
+        if (!decision || !kind) {
+          throw new Error(
+            `Review state is inconsistent for claim ${claim.id}.`,
+          );
+        }
         const result: {
           claimId: string;
           kind: (typeof CLAIM_KIND)[string];
@@ -388,12 +404,8 @@ export function M8VAdjudication() {
           note?: string;
         } = {
           claimId: claim.id,
-          kind: CLAIM_KIND[claim.id],
-          targetId: targetForClaim(
-            claim,
-            radialTrackId,
-            superficialTrackId,
-          ),
+          kind,
+          targetId: targetForClaim(claim, radialTrackId, superficialTrackId),
           verdict: decision.verdict,
           evidenceFrameIndices: decision.evidenceFrameIndices,
         };
@@ -425,7 +437,8 @@ export function M8VAdjudication() {
 
   const resetSession = () => {
     if (!v07Evidence) return;
-    if (!window.confirm('Clear locally saved M8V adjudication decisions?')) return;
+    if (!window.confirm('Clear locally saved M8V adjudication decisions?'))
+      return;
     window.localStorage.removeItem(sessionStorageKey(v07Evidence.sha256));
     setReviewerReference('');
     setStartedAt(new Date().toISOString());
@@ -479,7 +492,9 @@ export function M8VAdjudication() {
           <input
             value={reviewerReference}
             maxLength={200}
-            onChange={(event) => setReviewerReference(event.currentTarget.value)}
+            onChange={(event) =>
+              setReviewerReference(event.currentTarget.value)
+            }
             placeholder="e.g. reviewer initials or internal reference"
           />
         </label>
@@ -538,7 +553,9 @@ export function M8VAdjudication() {
             type="button"
             disabled={cursor === manifest.frames.length - 1}
             onClick={() =>
-              setCursor((value) => Math.min(manifest.frames.length - 1, value + 1))
+              setCursor((value) =>
+                Math.min(manifest.frames.length - 1, value + 1),
+              )
             }
           >
             Next
@@ -561,7 +578,10 @@ export function M8VAdjudication() {
               />
             )}
             {!cryoError ? (
-              <svg viewBox="0 0 2048 1216" aria-label="selected candidate observations">
+              <svg
+                viewBox="0 0 2048 1216"
+                aria-label="selected candidate observations"
+              >
                 {selectedObservations.map((observation) => (
                   <circle
                     key={observation.trackId}
@@ -645,7 +665,9 @@ export function M8VAdjudication() {
                 onClick={() => toggleCurrentFrame(claim.id)}
               >
                 {currentRecorded ? 'Remove current frame' : 'Add current frame'}
-                {targetObservedHere ? ' · target observed here' : ' · context frame'}
+                {targetObservedHere
+                  ? ' · target observed here'
+                  : ' · context frame'}
               </button>
               <p className="m8v-adj-muted">
                 Evidence frames:{' '}
@@ -659,7 +681,9 @@ export function M8VAdjudication() {
                   rows={3}
                   maxLength={4000}
                   value={decision?.note ?? ''}
-                  onChange={(event) => setNote(claim.id, event.currentTarget.value)}
+                  onChange={(event) =>
+                    setNote(claim.id, event.currentTarget.value)
+                  }
                 />
               </label>
             </article>
@@ -675,7 +699,9 @@ export function M8VAdjudication() {
             snapshot. A later ledger build rejects it if those inputs have
             changed.
           </p>
-          <p className="m8v-adj-muted">TASK-V07 SHA-256: {v07Evidence.sha256}</p>
+          <p className="m8v-adj-muted">
+            TASK-V07 SHA-256: {v07Evidence.sha256}
+          </p>
         </div>
         <div className="m8v-adj-export-actions">
           <button type="button" onClick={exportSession}>
