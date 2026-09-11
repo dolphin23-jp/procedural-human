@@ -96,32 +96,20 @@ jobs:
 
           tasks = Path('TASKS.md')
           text = tasks.read_text()
-          old = '''## TASK-V10 — Feed M8V evidence into M8A
-          Status: next.
-          Feed only claims and representations whose promotion criteria passed back through A06/A07/A08/A09, then re-evaluate A10. Gate V closes only when evidence has either passed and been fed forward or remains fail-closed with the source limitation documented.
+          start = text.index('## TASK-V10 — Feed M8V evidence into M8A')
+          end = text.index('\n# M8A — Medical Asset Authoring Lane', start)
+          replacement = '''## TASK-V10 — Feed M8V evidence into M8A
+          Status: complete / fail-closed-documented — see `authoring/outputs/m8v-v10-m8a-feed-forward-20260911.json`. TASK-V09 passed no radial, subject-scoped superficial-structure, or named-superficial promotion gate, so no new identity or geometry was injected into A07/A08/A09. Existing bounded ulnar evidence is preserved, TASK-A10 remains blocked, and the unresolved source limitations are explicitly fed back into M8A provenance.
+          Feed only passed claims and representations into A06/A07/A08/A09 and reevaluate A10. Preserve historical evidence and valid ulnar work. Identity eligibility never fabricates A08/A09 geometry or Medical Master readiness.
+
+          Gate V after TASK-V10: complete / fail-closed-documented — TASK-V01 through TASK-V10 are complete. Promotion criteria are explicit and independently evaluated; current radial and superficial identities remain unresolved, no anatomy was fabricated, and TASK-A10 was re-evaluated and remains blocked pending stronger same-subject evidence and explicit human anatomical review.
           '''.replace('          ', '')
-          new = '''## TASK-V10 — Feed M8V evidence into M8A
-          Status: complete / fail-closed-documented — see `authoring/outputs/m8v-v10-m8a-feed-forward-20260911.json`. TASK-V09 passed no radial, subject-scoped superficial-structure, or named-superficial promotion gate, so no new identity or geometry was injected into A07/A08/A09. Existing bounded ulnar evidence is preserved, TASK-A10 remains blocked, and the unresolved source limitations are now explicitly fed back into M8A provenance.
-          '''.replace('          ', '')
-          if old not in text:
-              raise SystemExit('TASKS V10 status block not found')
-          text = text.replace(old, new, 1)
-          old = '''## Gate V — Procedure-Relevant Vessel Identity Evidence
-          TASK-V01 through TASK-V10 complete, with promotion criteria explicit and A10 re-evaluated under the strengthened evidence.
-          '''.replace('          ', '')
-          new = '''## Gate V — Procedure-Relevant Vessel Identity Evidence
-          Status: complete / fail-closed-documented. TASK-V01 through TASK-V10 are complete. Promotion criteria are explicit and independently evaluated; current radial and superficial identities remain unresolved, no anatomy was fabricated, and TASK-A10 was re-evaluated and remains blocked pending stronger same-subject evidence and explicit human anatomical review.
-          '''.replace('          ', '')
-          if old not in text:
-              raise SystemExit('Gate V block not found')
-          tasks.write_text(text.replace(old, new, 1))
+          tasks.write_text(text[:start] + replacement + text[end:])
 
           evidence = Path('authoring/vessel-identification/VESSEL_IDENTIFICATION_EVIDENCE.md')
           text = evidence.read_text()
-          old = '''- TASK-V10: next.
-          '''.replace('          ', '')
-          new = '''- TASK-V10: complete — see `authoring/outputs/m8v-v10-m8a-feed-forward-20260911.json`; no V09 promotion gate passed, so radial/superficial identities and geometry remain blocked, existing bounded ulnar work is preserved, and A10 remains blocked. Gate V is complete as a fail-closed evidence-lane result, not as anatomical identity success.
-          '''.replace('          ', '')
+          old = '- TASK-V10: next.'
+          new = '- TASK-V10: complete — see `authoring/outputs/m8v-v10-m8a-feed-forward-20260911.json`; no V09 promotion gate passed, so radial/superficial identities and geometry remain blocked, existing bounded ulnar work is preserved, and A10 remains blocked. Gate V is complete as a fail-closed evidence-lane result, not as anatomical identity success.'
           if old not in text:
               raise SystemExit('VESSEL_IDENTIFICATION_EVIDENCE V10 state block not found')
           evidence.write_text(text.replace(old, new, 1))
