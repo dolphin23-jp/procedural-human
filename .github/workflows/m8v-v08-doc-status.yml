@@ -1,0 +1,67 @@
+name: M8V V08 document status updater
+
+on:
+  push:
+    branches:
+      - m8v-vessel-identification-evidence
+    paths:
+      - .github/workflows/m8v-v08-doc-status.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: m8v-vessel-identification-evidence
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Mark TASK-V08 complete and TASK-V09 next
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          tasks = Path('TASKS.md')
+          text = tasks.read_text()
+          old = '''## TASK-V08 — Evidence ledger and explicit human adjudication evidence
+          Status: next.
+          Create the durable machine-readable ledger linking each medically meaningful claim to supporting, conflicting, missing, algorithm-derived, and explicit human-review evidence. Claim-level human adjudication must be recorded as review evidence tied to immutable input hashes; merely opening or using the V07 surface is not a review receipt. Human anatomical review may satisfy only the claims actually reviewed and does not by itself confer V3 medical validation or procedure suitability.
+
+          ## TASK-V09 — Identity promotion evaluator
+          Implement fail-closed promotion rules for radial-artery identity, subject-scoped superficial-vein structure, and named superficial-vein identity. Every required gate must pass independently; no single scalar confidence may replace required evidence.
+          '''.replace('          ', '')
+          new = '''## TASK-V08 — Evidence ledger and explicit human adjudication evidence
+          Status: complete — a durable fail-closed evidence ledger, immutable-hash-bound human adjudication receipt schema, and browser/iPad adjudication route `?m8v-adjudicate=1` are implemented. The initial ledger contains no human review receipts and keeps radial, superficial-structure, and named-superficial promotion blocked.
+
+          ## TASK-V09 — Identity promotion evaluator
+          Status: next.
+          Implement fail-closed promotion rules for radial-artery identity, subject-scoped superficial-vein structure, and named superficial-vein identity. Every required gate must pass independently; no single scalar confidence may replace required evidence.
+          '''.replace('          ', '')
+          if old not in text:
+              raise SystemExit('TASKS V08/V09 status block not found')
+          tasks.write_text(text.replace(old, new, 1))
+
+          evidence = Path('authoring/vessel-identification/VESSEL_IDENTIFICATION_EVIDENCE.md')
+          text = evidence.read_text()
+          old = '''- TASK-V08: next.
+          - TASK-V09 through TASK-V10: not started.
+          '''.replace('          ', '')
+          new = '''- TASK-V08: complete — see `authoring/outputs/m8v-v08-evidence-ledger-20260911.json`; the durable ledger contains 15 explicit claims, binds any future human adjudication to the V07/evidence snapshot hashes and candidate-track domains, exposes browser/iPad adjudication at `?m8v-adjudicate=1`, and initially remains `blocked-unresolved` with no review receipt or promotion readiness.
+          - TASK-V09: next.
+          - TASK-V10: not started.
+          '''.replace('          ', '')
+          if old not in text:
+              raise SystemExit('VESSEL_IDENTIFICATION_EVIDENCE V08 state block not found')
+          evidence.write_text(text.replace(old, new, 1))
+          PY
+      - name: Commit status update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add TASKS.md authoring/vessel-identification/VESSEL_IDENTIFICATION_EVIDENCE.md
+          git commit -m "TASK-V08: mark evidence ledger complete"
+          git push origin HEAD:m8v-vessel-identification-evidence
