@@ -515,10 +515,10 @@ Status: complete — browser/iPad review is available at `?m8v-review=1`, synchr
 Status: complete — a durable fail-closed evidence ledger, immutable-hash-bound human adjudication receipt schema, and browser/iPad adjudication route `?m8v-adjudicate=1` are implemented. The initial ledger contains no human review receipts and keeps radial, superficial-structure, and named-superficial promotion blocked.
 
 ## TASK-V09 — Identity promotion evaluator
-Status: next.
-Implement fail-closed promotion rules for radial-artery identity, subject-scoped superficial-vein structure, and named superficial-vein identity. Every required gate must pass independently; no single scalar confidence may replace required evidence.
+Status: complete / blocked-unresolved — promotion readiness is independently recomputed from claim-level evidence, human-review target consistency, immutable source hashes, and TASK-V04 competitor domains rather than trusting aggregate booleans. Current evidence passes none of the radial, subject-scoped superficial-structure, or named-superficial promotion gates; automatic promotion remains prohibited.
 
 ## TASK-V10 — Feed M8V evidence into M8A
+Status: next.
 Feed only passed claims and representations into A06/A07/A08/A09 and reevaluate A10. Preserve historical evidence and valid ulnar work. If required gates still fail, A10 remains blocked.
 
 Gate V after TASK-V10: vascular identity evidence required by the MVP has either passed explicit promotion gates and been fed into M8A, or remains fail-closed with the source limitation documented. Gate V never means that unresolved anatomy may be fabricated.

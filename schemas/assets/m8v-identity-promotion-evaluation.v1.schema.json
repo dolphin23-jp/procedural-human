@@ -109,10 +109,7 @@
       }
     },
     "nullableTrackId": {
-      "anyOf": [
-        { "type": "string", "minLength": 1 },
-        { "type": "null" }
-      ]
+      "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
     },
     "claimResult": {
       "type": "object",
@@ -130,7 +127,13 @@
       "properties": {
         "claimId": { "type": "string", "minLength": 1 },
         "state": {
-          "enum": ["supported", "conflicting", "missing", "blocked", "unresolved"]
+          "enum": [
+            "supported",
+            "conflicting",
+            "missing",
+            "blocked",
+            "unresolved"
+          ]
         },
         "humanReviewStatus": {
           "enum": ["not-reviewed", "accepted", "rejected", "unresolved"]
