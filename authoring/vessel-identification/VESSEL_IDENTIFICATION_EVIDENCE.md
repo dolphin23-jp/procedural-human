@@ -230,7 +230,8 @@ Feed only passed claims/representations back into A06/A07/A08/A09 and reevaluate
 - TASK-V05: complete — see `authoring/outputs/m8v-v05-radial-artery-identity-evidence-20260911.json`; all eight anonymous arterial candidates remain competing, the six required promotion gates do not all pass, no candidate is selected, and the radial identity decision is `blocked-unresolved`.
 - TASK-V06: complete — see `authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json`; the longest direct superficial track spans 10 frames, no direct track reaches the 90-frame procedure-relevant threshold, no vein class or reviewed single-structure continuity is established, and the decision is `blocked-unresolved`.
 - TASK-V07: complete — see `authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json`; the browser/iPad review route `?m8v-review=1` synchronizes review evidence and exposes V04 tracks, V03 landmarks, V05/V06 gates, CT support state, and provenance without conferring identity or validation.
-- TASK-V08: next.
-- TASK-V09 through TASK-V10: not started.
+- TASK-V08: complete — see `authoring/outputs/m8v-v08-evidence-ledger-20260911.json`; the durable ledger contains 15 explicit claims, binds any future human adjudication to the V07/evidence snapshot hashes and candidate-track domains, exposes browser/iPad adjudication at `?m8v-adjudicate=1`, and initially remains `blocked-unresolved` with no review receipt or promotion readiness.
+- TASK-V09: next.
+- TASK-V10: not started.
 
 No M8V task currently claims radial-artery identity, observed or named superficial-vein identity, procedure role, medical validation, Patient Space, or Medical Master promotion.

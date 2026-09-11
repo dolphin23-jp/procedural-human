@@ -512,10 +512,10 @@ Status: complete / blocked-unresolved — eight anonymous superficial tracks rem
 Status: complete — browser/iPad review is available at `?m8v-review=1`, synchronizing source cryosection, bounded CT support, V04 track overlays, V03 landmarks, V05/V06 gates, and provenance. Viewing does not itself confer human review, identity, validation, Patient Space, or procedure role.
 
 ## TASK-V08 — Evidence ledger and explicit human adjudication evidence
-Status: next.
-Create the durable machine-readable ledger linking each medically meaningful claim to supporting, conflicting, missing, algorithm-derived, and explicit human-review evidence. Claim-level human adjudication must be recorded as review evidence tied to immutable input hashes; merely opening or using the V07 surface is not a review receipt. Human anatomical review may satisfy only the claims actually reviewed and does not by itself confer V3 medical validation or procedure suitability.
+Status: complete — a durable fail-closed evidence ledger, immutable-hash-bound human adjudication receipt schema, and browser/iPad adjudication route `?m8v-adjudicate=1` are implemented. The initial ledger contains no human review receipts and keeps radial, superficial-structure, and named-superficial promotion blocked.
 
 ## TASK-V09 — Identity promotion evaluator
+Status: next.
 Implement fail-closed promotion rules for radial-artery identity, subject-scoped superficial-vein structure, and named superficial-vein identity. Every required gate must pass independently; no single scalar confidence may replace required evidence.
 
 ## TASK-V10 — Feed M8V evidence into M8A
