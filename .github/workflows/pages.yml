@@ -64,6 +64,13 @@ jobs:
             --recorded-at 2026-09-11 \
             --web-output apps/web/dist/m8v-review-data/manifest.json
 
+      - name: Publish TASK-V08 fail-closed evidence ledger
+        run: |
+          test -f authoring/outputs/m8v-v08-evidence-ledger-20260911.json
+          mkdir -p apps/web/dist/m8v-review-data
+          cp authoring/outputs/m8v-v08-evidence-ledger-20260911.json \
+            apps/web/dist/m8v-review-data/evidence-ledger.json
+
       - id: a06-review
         name: Build transient TASK-A06 human-review data
         continue-on-error: true
