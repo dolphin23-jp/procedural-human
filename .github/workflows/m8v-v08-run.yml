@@ -62,8 +62,8 @@ jobs:
         run: pnpm schema:validate
       - name: Typecheck web
         run: pnpm --filter @procedural-human/web typecheck
-      - name: Build web
-        run: pnpm --filter @procedural-human/web build
+      - name: Build workspace
+        run: pnpm build
       - name: Verify fail-closed initial state
         run: >-
           python -c "import json,pathlib; r=json.loads(pathlib.Path('authoring/outputs/m8v-v08-evidence-ledger-20260911.json').read_text()); assert len(r['claims'])==15; assert not r['humanReviewSessions']; assert all(c['humanReviewStatus']=='not-reviewed' and c['humanReviewTargetId'] is None for c in r['claims']); assert r['decision']['ledgerState']=='blocked-unresolved'; assert not r['decision']['radialPromotionReady']; assert not r['decision']['superficialStructurePromotionReady']; assert not r['decision']['namedSuperficialPromotionReady']; assert not r['assertions']['medicalValidation']; assert not r['assertions']['patientSpaceGeometry']; assert not r['assertions']['procedureRoleEstablished']; assert not r['assertions']['automaticPromotionAllowed']"
