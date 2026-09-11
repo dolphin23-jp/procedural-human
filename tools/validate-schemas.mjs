@@ -84,6 +84,11 @@ const authoringContracts = [
     'schemas/assets/m8v-identity-promotion-evaluation.v1.schema.json',
     'authoring/outputs/m8v-v09-identity-promotion-evaluation-20260911.json',
   ],
+  [
+    'm8v-m8a-feed-forward',
+    'schemas/assets/m8v-m8a-feed-forward.v1.schema.json',
+    'authoring/outputs/m8v-v10-m8a-feed-forward-20260911.json',
+  ],
   ['vhf-source-chunk', 'schemas/assets/vhf-source-chunk.v1.schema.json', null],
   [
     'vhf-source-archive-index',

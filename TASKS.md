@@ -518,10 +518,10 @@ Status: complete — a durable fail-closed evidence ledger, immutable-hash-bound
 Status: complete / blocked-unresolved — promotion readiness is independently recomputed from claim-level evidence, human-review target consistency, immutable source hashes, and TASK-V04 competitor domains rather than trusting aggregate booleans. Current evidence passes none of the radial, subject-scoped superficial-structure, or named-superficial promotion gates; automatic promotion remains prohibited.
 
 ## TASK-V10 — Feed M8V evidence into M8A
-Status: next.
-Feed only passed claims and representations into A06/A07/A08/A09 and reevaluate A10. Preserve historical evidence and valid ulnar work. If required gates still fail, A10 remains blocked.
+Status: complete / fail-closed-documented — see `authoring/outputs/m8v-v10-m8a-feed-forward-20260911.json`. TASK-V09 passed no radial, subject-scoped superficial-structure, or named-superficial promotion gate, so no new identity or geometry was injected into A07/A08/A09. Existing bounded ulnar evidence is preserved, TASK-A10 remains blocked, and the unresolved source limitations are explicitly fed back into M8A provenance.
+Feed only passed claims and representations into A06/A07/A08/A09 and reevaluate A10. Preserve historical evidence and valid ulnar work. Identity eligibility never fabricates A08/A09 geometry or Medical Master readiness.
 
-Gate V after TASK-V10: vascular identity evidence required by the MVP has either passed explicit promotion gates and been fed into M8A, or remains fail-closed with the source limitation documented. Gate V never means that unresolved anatomy may be fabricated.
+Gate V after TASK-V10: complete / fail-closed-documented — TASK-V01 through TASK-V10 are complete. Promotion criteria are explicit and independently evaluated; current radial and superficial identities remain unresolved, no anatomy was fabricated, and TASK-A10 was re-evaluated and remains blocked pending stronger same-subject evidence and explicit human anatomical review.
 
 # M8A — Medical Asset Authoring Lane
 

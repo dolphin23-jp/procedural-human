@@ -49,7 +49,11 @@
     "feedForwardActions": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["radialArtery", "superficialStructure", "namedSuperficialVein"],
+      "required": [
+        "radialArtery",
+        "superficialStructure",
+        "namedSuperficialVein"
+      ],
       "properties": {
         "radialArtery": { "$ref": "#/$defs/radialAction" },
         "superficialStructure": { "$ref": "#/$defs/superficialAction" },
@@ -81,7 +85,12 @@
     "a10Reevaluation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["priorStatus", "status", "medicalMasterCreationAllowed", "blockers"],
+      "required": [
+        "priorStatus",
+        "status",
+        "medicalMasterCreationAllowed",
+        "blockers"
+      ],
       "properties": {
         "priorStatus": { "enum": ["blocked", "ready"] },
         "status": { "enum": ["blocked", "ready"] },
@@ -141,10 +150,7 @@
   },
   "$defs": {
     "nullableTrackId": {
-      "anyOf": [
-        { "type": "string", "minLength": 1 },
-        { "type": "null" }
-      ]
+      "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
     },
     "sourceRef": {
       "type": "object",
@@ -169,7 +175,12 @@
     "promotionState": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["promotionGatePassed", "targetId", "blockingClaimIds", "blockingReasons"],
+      "required": [
+        "promotionGatePassed",
+        "targetId",
+        "blockingClaimIds",
+        "blockingReasons"
+      ],
       "properties": {
         "promotionGatePassed": { "type": "boolean" },
         "targetId": { "$ref": "#/$defs/nullableTrackId" },
@@ -200,7 +211,9 @@
         "blockers"
       ],
       "properties": {
-        "identityClaimStatus": { "enum": ["blocked", "eligible-for-a07-authoring"] },
+        "identityClaimStatus": {
+          "enum": ["blocked", "eligible-for-a07-authoring"]
+        },
         "targetId": { "$ref": "#/$defs/nullableTrackId" },
         "existingA07RepresentationAvailable": { "type": "boolean" },
         "existingA08CenterlineStatus": { "enum": ["blocked", "generated"] },
@@ -222,7 +235,9 @@
         "blockers"
       ],
       "properties": {
-        "identityClaimStatus": { "enum": ["blocked", "eligible-for-subject-scoped-a07-authoring"] },
+        "identityClaimStatus": {
+          "enum": ["blocked", "eligible-for-subject-scoped-a07-authoring"]
+        },
         "targetId": { "$ref": "#/$defs/nullableTrackId" },
         "existingA07AnatomicalId": { "$ref": "#/$defs/nullableTrackId" },
         "existingA08CenterlineStatus": { "enum": ["blocked", "generated"] },
@@ -242,7 +257,9 @@
         "blockers"
       ],
       "properties": {
-        "identityClaimStatus": { "enum": ["blocked", "eligible-for-named-a07-authoring"] },
+        "identityClaimStatus": {
+          "enum": ["blocked", "eligible-for-named-a07-authoring"]
+        },
         "targetId": { "$ref": "#/$defs/nullableTrackId" },
         "procedureRoleUsedAsIdentity": { "const": false },
         "geometryPromotionApplied": { "const": false },
