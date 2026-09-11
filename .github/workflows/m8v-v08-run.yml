@@ -71,6 +71,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git restore .github/workflows/pages.yml
           git add authoring/review/m8v_build_evidence_ledger.py
           git add authoring/source-acquisition/tests/test_m8v_evidence_ledger.py
           git add apps/web/src/M8VAdjudication.tsx
@@ -79,6 +80,5 @@ jobs:
           git add schemas/assets/m8v-evidence-ledger.v1.schema.json
           git add authoring/outputs/m8v-v08-evidence-ledger-20260911.json
           git add tools/validate-schemas.mjs
-          git add .github/workflows/pages.yml
           git commit -m "TASK-V08: finalize fail-closed evidence ledger"
           git push origin HEAD:m8v-vessel-identification-evidence
