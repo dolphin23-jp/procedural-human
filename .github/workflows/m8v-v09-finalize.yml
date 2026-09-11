@@ -36,22 +36,17 @@ jobs:
           from pathlib import Path
           path = Path('tools/validate-schemas.mjs')
           text = path.read_text()
-          anchor = '''  [
-            'm8v-evidence-ledger',
-            'schemas/assets/m8v-evidence-ledger.v1.schema.json',
-            'authoring/outputs/m8v-v08-evidence-ledger-20260911.json',
-          ],
-          '''.replace('          ', '')
-          addition = anchor + '''  [
+          if "'m8v-identity-promotion-evaluation'" not in text:
+              anchor = "  ['vhf-source-chunk', 'schemas/assets/vhf-source-chunk.v1.schema.json', null],\n"
+              addition = """  [
             'm8v-identity-promotion-evaluation',
             'schemas/assets/m8v-identity-promotion-evaluation.v1.schema.json',
             'authoring/outputs/m8v-v09-identity-promotion-evaluation-20260911.json',
           ],
-          '''.replace('          ', '')
-          if "'m8v-identity-promotion-evaluation'" not in text:
+          """.replace('          ', '')
               if anchor not in text:
-                  raise SystemExit('V08 validator anchor not found')
-              text = text.replace(anchor, addition, 1)
+                  raise SystemExit('validator insertion point not found')
+              text = text.replace(anchor, addition + anchor, 1)
           path.write_text(text)
           PY
 
