@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.local/schemas/assets/m8v-human-adjudication-session/v1",
+  "title": "M8V human anatomical adjudication session",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "reviewerReference",
+    "startedAt",
+    "exportedAt",
+    "reviewTool",
+    "reviewSurface",
+    "evidenceSnapshot",
+    "decisions",
+    "claims"
+  ],
+  "properties": {
+    "schema": { "const": "ph-m8v-human-adjudication-session.v1" },
+    "schemaVersion": { "const": "1" },
+    "task": { "const": "TASK-V08" },
+    "reviewerReference": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "startedAt": { "type": "string", "minLength": 1 },
+    "exportedAt": { "type": "string", "minLength": 1 },
+    "reviewTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "route"],
+      "properties": {
+        "name": { "const": "Procedural Human M8V Adjudication" },
+        "version": { "const": "1" },
+        "route": { "const": "?m8v-adjudicate=1" }
+      }
+    },
+    "reviewSurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "schema", "sha256"],
+      "properties": {
+        "path": {
+          "const": "authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json"
+        },
+        "schema": { "const": "ph-m8v-multimodal-review-surface.v1" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "evidenceSnapshot": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/evidenceRef" }
+    },
+    "decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/decision" }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "humanReviewInputRecorded",
+        "medicalValidation",
+        "procedureRoleEstablished",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "humanReviewInputRecorded": { "const": true },
+        "medicalValidation": { "const": false },
+        "procedureRoleEstablished": { "const": false },
+        "automaticPromotionAllowed": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "evidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "schema", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "schema": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claimId",
+        "kind",
+        "targetId",
+        "verdict",
+        "evidenceFrameIndices"
+      ],
+      "properties": {
+        "claimId": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": [
+            "track-continuity",
+            "vessel-class",
+            "branch-topology",
+            "landmark-relationship",
+            "competitor-resolution",
+            "radial-artery-identity",
+            "superficial-vein-structure",
+            "named-superficial-vein-identity"
+          ]
+        },
+        "targetId": { "type": "string", "minLength": 1 },
+        "verdict": { "enum": ["accepted", "rejected", "unresolved"] },
+        "evidenceFrameIndices": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "integer", "minimum": 0 }
+        },
+        "note": { "type": "string", "maxLength": 4000 }
+      }
+    }
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.local/schemas/assets/m8v-multimodal-review-surface/v1",
+  "title": "M8V multimodal review surface",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "status",
+    "route",
+    "inputEvidence",
+    "coordinatePolicy",
+    "frameCoverage",
+    "trackCoverage",
+    "capabilities",
+    "claims"
+  ],
+  "properties": {
+    "schema": { "const": "ph-m8v-multimodal-review-surface.v1" },
+    "schemaVersion": { "const": "1" },
+    "task": { "const": "TASK-V07" },
+    "recordedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "status": { "const": "complete" },
+    "route": { "const": "?m8v-review=1" },
+    "inputEvidence": {
+      "type": "array",
+      "minItems": 6,
+      "items": { "$ref": "#/$defs/sourceRef" }
+    },
+    "coordinatePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cryosectionSpace",
+        "ctSpace",
+        "synchronization",
+        "boundedCtRegistrationStart",
+        "boundedCtRegistrationStop",
+        "patientSpaceClaim"
+      ],
+      "properties": {
+        "cryosectionSpace": { "const": "source-image-pixels-plus-frame-index" },
+        "ctSpace": { "const": "ct-source-pixels" },
+        "synchronization": {
+          "const": "shared-nominal-source-index-for-review-only"
+        },
+        "boundedCtRegistrationStart": { "const": 1567 },
+        "boundedCtRegistrationStop": { "const": 1685 },
+        "patientSpaceClaim": { "const": false }
+      }
+    },
+    "frameCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firstWholeBodyFrameIndex",
+        "lastWholeBodyFrameIndex",
+        "frameCount",
+        "ctProbeLinkedFrameCount",
+        "boundedCtScaffoldFrameCount"
+      ],
+      "properties": {
+        "firstWholeBodyFrameIndex": { "type": "integer", "minimum": 0 },
+        "lastWholeBodyFrameIndex": { "type": "integer", "minimum": 0 },
+        "frameCount": { "type": "integer", "minimum": 1 },
+        "ctProbeLinkedFrameCount": { "type": "integer", "minimum": 0 },
+        "boundedCtScaffoldFrameCount": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "trackCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "totalTrackCount",
+        "ulnarAnchorLinkedTrackCount",
+        "anonymousArterialTrackCount",
+        "anonymousSuperficialTrackCount",
+        "directObservationCount"
+      ],
+      "properties": {
+        "totalTrackCount": { "const": 17 },
+        "ulnarAnchorLinkedTrackCount": { "const": 1 },
+        "anonymousArterialTrackCount": { "const": 8 },
+        "anonymousSuperficialTrackCount": { "const": 8 },
+        "directObservationCount": { "const": 900 }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cryosectionDisplay",
+        "ctSideBySideDisplay",
+        "frameSynchronization",
+        "candidateTrackOverlay",
+        "landmarkEvidencePanel",
+        "promotionGatePanel",
+        "provenancePanel",
+        "identityPromotionByUi"
+      ],
+      "properties": {
+        "cryosectionDisplay": { "const": true },
+        "ctSideBySideDisplay": { "const": true },
+        "frameSynchronization": { "const": true },
+        "candidateTrackOverlay": { "const": true },
+        "landmarkEvidencePanel": { "const": true },
+        "promotionGatePanel": { "const": true },
+        "provenancePanel": { "const": true },
+        "identityPromotionByUi": { "const": false }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "multimodalReviewSurfaceEstablished",
+        "humanAnatomicalReviewCompleted",
+        "ctCryosectionMedicalRegistrationEstablished",
+        "patientSpaceGeometry",
+        "radialArteryIdentityEstablished",
+        "observedSuperficialVeinStructureEstablished",
+        "namedSuperficialVeinIdentityEstablished",
+        "medicalValidation",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "multimodalReviewSurfaceEstablished": { "const": true },
+        "humanAnatomicalReviewCompleted": { "const": false },
+        "ctCryosectionMedicalRegistrationEstablished": { "const": false },
+        "patientSpaceGeometry": { "const": false },
+        "radialArteryIdentityEstablished": { "const": false },
+        "observedSuperficialVeinStructureEstablished": { "const": false },
+        "namedSuperficialVeinIdentityEstablished": { "const": false },
+        "medicalValidation": { "const": false },
+        "automaticPromotionAllowed": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "schema"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "schema": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

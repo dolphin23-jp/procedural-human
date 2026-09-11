@@ -1,0 +1,94 @@
+{
+  "schema": "ph-m8v-ct-cryo-registration-scaffold.v1",
+  "schemaVersion": "1",
+  "task": "TASK-V02",
+  "recordedAt": "2026-09-10",
+  "status": "complete",
+  "sourceEvidence": {
+    "boneCandidateReport": {
+      "schema": "ph-a06-multimodality-bone-candidate-report.v1",
+      "sourceClass": "same-subject-cadaver-derived-plus-radiological",
+      "validationLevel": "V0"
+    },
+    "boneProvenance": {
+      "path": "authoring/outputs/a06-support-aware-radius-ulna-provenance-20260909.json",
+      "gitBlobSha": "066ad84de06a582fa42f30bd3222003c822a25e6"
+    },
+    "sameCadaverCt": {
+      "archiveSha256": "e00dc54d5e65e41e248ecf9c528b28a2493245ca97df9135a13455f62501d3dc",
+      "archiveByteSize": 40224195,
+      "persistentProvider": "Google Drive",
+      "persistentFileId": "1MUMntf6v2chal-Cpwi__FcKTt5gxsbiz",
+      "readBackVerified": true
+    },
+    "persistedA06Output": {
+      "archiveSha256": "407ca0dee7ef99dca8f408195159dca377342376f873c3611b4409b264ab724b",
+      "archiveByteSize": 664033,
+      "persistentProvider": "Google Drive",
+      "persistentFileId": "1RqfSfjMtmssxnm0CJRYqgoIUeHi8rEfq",
+      "readBackVerified": true
+    }
+  },
+  "landmarkPolicy": {
+    "landmarks": ["structure.radius.left", "structure.ulna.left"],
+    "vesselLandmarksUsed": false,
+    "selfConfirmingVesselEvidenceAllowed": false
+  },
+  "support": {
+    "nominalIndexStart": 1567,
+    "nominalIndexStop": 1685,
+    "firstSourceFilename": "avf1567a.png",
+    "lastSourceFilename": "avf1685c.png",
+    "supportedCryosectionFrameCount": 357,
+    "fitLandmarkObservationCount": 238,
+    "outsideSupportDisposition": "unknown-not-registered-by-this-scaffold"
+  },
+  "transform": {
+    "model": "least-squares-affine-2d",
+    "from": "ct-source-pixels",
+    "to": "cryosection-crop-source-pixels",
+    "matrix3x2": [
+      [2.3626060481389204, -0.3943986586518798],
+      [0.45744947263417846, -2.724185530712329],
+      [-957.098255571535, 1151.8269357956563]
+    ],
+    "patientSpaceTransform": false
+  },
+  "residualEvidence": {
+    "directMeanPixels": 9.895194437349101,
+    "directMedianPixels": 6.259964295968334,
+    "swappedMeanPixels": 75.9581886894137,
+    "swappedMedianPixels": 62.55749188869811,
+    "directToSwappedMeanRatio": 0.13027159557226506,
+    "predeclaredPreferenceThreshold": 0.35,
+    "directAssignmentClearlyPreferred": true
+  },
+  "decision": {
+    "registrationState": "bounded-bone-landmark-scaffold",
+    "identityCorrespondence": "direct-radius-ulna-correspondence-supported",
+    "usableFor": [
+      "landmark-constrained-same-subject-inspection",
+      "candidate-vessel-evidence-support",
+      "registration-method-development"
+    ],
+    "notUsableFor": [
+      "patient-space",
+      "vessel-identity-by-itself",
+      "medical-validation",
+      "automatic-medical-master-promotion",
+      "whole-body-registration-claim"
+    ],
+    "nextTask": "TASK-V03"
+  },
+  "claims": {
+    "sameSubject": true,
+    "boneOnlyRegistrationLandmarks": true,
+    "boundedRegistrationScaffoldEstablished": true,
+    "ctCryosectionMedicalRegistrationEstablished": false,
+    "patientSpaceGeometry": false,
+    "radialArteryIdentityEstablished": false,
+    "superficialVeinIdentityEstablished": false,
+    "medicalValidation": false,
+    "automaticPromotionAllowed": false
+  }
+}

@@ -484,6 +484,45 @@ Where support remains inadequate:
 
 Gate S: complete — reusable whole-body source foundation exists and the missing MVP vascular identities have been re-evaluated using same-subject continuity evidence; this does not imply a whole-body Medical Master.
 
+# M8V — Vessel Identification Evidence Lane
+
+This authoring-support lane resolves medically meaningful vascular identity claims after M8S and before Medical Master promotion. It preserves same-subject direct evidence, gaps, competing candidates, landmark and registration support, and human review as separate evidence dimensions. No scalar confidence, procedure role, atlas prior, or review UI may substitute for a missing promotion requirement.
+
+Detailed policy and evidence contracts are maintained in `authoring/vessel-identification/VESSEL_IDENTIFICATION_EVIDENCE.md`.
+
+## TASK-V01 — Same-subject radiological source inventory
+Status: complete — same-subject CT/MRI availability and limitations are inventoried without claiming registration or vessel identity.
+
+## TASK-V02 — Cryosection ↔ CT registration scaffold
+Status: complete — bounded same-subject radius/ulna bone-landmark scaffold established for authoring support only; not Patient Space or medical registration.
+
+## TASK-V03 — Upper-extremity landmark graph
+Status: complete — bounded radius/ulna support, V0 generic tissue-region priors, and explicitly unresolved named muscle/styloid landmarks are represented separately.
+
+## TASK-V04 — Candidate vessel source-index 3D track graph
+Status: complete — 17 tracks and 900 direct observations preserve continuation, explicit gaps, and competing candidates in source-index coordinates without named-vessel promotion.
+
+## TASK-V05 — Radial arterial identity evidence
+Status: complete / blocked-unresolved — all six promotion gates were evaluated independently; no radial candidate is selected and radial/brachial/bifurcation identity remains unresolved.
+
+## TASK-V06 — Superficial venous network evidence
+Status: complete / blocked-unresolved — eight anonymous superficial tracks remain short and competing; no procedure-relevant directly continuous vein structure or vein class is established.
+
+## TASK-V07 — Multimodal review surface
+Status: complete — browser/iPad review is available at `?m8v-review=1`, synchronizing source cryosection, bounded CT support, V04 track overlays, V03 landmarks, V05/V06 gates, and provenance. Viewing does not itself confer human review, identity, validation, Patient Space, or procedure role.
+
+## TASK-V08 — Evidence ledger and explicit human adjudication evidence
+Status: complete — a durable fail-closed evidence ledger, immutable-hash-bound human adjudication receipt schema, and browser/iPad adjudication route `?m8v-adjudicate=1` are implemented. The initial ledger contains no human review receipts and keeps radial, superficial-structure, and named-superficial promotion blocked.
+
+## TASK-V09 — Identity promotion evaluator
+Status: complete / blocked-unresolved — promotion readiness is independently recomputed from claim-level evidence, human-review target consistency, immutable source hashes, and TASK-V04 competitor domains rather than trusting aggregate booleans. Current evidence passes none of the radial, subject-scoped superficial-structure, or named-superficial promotion gates; automatic promotion remains prohibited.
+
+## TASK-V10 — Feed M8V evidence into M8A
+Status: complete / fail-closed-documented — see `authoring/outputs/m8v-v10-m8a-feed-forward-20260911.json`. TASK-V09 passed no radial, subject-scoped superficial-structure, or named-superficial promotion gate, so no new identity or geometry was injected into A07/A08/A09. Existing bounded ulnar evidence is preserved, TASK-A10 remains blocked, and the unresolved source limitations are explicitly fed back into M8A provenance.
+Feed only passed claims and representations into A06/A07/A08/A09 and reevaluate A10. Preserve historical evidence and valid ulnar work. Identity eligibility never fabricates A08/A09 geometry or Medical Master readiness.
+
+Gate V after TASK-V10: complete / fail-closed-documented — TASK-V01 through TASK-V10 are complete. Promotion criteria are explicit and independently evaluated; current radial and superficial identities remain unresolved, no anatomy was fabricated, and TASK-A10 was re-evaluated and remains blocked pending stronger same-subject evidence and explicit human anatomical review.
+
 # M8A — Medical Asset Authoring Lane
 
 May begin after relevant schemas exist.
@@ -658,6 +697,7 @@ Gate F after TASK-064: image/3D coordinate integrity.
 Gate G after TASK-077: generic needle traverses fixture anatomy.  
 Gate H after TASK-094: fixture end-to-end procedure/replay.  
 Gate S (complete) after TASK-AS07: reusable whole-body source foundation exists and missing MVP vascular identities have been re-evaluated from same-subject continuity evidence. Gate S does not imply a whole-body Medical Master.  
+Gate V after TASK-V10: vascular identity evidence has been explicitly adjudicated, promotion-gated, and fed forward or remains fail-closed with documented source limitation.  
 Gate I after TASK-A18: medically grounded runtime asset.  
 Gate J after TASK-112: MVP 0 complete.
 

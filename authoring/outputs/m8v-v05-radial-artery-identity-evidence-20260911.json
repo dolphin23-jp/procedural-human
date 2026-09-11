@@ -1,0 +1,214 @@
+{
+  "candidateAudit": [
+    {
+      "coverageFraction": 0.7807017543859649,
+      "gapLinkCount": 15,
+      "maxMissingFrameCount": 3,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 89,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "selectionStatus": "not-selected-competing-candidate",
+      "sourceClassification": "anonymous-vessel-like-track-only",
+      "spanFrameCount": 114,
+      "trackId": "vhf.m8v.branch-anonymous.01"
+    },
+    {
+      "coverageFraction": 0.7647058823529411,
+      "gapLinkCount": 12,
+      "maxMissingFrameCount": 3,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 65,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "selectionStatus": "not-selected-competing-candidate",
+      "sourceClassification": "anonymous-vessel-like-track-only",
+      "spanFrameCount": 85,
+      "trackId": "vhf.m8v.branch-anonymous.02"
+    },
+    {
+      "coverageFraction": 0.7142857142857143,
+      "gapLinkCount": 19,
+      "maxMissingFrameCount": 3,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 75,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "selectionStatus": "not-selected-competing-candidate",
+      "sourceClassification": "anonymous-vessel-like-track-only",
+      "spanFrameCount": 105,
+      "trackId": "vhf.m8v.branch-anonymous.03"
+    },
+    {
+      "coverageFraction": 0.7662337662337663,
+      "gapLinkCount": 13,
+      "maxMissingFrameCount": 2,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 59,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "selectionStatus": "not-selected-competing-candidate",
+      "sourceClassification": "anonymous-vessel-like-track-only",
+      "spanFrameCount": 77,
+      "trackId": "vhf.m8v.branch-anonymous.04"
+    },
+    {
+      "coverageFraction": 0.726027397260274,
+      "gapLinkCount": 13,
+      "maxMissingFrameCount": 3,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 53,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "selectionStatus": "not-selected-competing-candidate",
+      "sourceClassification": "anonymous-vessel-like-track-only",
+      "spanFrameCount": 73,
+      "trackId": "vhf.m8v.branch-anonymous.05"
+    },
+    {
+      "coverageFraction": 0.6571428571428571,
+      "gapLinkCount": 16,
+      "maxMissingFrameCount": 3,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 46,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "selectionStatus": "not-selected-competing-candidate",
+      "sourceClassification": "anonymous-vessel-like-track-only",
+      "spanFrameCount": 70,
+      "trackId": "vhf.m8v.branch-anonymous.06"
+    },
+    {
+      "coverageFraction": 0.5806451612903226,
+      "gapLinkCount": 13,
+      "maxMissingFrameCount": 3,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 36,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "selectionStatus": "not-selected-competing-candidate",
+      "sourceClassification": "anonymous-vessel-like-track-only",
+      "spanFrameCount": 62,
+      "trackId": "vhf.m8v.branch-anonymous.07"
+    },
+    {
+      "coverageFraction": 0.6744186046511628,
+      "gapLinkCount": 8,
+      "maxMissingFrameCount": 3,
+      "namedIdentityStatus": "anonymous-unresolved",
+      "observationCount": 29,
+      "reviewStatus": "unreviewed-as-complete-track",
+      "selectionStatus": "not-selected-competing-candidate",
+      "sourceClassification": "anonymous-vessel-like-track-only",
+      "spanFrameCount": 43,
+      "trackId": "vhf.m8v.branch-anonymous.08"
+    }
+  ],
+  "claims": {
+    "automaticPromotionAllowed": false,
+    "bifurcationIdentityEstablished": false,
+    "brachialArteryIdentityEstablished": false,
+    "medicalValidation": false,
+    "patientSpaceGeometry": false,
+    "physical3DGeometry": false,
+    "radialArteryIdentityEstablished": false
+  },
+  "decision": {
+    "allRequiredGatesPass": false,
+    "blockingGateIds": [
+      "unique-same-subject-arterial-anchor",
+      "bounded-gap-continuity-to-target",
+      "compatible-branch-topology",
+      "compatible-landmark-relationships",
+      "no-equal-or-better-competing-candidate",
+      "explicit-human-anatomical-review"
+    ],
+    "candidateSelected": null,
+    "nextTask": "TASK-V06",
+    "radialArteryPromotionAllowed": false,
+    "state": "blocked-unresolved"
+  },
+  "promotionGateEvaluations": [
+    {
+      "evidence": [
+        "AS06 preserves a reviewed left ulnar-artery anchor.",
+        "AS06 explicitly leaves radial, brachial, and bifurcation identity unresolved."
+      ],
+      "id": "unique-same-subject-arterial-anchor",
+      "reason": "The ulnar anchor is valuable competing anatomy but is not a unique radial or brachial anchor and cannot establish the radial path by itself.",
+      "requirement": "A defensible same-subject proximal or otherwise unique arterial anchor for the radial path is required.",
+      "status": "fail"
+    },
+    {
+      "evidence": [
+        "TASK-V04 contains 8 anonymous arterial branch-search tracks with direct observations and explicit gaps.",
+        "None of those tracks is bound to structure.radial_artery.left."
+      ],
+      "id": "bounded-gap-continuity-to-target",
+      "reason": "Track continuity exists as anonymous candidate evidence, but identity continuity from a unique radial anchor to the target cannot be demonstrated while no candidate is selected or named.",
+      "requirement": "The radial identity must be followed by continuous or explicitly bounded-gap same-subject tracking to the target region.",
+      "status": "insufficient"
+    },
+    {
+      "evidence": [
+        "TASK-V04 has 0 branch/merge candidates meeting the carried-forward topology gate.",
+        "TASK-V04 explicitly leaves brachial and bifurcation identity unestablished."
+      ],
+      "id": "compatible-branch-topology",
+      "reason": "No source-supported branch topology currently distinguishes one anonymous branch-search track as the radial artery.",
+      "requirement": "The candidate must have compatible radial/ulnar/brachial branch topology where topology is used as identity evidence.",
+      "status": "fail"
+    },
+    {
+      "evidence": [
+        "TASK-V02 supports bounded same-subject radius/ulna correspondence for inspection, not vessel identity by itself.",
+        "Unresolved radial-localizing landmarks: structure.brachioradialis.left, structure.flexor_carpi_radialis.left, structure.pronator_quadratus.left, structure.radial_styloid.left"
+      ],
+      "id": "compatible-landmark-relationships",
+      "reason": "Radius/ulna orientation constrains the search, but the named local landmarks needed for a defensible radial relationship remain unresolved.",
+      "requirement": "The candidate must have compatible source-supported landmark relationships.",
+      "status": "insufficient"
+    },
+    {
+      "evidence": [
+        "TASK-V04 branch identity competitor set contains 8 candidates.",
+        "Competitor-set resolution status is unresolved."
+      ],
+      "id": "no-equal-or-better-competing-candidate",
+      "reason": "Multiple anonymous arterial candidates remain explicitly competing; choosing one now would convert algorithmic preference into anatomical truth.",
+      "requirement": "No competing candidate with equal or better evidence may remain unresolved.",
+      "status": "fail"
+    },
+    {
+      "evidence": [
+        "TASK-V04 anonymous branch-search tracks are not reviewed as complete named tracks.",
+        "No V05 human anatomical review receipt is present in the current evidence inputs."
+      ],
+      "id": "explicit-human-anatomical-review",
+      "reason": "The required identity-level human review has not occurred; prior review of the ulnar anchor cannot be transferred to a radial candidate.",
+      "requirement": "The radial identity claim requires explicit human anatomical review.",
+      "status": "fail"
+    }
+  ],
+  "recordedAt": "2026-09-11",
+  "schema": "ph-m8v-radial-artery-identity-evidence.v1",
+  "schemaVersion": "1",
+  "sourceEvidence": {
+    "landmarkGraph": {
+      "path": "authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json",
+      "schema": "ph-m8v-upper-extremity-landmark-graph.v1",
+      "sha256": "67b4c1aca511e3e2ea301fc55f9ef4aa92ff48ce9a97310764f563d27ef61a00"
+    },
+    "registrationScaffold": {
+      "path": "authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json",
+      "schema": "ph-m8v-ct-cryo-registration-scaffold.v1",
+      "sha256": "061002161d98cd595a07c85af76ca944e3fb753296f280a9125d14fa8938e79a"
+    },
+    "sameSubjectContinuity": {
+      "path": "authoring/outputs/as06-same-subject-continuity-provenance-20260910.json",
+      "schema": "ph-as06-same-subject-continuity-provenance.v1",
+      "sha256": "16d560b7b21c8b7f1542e243df0451a9929e2f4395f3132d49f919d51ce44062"
+    },
+    "trackGraph": {
+      "path": "authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json",
+      "schema": "ph-m8v-candidate-vessel-track-graph.v1",
+      "sha256": "02f37cc34e0e02de1c68d7c2aa57d05ff48efe366e9531a0495de428c22c2f8c"
+    }
+  },
+  "status": "complete",
+  "targetIdentity": "structure.radial_artery.left",
+  "task": "TASK-V05"
+}

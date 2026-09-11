@@ -1,0 +1,92 @@
+{
+  "schema": "ph-m8v-radiological-source-inventory.v1",
+  "schemaVersion": "1",
+  "task": "TASK-V01",
+  "recordedAt": "2026-09-10",
+  "status": "complete",
+  "sourceArchiveId": "source.nlm.vhp-female",
+  "subjectId": "VHP-F",
+  "inventoryEvidence": {
+    "path": "authoring/source-archives/vhf-whole-body-inventory-20260910.json",
+    "sha256": "sha256:268a6896b333cf9f1c77d7cf4f97bc838088666385c4a6cec0d36da1129a85d5",
+    "snapshotDate": "2026-09-10"
+  },
+  "providerDocumentation": {
+    "datasetUrl": "https://datadiscovery.nlm.nih.gov/Images/Visible-Human-Project/ux2j-9i9a/about_data",
+    "gettingDataUrl": "https://www.nlm.nih.gov/research/visible/getting_data.html",
+    "documentedRelationship": "NLM documents the Visible Human Female as one cadaver represented by anatomical cryosection, CT, and MRI modes; modality availability does not itself establish cross-modality registration."
+  },
+  "preferredCollections": [
+    {
+      "role": "ct-images",
+      "path": "PNG_format/radiological/normalCT",
+      "listedObjectCount": 1734,
+      "listedByteSize": 413890012,
+      "inventoryStatus": "inventoried",
+      "acquisitionStatus": "not-persisted-by-m8v",
+      "registrationStatus": "not-established",
+      "patientSpaceClaim": false
+    },
+    {
+      "role": "ct-headers",
+      "path": "PNG_format/radiological/normalCTHeaders",
+      "listedObjectCount": 1734,
+      "listedByteSize": 28593072,
+      "inventoryStatus": "inventoried",
+      "acquisitionStatus": "not-persisted-by-m8v",
+      "registrationStatus": "not-established",
+      "patientSpaceClaim": false
+    },
+    {
+      "role": "mri-images",
+      "path": "PNG_format/radiological/mri",
+      "listedObjectCount": 986,
+      "listedByteSize": 58579700,
+      "inventoryStatus": "inventoried",
+      "acquisitionStatus": "not-persisted-by-m8v",
+      "registrationStatus": "not-established",
+      "patientSpaceClaim": false
+    },
+    {
+      "role": "mri-headers",
+      "path": "PNG_format/radiological/mriHeaders",
+      "listedObjectCount": 985,
+      "listedByteSize": 15907263,
+      "inventoryStatus": "inventoried",
+      "acquisitionStatus": "not-persisted-by-m8v",
+      "registrationStatus": "not-established",
+      "patientSpaceClaim": false
+    }
+  ],
+  "existingBoundedCtProbe": {
+    "workflowPath": ".github/workflows/probe-vhp-female-ct.yml",
+    "status": "implemented-reference-probe",
+    "nominalIndexStart": 1567,
+    "nominalIndexStop": 1717,
+    "expectedCtImageCount": 151,
+    "imageDimensions": {
+      "width": 512,
+      "height": 512
+    },
+    "persistence": "github-actions-artifact-ephemeral",
+    "registrationStatus": "not-established",
+    "patientSpaceClaim": false
+  },
+  "disposition": {
+    "nextTask": "TASK-V02",
+    "ctPriority": "primary-same-subject-registration-support",
+    "mriPriority": "secondary-use-if-information-gain-justifies",
+    "reason": "CT is already represented by bounded same-cadaver probe tooling and stable bone evidence is available for a non-vascular registration scaffold. MRI remains inventoried but should not be acquired or processed merely because it exists; use it only if CT plus cryosection continuity and landmarks leave material ambiguity that MRI can plausibly reduce."
+  },
+  "claims": {
+    "sameSubjectRadiologicalSourcesInventoried": true,
+    "persistentRadiologicalArchiveComplete": false,
+    "ctCryosectionRegistrationEstablished": false,
+    "mriCryosectionRegistrationEstablished": false,
+    "radialArteryIdentityEstablished": false,
+    "superficialVeinIdentityEstablished": false,
+    "medicalValidation": false,
+    "patientSpaceGeometry": false,
+    "automaticPromotionAllowed": false
+  }
+}

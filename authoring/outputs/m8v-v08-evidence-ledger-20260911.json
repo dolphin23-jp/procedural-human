@@ -1,0 +1,364 @@
+{
+  "assertions": {
+    "automaticPromotionAllowed": false,
+    "medicalValidation": false,
+    "patientSpaceGeometry": false,
+    "procedureRoleEstablished": false
+  },
+  "claims": [
+    {
+      "conflictingEvidence": [
+        {
+          "description": "AS06 preserves a reviewed left ulnar-artery anchor.",
+          "source": "TASK-V05"
+        },
+        {
+          "description": "AS06 explicitly leaves radial, brachial, and bifurcation identity unresolved.",
+          "source": "TASK-V05"
+        }
+      ],
+      "domain": "radial-artery",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "radial.gate.same-subject-anchor",
+      "missingEvidence": [
+        "The ulnar anchor is valuable competing anatomy but is not a unique radial or brachial anchor and cannot establish the radial path by itself."
+      ],
+      "promotionEligible": false,
+      "requirement": "A defensible same-subject proximal or otherwise unique arterial anchor for the radial path is required.",
+      "state": "blocked",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [],
+      "domain": "radial-artery",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "radial.gate.continuity",
+      "missingEvidence": [
+        "Track continuity exists as anonymous candidate evidence, but identity continuity from a unique radial anchor to the target cannot be demonstrated while no candidate is selected or named."
+      ],
+      "promotionEligible": false,
+      "requirement": "The radial identity must be followed by continuous or explicitly bounded-gap same-subject tracking to the target region.",
+      "state": "unresolved",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [
+        {
+          "description": "TASK-V04 has 0 branch/merge candidates meeting the carried-forward topology gate.",
+          "source": "TASK-V05"
+        },
+        {
+          "description": "TASK-V04 explicitly leaves brachial and bifurcation identity unestablished.",
+          "source": "TASK-V05"
+        }
+      ],
+      "domain": "radial-artery",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "radial.gate.branch-topology",
+      "missingEvidence": [
+        "No source-supported branch topology currently distinguishes one anonymous branch-search track as the radial artery."
+      ],
+      "promotionEligible": false,
+      "requirement": "The candidate must have compatible radial/ulnar/brachial branch topology where topology is used as identity evidence.",
+      "state": "blocked",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [],
+      "domain": "radial-artery",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "radial.gate.landmark-relationships",
+      "missingEvidence": [
+        "Radius/ulna orientation constrains the search, but the named local landmarks needed for a defensible radial relationship remain unresolved."
+      ],
+      "promotionEligible": false,
+      "requirement": "The candidate must have compatible source-supported landmark relationships.",
+      "state": "unresolved",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [
+        {
+          "description": "TASK-V04 branch identity competitor set contains 8 candidates.",
+          "source": "TASK-V05"
+        },
+        {
+          "description": "Competitor-set resolution status is unresolved.",
+          "source": "TASK-V05"
+        }
+      ],
+      "domain": "radial-artery",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "radial.gate.competitor-resolution",
+      "missingEvidence": [
+        "Multiple anonymous arterial candidates remain explicitly competing; choosing one now would convert algorithmic preference into anatomical truth."
+      ],
+      "promotionEligible": false,
+      "requirement": "No competing candidate with equal or better evidence may remain unresolved.",
+      "state": "blocked",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [
+        {
+          "description": "TASK-V04 anonymous branch-search tracks are not reviewed as complete named tracks.",
+          "source": "TASK-V05"
+        },
+        {
+          "description": "No V05 human anatomical review receipt is present in the current evidence inputs.",
+          "source": "TASK-V05"
+        }
+      ],
+      "domain": "radial-artery",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "radial.gate.human-review",
+      "missingEvidence": [
+        "The required identity-level human review has not occurred; prior review of the ulnar anchor cannot be transferred to a radial candidate."
+      ],
+      "promotionEligible": false,
+      "requirement": "The radial identity claim requires explicit human anatomical review.",
+      "state": "blocked",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [
+        {
+          "description": "The longest direct superficial track spans 10 frames.",
+          "source": "TASK-V06"
+        },
+        {
+          "description": "0 track(s) meet the inherited 90-frame minimum extent.",
+          "source": "TASK-V06"
+        }
+      ],
+      "domain": "superficial-vein",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "superficial.gate.direct-extent",
+      "missingEvidence": [
+        "No direct superficial track reaches the predeclared AS06 procedure-relevant extent; derived link hypotheses cannot fill that gap."
+      ],
+      "promotionEligible": false,
+      "requirement": "Direct same-subject vessel observations must cover a procedure-relevant extent.",
+      "state": "blocked",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [
+        {
+          "description": "0 track(s) meet the unchanged AS06 direct continuity criteria.",
+          "source": "TASK-V06"
+        },
+        {
+          "description": "0 inter-track continuation hypothesis link(s) were found, but they are explicitly non-observational.",
+          "source": "TASK-V06"
+        }
+      ],
+      "domain": "superficial-vein",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "superficial.gate.continuity",
+      "missingEvidence": [
+        "The observed tracks remain fragmented; hypothesis links are inspection cues only and are not counted as source continuity."
+      ],
+      "promotionEligible": false,
+      "requirement": "Continuity must establish one observed superficial structure rather than isolated blobs or derived links.",
+      "state": "blocked",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [],
+      "domain": "superficial-vein",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "superficial.gate.subcutaneous-relationship",
+      "missingEvidence": [
+        "Shallow source-image depth is useful supporting evidence, but it is not yet equivalent to an anatomically reviewed subcutaneous-plane relationship."
+      ],
+      "promotionEligible": false,
+      "requirement": "The structure must have a defensible source-supported superficial/subcutaneous relationship.",
+      "state": "unresolved",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [
+        {
+          "description": "0 of 8 tracks currently carry vein-specific class support.",
+          "source": "TASK-V06"
+        },
+        {
+          "description": "TASK-V04 intentionally labels the superficial tracks as superficial-vessel-like-unknown.",
+          "source": "TASK-V06"
+        }
+      ],
+      "domain": "superficial-vein",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "superficial.gate.vein-class",
+      "missingEvidence": [
+        "Static superficial vessel-like appearance and shallow depth do not by themselves distinguish a vein from another vascular or nonvascular lumen-like structure."
+      ],
+      "promotionEligible": false,
+      "requirement": "The observed structure must have defensible vessel-class evidence as a vein.",
+      "state": "blocked",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [
+        {
+          "description": "The superficial competitor set contains 8 anonymous tracks.",
+          "source": "TASK-V06"
+        },
+        {
+          "description": "Its resolution status is unresolved.",
+          "source": "TASK-V06"
+        }
+      ],
+      "domain": "superficial-vein",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "superficial.gate.competitor-resolution",
+      "missingEvidence": [
+        "No single observed superficial structure can be promoted while the candidate set remains explicitly unresolved."
+      ],
+      "promotionEligible": false,
+      "requirement": "Competing tracks and conflicts must be resolved for the proposed observed structure.",
+      "state": "blocked",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [
+        {
+          "description": "TASK-V04 tracks remain unreviewed as complete tracks.",
+          "source": "TASK-V06"
+        },
+        {
+          "description": "No TASK-V06 human review receipt is present in the current inputs.",
+          "source": "TASK-V06"
+        }
+      ],
+      "domain": "superficial-vein",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "superficial.gate.human-review",
+      "missingEvidence": [
+        "Algorithmic source evidence can prioritize review but cannot substitute for the required anatomy-level human review."
+      ],
+      "promotionEligible": false,
+      "requirement": "The observed structure, vessel class, and superficial relationship require explicit human anatomical review.",
+      "state": "blocked",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [],
+      "domain": "superficial-vein",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "superficial.structure.observed",
+      "missingEvidence": [
+        "TASK-V06 does not establish a procedure-relevant directly continuous superficial vein structure."
+      ],
+      "promotionEligible": false,
+      "requirement": "All subject-scoped superficial-vein structure promotion gates must be supported.",
+      "state": "blocked",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [],
+      "domain": "named-superficial-vein",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "superficial.identity.named-topology",
+      "missingEvidence": [
+        "No source-supported named superficial-vein course or connection topology is established."
+      ],
+      "promotionEligible": false,
+      "requirement": "Named cephalic/basilic identity requires source-supported course and connection topology appropriate to that name.",
+      "state": "missing",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    },
+    {
+      "conflictingEvidence": [],
+      "domain": "named-superficial-vein",
+      "humanReviewStatus": "not-reviewed",
+      "humanReviewTargetId": null,
+      "id": "superficial.identity.named",
+      "missingEvidence": [
+        "No subject-scoped superficial vein structure is established.",
+        "No source-supported named superficial-vein course/topology is established.",
+        "No named superficial-vein human adjudication is recorded."
+      ],
+      "promotionEligible": false,
+      "requirement": "Named superficial-vein identity requires an established observed structure, compatible named course/topology, and explicit identity-level human review.",
+      "state": "blocked",
+      "supportingEvidence": [],
+      "validationLevel": "V0"
+    }
+  ],
+  "decision": {
+    "humanAdjudicationEvidencePresent": false,
+    "ledgerState": "blocked-unresolved",
+    "namedSuperficialPromotionReady": false,
+    "nextTask": "TASK-V09",
+    "radialPromotionReady": false,
+    "superficialStructurePromotionReady": false
+  },
+  "humanReviewSessions": [],
+  "recordedAt": "2026-09-11",
+  "schema": "ph-m8v-evidence-ledger.v1",
+  "schemaVersion": "1",
+  "sourceEvidence": [
+    {
+      "path": "authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json",
+      "role": "candidate-vessel-track-graph",
+      "schema": "ph-m8v-candidate-vessel-track-graph.v1",
+      "sha256": "02f37cc34e0e02de1c68d7c2aa57d05ff48efe366e9531a0495de428c22c2f8c"
+    },
+    {
+      "path": "authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json",
+      "role": "upper-extremity-landmarks",
+      "schema": "ph-m8v-upper-extremity-landmark-graph.v1",
+      "sha256": "67b4c1aca511e3e2ea301fc55f9ef4aa92ff48ce9a97310764f563d27ef61a00"
+    },
+    {
+      "path": "authoring/outputs/m8v-v05-radial-artery-identity-evidence-20260911.json",
+      "role": "radial-promotion-gate-evidence",
+      "schema": "ph-m8v-radial-artery-identity-evidence.v1",
+      "sha256": "bafada6ec31a79b3a02f723226cd5b1a414c9cf250e0ae9bd14d2a8209e2e8b0"
+    },
+    {
+      "path": "authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json",
+      "role": "superficial-promotion-gate-evidence",
+      "schema": "ph-m8v-superficial-venous-network-evidence.v1",
+      "sha256": "5a65713cd8d3cec20e9e06570b3666fc5101793b511d508146e1a39ad19e94ae"
+    },
+    {
+      "path": "authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json",
+      "role": "multimodal-review-surface",
+      "schema": "ph-m8v-multimodal-review-surface.v1",
+      "sha256": "5b95b9a10f471ea19a8ca7c3ac5288ebb0eb45f4a4a1803271391652d4327463"
+    }
+  ],
+  "status": "complete",
+  "task": "TASK-V08"
+}

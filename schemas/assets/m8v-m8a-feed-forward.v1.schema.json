@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://procedural-human.local/schemas/assets/m8v-m8a-feed-forward/v1",
+  "title": "M8V to M8A feed-forward and A10 re-evaluation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "task",
+    "recordedAt",
+    "status",
+    "sourceEvidence",
+    "promotionInput",
+    "feedForwardActions",
+    "preservedExistingEvidence",
+    "a10Reevaluation",
+    "gateV",
+    "claims"
+  ],
+  "properties": {
+    "schema": { "const": "ph-m8v-m8a-feed-forward.v1" },
+    "schemaVersion": { "const": "1" },
+    "task": { "const": "TASK-V10" },
+    "recordedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "status": { "const": "complete" },
+    "sourceEvidence": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": { "$ref": "#/$defs/sourceRef" }
+    },
+    "promotionInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "anyPromotionGatePassed",
+        "radialArtery",
+        "superficialStructure",
+        "namedSuperficialVein"
+      ],
+      "properties": {
+        "anyPromotionGatePassed": { "type": "boolean" },
+        "radialArtery": { "$ref": "#/$defs/promotionState" },
+        "superficialStructure": { "$ref": "#/$defs/promotionState" },
+        "namedSuperficialVein": { "$ref": "#/$defs/promotionState" }
+      }
+    },
+    "feedForwardActions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "radialArtery",
+        "superficialStructure",
+        "namedSuperficialVein"
+      ],
+      "properties": {
+        "radialArtery": { "$ref": "#/$defs/radialAction" },
+        "superficialStructure": { "$ref": "#/$defs/superficialAction" },
+        "namedSuperficialVein": { "$ref": "#/$defs/namedAction" }
+      }
+    },
+    "preservedExistingEvidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "anatomicalId",
+          "a07RepresentationAvailable",
+          "a08CenterlineStatus",
+          "a09RepresentationStatus",
+          "scope"
+        ],
+        "properties": {
+          "anatomicalId": { "const": "structure.ulnar_artery.left" },
+          "a07RepresentationAvailable": { "const": true },
+          "a08CenterlineStatus": { "const": "generated" },
+          "a09RepresentationStatus": { "const": "generated" },
+          "scope": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "a10Reevaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "priorStatus",
+        "status",
+        "medicalMasterCreationAllowed",
+        "blockers"
+      ],
+      "properties": {
+        "priorStatus": { "enum": ["blocked", "ready"] },
+        "status": { "enum": ["blocked", "ready"] },
+        "medicalMasterCreationAllowed": { "type": "boolean" },
+        "blockers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "gateV": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "outcome",
+        "allPassedClaimsFedWithoutGeometryFabrication",
+        "unresolvedClaimsRemainBlocked",
+        "a10Reevaluated"
+      ],
+      "properties": {
+        "status": { "const": "complete" },
+        "outcome": { "enum": ["promotion-fed", "fail-closed-documented"] },
+        "allPassedClaimsFedWithoutGeometryFabrication": { "const": true },
+        "unresolvedClaimsRemainBlocked": { "const": true },
+        "a10Reevaluated": { "const": true }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "newRadialIdentityApplied",
+        "newSuperficialStructureIdentityApplied",
+        "newNamedSuperficialVeinIdentityApplied",
+        "newGeometryPromoted",
+        "existingUlnarEvidencePreserved",
+        "medicalMasterCreated",
+        "medicalValidation",
+        "patientSpaceGeometry",
+        "procedureRoleUsedAsAnatomicalIdentity",
+        "automaticPromotionAllowed"
+      ],
+      "properties": {
+        "newRadialIdentityApplied": { "type": "boolean" },
+        "newSuperficialStructureIdentityApplied": { "type": "boolean" },
+        "newNamedSuperficialVeinIdentityApplied": { "type": "boolean" },
+        "newGeometryPromoted": { "const": false },
+        "existingUlnarEvidencePreserved": { "const": true },
+        "medicalMasterCreated": { "type": "boolean" },
+        "medicalValidation": { "const": false },
+        "patientSpaceGeometry": { "const": false },
+        "procedureRoleUsedAsAnatomicalIdentity": { "const": false },
+        "automaticPromotionAllowed": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "nullableTrackId": {
+      "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+    },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "schema", "sha256", "role"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "schema": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "role": {
+          "enum": [
+            "m8v-promotion-evaluation",
+            "prior-m8a-feed-forward",
+            "a07-semantic-mapping",
+            "a08-centerline-report",
+            "a09-boundary-lumen-report",
+            "a10-readiness-record"
+          ]
+        }
+      }
+    },
+    "promotionState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promotionGatePassed",
+        "targetId",
+        "blockingClaimIds",
+        "blockingReasons"
+      ],
+      "properties": {
+        "promotionGatePassed": { "type": "boolean" },
+        "targetId": { "$ref": "#/$defs/nullableTrackId" },
+        "blockingClaimIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "blockingReasons": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "radialAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identityClaimStatus",
+        "targetId",
+        "existingA07RepresentationAvailable",
+        "existingA08CenterlineStatus",
+        "existingA09RepresentationStatus",
+        "geometryPromotionApplied",
+        "blockers"
+      ],
+      "properties": {
+        "identityClaimStatus": {
+          "enum": ["blocked", "eligible-for-a07-authoring"]
+        },
+        "targetId": { "$ref": "#/$defs/nullableTrackId" },
+        "existingA07RepresentationAvailable": { "type": "boolean" },
+        "existingA08CenterlineStatus": { "enum": ["blocked", "generated"] },
+        "existingA09RepresentationStatus": { "enum": ["blocked", "generated"] },
+        "geometryPromotionApplied": { "const": false },
+        "blockers": { "$ref": "#/$defs/blockers" }
+      }
+    },
+    "superficialAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identityClaimStatus",
+        "targetId",
+        "existingA07AnatomicalId",
+        "existingA08CenterlineStatus",
+        "existingA09RepresentationStatus",
+        "geometryPromotionApplied",
+        "blockers"
+      ],
+      "properties": {
+        "identityClaimStatus": {
+          "enum": ["blocked", "eligible-for-subject-scoped-a07-authoring"]
+        },
+        "targetId": { "$ref": "#/$defs/nullableTrackId" },
+        "existingA07AnatomicalId": { "$ref": "#/$defs/nullableTrackId" },
+        "existingA08CenterlineStatus": { "enum": ["blocked", "generated"] },
+        "existingA09RepresentationStatus": { "enum": ["blocked", "generated"] },
+        "geometryPromotionApplied": { "const": false },
+        "blockers": { "$ref": "#/$defs/blockers" }
+      }
+    },
+    "namedAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identityClaimStatus",
+        "targetId",
+        "procedureRoleUsedAsIdentity",
+        "geometryPromotionApplied",
+        "blockers"
+      ],
+      "properties": {
+        "identityClaimStatus": {
+          "enum": ["blocked", "eligible-for-named-a07-authoring"]
+        },
+        "targetId": { "$ref": "#/$defs/nullableTrackId" },
+        "procedureRoleUsedAsIdentity": { "const": false },
+        "geometryPromotionApplied": { "const": false },
+        "blockers": { "$ref": "#/$defs/blockers" }
+      }
+    }
+  }
+}

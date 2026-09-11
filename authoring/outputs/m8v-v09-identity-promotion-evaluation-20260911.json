@@ -1,0 +1,459 @@
+{
+  "claims": {
+    "automaticPromotionAllowed": false,
+    "medicalValidation": false,
+    "namedSuperficialVeinPromotionGatePassed": false,
+    "patientSpaceGeometry": false,
+    "procedureRoleEstablished": false,
+    "radialArteryPromotionGatePassed": false,
+    "superficialStructurePromotionGatePassed": false
+  },
+  "crossChecks": {
+    "ledgerDecisionConsistency": true,
+    "ledgerSourceSnapshotHashesVerified": true,
+    "procedureRoleExcluded": true,
+    "prohibitedAssertionsRemainFalse": true,
+    "targetDomainMembershipVerified": true
+  },
+  "decision": {
+    "anyPromotionGatePassed": false,
+    "nextTask": "TASK-V10",
+    "state": "blocked-unresolved"
+  },
+  "evaluations": {
+    "namedSuperficialVein": {
+      "allRequiredClaimsPass": false,
+      "blockingClaimIds": [
+        "superficial.gate.direct-extent",
+        "superficial.gate.continuity",
+        "superficial.gate.subcutaneous-relationship",
+        "superficial.gate.vein-class",
+        "superficial.gate.competitor-resolution",
+        "superficial.gate.human-review",
+        "superficial.structure.observed",
+        "superficial.identity.named-topology",
+        "superficial.identity.named"
+      ],
+      "blockingReasons": [
+        "no single reviewed target is present across required claims",
+        "one or more required claim-level gates do not pass"
+      ],
+      "claimResults": [
+        {
+          "claimId": "superficial.gate.direct-extent",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.gate.continuity",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.gate.subcutaneous-relationship",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is unresolved, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "unresolved",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.gate.vein-class",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.gate.competitor-resolution",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.gate.human-review",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.structure.observed",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "aggregate structure state is blocked, not supported",
+            "aggregate structure has no reviewed target track"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.identity.named-topology",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is missing, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "missing",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.identity.named",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        }
+      ],
+      "competitorSetId": "vhf.m8v.competitors.superficial-structure",
+      "decision": "blocked-unresolved",
+      "promotionGatePassed": false,
+      "requiredClaimIds": [
+        "superficial.gate.direct-extent",
+        "superficial.gate.continuity",
+        "superficial.gate.subcutaneous-relationship",
+        "superficial.gate.vein-class",
+        "superficial.gate.competitor-resolution",
+        "superficial.gate.human-review",
+        "superficial.structure.observed",
+        "superficial.identity.named-topology",
+        "superficial.identity.named"
+      ],
+      "targetClaim": "named-superficial-vein-identity",
+      "targetConsistencyPass": false,
+      "targetId": null,
+      "targetInAllowedCompetitorSet": false
+    },
+    "radialArtery": {
+      "allRequiredClaimsPass": false,
+      "blockingClaimIds": [
+        "radial.gate.same-subject-anchor",
+        "radial.gate.continuity",
+        "radial.gate.branch-topology",
+        "radial.gate.landmark-relationships",
+        "radial.gate.competitor-resolution",
+        "radial.gate.human-review"
+      ],
+      "blockingReasons": [
+        "no single reviewed target is present across required claims",
+        "one or more required claim-level gates do not pass"
+      ],
+      "claimResults": [
+        {
+          "claimId": "radial.gate.same-subject-anchor",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "radial.gate.continuity",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is unresolved, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "unresolved",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "radial.gate.branch-topology",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "radial.gate.landmark-relationships",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is unresolved, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "unresolved",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "radial.gate.competitor-resolution",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "radial.gate.human-review",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        }
+      ],
+      "competitorSetId": "vhf.m8v.competitors.branch-identity",
+      "decision": "blocked-unresolved",
+      "promotionGatePassed": false,
+      "requiredClaimIds": [
+        "radial.gate.same-subject-anchor",
+        "radial.gate.continuity",
+        "radial.gate.branch-topology",
+        "radial.gate.landmark-relationships",
+        "radial.gate.competitor-resolution",
+        "radial.gate.human-review"
+      ],
+      "targetClaim": "structure.radial_artery.left",
+      "targetConsistencyPass": false,
+      "targetId": null,
+      "targetInAllowedCompetitorSet": false
+    },
+    "superficialStructure": {
+      "allRequiredClaimsPass": false,
+      "blockingClaimIds": [
+        "superficial.gate.direct-extent",
+        "superficial.gate.continuity",
+        "superficial.gate.subcutaneous-relationship",
+        "superficial.gate.vein-class",
+        "superficial.gate.competitor-resolution",
+        "superficial.gate.human-review"
+      ],
+      "blockingReasons": [
+        "no single reviewed target is present across required claims",
+        "one or more required claim-level gates do not pass"
+      ],
+      "claimResults": [
+        {
+          "claimId": "superficial.gate.direct-extent",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.gate.continuity",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.gate.subcutaneous-relationship",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is unresolved, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "unresolved",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.gate.vein-class",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.gate.competitor-resolution",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        },
+        {
+          "claimId": "superficial.gate.human-review",
+          "humanReviewStatus": "not-reviewed",
+          "humanReviewTargetId": null,
+          "pass": false,
+          "promotionEligible": false,
+          "reasons": [
+            "claim state is blocked, not supported",
+            "human review is not-reviewed, not accepted",
+            "validation level is V0, below explicit human anatomical review",
+            "no reviewed target track is bound to the claim"
+          ],
+          "state": "blocked",
+          "validationLevel": "V0"
+        }
+      ],
+      "competitorSetId": "vhf.m8v.competitors.superficial-structure",
+      "decision": "blocked-unresolved",
+      "promotionGatePassed": false,
+      "requiredClaimIds": [
+        "superficial.gate.direct-extent",
+        "superficial.gate.continuity",
+        "superficial.gate.subcutaneous-relationship",
+        "superficial.gate.vein-class",
+        "superficial.gate.competitor-resolution",
+        "superficial.gate.human-review"
+      ],
+      "targetClaim": "subject-scoped-superficial-vein-structure",
+      "targetConsistencyPass": false,
+      "targetId": null,
+      "targetInAllowedCompetitorSet": false
+    }
+  },
+  "recordedAt": "2026-09-11",
+  "schema": "ph-m8v-identity-promotion-evaluation.v1",
+  "schemaVersion": "1",
+  "sourceEvidence": [
+    {
+      "path": "authoring/outputs/m8v-v08-evidence-ledger-20260911.json",
+      "role": "evidence-ledger",
+      "schema": "ph-m8v-evidence-ledger.v1",
+      "sha256": "de48660c6dbb402017e5396d9fe22d508467e997509c3a8f077fa8358ab877fa"
+    },
+    {
+      "path": "authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json",
+      "role": "candidate-vessel-track-graph",
+      "schema": "ph-m8v-candidate-vessel-track-graph.v1",
+      "sha256": "02f37cc34e0e02de1c68d7c2aa57d05ff48efe366e9531a0495de428c22c2f8c"
+    }
+  ],
+  "status": "complete",
+  "task": "TASK-V09"
+}

@@ -34,6 +34,61 @@ const authoringContracts = [
     'schemas/assets/vhf-whole-body-inventory.v1.schema.json',
     'authoring/source-archives/vhf-whole-body-inventory-20260910.json',
   ],
+  [
+    'm8v-radiological-source-inventory',
+    'schemas/assets/m8v-radiological-source-inventory.v1.schema.json',
+    'authoring/outputs/m8v-v01-radiological-source-inventory-20260910.json',
+  ],
+  [
+    'm8v-ct-cryo-registration-scaffold',
+    'schemas/assets/m8v-ct-cryo-registration-scaffold.v1.schema.json',
+    'authoring/outputs/m8v-v02-ct-cryo-registration-scaffold-20260910.json',
+  ],
+  [
+    'm8v-upper-extremity-landmark-graph',
+    'schemas/assets/m8v-upper-extremity-landmark-graph.v1.schema.json',
+    'authoring/outputs/m8v-v03-upper-extremity-landmark-graph-20260910.json',
+  ],
+  [
+    'm8v-candidate-vessel-track-graph',
+    'schemas/assets/m8v-candidate-vessel-track-graph.v1.schema.json',
+    'authoring/outputs/m8v-v04-candidate-vessel-track-graph-20260910.json',
+  ],
+  [
+    'm8v-radial-artery-identity-evidence',
+    'schemas/assets/m8v-radial-artery-identity-evidence.v1.schema.json',
+    'authoring/outputs/m8v-v05-radial-artery-identity-evidence-20260911.json',
+  ],
+  [
+    'm8v-superficial-venous-network-evidence',
+    'schemas/assets/m8v-superficial-venous-network-evidence.v1.schema.json',
+    'authoring/outputs/m8v-v06-superficial-venous-network-evidence-20260911.json',
+  ],
+  [
+    'm8v-multimodal-review-surface',
+    'schemas/assets/m8v-multimodal-review-surface.v1.schema.json',
+    'authoring/outputs/m8v-v07-multimodal-review-surface-20260911.json',
+  ],
+  [
+    'm8v-human-adjudication-session',
+    'schemas/assets/m8v-human-adjudication-session.v1.schema.json',
+    null,
+  ],
+  [
+    'm8v-evidence-ledger',
+    'schemas/assets/m8v-evidence-ledger.v1.schema.json',
+    'authoring/outputs/m8v-v08-evidence-ledger-20260911.json',
+  ],
+  [
+    'm8v-identity-promotion-evaluation',
+    'schemas/assets/m8v-identity-promotion-evaluation.v1.schema.json',
+    'authoring/outputs/m8v-v09-identity-promotion-evaluation-20260911.json',
+  ],
+  [
+    'm8v-m8a-feed-forward',
+    'schemas/assets/m8v-m8a-feed-forward.v1.schema.json',
+    'authoring/outputs/m8v-v10-m8a-feed-forward-20260911.json',
+  ],
   ['vhf-source-chunk', 'schemas/assets/vhf-source-chunk.v1.schema.json', null],
   [
     'vhf-source-archive-index',
